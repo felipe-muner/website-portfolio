@@ -1,4 +1,5 @@
 import React from 'react';
+import { Cta } from '../Cta';
 
 const Registration = () => {
   return (
@@ -15,12 +16,7 @@ const Registration = () => {
             <div className="text-brand-gray-light text-xl uppercase mb-12 font-mulish font-bold">
               Where health, beauty, and fitness meet.
             </div>
-            <a
-              href="#"
-              className="font-mulish inline-block bg-transparent border-2 border-brand-orange text-white py-4 font-bold px-8 text-sm hover:bg-brand-orange hover:text-white transition uppercase tracking-[2px]"
-            >
-              Appointment
-            </a>
+            <Cta href='/' label='appointment' />
           </div>
         </div>
       </div>
