@@ -78,7 +78,7 @@ export default function OurPlan() {
             >
               {/* Title */}
               <h3
-                className="text-2xl font-semibold mb-4 text-white transition-colors duration-500 group-hover:text-brand-black"
+                className="text-[28px] font-semibold mb-4 text-white transition-colors duration-500 group-hover:text-brand-black"
                 style={{ transform: "skewY(4deg)" }} // Opposite skew for content
               >
                 {plan.title}
@@ -92,7 +92,7 @@ export default function OurPlan() {
                 <h2 className="text-[48px] md:text-[60px] text-brand-orange font-semibold leading-none">
                   {plan.price}
                 </h2>
-                <span className="block text-base font-bold uppercase text-brand-gray-light">
+                <span className="block text-base font-bold uppercase text-brand-gray-light font-mulish group-hover:text-[#444]">
                   {plan.label}
                 </span>
               </div>
@@ -105,7 +105,7 @@ export default function OurPlan() {
                 {plan.features.map((feature, i) => (
                   <li
                     key={i}
-                    className="text-sm leading-7 text-brand-gray-light transition-colors duration-300 group-hover:text-brand-black group-hover:font-semibold"
+                    className="text-sm leading-8 text-brand-gray-light transition-colors duration-300 group-hover:text-brand-black font-mulish"
                   >
                     {feature}
                   </li>
@@ -117,39 +117,21 @@ export default function OurPlan() {
                 href="#"
                 className={`
                   block 
-                  bg-brand-black 
+                  bg-[#333] 
                   text-white 
-                  py-2 px-6
+                  py-4 px-[30px] mt-2
+                  font-mulish
                   uppercase 
                   transition-colors 
                   duration-300
-                  hover:bg-brand-orange
+                  group-hover:bg-brand-orange
+                  font-bold
                 `}
                 style={{ transform: "skewY(4deg)" }}
               >
                 Enroll now
               </a>
 
-              {/* Icon (appears on hover) */}
-              <a
-                href="#"
-                className={`
-                  text-brand-orange
-                  text-[48px]
-                  absolute
-                  left-12
-                  bottom-32
-                  opacity-0 
-                  invisible
-                  transition-all
-                  duration-500
-                  group-hover:opacity-100
-                  group-hover:visible
-                `}
-                style={{ transform: "skewY(4deg)" }}
-              >
-                <i className="fa fa-picture-o" />
-              </a>
             </div>
           ))}
         </div>
