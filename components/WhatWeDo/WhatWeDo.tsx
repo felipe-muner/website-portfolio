@@ -32,19 +32,22 @@ const WhatWeDo: React.FC = () => {
           <span className="text-brand-orange text-sm uppercase tracking-widest">What we do?</span>
           <h2 className="text-white text-3xl font-bold">PUSH YOUR LIMITS FORWARD</h2>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2">
           {services.map((service, index) => (
-            <div key={index} className="flex flex-col items-stretch">
-              <div className="overflow-hidden h-64 w-full">
+            <div
+              key={index}
+              className={`flex ${index % 2 === 0 ? "md:flex-row" : "md:flex-row"} flex-col items-center`}
+            >
+              <div className="overflow-hidden h-64 w-full md:w-1/2">
                 <img
                   src={service.image}
                   alt={service.title}
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className={`bg-brand-background-1 p-6 text-white relative h-64 w-full flex flex-col justify-between`}>
+              <div className={`bg-[#252525] p-6 text-white relative h-64 w-full md:w-1/2 flex flex-col justify-evenly`}>
                 <h4 className="text-lg font-semibold mb-2">{service.title}</h4>
-                <p className="text-sm mb-4 text-brand-gray-light">
+                <p className="text-sm mb-4 text-brand-gray-light font-mulish">
                   {service.description}
                 </p>
                 <a
@@ -54,7 +57,7 @@ const WhatWeDo: React.FC = () => {
                   Explore
                 </a>
                 <div
-                  className={`absolute top-1/2 transform -translate-y-1/2 w-5 h-5 bg-brand-background-1 rotate-45 ${index % 2 === 0 ? "-right-2" : "-left-2"
+                  className={`absolute top-1/2 transform -translate-y-1/2 w-5 h-5 bg-[#252525] rotate-45 ${index % 2 === 0 ? "-right-2" : "-left-2"
                     }`}
                 ></div>
               </div>
