@@ -2,6 +2,7 @@ import { Facebook, Twitter, Youtube, Instagram, Mail } from "lucide-react";
 import { APP_NAME } from "@/constants";
 import Link from "next/link";
 import { ContactData } from "../ContactData";
+import Image from "next/image";
 
 const Footer: React.FC = () => {
   return (
@@ -14,7 +15,12 @@ const Footer: React.FC = () => {
             <div className="space-y-6">
               <div>
                 <a href="#">
-                  <img src="/img/logo.png" alt="Logo" className="mb-6" />
+                  <Image
+                    src='/img/logo.png'
+                    alt={APP_NAME}
+                    width={182}
+                    height={41}
+                  />
                 </a>
               </div>
               <p className="text-brand-gray-light leading-7">
