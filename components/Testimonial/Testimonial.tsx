@@ -12,10 +12,29 @@ import {
 } from "@/components/ui/carousel"
 import Image from "next/image";
 
+interface Testimonial {
+  src: string;
+  alt: string;
+  text: string;
+  name: string;
+  stars: number;
+}
 // Your real testimonials array
-const testimonials = [
-  { src: "/img/testimonial/testimonial-1.jpg", alt: "Testimonial 1" },
-  { src: "/img/testimonial/testimonial-2.jpg", alt: "Testimonial 2" },
+const testimonials: Array<Testimonial> = [
+  {
+    src: "/img/testimonial/testimonial-1.jpg",
+    alt: "Testimonial 1",
+    text: "I love everything about this gym. The trainers push me to be better every day, and I’ve seen amazing results already!",
+    name: "Sarah Johnson",
+    stars: 5
+  },
+  {
+    src: "/img/testimonial/testimonial-2.jpg",
+    alt: "Testimonial 2",
+    text: "Clean, friendly, and motivating environment. Whether you’re new or advanced, you’ll find the support you need here.",
+    name: "Michael Roberts",
+    stars: 5
+  },
 ];
 
 const Testimonial: React.FC = () => {
@@ -32,11 +51,12 @@ const Testimonial: React.FC = () => {
               {testimonials.map((testimonial, index) => (
                 <CarouselItem key={index} className="w-full">
                   <Card className="bg-transparent border-none">
-                    <CardContent className="flex items-center justify-center p-6">
+                    <CardContent className="flex flex-col items-center justify-center p-6">
                       {/* Here’s the image instead of the number */}
-                      <span className="text-white">
-                        {index + 1}
-                        </span>
+                      <div></div>
+                      <div></div>
+                      <div></div>
+                      <div></div>                      
                     </CardContent>
                   </Card>
                 </CarouselItem>
