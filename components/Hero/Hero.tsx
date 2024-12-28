@@ -41,7 +41,7 @@ const slides = [
 
 export default function Hero() {
   return (
-    <Carousel className="relative w-full">
+    <Carousel className="relative w-full" opts={{ loop: true }}>
       <CarouselContent>
         {slides.map((slide, index) => (
           <CarouselItem key={index} className="relative">
