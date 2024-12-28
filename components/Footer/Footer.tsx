@@ -147,9 +147,9 @@ const Footer: React.FC = () => {
           {/* END ROW */}
 
           {/* COPYRIGHT SECTION */}
-          <div className="mt-12 border-t border-brand-gray-dark pt-6 text-center">
+          <div className="mt-12 py-8 border-t border-brand-gray-dark text-center">
             <p className="text-sm text-brand-gray-light">
-              Copyright &copy; {new Date().getFullYear()}
+              Copyright &copy; {new Date().getFullYear() + ' '}
               All rights reserved | This template is made by{" "}
               <Link
                 href="https://felipemuner.com/portfolio"
