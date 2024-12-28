@@ -44,7 +44,7 @@ export default function Hero() {
         {slides.map((slide, index) => (
           <CarouselItem key={index} className="relative">
             {/* Keep a fixed aspect ratio for each slide */}
-            <div className="relative w-full aspect-[4/3] md:aspect-[16/9]">
+            <div className="relative w-full aspect-[3/4] md:aspect-[16/9]">
               {/* Background Image */}
               <Image
                 src={slide.src}
