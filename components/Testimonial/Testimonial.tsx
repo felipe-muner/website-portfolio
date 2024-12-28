@@ -31,10 +31,10 @@ const Testimonial: React.FC = () => {
             <CarouselContent>
               {testimonials.map((testimonial, index) => (
                 <CarouselItem key={index} className="w-full">
-                  <Card>
+                  <Card className="bg-transparent border-none">
                     <CardContent className="flex items-center justify-center p-6">
                       {/* Here’s the image instead of the number */}
-                      <span>
+                      <span className="text-white">
                         {index + 1}
                         </span>
                     </CardContent>
