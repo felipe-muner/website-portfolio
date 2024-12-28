@@ -1,13 +1,16 @@
+import { cn } from "@/lib/utils"
 import React from "react"
 
 interface TitleSectionProps {
   subtitle: string
   title: string
+  className?: string
 }
 
-const TitleSection: React.FC<TitleSectionProps> = ({ subtitle, title }) => {
+const TitleSection: React.FC<TitleSectionProps> = ({ subtitle, title, className }) => {
   return (
-    <div className="text-center mb-11">
+    <div className={
+      cn(`text-center mb-11`, className)}>
       <span className="text-brand-orange text-md uppercase font-mulish font-bold">
         {subtitle}
       </span>
