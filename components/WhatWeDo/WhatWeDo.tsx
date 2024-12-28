@@ -35,7 +35,7 @@ const WhatWeDo: React.FC = () => {
           {services.map((service, index) => (
             <div
               key={index}
-              className={`flex ${index === 2 ? "md:flex-row-reverse" : "md:flex-row"
+              className={`flex ${index === 2 || index === 3 ? "md:flex-row-reverse" : "md:flex-row"
                 } flex-col items-center`}
             >
               <div className="overflow-hidden h-64 w-full md:w-1/2">
@@ -45,19 +45,19 @@ const WhatWeDo: React.FC = () => {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="bg-[#252525] p-6 text-white relative h-64 w-full md:w-1/2 flex flex-col justify-evenly">
+              <div className="group bg-[#252525] p-6 text-white relative h-64 w-full md:w-1/2 flex flex-col justify-evenly">
                 <h4 className="text-lg font-semibold mb-2">{service.title}</h4>
                 <p className="text-sm mb-4 text-brand-gray-light font-mulish">
                   {service.description}
                 </p>
                 <a
                   href="#"
-                  className="text-sm font-bold uppercase text-white hover:text-brand-orange transition"
+                  className="text-sm font-bold uppercase text-white group-hover:text-brand-orange transition"
                 >
                   Explore
                 </a>
                 <div
-                  className={`absolute top-1/2 transform -translate-y-1/2 w-5 h-5 bg-[#252525] rotate-45 ${index === 2 ? "-right-2" : index === 0 ? "-left-2" : index % 2 === 0 ? "-right-2" : "-left-2"
+                  className={`absolute top-1/2 transform -translate-y-1/2 w-5 h-5 bg-[#252525] rotate-45 ${index === 2 || index === 3 ? "-right-2" : index === 0 ? "-left-2" : index % 2 === 0 ? "-right-2" : "-left-2"
                     }`}
                 ></div>
               </div>
