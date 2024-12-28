@@ -138,7 +138,7 @@ const Footer: React.FC = () => {
                     </a>
                   </h6>
                   <ul className="text-xs text-brand-gray-darker font-mulish">
-                    <li>3 min read</li>
+                    <li>5 min read</li>
                   </ul>
                 </div>
               </div>
