@@ -1,17 +1,17 @@
-"use client"
+"use client";
 
 import React from "react";
 import { TitleSection } from "../TitleSection";
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "@/components/ui/carousel"
+} from "@/components/ui/carousel";
 import Image from "next/image";
-import { Star } from "lucide-react";
+import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Testimonial {
   src: string;
@@ -44,7 +44,7 @@ const Testimonial: React.FC = () => {
       <div className="container mx-auto px-4">
         <TitleSection subtitle="Testimonial" title="Our Clients Say" />
         <div className="flex justify-center w-full mt-10">
-          <Carousel className="w-full max-w-4xl">
+          <Carousel className="w-full max-w-4xl" opts={{ loop: true }}>
             <CarouselContent className="flex gap-4">
               {testimonials.map((testimonial, index) => (
                 <CarouselItem key={index} className="w-full">
@@ -84,8 +84,14 @@ const Testimonial: React.FC = () => {
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
+
+            {/* Carousel Navigation */}
+            <CarouselPrevious className="rounded-none border-none w-12 h-12 flex items-center justify-center bg-gray-800 text-white">
+              <ChevronLeft className="w-6 h-6" />
+            </CarouselPrevious>
+            <CarouselNext className="rounded-none border-none w-12 h-12 flex items-center justify-center bg-gray-800 text-white">
+              <ChevronRight className="w-6 h-6" />
+            </CarouselNext>
           </Carousel>
         </div>
       </div>
