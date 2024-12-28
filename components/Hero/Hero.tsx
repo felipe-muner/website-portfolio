@@ -41,13 +41,11 @@ const slides = [
 
 export default function Hero() {
   return (
-    <Carousel className="w-full relative">
+    <Carousel className="relative w-full">
       <CarouselContent>
         {slides.map((slide, index) => (
           <CarouselItem key={index} className="relative">
-            {/* Keep a fixed aspect ratio for each slide */}
             <div className="relative w-full aspect-[3/4] md:aspect-[16/9]">
-              {/* Background Image */}
               <Image
                 src={slide.src}
                 alt={slide.alt}
@@ -55,13 +53,9 @@ export default function Hero() {
                 className="object-cover"
                 priority={index === 0}
               />
-
-              {/* Text Overlay */}
               <div className="absolute inset-0 flex items-center">
-                {/* Container + offset-lg-6 analog */}
                 <div className="container mx-auto px-4">
                   <div className="grid grid-cols-12">
-                    {/* Leave half the grid empty on lg screens (offset) */}
                     <div className="hidden lg:block lg:col-span-6" />
                     <div className="col-span-12 lg:col-span-6">
                       <div className="hi-text text-white">
@@ -86,7 +80,7 @@ export default function Hero() {
         ))}
       </CarouselContent>
 
-      {/* Custom square Navigation arrows (no transition, no hover effect) */}
+      {/* No hover color changes — force with !important */}
       <CarouselPrevious
         className="
           absolute 
@@ -98,11 +92,13 @@ export default function Hero() {
           h-12 
           flex 
           items-center 
-          justify-center 
-          bg-white/10
-          text-[#a9a9a9]
+          justify-center
           rounded-none
           border-none
+          bg-white/10
+          text-[#a9a9a9]
+          hover:bg-white/10
+          hover:text-[#a9a9a9]
         "
       >
         <ChevronLeft className="w-6 h-6" />
@@ -118,11 +114,13 @@ export default function Hero() {
           h-12 
           flex 
           items-center 
-          justify-center 
+          justify-center
+          // rounded-none
+          // border-none
           bg-white/10
           text-[#a9a9a9]
-          rounded-none
-          border-none
+          hover:bg-white/10
+          hover:text-[#a9a9a9]
         "
       >
         <ChevronRight className="w-6 h-6" />
