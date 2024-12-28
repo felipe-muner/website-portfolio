@@ -9,6 +9,26 @@ export default {
   ],
   theme: {
     extend: {
+      keyframes: {
+        "fade-up": {
+          "0%": {
+            opacity: "0",
+            transform: "translateY(40px)",
+          },
+          "100%": {
+            opacity: "1",
+            transform: "translateY(0)",
+          },
+        },
+      },
+      animation: {
+        // Duration = 0.5s, easing = ease-out, fill-mode = forwards
+        // You can create multiple delays as needed
+        "fade-up": "fade-up 0.8s ease-out forwards",
+        "fade-up-delay-100": "fade-up 0.5s ease-out 0.1s forwards",
+        "fade-up-delay-250": "fade-up 0.5s ease-out 0.25s forwards",
+        "fade-up-delay-500": "fade-up 0.5s ease-out 0.5s forwards",
+      },
       fontFamily: {
         oswald: ['var(--font-oswald)', 'sans-serif'],
         mulish: ['var(--font-mulish)', 'sans-serif'],

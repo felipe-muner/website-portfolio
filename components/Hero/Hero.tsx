@@ -44,8 +44,8 @@ export default function Hero() {
     <Carousel className="relative w-full" opts={{ loop: true }}>
       <CarouselContent>
         {slides.map((slide, index) => (
-          <CarouselItem key={index} className="relative">
-            <div className="relative w-full aspect-[3/4] md:aspect-[16/9]">
+          <CarouselItem key={slide.src} className="relative">
+            <div className="relative w-full aspect-[3/4] md:aspect-[6/4]">
               <Image
                 src={slide.src}
                 alt={slide.alt}
@@ -59,17 +59,44 @@ export default function Hero() {
                     <div className="hidden lg:block lg:col-span-6" />
                     <div className="col-span-12 lg:col-span-6">
                       <div className="hi-text text-white">
-                        <span className="block text-lg uppercase font-bold mb-[18px] font-mulish tracking-[6px]">
+                        {/* Animate from bottom with a slight delay */}
+                        <span
+                          className="
+                            block 
+                            text-lg 
+                            uppercase 
+                            font-bold 
+                            mb-[18px] 
+                            font-mulish 
+                            tracking-[6px]
+                            animate-fade-up-delay-100
+                          "
+                        >
                           {slide.span}
                         </span>
-                        <h1 className="text-4xl font-bold uppercase mb-10 leading-[1.2] text-[48px] md:text-[80px]">
+
+                        <h1
+                          className="
+                            text-4xl 
+                            font-bold 
+                            uppercase 
+                            mb-10 
+                            leading-[1.2] 
+                            text-[48px] 
+                            md:text-[80px]
+                            animate-fade-up-delay-250
+                          "
+                        >
                           {slide.heading}
                         </h1>
-                        <Cta
-                          href={slide.linkHref}
-                          label={slide.linkLabel}
-                          className="bg-brand-orange"
-                        />
+
+                        <div className="animate-fade-up-delay-500">
+                          <Cta
+                            href={slide.linkHref}
+                            label={slide.linkLabel}
+                            className="bg-brand-orange"
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -80,7 +107,6 @@ export default function Hero() {
         ))}
       </CarouselContent>
 
-      {/* No hover color changes — force with !important */}
       <CarouselPrevious
         className="
           absolute 
@@ -103,6 +129,7 @@ export default function Hero() {
       >
         <ChevronLeft className="w-6 h-6" />
       </CarouselPrevious>
+
       <CarouselNext
         className="
           absolute 
