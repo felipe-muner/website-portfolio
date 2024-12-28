@@ -36,7 +36,7 @@ const OurClasses: React.FC = () => {
       <div className="container mx-auto px-4">
         {/* Section Title */}
         <div className="text-center mb-12">
-          <span className="text-brand-orange text-lg font-bold uppercase tracking-wide">
+          <span className="text-brand-orange text-lg font-bold uppercase tracking-wide font-mulish">
             Our Classes
           </span>
           <h2 className="text-4xl font-bold text-white mt-2">WHAT WE CAN OFFER</h2>

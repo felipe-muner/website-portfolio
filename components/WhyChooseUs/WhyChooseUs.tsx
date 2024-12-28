@@ -53,9 +53,9 @@ const WhyChooseUs: React.FC = () => {
     <section className="bg-brand-background-1 pb-[70px] pt-[100px] w-full">
       <div className="container mx-auto px-4">
         {/* Section Title */}
-        <div className="text-center mb-[35px]">
-          <span className="text-brand-orange text-lg uppercase tracking-wider">Why choose us?</span>
-          <h2 className="text-4xl font-bold text-white mt-2">PUSH YOUR LIMITS FORWARD</h2>
+        <div className="text-center mb-11">
+          <span className="text-brand-orange text-md uppercase font-mulish font-bold">Why choose us?</span>
+          <h2 className="text-[32px] font-bold text-white mt-1">PUSH YOUR LIMITS FORWARD</h2>
         </div>
 
         {/* Features */}
