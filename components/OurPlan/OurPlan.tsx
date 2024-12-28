@@ -1,4 +1,5 @@
 import React from "react";
+import { TitleSection } from "../TitleSection";
 
 const pricingPlans = [
   {
@@ -50,10 +51,10 @@ const OurPlan: React.FC = () => {
     <section className="bg-brand-background-2 py-20 w-full">
       <div className="container mx-auto px-4">
         {/* Section Title */}
-        <div className="text-center mb-14">
-          <span className="text-brand-orange text-lg uppercase tracking-wider">Our Plan</span>
-          <h2 className="text-4xl font-bold text-white mt-2">Choose your pricing plan</h2>
-        </div>
+        <TitleSection
+          subtitle="Our Plan"
+          title="Choose your pricing plan"
+        />
 
         {/* Pricing Cards */}
         <div className="flex flex-col md:flex-row justify-between gap-8">

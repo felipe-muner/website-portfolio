@@ -1,6 +1,7 @@
 import { ChevronRight } from "lucide-react";
 import React from "react";
 import Image from "next/image";
+import { TitleSection } from "../TitleSection";
 
 const classes = [
   {
@@ -35,13 +36,10 @@ const OurClasses: React.FC = () => {
     <section className="bg-brand-background-2 py-20 w-full">
       <div className="container mx-auto px-4">
         {/* Section Title */}
-        <div className="text-center mb-12">
-          <span className="text-brand-orange text-lg font-bold uppercase tracking-wide font-mulish">
-            Our Classes
-          </span>
-          <h2 className="text-4xl font-bold text-white mt-2">WHAT WE CAN OFFER</h2>
-        </div>
-
+        <TitleSection
+          subtitle="Our Classes"
+          title="WHAT WE CAN OFFER"
+        />
         {/* Classes Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {classes.map((classItem, index) => (

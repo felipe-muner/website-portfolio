@@ -1,5 +1,6 @@
 import React from "react";
 import { Bike, Salad, Dumbbell, Heart } from "lucide-react";
+import { TitleSection } from "../TitleSection";
 
 interface Feature {
   icon: React.ReactNode;
@@ -53,10 +54,10 @@ const WhyChooseUs: React.FC = () => {
     <section className="bg-brand-background-1 pb-[70px] pt-[100px] w-full">
       <div className="container mx-auto px-4">
         {/* Section Title */}
-        <div className="text-center mb-11">
-          <span className="text-brand-orange text-md uppercase font-mulish font-bold">Why choose us?</span>
-          <h2 className="text-[32px] font-bold text-white mt-1">PUSH YOUR LIMITS FORWARD</h2>
-        </div>
+        <TitleSection
+          subtitle="Why choose us?"
+          title="PUSH YOUR LIMITS FORWARD"
+        />
 
         {/* Features */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
