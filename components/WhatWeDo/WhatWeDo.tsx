@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 
 const services = [
   {
@@ -22,7 +22,6 @@ const services = [
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor ut dolore facilisis.",
   },
 ];
-
 
 const WhatWeDo: React.FC = () => {
   return (
@@ -57,8 +56,9 @@ const WhatWeDo: React.FC = () => {
                   Explore
                 </a>
                 <div
-                  className={`absolute top-1/2 transform -translate-y-1/2 w-5 h-5 bg-[#252525] rotate-45 ${index % 2 === 0 ? "-right-2" : "-left-2"
-                    }`}
+                  className={`absolute top-1/2 transform -translate-y-1/2 w-5 h-5 bg-[#252525] rotate-45 ${
+                    index === 0 ? "-left-2" : index % 2 === 0 ? "-right-2" : "-left-2"
+                  }`}
                 ></div>
               </div>
             </div>
@@ -66,7 +66,7 @@ const WhatWeDo: React.FC = () => {
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
 export default WhatWeDo;
