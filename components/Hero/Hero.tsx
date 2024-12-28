@@ -9,6 +9,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
+import { Cta } from "../Cta"
 
 const slides = [
   {
@@ -69,12 +70,7 @@ export default function Hero() {
                         <h1 className="text-4xl font-bold uppercase mb-10 leading-[1.2] text-[48px] md:text-[80px]">
                           {slide.heading}
                         </h1>
-                        <a
-                          href={slide.linkHref}
-                          className="primary-btn inline-block px-6 py-2 bg-brand-orange text-white font-semibold uppercase"
-                        >
-                          {slide.linkLabel}
-                        </a>
+                        <Cta href={slide.linkHref} label={slide.linkLabel} className="bg-brand-orange" />
                       </div>
                     </div>
                   </div>
