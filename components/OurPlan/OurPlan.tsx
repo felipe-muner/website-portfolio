@@ -3,9 +3,6 @@
 import React from "react"
 import { TitleSection } from "../TitleSection"
 
-// Optional icon usage; e.g., <i className="fa fa-picture-o" />
-// If you're using Font Awesome, be sure to import it or load it in your app
-
 export default function OurPlan() {
   const plans = [
     {
