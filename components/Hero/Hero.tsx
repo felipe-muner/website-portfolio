@@ -19,7 +19,7 @@ const slides = [
     span: "Shape your body",
     heading: (
       <>
-        Be <strong>strong</strong> training hard
+        Be <strong className="text-brand-orange">strong</strong> training hard
       </>
     ),
     linkHref: "#",
@@ -31,7 +31,7 @@ const slides = [
     span: "Shape your body",
     heading: (
       <>
-        Be <strong>strong</strong> training hard
+        Be <strong className="text-brand-orange">strong</strong> training hard
       </>
     ),
     linkHref: "#",
@@ -115,8 +115,8 @@ export default function Hero() {
           flex 
           items-center 
           justify-center
-          // rounded-none
-          // border-none
+          rounded-none
+          border-none
           bg-white/10
           text-[#a9a9a9]
           hover:bg-white/10
