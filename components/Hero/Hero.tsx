@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import Image from "next/image"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 import {
   Carousel,
   CarouselContent,
@@ -40,7 +41,7 @@ const slides = [
 
 export default function Hero() {
   return (
-    <Carousel className="w-full">
+    <Carousel className="w-full relative">
       <CarouselContent>
         {slides.map((slide, index) => (
           <CarouselItem key={index} className="relative">
@@ -70,7 +71,11 @@ export default function Hero() {
                         <h1 className="text-4xl font-bold uppercase mb-10 leading-[1.2] text-[48px] md:text-[80px]">
                           {slide.heading}
                         </h1>
-                        <Cta href={slide.linkHref} label={slide.linkLabel} className="bg-brand-orange" />
+                        <Cta
+                          href={slide.linkHref}
+                          label={slide.linkLabel}
+                          className="bg-brand-orange"
+                        />
                       </div>
                     </div>
                   </div>
@@ -81,9 +86,47 @@ export default function Hero() {
         ))}
       </CarouselContent>
 
-      {/* Navigation arrows */}
-      <CarouselPrevious className="left-6" />
-      <CarouselNext className="right-6" />
+      {/* Custom square Navigation arrows (no transition, no hover effect) */}
+      <CarouselPrevious
+        className="
+          absolute 
+          left-6 
+          top-1/2 
+          -translate-y-1/2
+          ml-4 
+          w-12 
+          h-12 
+          flex 
+          items-center 
+          justify-center 
+          bg-white/10
+          text-[#a9a9a9]
+          rounded-none
+          border-none
+        "
+      >
+        <ChevronLeft className="w-6 h-6" />
+      </CarouselPrevious>
+      <CarouselNext
+        className="
+          absolute 
+          right-6 
+          top-1/2 
+          -translate-y-1/2
+          ml-4 
+          w-12 
+          h-12 
+          flex 
+          items-center 
+          justify-center 
+          bg-white/10
+          text-[#a9a9a9]
+          rounded-none
+          border-none
+        "
+      >
+        <ChevronRight className="w-6 h-6" />
+      </CarouselNext>
     </Carousel>
   )
 }
