@@ -10,7 +10,7 @@ export default function AboutUs() {
       <Breadcrumb route={'About Us'} />
       <WhyChooseUs />
       <OurTeam />
-      <Registration />
+      <Registration lead="registration now to get more deals" sublead="Where health, beauty, and fitness meet" />
       <Testimonial />
     </main>
   );

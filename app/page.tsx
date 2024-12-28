@@ -8,14 +8,14 @@ import { WhyChooseUs } from "@/components/WhyChooseUs";
 
 export default function Home() {
   return (
-      <main className="flex flex-col row-start-2 items-center sm:items-start">
-        <Hero />
-        <WhyChooseUs />
-        <OurClasses />
-        <Registration />
-        <OurPlan />
-        <Gallery />
-        <OurTeam />        
-      </main>
+    <main className="flex flex-col row-start-2 items-center sm:items-start">
+      <Hero />
+      <WhyChooseUs />
+      <OurClasses />
+      <Registration lead="registration now to get more deals" sublead="Where health, beauty and fitness meet" />
+      <OurPlan />
+      <Gallery />
+      <OurTeam />
+    </main>
   );
 }
