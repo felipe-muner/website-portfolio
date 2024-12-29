@@ -1,23 +1,24 @@
 import React from "react";
+import Image from "next/image";
 
 const services = [
   {
-    image: "img/services/services-1.jpg",
+    image: "/img/services/services-1.jpg",
     title: "Personal training",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor ut dolore facilisis.",
   },
   {
-    image: "img/services/services-2.jpg",
+    image: "/img/services/services-2.jpg",
     title: "Group fitness classes",
     description: "Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus.",
   },
   {
-    image: "img/services/services-3.jpg",
+    image: "/img/services/services-3.jpg",
     title: "Strength training",
     description: "Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus.",
   },
   {
-    image: "img/services/services-4.jpg",
+    image: "/img/services/services-4.jpg",
     title: "Body building",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor ut dolore facilisis.",
   },
@@ -31,14 +32,15 @@ const WhatWeDo: React.FC = () => {
           {services.map((service, index) => (
             <div
               key={index}
-              className={`flex ${index === 2 || index === 3 ? "md:flex-row-reverse" : "md:flex-row"
-                } flex-col items-center`}
+              className={`flex ${index === 2 || index === 3 ? "md:flex-row-reverse" : "md:flex-row"} flex-col items-center`}
             >
-              <div className="overflow-hidden h-64 w-full md:w-1/2">
-                <img
+              <div className="overflow-hidden h-64 w-full md:w-1/2 relative">
+                <Image
                   src={service.image}
                   alt={service.title}
-                  className="w-full h-full object-cover"
+                  layout="fill"
+                  objectFit="cover"
+                  className="rounded"
                 />
               </div>
               <div className="group bg-[#252525] p-6 text-white relative h-64 w-full md:w-1/2 flex flex-col justify-evenly">
@@ -53,8 +55,7 @@ const WhatWeDo: React.FC = () => {
                   Explore
                 </a>
                 <div
-                  className={`absolute top-1/2 transform -translate-y-1/2 w-5 h-5 bg-[#252525] rotate-45 ${index === 2 || index === 3 ? "-right-2" : index === 0 ? "-left-2" : index % 2 === 0 ? "-right-2" : "-left-2"
-                    }`}
+                  className={`absolute top-1/2 transform -translate-y-1/2 w-5 h-5 bg-[#252525] rotate-45 ${index === 2 || index === 3 ? "-right-2" : index === 0 ? "-left-2" : index % 2 === 0 ? "-right-2" : "-left-2"}`}
                 ></div>
               </div>
             </div>
