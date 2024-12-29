@@ -58,13 +58,13 @@ const Timetable = () => {
       <table className="min-w-full border-collapse border border-[#363636] text-center">
         <thead>
           <tr className="bg-brand-orange font-mulish">
-            <th className="p-3 text-sm text-white">&nbsp;</th>
-            <th className="p-3 text-sm text-white">Monday</th>
-            <th className="p-3 text-sm text-white">Tuesday</th>
-            <th className="p-3 text-sm text-white">Wednesday</th>
-            <th className="p-3 text-sm text-white">Thursday</th>
-            <th className="p-3 text-sm text-white">Friday</th>
-            <th className="p-3 text-sm text-white">Saturday</th>
+            <th className="p-3 text-sm text-white border-r border-brand-gray-darker">&nbsp;</th>
+            <th className="p-3 text-sm text-white border-r border-brand-gray-darker">Monday</th>
+            <th className="p-3 text-sm text-white border-r border-brand-gray-darker">Tuesday</th>
+            <th className="p-3 text-sm text-white border-r border-brand-gray-darker">Wednesday</th>
+            <th className="p-3 text-sm text-white border-r border-brand-gray-darker">Thursday</th>
+            <th className="p-3 text-sm text-white border-r border-brand-gray-darker">Friday</th>
+            <th className="p-3 text-sm text-white border-r border-brand-gray-darker">Saturday</th>
             <th className="p-3 text-sm text-white">Sunday</th>
           </tr>
         </thead>
