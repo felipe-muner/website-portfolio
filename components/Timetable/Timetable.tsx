@@ -54,7 +54,8 @@ const Timetable = () => {
   ];
 
   return (
-    <section className="overflow-x-auto bg-brand-background-2 lg:p-4 lg:container lg:mx-auto my-28">
+    <section className="overflow-x-auto bg-brand-background-2 lg:p-4 lg:container lg:mx-auto my-28 flex flex-col gap-12 text-white text-xl font-semibold">
+      <p >Classes timetable</p>
       <table className="min-w-full table-fixed border-collapse border border-[#363636] text-center">
         <thead>
           <tr className="bg-brand-orange font-mulish">
@@ -94,7 +95,7 @@ const Timetable = () => {
                 <td
                   key={dayIndex}
                   className={cn(
-                    'border border-[#363636] py-6 w-24 h-24 text-sm',
+                    'border border-[#363636] py-6 w-24 h-24 text-sm relative',
                     {
                       'bg-brand-background-1': day.type === 'dark',
                       'bg-brand-background-2': day.type !== 'dark',
@@ -106,11 +107,13 @@ const Timetable = () => {
                       <h5 className="mb-[10px] text-lg font-semibold uppercase text-white text-opacity-10 group-hover:text-opacity-100 transition">
                         {day.name}
                       </h5>
-                      <span className="text-xs text-white text-opacity-10 group-hover:text-opacity-100 transition">
+                      <span className="text-xs text-white text-opacity-10 group-hover:text-brand-gray-medium transition">
                         {day.instructor}
                       </span>
                     </div>
-                  ) : null}
+                  ) : (
+                    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rotate-[-35deg] w-[188px] h-[1px] bg-[#363636]"></div>
+                  )}
                 </td>
               ))}
             </tr>
