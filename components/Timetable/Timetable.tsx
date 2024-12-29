@@ -58,27 +58,27 @@ const Timetable = () => {
       <table className="min-w-full border-collapse border border-[#363636] text-center">
         <thead>
           <tr className="bg-brand-orange font-mulish">
-            <th className="p-3 text-sm text-white border-r border-brand-gray-darker">&nbsp;</th>
-            <th className="p-3 text-sm text-white border-r border-brand-gray-darker">Monday</th>
-            <th className="p-3 text-sm text-white border-r border-brand-gray-darker">Tuesday</th>
-            <th className="p-3 text-sm text-white border-r border-brand-gray-darker">Wednesday</th>
-            <th className="p-3 text-sm text-white border-r border-brand-gray-darker">Thursday</th>
-            <th className="p-3 text-sm text-white border-r border-brand-gray-darker">Friday</th>
-            <th className="p-3 text-sm text-white border-r border-brand-gray-darker">Saturday</th>
-            <th className="p-3 text-sm text-white">Sunday</th>
+            <th className="p-4 text-sm text-white border-r border-brand-gray-darker font-normal">&nbsp;</th>
+            <th className="p-4 text-sm text-white border-r border-brand-gray-darker font-normal">Monday</th>
+            <th className="p-4 text-sm text-white border-r border-brand-gray-darker font-normal">Tuesday</th>
+            <th className="p-4 text-sm text-white border-r border-brand-gray-darker font-normal">Wednesday</th>
+            <th className="p-4 text-sm text-white border-r border-brand-gray-darker font-normal">Thursday</th>
+            <th className="p-4 text-sm text-white border-r border-brand-gray-darker font-normal">Friday</th>
+            <th className="p-4 text-sm text-white border-r border-brand-gray-darker font-normal">Saturday</th>
+            <th className="p-4 text-sm text-white">Sunday</th>
           </tr>
         </thead>
         <tbody>
           {timetable.map((row, rowIndex) => (
             <tr key={rowIndex}>
-              <td className="border border-[#363636] bg-brand-black p-3 text-brand-orange font-mulish text-xs">
+              <td className="border border-[#363636] bg-brand-black p-4 w-24 h-24 text-brand-orange font-mulish text-xs">
                 {row.time}
               </td>
               {row.days.map((day, dayIndex) => (
                 <td
                   key={dayIndex}
                   className={cn(
-                    'border border-[#363636] p-3 text-sm',
+                    'border border-[#363636] p-4 w-24 h-24 text-sm',
                     {
                       'bg-brand-background-1': day.type === 'dark',
                       'bg-brand-background-2': day.type !== 'dark'
@@ -87,7 +87,7 @@ const Timetable = () => {
                 >
                   {day.name ? (
                     <div>
-                      <h5 className="mb-2 text-sm font-semibold uppercase text-white">
+                      <h5 className="mb-2 text-lg font-semibold uppercase text-white">
                         {day.name}
                       </h5>
                       <span className="text-xs text-brand-gray-medium font-mulish">
