@@ -55,17 +55,33 @@ const Timetable = () => {
 
   return (
     <section className="overflow-x-auto bg-brand-background-2 lg:p-4 lg:container lg:mx-auto my-28">
-      <table className="min-w-full border-collapse border border-[#363636] text-center">
+      <table className="min-w-full table-fixed border-collapse border border-[#363636] text-center">
         <thead>
           <tr className="bg-brand-orange font-mulish">
-            <th className="p-4 text-sm text-white border-r border-brand-gray-darker font-normal">&nbsp;</th>
-            <th className="p-4 text-sm text-white border-r border-brand-gray-darker font-normal">Monday</th>
-            <th className="p-4 text-sm text-white border-r border-brand-gray-darker font-normal">Tuesday</th>
-            <th className="p-4 text-sm text-white border-r border-brand-gray-darker font-normal">Wednesday</th>
-            <th className="p-4 text-sm text-white border-r border-brand-gray-darker font-normal">Thursday</th>
-            <th className="p-4 text-sm text-white border-r border-brand-gray-darker font-normal">Friday</th>
-            <th className="p-4 text-sm text-white border-r border-brand-gray-darker font-normal">Saturday</th>
-            <th className="p-4 text-sm text-white">Sunday</th>
+            <th className="p-4 w-24 text-sm text-white border-r border-brand-gray-darker font-normal">
+              &nbsp;
+            </th>
+            <th className="p-4 w-24 text-sm text-white border-r border-brand-gray-darker font-normal">
+              Monday
+            </th>
+            <th className="p-4 w-24 text-sm text-white border-r border-brand-gray-darker font-normal">
+              Tuesday
+            </th>
+            <th className="p-4 w-24 text-sm text-white border-r border-brand-gray-darker font-normal">
+              Wednesday
+            </th>
+            <th className="p-4 w-24 text-sm text-white border-r border-brand-gray-darker font-normal">
+              Thursday
+            </th>
+            <th className="p-4 w-24 text-sm text-white border-r border-brand-gray-darker font-normal">
+              Friday
+            </th>
+            <th className="p-4 w-24 text-sm text-white border-r border-brand-gray-darker font-normal">
+              Saturday
+            </th>
+            <th className="p-4 w-24 text-sm text-white font-normal">
+              Sunday
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -78,19 +94,19 @@ const Timetable = () => {
                 <td
                   key={dayIndex}
                   className={cn(
-                    'border border-[#363636] lg:py-8 md:py-6 py-4 w-24 h-24 text-sm',
+                    'border border-[#363636] py-6 w-24 h-24 text-sm',
                     {
                       'bg-brand-background-1': day.type === 'dark',
-                      'bg-brand-background-2': day.type !== 'dark'
+                      'bg-brand-background-2': day.type !== 'dark',
                     }
                   )}
                 >
                   {day.name ? (
-                    <div>
-                      <h5 className="mb-3 text-lg font-semibold uppercase text-white">
+                    <div className="group">
+                      <h5 className="mb-[10px] text-lg font-semibold uppercase text-white text-opacity-10 group-hover:text-opacity-100 transition">
                         {day.name}
                       </h5>
-                      <span className="text-xs text-brand-gray-medium font-mulish">
+                      <span className="text-xs text-white text-opacity-10 group-hover:text-opacity-100 transition">
                         {day.instructor}
                       </span>
                     </div>
