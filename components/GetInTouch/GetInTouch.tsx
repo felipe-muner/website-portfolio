@@ -1,5 +1,6 @@
 import React from "react";
 import { TitleSection } from "../TitleSection";
+import { ContactData } from "../ContactData";
 
 const GetInTouch = () => {
   return (
@@ -7,29 +8,7 @@ const GetInTouch = () => {
       <div className="container mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12">
         <div>
           <TitleSection subtitle="Contact Us" title="Get in touch" className="text-left" />
-          <div className="space-y-8">
-            <div className="flex items-start space-x-4">
-              <div className="flex-shrink-0 w-16 h-16 bg-brand-darker text-brand-orange rounded-full flex items-center justify-center">
-                <i className="fa fa-map-marker text-2xl"></i>
-              </div>
-              <p className="text-brand-gray-medium">333 Middle Winchendon Rd, Rindge,<br /> NH 03461</p>
-            </div>
-            <div className="flex items-start space-x-4">
-              <div className="flex-shrink-0 w-16 h-16 bg-brand-darker text-brand-orange rounded-full flex items-center justify-center">
-                <i className="fa fa-mobile text-2xl"></i>
-              </div>
-              <ul className="text-brand-gray-medium space-y-1">
-                <li>125-711-811</li>
-                <li>125-668-886</li>
-              </ul>
-            </div>
-            <div className="flex items-start space-x-4">
-              <div className="flex-shrink-0 w-16 h-16 bg-brand-darker text-brand-orange rounded-full flex items-center justify-center">
-                <i className="fa fa-envelope text-2xl"></i>
-              </div>
-              <p className="text-brand-gray-medium">Support.gymcenter@gmail.com</p>
-            </div>
-          </div>
+          <ContactData className="flex-col"/>
         </div>
         <div>
           <form className="space-y-6">

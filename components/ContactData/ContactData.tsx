@@ -1,13 +1,31 @@
 import React from "react";
 import { MapPin, Smartphone, Mail } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-const ContactData: React.FC = () => {
+interface ContactDataProps {
+  className?: string;
+}
+
+const ContactData: React.FC<ContactDataProps> = ({ className }) => {
+  const isFlexCol = className?.includes("flex-col");
+
   return (
     <div className="bg-brand-background-1 py-8 w-full">
       <div className="container mx-auto px-4">
-        <div className="flex flex-wrap justify-between">
+        <div
+          className={cn(
+            "flex flex-wrap justify-between",
+            className,
+            isFlexCol ? "flex-col gap-2" : "flex-row"
+          )}
+        >
           {/* Address Section */}
-          <div className="w-full md:w-1/3 text-left mb-6 md:mb-0">
+          <div
+            className={cn(
+              "text-left mb-6 md:mb-0",
+              isFlexCol ? "w-full" : "w-full md:w-1/3"
+            )}
+          >
             <div className="flex items-center space-x-4">
               <div className="bg-brand-orange text-white flex items-center justify-center h-16 w-16 rounded-full">
                 <MapPin size={30} />
@@ -20,7 +38,12 @@ const ContactData: React.FC = () => {
           </div>
 
           {/* Phone Section */}
-          <div className="w-full md:w-1/3 text-left mb-6 md:mb-0">
+          <div
+            className={cn(
+              "text-left mb-6 md:mb-0",
+              isFlexCol ? "w-full" : "w-full md:w-1/3"
+            )}
+          >
             <div className="flex items-center space-x-4">
               <div className="bg-brand-orange text-white flex items-center justify-center h-16 w-16 rounded-full">
                 <Smartphone size={30} />
@@ -28,15 +51,18 @@ const ContactData: React.FC = () => {
               <ul className="flex items-center space-x-6 text-white">
                 <li className="relative">
                   125-711-811
-                  <span className="absolute right-[-10px] text-gray-500">|</span>
                 </li>
-                <li>125-668-886</li>
               </ul>
             </div>
           </div>
 
           {/* Email Section */}
-          <div className="w-full md:w-1/3 text-left">
+          <div
+            className={cn(
+              "text-left",
+              isFlexCol ? "w-full" : "w-full md:w-1/3"
+            )}
+          >
             <div className="flex items-center space-x-4">
               <div className="bg-brand-orange text-white flex items-center justify-center h-16 w-16 rounded-full">
                 <Mail size={30} />
