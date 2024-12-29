@@ -7,15 +7,20 @@ interface ContactDataProps {
 }
 
 const ContactData: React.FC<ContactDataProps> = ({ className }) => {
-  const isFlexCol = className?.includes("flex-col");
+  const isVertical = className?.includes("flex-col");
 
   return (
     <div className="bg-brand-background-1 py-8 w-full">
-      <div className="container mx-auto px-4">
+      <div className={
+        cn(
+          "container mx-auto",
+          isVertical ? "px-0" : "px-4"
+        )
+      }>
         <div
           className={cn(
             "flex flex-wrap justify-between font-mulish text-sm",
-            isFlexCol ? "flex-col gap-2 text-brand-gray-light" : "flex-row text-white",
+            isVertical ? "flex-col gap-2 text-brand-gray-light" : "flex-row text-white",
             className,
           )}
         >
@@ -23,7 +28,7 @@ const ContactData: React.FC<ContactDataProps> = ({ className }) => {
           <div
             className={cn(
               "text-left mb-6 md:mb-0",
-              isFlexCol ? "w-full" : "w-full md:w-1/3"
+              isVertical ? "w-full" : "w-full md:w-1/3"
             )}
           >
             <div className="flex items-center space-x-5">
@@ -41,7 +46,7 @@ const ContactData: React.FC<ContactDataProps> = ({ className }) => {
           <div
             className={cn(
               "text-left mb-6 md:mb-0",
-              isFlexCol ? "w-full" : "w-full md:w-1/3"
+              isVertical ? "w-full" : "w-full md:w-1/3"
             )}
           >
             <div className="flex items-center space-x-5">
@@ -60,7 +65,7 @@ const ContactData: React.FC<ContactDataProps> = ({ className }) => {
           <div
             className={cn(
               "text-left",
-              isFlexCol ? "w-full" : "w-full md:w-1/3"
+              isVertical ? "w-full" : "w-full md:w-1/3"
             )}
           >
             <div className="flex items-center space-x-5">

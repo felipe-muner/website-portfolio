@@ -4,7 +4,7 @@ import { ContactData } from "../ContactData";
 
 const GetInTouch = () => {
   return (
-    <div className="bg-brand-background-1 py-16">
+    <div className="bg-brand-background-1 py-16 px-4">
       <div className="container mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12">
         <div>
           <TitleSection subtitle="Contact Us" title="Get in touch" className="text-left" />
