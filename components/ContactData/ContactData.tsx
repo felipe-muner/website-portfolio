@@ -14,9 +14,9 @@ const ContactData: React.FC<ContactDataProps> = ({ className }) => {
       <div className="container mx-auto px-4">
         <div
           className={cn(
-            "flex flex-wrap justify-between",
+            "flex flex-wrap justify-between font-mulish text-sm",
+            isFlexCol ? "flex-col gap-2 text-brand-gray-light" : "flex-row text-white",
             className,
-            isFlexCol ? "flex-col gap-2" : "flex-row"
           )}
         >
           {/* Address Section */}
@@ -26,11 +26,11 @@ const ContactData: React.FC<ContactDataProps> = ({ className }) => {
               isFlexCol ? "w-full" : "w-full md:w-1/3"
             )}
           >
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-5">
               <div className="bg-brand-orange text-white flex items-center justify-center h-16 w-16 rounded-full shrink-0">
                 <MapPin size={30} className="h-8 w-8" />
               </div>
-              <p className="text-white">
+              <p>
                 333 Middle Winchendon Rd, Rindge,
                 <br /> NH 03461
               </p>
@@ -44,11 +44,11 @@ const ContactData: React.FC<ContactDataProps> = ({ className }) => {
               isFlexCol ? "w-full" : "w-full md:w-1/3"
             )}
           >
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-5">
               <div className="bg-brand-orange text-white flex items-center justify-center h-16 w-16 rounded-full shrink-0">
                 <Smartphone size={30} className="h-8 w-8" />
               </div>
-              <ul className="flex items-center space-x-6 text-white">
+              <ul className="flex items-center space-x-5">
                 <li className="relative">
                   125-711-811
                 </li>
@@ -63,11 +63,11 @@ const ContactData: React.FC<ContactDataProps> = ({ className }) => {
               isFlexCol ? "w-full" : "w-full md:w-1/3"
             )}
           >
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-5">
               <div className="bg-brand-orange text-white flex items-center justify-center h-16 w-16 rounded-full shrink-0">
                 <Mail size={30} className="h-8 w-8" />
               </div>
-              <p className="text-white">Support.gymcenter@gmail.com</p>
+              <p>Support.gymcenter@gmail.com</p>
             </div>
           </div>
         </div>
