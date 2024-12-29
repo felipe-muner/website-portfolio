@@ -54,7 +54,7 @@ const Timetable = () => {
   ];
 
   return (
-    <section className="overflow-x-auto bg-brand-background-2 p-4 container mx-auto my-28">
+    <section className="overflow-x-auto bg-brand-background-2 lg:p-4 lg:container lg:mx-auto my-28">
       <table className="min-w-full border-collapse border border-[#363636] text-center">
         <thead>
           <tr className="bg-brand-orange font-mulish">
@@ -78,7 +78,7 @@ const Timetable = () => {
                 <td
                   key={dayIndex}
                   className={cn(
-                    'border border-[#363636] p-4 w-24 h-24 text-sm',
+                    'border border-[#363636] lg:py-8 md:py-6 py-4 w-24 h-24 text-sm',
                     {
                       'bg-brand-background-1': day.type === 'dark',
                       'bg-brand-background-2': day.type !== 'dark'
@@ -87,7 +87,7 @@ const Timetable = () => {
                 >
                   {day.name ? (
                     <div>
-                      <h5 className="mb-2 text-lg font-semibold uppercase text-white">
+                      <h5 className="mb-3 text-lg font-semibold uppercase text-white">
                         {day.name}
                       </h5>
                       <span className="text-xs text-brand-gray-medium font-mulish">
