@@ -27,8 +27,8 @@ const ContactData: React.FC<ContactDataProps> = ({ className }) => {
             )}
           >
             <div className="flex items-center space-x-4">
-              <div className="bg-brand-orange text-white flex items-center justify-center h-16 w-16 rounded-full">
-                <MapPin size={30} />
+              <div className="bg-brand-orange text-white flex items-center justify-center h-16 w-16 rounded-full shrink-0">
+                <MapPin size={30} className="h-8 w-8" />
               </div>
               <p className="text-white">
                 333 Middle Winchendon Rd, Rindge,
@@ -45,8 +45,8 @@ const ContactData: React.FC<ContactDataProps> = ({ className }) => {
             )}
           >
             <div className="flex items-center space-x-4">
-              <div className="bg-brand-orange text-white flex items-center justify-center h-16 w-16 rounded-full">
-                <Smartphone size={30} />
+              <div className="bg-brand-orange text-white flex items-center justify-center h-16 w-16 rounded-full shrink-0">
+                <Smartphone size={30} className="h-8 w-8" />
               </div>
               <ul className="flex items-center space-x-6 text-white">
                 <li className="relative">
@@ -64,8 +64,8 @@ const ContactData: React.FC<ContactDataProps> = ({ className }) => {
             )}
           >
             <div className="flex items-center space-x-4">
-              <div className="bg-brand-orange text-white flex items-center justify-center h-16 w-16 rounded-full">
-                <Mail size={30} />
+              <div className="bg-brand-orange text-white flex items-center justify-center h-16 w-16 rounded-full shrink-0">
+                <Mail size={30} className="h-8 w-8" />
               </div>
               <p className="text-white">Support.gymcenter@gmail.com</p>
             </div>
