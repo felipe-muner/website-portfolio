@@ -54,7 +54,7 @@ const Timetable = () => {
 
   return (
     <section className="overflow-x-auto bg-brand-background-2 p-4 container mx-auto my-28">
-      <table className="min-w-full border-collapse border border-brand-gray-darker text-center">
+      <table className="min-w-full border-collapse border border-[#363636] text-center">
         <thead>
           <tr className="bg-brand-orange">
             <th className="p-3 text-sm text-white">&nbsp;</th>
@@ -70,13 +70,13 @@ const Timetable = () => {
         <tbody>
           {timetable.map((row, rowIndex) => (
             <tr key={rowIndex}>
-              <td className="border border-brand-gray-darker bg-brand-black p-3 text-sm text-brand-orange">
+              <td className="border border-[#363636] bg-brand-black p-3 text-brand-orange font-mulish text-xs">
                 {row.time}
               </td>
               {row.days.map((day, dayIndex) => (
                 <td
                   key={dayIndex}
-                  className={`border border-brand-gray-darker p-3 text-sm ${day.type === 'dark' ? 'bg-brand-background-1' : 'bg-brand-background-2'
+                  className={`border border-[#363636] p-3 text-sm ${day.type === 'dark' ? 'bg-brand-background-1' : 'bg-brand-background-2'
                     } hover:bg-brand-orange transition`}
                 >
                   {day.name ? (
@@ -84,7 +84,7 @@ const Timetable = () => {
                       <h5 className="mb-2 text-sm font-semibold uppercase text-white">
                         {day.name}
                       </h5>
-                      <span className="text-xs text-brand-gray-medium">
+                      <span className="text-xs text-brand-gray-medium font-mulish">
                         {day.instructor}
                       </span>
                     </div>
