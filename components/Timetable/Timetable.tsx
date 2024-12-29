@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import React from 'react';
 
 const Timetable = () => {
@@ -76,8 +77,13 @@ const Timetable = () => {
               {row.days.map((day, dayIndex) => (
                 <td
                   key={dayIndex}
-                  className={`border border-[#363636] p-3 text-sm ${day.type === 'dark' ? 'bg-brand-background-1' : 'bg-brand-background-2'
-                    } hover:bg-brand-orange transition`}
+                  className={cn(
+                    'border border-[#363636] p-3 text-sm',
+                    {
+                      'bg-brand-background-1': day.type === 'dark',
+                      'bg-brand-background-2': day.type !== 'dark'
+                    }
+                  )}
                 >
                   {day.name ? (
                     <div>
