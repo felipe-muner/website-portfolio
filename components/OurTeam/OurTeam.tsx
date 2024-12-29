@@ -2,7 +2,7 @@
 
 import React from "react"
 import Image from "next/image"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+// import { ChevronLeft, ChevronRight } from "lucide-react"
 import {
   Carousel,
   CarouselContent,
@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/carousel"
 import { TitleSection } from "../TitleSection"
 import { Cta } from "../Cta"
-import { Card, CardContent } from "../ui/card"
+// import { Card, CardContent } from "../ui/card"
 
 type TeamMember = {
   name: string
