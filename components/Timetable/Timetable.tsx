@@ -56,7 +56,7 @@ const Timetable = () => {
     <section className="overflow-x-auto bg-brand-background-2 p-4 container mx-auto my-28">
       <table className="min-w-full border-collapse border border-[#363636] text-center">
         <thead>
-          <tr className="bg-brand-orange">
+          <tr className="bg-brand-orange font-mulish">
             <th className="p-3 text-sm text-white">&nbsp;</th>
             <th className="p-3 text-sm text-white">Monday</th>
             <th className="p-3 text-sm text-white">Tuesday</th>
