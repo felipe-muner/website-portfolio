@@ -3,6 +3,9 @@ import { OurTeam } from "@/components/OurTeam";
 import { Registration } from "@/components/Registration";
 import { Testimonial } from "@/components/Testimonial";
 import { WhyChooseUs } from "@/components/WhyChooseUs";
+import { getMetadata } from "@/lib/utils";
+
+export const metadata = getMetadata({ routeName: "About Us" });
 
 export default function AboutUs() {
   return (

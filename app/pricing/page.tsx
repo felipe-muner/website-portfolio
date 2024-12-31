@@ -2,6 +2,10 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { OurPlan } from "@/components/OurPlan";
 import { TitleSection } from "@/components/TitleSection";
 import { WhatWeDo } from "@/components/WhatWeDo";
+import { getMetadata } from "@/lib/utils";
+
+export const metadata = getMetadata({ routeName: "Pricing" });
+
 
 export default function Pricing() {
   return (

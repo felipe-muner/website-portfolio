@@ -5,6 +5,9 @@ import { OurPlan } from "@/components/OurPlan";
 import { OurTeam } from "@/components/OurTeam";
 import { Registration } from "@/components/Registration";
 import { WhyChooseUs } from "@/components/WhyChooseUs";
+import { getMetadata } from "@/lib/utils";
+
+export const metadata = getMetadata({ routeName: "Home" });
 
 export default function Home() {
   return (
