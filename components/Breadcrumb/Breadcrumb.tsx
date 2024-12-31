@@ -10,7 +10,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ route }) => {
       <div className="mx-auto">
         <div className="flex justify-center items-center">
           <div className="text-center">
-            <h2 className="text-4xl text-white font-semibold uppercase mb-4">
+            <h2 className="text-6xl text-white font-semibold uppercase mb-4">
               {route}
             </h2>
           </div>
