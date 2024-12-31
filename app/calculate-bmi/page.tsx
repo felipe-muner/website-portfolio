@@ -1,3 +1,4 @@
+import { BMICalculator } from "@/components/BMICalculator";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { getMetadata } from "@/lib/utils";
 
@@ -7,6 +8,7 @@ export default function CalculateBMI() {
   return (
     <main className="flex flex-col">
       <Breadcrumb route={'BMI calculator'} />
+      <BMICalculator />
     </main>
   );
 }
