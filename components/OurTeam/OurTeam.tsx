@@ -38,22 +38,21 @@ export default function OurTeam() {
         </div>
 
         {/* Carousel Container */}
-        <Carousel className="w-full text-white" opts={{ loop: true }}>
+        <Carousel opts={{ align: "start", loop: true }} className="w-full">
           <CarouselContent className="-ml-1">
             {team.map((member, index) => (
-              <CarouselItem key={index} className="px-4 md:basis-1/2 lg:basis-1/3">
-                <div className="shadow">
+              <CarouselItem key={index} className="w-full md:basis-1/2 lg:basis-1/3 pl-7">
+                <div className="relative w-full h-[450px]">
                   <Image
                     src={member.image}
                     alt={`${member.name} - ${member.role}`}
-                    width={200}
-                    height={200}
-                    className="w-full h-48 object-cover"
+                    layout="fill"
+                    objectFit="cover"
                   />
-                  <div className="mt-4 text-center">
-                    <h3 className="text-xl font-semibold">{member.name}</h3>
-                    <p className="text-gray-500">{member.role}</p>
-                  </div>
+                </div>
+                <div className="mt-4 text-center">
+                  <h3 className="text-xl font-semibold">{member.name}</h3>
+                  <p className="text-gray-500">{member.role}</p>
                 </div>
               </CarouselItem>
             ))}
