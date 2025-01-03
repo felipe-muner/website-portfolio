@@ -41,14 +41,14 @@ export default function OurTeam() {
         <Carousel className="w-full text-white" opts={{ loop: true }}>
           <CarouselContent className="-ml-1">
             {team.map((member, index) => (
-              <CarouselItem key={index} className="pl-1 md:basis-1/2 lg:basis-1/3">
-                <div className="bg-white rounded-lg shadow p-4">
+              <CarouselItem key={index} className="px-4 md:basis-1/2 lg:basis-1/3">
+                <div className="shadow">
                   <Image
                     src={member.image}
                     alt={`${member.name} - ${member.role}`}
                     width={200}
                     height={200}
-                    className="w-full h-48 object-cover rounded-md"
+                    className="w-full h-48 object-cover"
                   />
                   <div className="mt-4 text-center">
                     <h3 className="text-xl font-semibold">{member.name}</h3>
