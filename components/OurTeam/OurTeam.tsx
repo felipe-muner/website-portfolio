@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/carousel"
 import { TitleSection } from "../TitleSection"
 import { Cta } from "../Cta"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 
 type TeamMember = {
   name: string
@@ -68,8 +69,12 @@ export default function OurTeam() {
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
+          <CarouselPrevious className="rounded-none border-none w-12 h-12 flex items-center justify-center bg-gray-800 text-white left-0">
+            <ChevronLeft className="w-6 h-6" />
+          </CarouselPrevious>
+          <CarouselNext className="rounded-none border-none w-12 h-12 flex items-center justify-center bg-gray-800 text-white right-0">
+            <ChevronRight className="w-6 h-6" />
+          </CarouselNext>
         </Carousel>
       </div>
     </section>
