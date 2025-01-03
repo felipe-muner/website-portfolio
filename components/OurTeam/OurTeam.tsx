@@ -2,7 +2,6 @@
 
 import React from "react"
 import Image from "next/image"
-// import { ChevronLeft, ChevronRight } from "lucide-react"
 import {
   Carousel,
   CarouselContent,
@@ -12,7 +11,6 @@ import {
 } from "@/components/ui/carousel"
 import { TitleSection } from "../TitleSection"
 import { Cta } from "../Cta"
-// import { Card, CardContent } from "../ui/card"
 
 type TeamMember = {
   name: string
@@ -21,14 +19,13 @@ type TeamMember = {
 }
 
 export default function OurTeam() {
-  // Your real images, names, and roles
   const team: TeamMember[] = [
     { name: "Athart Rachel", role: "Gym Trainer", image: "/img/team/team-1.jpg" },
-    { name: "Athart Rachel", role: "Gym Trainer", image: "/img/team/team-2.jpg" },
-    { name: "Athart Rachel", role: "Gym Trainer", image: "/img/team/team-3.jpg" },
-    { name: "Athart Rachel", role: "Gym Trainer", image: "/img/team/team-4.jpg" },
-    { name: "Athart Rachel", role: "Gym Trainer", image: "/img/team/team-5.jpg" },
-    { name: "Athart Rachel", role: "Gym Trainer", image: "/img/team/team-6.jpg" },
+    { name: "John Doe", role: "Yoga Instructor", image: "/img/team/team-2.jpg" },
+    { name: "Jane Smith", role: "Dietitian", image: "/img/team/team-3.jpg" },
+    { name: "Mark Johnson", role: "Strength Coach", image: "/img/team/team-4.jpg" },
+    { name: "Sophia Lee", role: "Personal Trainer", image: "/img/team/team-5.jpg" },
+    { name: "Chris Brown", role: "Cardio Specialist", image: "/img/team/team-6.jpg" },
   ]
 
   return (
@@ -37,44 +34,33 @@ export default function OurTeam() {
         {/* Top row: Title + Button */}
         <div className="flex justify-between items-start mb-8">
           <TitleSection title="Our Team" subtitle="Train with experts" className="text-left mb-0" />
-          <Cta href="#" label="appoitment" className="mt-2" />
+          <Cta href="#" label="appointment" className="mt-2" />
         </div>
 
         {/* Carousel Container */}
-        <div>
-          <Carousel
-            // Adjust Embla options as needed:
-            opts={{
-              loop: true,
-              align: "start", // Ensure slides start left-aligned
-            }}
-          >
-            {/* Slides Wrapper */}
-            <CarouselContent className="flex gap-4 w-full">
-              {team.map((member, index) => (
-                <CarouselItem
-                  key={index}
-                  // 1 slide on small screens, 2 on md, 3 on lg
-                  className="w-full md:basis-1/2 lg:basis-1/3"
-                >
+        <Carousel className="w-full text-white" opts={{ loop: true }}>
+          <CarouselContent className="-ml-1">
+            {team.map((member, index) => (
+              <CarouselItem key={index} className="pl-1 md:basis-1/2 lg:basis-1/3">
+                <div className="bg-white rounded-lg shadow p-4">
                   <Image
                     src={member.image}
-                    alt={member.name}
-                    fill
-                    sizes="(max-width: 768px) 100vw,
-                               (max-width: 1200px) 50vw,
-                               33vw"
-                  className="object-cover"
+                    alt={`${member.name} - ${member.role}`}
+                    width={200}
+                    height={200}
+                    className="w-full h-48 object-cover rounded-md"
                   />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-
-            {/* Previous & Next buttons */}
-            <CarouselPrevious />
-            <CarouselNext />
-          </Carousel>
-        </div>
+                  <div className="mt-4 text-center">
+                    <h3 className="text-xl font-semibold">{member.name}</h3>
+                    <p className="text-gray-500">{member.role}</p>
+                  </div>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
       </div>
     </section>
   )
