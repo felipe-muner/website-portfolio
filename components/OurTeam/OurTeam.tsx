@@ -29,7 +29,7 @@ export default function OurTeam() {
   ]
 
   return (
-    <section className="bg-brand-background-2 py-16 w-full">
+    <section className="bg-[#151515] py-16 w-full">
       <div className="container w-full mx-auto px-4 flex flex-col">
         {/* Top row: Title + Button */}
         <div className="flex justify-between items-start mb-8">
@@ -41,19 +41,30 @@ export default function OurTeam() {
         <Carousel opts={{ align: "start", loop: true }} className="w-full">
           <CarouselContent className="-ml-1">
             {team.map((member, index) => (
-              <CarouselItem key={index} className="w-full md:basis-1/2 lg:basis-1/3 pl-7">
-                <div className="relative w-full h-[450px]">
+              <CarouselItem
+                key={index}
+                className="w-full md:basis-1/2 lg:basis-1/3 relative pl-7"
+              >
+                {/* Team Member Image */}
+                <div className="relative w-full h-[450px] overflow-hidden group">
                   <Image
                     src={member.image}
                     alt={`${member.name} - ${member.role}`}
                     layout="fill"
                     objectFit="cover"
+                    className="transition-transform duration-300 group-hover:scale-110"
                   />
+                  <div className="absolute bottom-[-250px] left-0 w-full bg-[#0a0a0a] border-t-4 border-[#464646] skew-y-[-5deg] transition-all duration-300 group-hover:bottom-0">
+                  <div className="text-center p-6 skew-y-[5deg]">
+                    <h4 className="text-white font-semibold text-lg">{member.name}</h4>
+                    <span className="text-gray-400 uppercase text-sm font-bold">
+                      {member.role}
+                    </span>
+                  </div>
                 </div>
-                <div className="mt-4 text-center">
-                  <h3 className="text-xl font-semibold">{member.name}</h3>
-                  <p className="text-gray-500">{member.role}</p>
                 </div>
+
+                {/* Animated Text Box */}                
               </CarouselItem>
             ))}
           </CarouselContent>
