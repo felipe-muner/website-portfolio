@@ -39,11 +39,11 @@ export default function OurTeam() {
 
         {/* Carousel Container */}
         <Carousel opts={{ align: "start", loop: true }} className="w-full">
-          <CarouselContent className="-ml-1">
+          <CarouselContent className="-ml-7">
             {team.map((member, index) => (
               <CarouselItem
                 key={index}
-                className="w-full md:basis-1/2 lg:basis-1/3 relative pl-7"
+                className="w-full md:basis-1/2 lg:basis-1/3 relative pl-6"
               >
                 {/* Team Member Image */}
                 <div className="relative w-full h-[450px] overflow-hidden group">
@@ -54,17 +54,17 @@ export default function OurTeam() {
                     objectFit="cover"
                     className="transition-transform duration-300 group-hover:scale-110"
                   />
-                  <div className="absolute bottom-[-250px] left-0 w-full bg-[#0a0a0a] border-t-4 border-[#464646] skew-y-[-5deg] transition-all duration-300 group-hover:bottom-0">
-                  <div className="text-center p-6 skew-y-[5deg]">
-                    <h4 className="text-white font-semibold text-lg">{member.name}</h4>
-                    <span className="text-gray-400 uppercase text-sm font-bold">
-                      {member.role}
-                    </span>
+                  <div className="absolute bottom-[-250px] left-0 w-full bg-[#0a0a0a] border-t-4 border-[#464646] skew-y-[-5deg] transition-all duration-300 group-hover:-bottom-10 group-hover:pb-10">
+                    <div className="text-center p-6 skew-y-[5deg]">
+                      <h4 className="text-white font-semibold text-2xl mb-1">{member.name}</h4>
+                      <span className="text-gray-400 uppercase text-xs font-bold font-mulish">
+                        {member.role}
+                      </span>
+                    </div>
                   </div>
                 </div>
-                </div>
 
-                {/* Animated Text Box */}                
+                {/* Animated Text Box */}
               </CarouselItem>
             ))}
           </CarouselContent>
