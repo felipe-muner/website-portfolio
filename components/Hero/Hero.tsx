@@ -4,6 +4,7 @@ import * as React from "react"
 import Image from "next/image"
 import { motion } from "framer-motion"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+import Autoplay from "embla-carousel-autoplay"
 import {
   Carousel,
   CarouselContent,
@@ -74,7 +75,18 @@ export default function Hero() {
   }, [api])
 
   return (
-    <Carousel className="relative w-full" setApi={setApi} opts={{ loop: true }}>
+    <Carousel
+      className="relative w-full"
+      setApi={setApi}
+      opts={{ loop: true }}
+      plugins={[
+        Autoplay({
+          delay: 4000,
+          stopOnInteraction: false,
+          stopOnMouseEnter: false
+        }),
+      ]}
+    >
       <CarouselContent>
         {slides.map((slide, index) => (
           <CarouselItem key={slide.src} className="relative">
