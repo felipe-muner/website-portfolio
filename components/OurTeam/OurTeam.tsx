@@ -30,7 +30,7 @@ export default function OurTeam() {
   ]
 
   return (
-    <section className="bg-[#151515] py-16 w-full">
+    <section className="bg-[#151515] pt-32 pb-52 w-full">
       <div className="container w-full mx-auto px-4 flex flex-col">
         {/* Top row: Title + Button */}
         <div className="flex justify-between items-start mb-8">

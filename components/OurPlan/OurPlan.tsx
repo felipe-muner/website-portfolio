@@ -47,7 +47,7 @@ export default function OurPlan() {
   ]
 
   return (
-    <section className="bg-brand-background-2 py-16 w-full">
+    <section className="bg-brand-background-2 pt-32 pb-52 w-full">
       <div className="container mx-auto px-4">
         {/* Heading */}
         <div className="text-center mb-14">

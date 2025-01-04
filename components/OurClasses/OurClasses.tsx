@@ -33,7 +33,7 @@ const classes = [
 
 const OurClasses: React.FC = () => {
   return (
-    <section className="bg-brand-background-2 py-20 w-full">
+    <section className="bg-brand-background-2 pt-32 pb-52 w-full">
       <div className="container mx-auto px-4">
         {/* Section Title */}
         <TitleSection

@@ -51,7 +51,7 @@ const FeatureCard: React.FC<Feature> = ({ icon, title, description }) => (
 
 const WhyChooseUs: React.FC = () => {
   return (
-    <section className="bg-brand-background-1 pb-[70px] pt-[100px] w-full">
+    <section className="bg-brand-background-1 pt-[140px] pb-[200px] w-full">
       <div className="container mx-auto px-4">
         {/* Section Title */}
         <TitleSection
