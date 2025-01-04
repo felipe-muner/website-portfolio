@@ -10,6 +10,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
+  type CarouselApi,
 } from "@/components/ui/carousel"
 import { Cta } from "../Cta"
 
@@ -45,17 +46,35 @@ const animationVariants = {
   visible: (custom: number) => ({
     opacity: 1,
     y: 0,
-    transition: {
-      duration: 0.4,
-      delay: custom,
-      ease: "easeOut",
-    },
+    transition: { duration: 0.6, delay: custom, ease: "easeOut" },
   }),
 }
 
 export default function Hero() {
+  const [api, setApi] = React.useState<CarouselApi | null>(null)
+  const [activeSlide, setActiveSlide] = React.useState(0)
+
+  React.useEffect(() => {
+    if (!api) return
+
+    // Update active slide on initialization
+    setActiveSlide(api.selectedScrollSnap())
+
+    // Listen to slide changes
+    const handleSelect = () => {
+      setActiveSlide(api.selectedScrollSnap())
+    }
+
+    api.on("select", handleSelect)
+
+    // Cleanup listener on unmount
+    return () => {
+      api.off("select", handleSelect)
+    }
+  }, [api])
+
   return (
-    <Carousel className="relative w-full" opts={{ loop: true }}>
+    <Carousel className="relative w-full" setApi={setApi} opts={{ loop: true }}>
       <CarouselContent>
         {slides.map((slide, index) => (
           <CarouselItem key={slide.src} className="relative">
@@ -72,56 +91,61 @@ export default function Hero() {
                   <div className="grid grid-cols-12">
                     <div className="hidden lg:block lg:col-span-6" />
                     <div className="col-span-12 lg:col-span-6">
-                      <div className="text-white">
-                        <motion.span
-                          className="
-                            block 
-                            text-lg 
-                            uppercase 
-                            font-bold 
-                            mb-[18px] 
-                            font-mulish 
-                            tracking-[6px]
-                          "
-                          initial="hidden"
-                          animate="visible"
-                          custom={0.2}
-                          variants={animationVariants}
-                        >
-                          {slide.span}
-                        </motion.span>
+                      {activeSlide === index && (
+                        <div className="text-white">
+                          <motion.span
+                            key={`span-${activeSlide}`}
+                            className="
+                              block 
+                              text-lg 
+                              uppercase 
+                              font-bold 
+                              mb-[18px] 
+                              font-mulish 
+                              tracking-[6px]
+                            "
+                            initial="hidden"
+                            animate="visible"
+                            custom={0.2} // Delay for span
+                            variants={animationVariants}
+                          >
+                            {slide.span}
+                          </motion.span>
 
-                        <motion.h1
-                          className="
-                            text-4xl 
-                            font-bold 
-                            uppercase 
-                            mb-10 
-                            leading-[1.2] 
-                            text-[48px] 
-                            md:text-[80px]
-                          "
-                          initial="hidden"
-                          animate="visible"
-                          custom={0.4}
-                          variants={animationVariants}
-                        >
-                          {slide.heading}
-                        </motion.h1>
+                          <motion.h1
+                            key={`heading-${activeSlide}`}
+                            className="
+                              text-4xl 
+                              font-bold 
+                              uppercase 
+                              mb-10 
+                              leading-[1.2] 
+                              text-[48px] 
+                              md:text-[80px]
+                            "
+                            initial="hidden"
+                            animate="visible"
+                            custom={0.4} // Delay for heading
+                            variants={animationVariants}
+                          >
+                            {slide.heading}
+                          </motion.h1>
 
-                        <motion.div
-                          initial="hidden"
-                          animate="visible"
-                          custom={0.6}
-                          variants={animationVariants}
-                        >
-                          <Cta
-                            href={slide.linkHref}
-                            label={slide.linkLabel}
-                            className="bg-brand-orange"
-                          />
-                        </motion.div>
-                      </div>
+                          <motion.div
+                            key={`cta-${activeSlide}`}
+                            initial="hidden"
+                            animate="visible"
+                            custom={0.6} // Delay for Cta button
+                            variants={animationVariants}
+                          >
+                            <Cta
+                              href={slide.linkHref}
+                              label={slide.linkLabel}
+                              className="bg-brand-orange"
+                            />
+                          </motion.div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
