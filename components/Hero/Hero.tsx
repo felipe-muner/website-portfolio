@@ -82,7 +82,7 @@ export default function Hero() {
       plugins={[
         Autoplay({
           delay: 4000,
-          stopOnInteraction: false,
+          stopOnInteraction: true,
           stopOnMouseEnter: false
         }),
       ]}
