@@ -1,7 +1,15 @@
-import React from "react";
+import React from "react"
+import {
+  Breadcrumb as UIBreadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
 
 interface BreadcrumbProps {
-  route: string;
+  route: string
 }
 
 const Breadcrumb: React.FC<BreadcrumbProps> = ({ route }) => {
@@ -13,11 +21,22 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ route }) => {
             <h2 className="text-6xl text-white font-semibold uppercase mb-4">
               {route}
             </h2>
+            <UIBreadcrumb>
+              <BreadcrumbList className="flex justify-center text-2xl">
+                <BreadcrumbItem>
+                  <BreadcrumbLink className="text-white hover:text-background" href="/">Home</BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator className="text-white" />
+                <BreadcrumbItem>
+                  <BreadcrumbPage className="text-brand-orange">{route}</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </UIBreadcrumb>
           </div>
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default Breadcrumb;
+export default Breadcrumb
