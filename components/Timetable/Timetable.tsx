@@ -67,7 +67,7 @@ const TIMETABLE_DATA: TimetableRow[] = [
       { name: "Yoga", instructor: "Keaf Shen", type: "dark" },
       { name: "Karate", instructor: "Donald Grey" },
       { name: "Boxing", instructor: "Rachel Adam", type: "dark" },
-      { name: "WEIGHT LOOSE", instructor: "RLefew D. Loee" },
+      { name: "Weight Loss", instructor: "RLefew D. Loee" },
     ],
   },
 ];
@@ -149,7 +149,7 @@ export default function Timetable() {
             </SelectTrigger>
             <SelectContent>
               {/* The "All" option */}
-              <SelectItem value="all">All (show every class)</SelectItem>
+              <SelectItem value="all">All classes</SelectItem>
 
               {/* Each (teacher, className) pair */}
               {teacherClassCombos.map(({ teacher, className }) => {
