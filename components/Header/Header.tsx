@@ -27,7 +27,7 @@ const Header: React.FC = () => {
         </nav>
       </div>
       <MobileNavbar>
-        <div className="rounded-b-lg bg-background py-4 text-foreground shadow-xl z-50">
+        <div className="rounded-b-lg bg-brand-background-2 py-4 text-foreground shadow-xl z-50">
           <nav className="flex flex-col gap-1 pt-2 uppercase">
             <MobileNavItem href="/" label="Home" />
             <MobileNavItem href="/about-us" label="About us" />

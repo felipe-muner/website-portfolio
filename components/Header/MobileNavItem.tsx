@@ -17,8 +17,8 @@ export function MobileNavItem({ label, href, className }: MobileNavItemProps) {
     <Link
       href={href}
       className={cn(
-        "flex w-full cursor-pointer items-center rounded-md p-2 px-10 font-medium text-muted-foreground hover:text-foreground",
-        isActive ? "text-brand-orange" : "bg-background",
+        "flex w-full cursor-pointer items-center rounded-md p-2 px-10 font-medium text-brand-gray-darkest",
+        isActive ? "text-brand-orange" : "bg-brand-background-2",
         className,
       )}
     >
