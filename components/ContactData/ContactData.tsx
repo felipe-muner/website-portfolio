@@ -54,9 +54,9 @@ const ContactData: React.FC<ContactDataProps> = ({ className }) => {
                 <Smartphone size={30} className="h-8 w-8" />
               </div>
               <ul className="flex items-center space-x-5">
-                <li className="relative">
-                  125-711-811
-                </li>
+                <li className="relative">125-711-811</li>
+                <li className="relative">|</li>
+                <li className="relative">202-123-4567</li>
               </ul>
             </div>
           </div>
