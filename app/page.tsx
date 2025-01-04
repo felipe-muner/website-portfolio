@@ -11,7 +11,7 @@ export const metadata = getMetadata({ routeName: "Home" });
 
 export default function Home() {
   return (
-    <main className="flex flex-col row-start-2 items-center sm:items-start">
+    <>
       <Hero />
       <WhyChooseUs />
       <OurClasses />
@@ -19,6 +19,6 @@ export default function Home() {
       <OurPlan />
       <Gallery />
       <OurTeam />
-    </main>
+    </>
   );
 }

@@ -69,7 +69,6 @@ export default function Hero() {
                             mb-[18px] 
                             font-mulish 
                             tracking-[6px]
-                            animate-fade-up-delay-100
                           "
                         >
                           {slide.span}
@@ -84,13 +83,12 @@ export default function Hero() {
                             leading-[1.2] 
                             text-[48px] 
                             md:text-[80px]
-                            animate-fade-up-delay-250
                           "
                         >
                           {slide.heading}
                         </h1>
 
-                        <div className="animate-fade-up-delay-500">
+                        <div>
                           <Cta
                             href={slide.linkHref}
                             label={slide.linkLabel}

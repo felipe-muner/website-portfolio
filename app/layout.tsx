@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { APP_NAME } from "@/constants";
+import { Animate } from "@/components/Animate";
 
 const oswald = Oswald({
   variable: "--font-oswald",
@@ -34,7 +35,7 @@ export default function RootLayout({
         className={`${oswald.variable} ${mulish.variable} antialiased bg-brand-background-2`}
       >
         <Header />
-        {children}
+        <main>{children}</main>
         <Footer />
       </body>
     </html>
