@@ -107,49 +107,10 @@ export default function Hero() {
         ))}
       </CarouselContent>
 
-      <CarouselPrevious
-        className="
-          absolute 
-          left-6 
-          top-1/2 
-          -translate-y-1/2
-          ml-4 
-          w-12 
-          h-12 
-          flex 
-          items-center 
-          justify-center
-          rounded-none
-          border-none
-          bg-white/10
-          text-[#a9a9a9]
-          hover:bg-white/10
-          hover:text-[#a9a9a9]
-        "
-      >
+      <CarouselPrevious className="rounded-none border-none w-12 h-12 flex items-center justify-center bg-gray-800/40 text-white left-0">
         <ChevronLeft className="w-6 h-6" />
       </CarouselPrevious>
-
-      <CarouselNext
-        className="
-          absolute 
-          right-6 
-          top-1/2 
-          -translate-y-1/2
-          ml-4 
-          w-12 
-          h-12 
-          flex 
-          items-center 
-          justify-center
-          rounded-none
-          border-none
-          bg-white/10
-          text-[#a9a9a9]
-          hover:bg-white/10
-          hover:text-[#a9a9a9]
-        "
-      >
+      <CarouselNext className="rounded-none border-none w-12 h-12 flex items-center justify-center bg-gray-800/40 text-white right-0">
         <ChevronRight className="w-6 h-6" />
       </CarouselNext>
     </Carousel>

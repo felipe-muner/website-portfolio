@@ -86,10 +86,10 @@ const Testimonial: React.FC = () => {
             </CarouselContent>
 
             {/* Carousel Navigation */}
-            <CarouselPrevious className="rounded-none border-none w-12 h-12 flex items-center justify-center bg-gray-800 text-white">
+            <CarouselPrevious className="rounded-none border-none w-12 h-12 flex items-center justify-center bg-gray-800 text-white left-0">
               <ChevronLeft className="w-6 h-6" />
             </CarouselPrevious>
-            <CarouselNext className="rounded-none border-none w-12 h-12 flex items-center justify-center bg-gray-800 text-white">
+            <CarouselNext className="rounded-none border-none w-12 h-12 flex items-center justify-center bg-gray-800 text-white right-0">
               <ChevronRight className="w-6 h-6" />
             </CarouselNext>
           </Carousel>
