@@ -137,7 +137,7 @@ export default function Timetable() {
           <Select value={selectedPair} onValueChange={(val) => setSelectedPair(val)}>
             <SelectTrigger
               className={cn(
-                "w-[250px]",
+                "max-w-[250px]",
                 // Remove rounded corners -> "rounded-none"
                 // Use "bg-brand-background-2" for the closed trigger background
                 // Same border + ring focus style if desired
