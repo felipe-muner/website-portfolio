@@ -7,10 +7,10 @@ export const metadata = getMetadata({ routeName: "Contact" });
 
 export default function Contact() {
   return (
-    <main className="flex flex-col">
+    <>
       <Breadcrumb route={'Contact'} />
       <GetInTouch />
       <GoogleMapEmbed />
-    </main>
+    </>
   );
 }

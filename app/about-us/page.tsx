@@ -9,12 +9,12 @@ export const metadata = getMetadata({ routeName: "About Us" });
 
 export default function AboutUs() {
   return (
-    <main className="flex flex-col">
+    <>
       <Breadcrumb route={'About Us'} />
       <WhyChooseUs />
       <OurTeam />
       <Registration lead="registration now to get more deals" sublead="Where health, beauty, and fitness meet" />
       <Testimonial />
-    </main>
+    </>
   );
 }
