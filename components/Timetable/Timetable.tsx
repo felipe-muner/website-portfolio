@@ -8,7 +8,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"; // Adjust path to your shadcn exports
+} from "@/components/ui/select"; // Adjust path for your shadcn exports
 
 type TimetableDay = {
   name?: string;
@@ -107,14 +107,8 @@ function getTeacherClassCombos(data: TimetableRow[]) {
   return teacherClassCombos;
 }
 
-// We'll pass these combos into a single <Select>
 const teacherClassCombos = getTeacherClassCombos(TIMETABLE_DATA);
 
-/**
- * We'll store either:
- * - "all" => means user wants to see everything
- * - "teacher|className" => means user selected a pair
- */
 export default function Timetable() {
   // Single select: "all" or "teacher|className"
   const [selectedPair, setSelectedPair] = useState("all");
@@ -134,22 +128,40 @@ export default function Timetable() {
   }
 
   return (
-    <section className="overflow-x-auto bg-brand-background-2 lg:p-4 lg:container lg:mx-auto my-28 flex flex-col gap-6 text-white text-xl font-semibold">
-      <div>
-        <h2 className="mb-4 text-2xl">Classes Timetable</h2>
+    <section className="w-full bg-brand-background-2 py-10 lg:py-16 text-white font-semibold">
+      <div className="mx-auto w-full max-w-7xl px-4 flex flex-col gap-6">
+        <h2 className="text-2xl">Classes Timetable</h2>
 
-        {/* 4) SINGLE SELECT */}
-        <div className="mb-6">
-          <Select
-            value={selectedPair}
-            onValueChange={(val) => setSelectedPair(val)}
-          >
-            <SelectTrigger className="w-[250px] text-brand-background-1 font-mulish">
+        {/* SINGLE SELECT */}
+        <div>
+          <Select value={selectedPair} onValueChange={(val) => setSelectedPair(val)}>
+            <SelectTrigger
+              className={cn(
+                "w-[250px]",
+                // Remove rounded corners -> "rounded-none"
+                // Use "bg-brand-background-2" for the closed trigger background
+                // Same border + ring focus style if desired
+                "bg-brand-background-2 text-white border border-brand-gray-darker rounded-none px-4 py-3",
+                "focus:outline-none focus:ring-2 focus:ring-brand-orange font-mulish"
+              )}
+            >
               <SelectValue placeholder="Select teacher & class" />
             </SelectTrigger>
-            <SelectContent>
+
+            <SelectContent
+              // The dropdown container
+              className={cn(
+                "bg-brand-background-2 text-white border border-brand-gray-darker rounded-none font-mulish"
+              )}
+            >
               {/* The "All" option */}
-              <SelectItem value="all">All classes</SelectItem>
+              <SelectItem
+                value="all"
+                // Use same background and no radius
+                className="bg-brand-background-2 text-white cursor-pointer rounded-none hover:bg-brand-black"
+              >
+                All classes
+              </SelectItem>
 
               {/* Each (teacher, className) pair */}
               {teacherClassCombos.map(({ teacher, className }) => {
@@ -157,7 +169,14 @@ export default function Timetable() {
                 const comboLabel = `${teacher} • ${className}`;
 
                 return (
-                  <SelectItem key={comboValue} value={comboValue}>
+                  <SelectItem
+                    key={comboValue}
+                    value={comboValue}
+                    className={cn(
+                      // Force the item to keep the same background
+                      "bg-brand-background-2 text-white cursor-pointer rounded-none hover:bg-brand-black"
+                    )}
+                  >
                     {comboLabel}
                   </SelectItem>
                 );
@@ -165,100 +184,88 @@ export default function Timetable() {
             </SelectContent>
           </Select>
         </div>
-      </div>
 
-      {/* 5) TIMETABLE TABLE */}
-      <table className="min-w-full table-fixed border-collapse border border-[#363636] text-center">
-        <thead>
-          <tr className="bg-brand-orange font-mulish">
-            <th className="p-4 w-24 text-sm text-white border-r border-brand-gray-darker font-normal">
-              &nbsp;
-            </th>
-            <th className="p-4 w-24 text-sm text-white border-r border-brand-gray-darker font-normal">
-              Monday
-            </th>
-            <th className="p-4 w-24 text-sm text-white border-r border-brand-gray-darker font-normal">
-              Tuesday
-            </th>
-            <th className="p-4 w-24 text-sm text-white border-r border-brand-gray-darker font-normal">
-              Wednesday
-            </th>
-            <th className="p-4 w-24 text-sm text-white border-r border-brand-gray-darker font-normal">
-              Thursday
-            </th>
-            <th className="p-4 w-24 text-sm text-white border-r border-brand-gray-darker font-normal">
-              Friday
-            </th>
-            <th className="p-4 w-24 text-sm text-white border-r border-brand-gray-darker font-normal">
-              Saturday
-            </th>
-            <th className="p-4 w-24 text-sm text-white font-normal">Sunday</th>
-          </tr>
-        </thead>
-        <tbody>
-          {TIMETABLE_DATA.map((row, rowIndex) => (
-            <tr key={rowIndex}>
-              {/* TIME CELL */}
-              <td className="border border-[#363636] bg-brand-black p-4 w-24 h-24 text-brand-orange font-mulish text-xs">
-                {row.time}
-              </td>
-              {/* DAY CELLS */}
-              {row.days.map((day, dayIndex) => {
-                const isMatch = cellMatchesFilter(day);
-
-                // Decide the background color:
-                // If there's a class (day.name), use brand-background-1
-                // If it's empty, use brand-background-2
-                const backgroundClass = day.name
-                  ? "bg-brand-background-1"
-                  : "bg-brand-background-2";
-
-                return (
-                  <td
-                    key={dayIndex}
-                    className={cn(
-                      "border border-[#363636] py-6 w-24 h-24 text-sm relative transition-colors",
-                      backgroundClass,
-                      {
-                        // Dim non-matching cells
-                        "opacity-20 pointer-events-none": !isMatch,
-                      }
-                    )}
-                  >
-                    {day.name ? (
-                      <div className="group">
-                        <h5
-                          className={cn(
-                            "mb-[10px] text-lg font-semibold uppercase transition",
-                            isMatch
-                              ? "text-white group-hover:text-opacity-100"
-                              : "text-white text-opacity-20"
-                          )}
-                        >
-                          {day.name}
-                        </h5>
-                        <span
-                          className={cn(
-                            "text-xs transition",
-                            isMatch
-                              ? "text-brand-gray-medium group-hover:text-brand-gray-light"
-                              : "text-white text-opacity-20"
-                          )}
-                        >
-                          {day.instructor}
-                        </span>
-                      </div>
-                    ) : (
-                      // No class => slash line
-                      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rotate-[-35deg] w-[188px] h-[1px] bg-[#363636]" />
-                    )}
+        {/* TIMETABLE TABLE */}
+        <div className="overflow-x-auto">
+          <table className="min-w-full table-fixed border-collapse border border-[#363636] text-center">
+            <thead>
+              <tr className="bg-brand-orange font-mulish text-white">
+                <th className="p-4 w-24 text-sm border-r border-brand-gray-darker font-normal">&nbsp;</th>
+                <th className="p-4 w-24 text-sm border-r border-brand-gray-darker font-normal">Monday</th>
+                <th className="p-4 w-24 text-sm border-r border-brand-gray-darker font-normal">Tuesday</th>
+                <th className="p-4 w-24 text-sm border-r border-brand-gray-darker font-normal">Wednesday</th>
+                <th className="p-4 w-24 text-sm border-r border-brand-gray-darker font-normal">Thursday</th>
+                <th className="p-4 w-24 text-sm border-r border-brand-gray-darker font-normal">Friday</th>
+                <th className="p-4 w-24 text-sm border-r border-brand-gray-darker font-normal">Saturday</th>
+                <th className="p-4 w-24 text-sm font-normal">Sunday</th>
+              </tr>
+            </thead>
+            <tbody>
+              {TIMETABLE_DATA.map((row, rowIndex) => (
+                <tr key={rowIndex}>
+                  {/* TIME CELL */}
+                  <td className="border border-[#363636] bg-brand-black p-4 w-24 h-24 text-brand-orange font-mulish text-xs">
+                    {row.time}
                   </td>
-                );
-              })}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                  {/* DAY CELLS */}
+                  {row.days.map((day, dayIndex) => {
+                    const isMatch = cellMatchesFilter(day);
+
+                    // Decide the background color:
+                    // If there's a class (day.name), use brand-background-1
+                    // If it's empty, use brand-background-2
+                    const backgroundClass = day.name
+                      ? "bg-brand-background-1"
+                      : "bg-brand-background-2";
+
+                    return (
+                      <td
+                        key={dayIndex}
+                        className={cn(
+                          "border border-[#363636] py-6 w-24 h-24 text-sm relative transition-colors",
+                          backgroundClass,
+                          {
+                            // Dim non-matching cells
+                            "opacity-20 pointer-events-none": !isMatch,
+                          }
+                        )}
+                      >
+                        {day.name ? (
+                          <div className="group">
+                            <h5
+                              className={cn(
+                                "mb-[10px] text-lg font-semibold uppercase transition",
+                                isMatch
+                                  ? "text-white group-hover:text-opacity-100"
+                                  : "text-white text-opacity-20"
+                              )}
+                            >
+                              {day.name}
+                            </h5>
+                            <span
+                              className={cn(
+                                "text-xs transition",
+                                isMatch
+                                  ? "text-brand-gray-medium group-hover:text-brand-gray-light"
+                                  : "text-white text-opacity-20"
+                              )}
+                            >
+                              {day.instructor}
+                            </span>
+                          </div>
+                        ) : (
+                          // No class => slash line
+                          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rotate-[-35deg] w-[188px] h-[1px] bg-[#363636]" />
+                        )}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </section>
   );
 }
