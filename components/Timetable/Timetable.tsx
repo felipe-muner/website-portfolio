@@ -110,19 +110,17 @@ function getTeacherClassCombos(data: TimetableRow[]) {
 const teacherClassCombos = getTeacherClassCombos(TIMETABLE_DATA);
 
 export default function Timetable() {
-  // Single select: "all" or "teacher|className"
   const [selectedPair, setSelectedPair] = useState("all");
 
   /**
    * Filtering logic:
-   * If selectedPair is "all", we show everything.
-   * Otherwise, only highlight cells that match the chosen teacher + class.
+   * If selectedPair is "all", show everything.
+   * Otherwise, only highlight cells that match teacher + class.
    */
   function cellMatchesFilter(day: TimetableDay) {
     if (selectedPair === "all") return true;
-    if (!day.instructor || !day.name) return false; // No class or no instructor => can't match
+    if (!day.instructor || !day.name) return false;
 
-    // Decompose selected teacher + class from the state
     const [selectedTeacher, selectedClass] = selectedPair.split("|");
     return day.instructor === selectedTeacher && day.name === selectedClass;
   }
@@ -138,32 +136,27 @@ export default function Timetable() {
             <SelectTrigger
               className={cn(
                 "max-w-[250px]",
-                // Remove rounded corners -> "rounded-none"
-                // Use "bg-brand-background-2" for the closed trigger background
-                // Same border + ring focus style if desired
                 "bg-brand-background-2 text-white border border-brand-gray-darker rounded-none px-4 py-3",
                 "focus:outline-none focus:ring-2 focus:ring-brand-orange font-mulish"
               )}
             >
               <SelectValue placeholder="Select teacher & class" />
             </SelectTrigger>
-
             <SelectContent
-              // The dropdown container
               className={cn(
                 "bg-brand-background-2 text-white border border-brand-gray-darker rounded-none font-mulish"
               )}
             >
-              {/* The "All" option */}
               <SelectItem
                 value="all"
-                // Use same background and no radius
-                className="bg-brand-background-2 text-white cursor-pointer rounded-none hover:bg-brand-black"
+                className={cn(
+                  "bg-brand-background-2 text-white cursor-pointer rounded-none",
+                  "data-[highlighted]:bg-brand-background-2 data-[highlighted]:text-brand-orange"
+                )}
               >
                 All classes
               </SelectItem>
 
-              {/* Each (teacher, className) pair */}
               {teacherClassCombos.map(({ teacher, className }) => {
                 const comboValue = `${teacher}|${className}`;
                 const comboLabel = `${teacher} • ${className}`;
@@ -173,8 +166,8 @@ export default function Timetable() {
                     key={comboValue}
                     value={comboValue}
                     className={cn(
-                      // Force the item to keep the same background
-                      "bg-brand-background-2 text-white cursor-pointer rounded-none hover:bg-brand-black"
+                      "bg-brand-background-2 text-white cursor-pointer rounded-none",
+                      "data-[highlighted]:bg-brand-background-2 data-[highlighted]:text-brand-orange"
                     )}
                   >
                     {comboLabel}
@@ -190,13 +183,27 @@ export default function Timetable() {
           <table className="min-w-full table-fixed border-collapse border border-[#363636] text-center">
             <thead>
               <tr className="bg-brand-orange font-mulish text-white">
-                <th className="p-4 w-24 text-sm border-r border-brand-gray-darker font-normal">&nbsp;</th>
-                <th className="p-4 w-24 text-sm border-r border-brand-gray-darker font-normal">Monday</th>
-                <th className="p-4 w-24 text-sm border-r border-brand-gray-darker font-normal">Tuesday</th>
-                <th className="p-4 w-24 text-sm border-r border-brand-gray-darker font-normal">Wednesday</th>
-                <th className="p-4 w-24 text-sm border-r border-brand-gray-darker font-normal">Thursday</th>
-                <th className="p-4 w-24 text-sm border-r border-brand-gray-darker font-normal">Friday</th>
-                <th className="p-4 w-24 text-sm border-r border-brand-gray-darker font-normal">Saturday</th>
+                <th className="p-4 w-24 text-sm border-r border-brand-gray-darker font-normal">
+                  &nbsp;
+                </th>
+                <th className="p-4 w-24 text-sm border-r border-brand-gray-darker font-normal">
+                  Monday
+                </th>
+                <th className="p-4 w-24 text-sm border-r border-brand-gray-darker font-normal">
+                  Tuesday
+                </th>
+                <th className="p-4 w-24 text-sm border-r border-brand-gray-darker font-normal">
+                  Wednesday
+                </th>
+                <th className="p-4 w-24 text-sm border-r border-brand-gray-darker font-normal">
+                  Thursday
+                </th>
+                <th className="p-4 w-24 text-sm border-r border-brand-gray-darker font-normal">
+                  Friday
+                </th>
+                <th className="p-4 w-24 text-sm border-r border-brand-gray-darker font-normal">
+                  Saturday
+                </th>
                 <th className="p-4 w-24 text-sm font-normal">Sunday</th>
               </tr>
             </thead>
@@ -211,9 +218,8 @@ export default function Timetable() {
                   {row.days.map((day, dayIndex) => {
                     const isMatch = cellMatchesFilter(day);
 
-                    // Decide the background color:
-                    // If there's a class (day.name), use brand-background-1
-                    // If it's empty, use brand-background-2
+                    // If there's a class => brand-background-1
+                    // If empty => brand-background-2
                     const backgroundClass = day.name
                       ? "bg-brand-background-1"
                       : "bg-brand-background-2";
