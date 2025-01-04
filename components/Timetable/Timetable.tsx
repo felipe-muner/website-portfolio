@@ -93,7 +93,7 @@ function getTeacherClassCombos(data: TimetableRow[]) {
     return { teacher, className };
   });
 
-  // 2) Sort by teacher, then by class (alphabetically)
+  // 2) Sort by teacher, then class name (alphabetically)
   teacherClassCombos.sort((a, b) => {
     // Compare teacher first
     const teacherCompare = a.teacher.localeCompare(b.teacher);
@@ -142,6 +142,12 @@ export default function Timetable() {
             >
               <SelectValue placeholder="Select teacher & class" />
             </SelectTrigger>
+
+            {/* 
+              Use data-[highlighted] to override Radix UI’s default highlight. 
+              We change the background to brand-background-1 & text to brand-orange 
+              when hovered/focused.
+            */}
             <SelectContent
               className={cn(
                 "bg-brand-background-2 text-white border border-brand-gray-darker rounded-none font-mulish"
@@ -151,7 +157,7 @@ export default function Timetable() {
                 value="all"
                 className={cn(
                   "bg-brand-background-2 text-white cursor-pointer rounded-none",
-                  "data-[highlighted]:bg-brand-background-2 data-[highlighted]:text-brand-orange"
+                  "data-[highlighted]:bg-brand-background-1 data-[highlighted]:text-brand-orange"
                 )}
               >
                 All classes
@@ -167,7 +173,8 @@ export default function Timetable() {
                     value={comboValue}
                     className={cn(
                       "bg-brand-background-2 text-white cursor-pointer rounded-none",
-                      "data-[highlighted]:bg-brand-background-2 data-[highlighted]:text-brand-orange"
+                      // Highlight => switch background to background-1 and text to brand-orange
+                      "data-[highlighted]:bg-brand-background-1 data-[highlighted]:text-brand-orange"
                     )}
                   >
                     {comboLabel}
