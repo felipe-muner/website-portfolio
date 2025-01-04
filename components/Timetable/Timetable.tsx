@@ -8,7 +8,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"; // Update this path to match where you exported shadcn's Select components
+} from "@/components/ui/select"; // Adjust path to your shadcn exports
 
 type TimetableDay = {
   name?: string;
@@ -72,49 +72,65 @@ const TIMETABLE_DATA: TimetableRow[] = [
   },
 ];
 
-// Extract unique teachers and classes
-function extractUniqueValues(data: TimetableRow[]) {
-  const allTeachers = new Set<string>();
-  const allClasses = new Set<string>();
+/** 
+ * 1) Gather all unique (teacher, class) pairs from the timetable
+ */
+function getTeacherClassCombos(data: TimetableRow[]) {
+  const pairs = new Set<string>(); // We'll store "teacher|className" to ensure uniqueness
 
   data.forEach((row) => {
     row.days.forEach((day) => {
-      if (day.instructor) {
-        allTeachers.add(day.instructor);
-      }
-      if (day.name) {
-        allClasses.add(day.name);
+      if (day.instructor && day.name) {
+        const combo = `${day.instructor}|${day.name}`;
+        pairs.add(combo);
       }
     });
   });
 
-  return {
-    teachers: Array.from(allTeachers),
-    classes: Array.from(allClasses),
-  };
+  // Convert each unique pair string into a structured object
+  const teacherClassCombos = Array.from(pairs).map((pair) => {
+    const [teacher, className] = pair.split("|");
+    return { teacher, className };
+  });
+
+  // 2) Sort by teacher, then by class (alphabetically)
+  teacherClassCombos.sort((a, b) => {
+    // Compare teacher first
+    const teacherCompare = a.teacher.localeCompare(b.teacher);
+    if (teacherCompare !== 0) {
+      return teacherCompare;
+    }
+    // If same teacher, compare by className
+    return a.className.localeCompare(b.className);
+  });
+
+  return teacherClassCombos;
 }
 
-const { teachers, classes } = extractUniqueValues(TIMETABLE_DATA);
+// We'll pass these combos into a single <Select>
+const teacherClassCombos = getTeacherClassCombos(TIMETABLE_DATA);
 
+/**
+ * We'll store either:
+ * - "all" => means user wants to see everything
+ * - "teacher|className" => means user selected a pair
+ */
 export default function Timetable() {
-  // Use "all-teachers" and "all-classes" to represent "no specific filter"
-  const [selectedTeacher, setSelectedTeacher] = useState("all-teachers");
-  const [selectedClass, setSelectedClass] = useState("all-classes");
+  // Single select: "all" or "teacher|className"
+  const [selectedPair, setSelectedPair] = useState("all");
 
-  // Decide if a cell matches the user filters
+  /**
+   * Filtering logic:
+   * If selectedPair is "all", we show everything.
+   * Otherwise, only highlight cells that match the chosen teacher + class.
+   */
   function cellMatchesFilter(day: TimetableDay) {
-    // If user picked "all-teachers" or "all-classes", treat them as no filter
-    const isAllTeachers = selectedTeacher === "all-teachers";
-    const isAllClasses = selectedClass === "all-classes";
+    if (selectedPair === "all") return true;
+    if (!day.instructor || !day.name) return false; // No class or no instructor => can't match
 
-    // If both are 'all', everything matches
-    if (isAllTeachers && isAllClasses) return true;
-
-    // Compare day.instructor/day.name to selected values
-    const matchTeacher = isAllTeachers || day.instructor === selectedTeacher;
-    const matchClass = isAllClasses || day.name === selectedClass;
-
-    return matchTeacher && matchClass;
+    // Decompose selected teacher + class from the state
+    const [selectedTeacher, selectedClass] = selectedPair.split("|");
+    return day.instructor === selectedTeacher && day.name === selectedClass;
   }
 
   return (
@@ -122,51 +138,36 @@ export default function Timetable() {
       <div>
         <h2 className="mb-4 text-2xl">Classes Timetable</h2>
 
-        {/* FILTERS */}
-        <div className="flex flex-wrap gap-4 mb-6">
-          {/* Teacher Filter */}
-          <div>
-            <Select
-              value={selectedTeacher}
-              onValueChange={(val) => setSelectedTeacher(val)}
-            >
-              <SelectTrigger className="w-[200px] text-brand-background-1 font-mulish">
-                <SelectValue placeholder="Select teacher" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all-teachers">All Teachers</SelectItem>
-                {teachers.map((teacher) => (
-                  <SelectItem key={teacher} value={teacher}>
-                    {teacher}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+        {/* 4) SINGLE SELECT */}
+        <div className="mb-6">
+          <Select
+            value={selectedPair}
+            onValueChange={(val) => setSelectedPair(val)}
+          >
+            <SelectTrigger className="w-[250px] text-brand-background-1 font-mulish">
+              <SelectValue placeholder="Select teacher & class" />
+            </SelectTrigger>
+            <SelectContent>
+              {/* The "All" option */}
+              <SelectItem value="all">All (show every class)</SelectItem>
 
-          {/* Class Filter */}
-          <div>
-            <Select
-              value={selectedClass}
-              onValueChange={(val) => setSelectedClass(val)}
-            >
-              <SelectTrigger className="w-[200px] text-brand-background-1 font-mulish">
-                <SelectValue placeholder="Select class" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all-classes">All Classes</SelectItem>
-                {classes.map((cls) => (
-                  <SelectItem key={cls} value={cls}>
-                    {cls}
+              {/* Each (teacher, className) pair */}
+              {teacherClassCombos.map(({ teacher, className }) => {
+                const comboValue = `${teacher}|${className}`;
+                const comboLabel = `${teacher} • ${className}`;
+
+                return (
+                  <SelectItem key={comboValue} value={comboValue}>
+                    {comboLabel}
                   </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+                );
+              })}
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
-      {/* TIMETABLE TABLE */}
+      {/* 5) TIMETABLE TABLE */}
       <table className="min-w-full table-fixed border-collapse border border-[#363636] text-center">
         <thead>
           <tr className="bg-brand-orange font-mulish">
@@ -248,7 +249,7 @@ export default function Timetable() {
                         </span>
                       </div>
                     ) : (
-                      // No class => show slash
+                      // No class => slash line
                       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rotate-[-35deg] w-[188px] h-[1px] bg-[#363636]" />
                     )}
                   </td>
