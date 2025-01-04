@@ -5,7 +5,7 @@ import * as React from "react"
 
 type GalleryItem = {
   src: string
-  wide?: boolean // If true => spans 2 columns
+  wide?: boolean // If true => spans 2 columns on larger screens
 }
 
 const galleryItems: GalleryItem[] = [
@@ -19,20 +19,40 @@ const galleryItems: GalleryItem[] = [
 
 export default function Gallery() {
   return (
-    <section className="bg-[#151515] overflow-hidden py-10 w-full">
-      <div className="mx-auto">
-        <div className="grid grid-cols-4 gap-2 auto-rows-[472px]">
+    <section className="bg-brand-background-2 overflow-hidden py-10 w-full">
+      <div>
+        {/* 
+          - grid-cols-1 on very small screens (one column),
+          - sm:grid-cols-2 on small screens (two columns),
+          - md:grid-cols-4 for medium screens and above (four columns).
+          - auto-rows-[250px] on smaller screens, auto-rows-[472px] on md+ screens
+        */}
+        <div className="
+          grid 
+          grid-cols-1 
+          sm:grid-cols-2 
+          md:grid-cols-4 
+          gap-2 
+          auto-rows-[250px] 
+          md:auto-rows-[472px]
+        ">
           {galleryItems.map((item, id) => (
             <div
               key={item.src}
-              className={`relative group h-full w-full ${item.wide ? "col-span-2" : "col-span-1"
-                }`}
+              className={`
+                relative 
+                group 
+                h-full 
+                w-full 
+                ${item.wide ? "md:col-span-2" : "col-span-1"}
+              `}
             >
               <Image
                 src={item.src}
                 alt={`Gallery item ${id + 1}`}
                 fill
-              />              
+                className="object-cover"
+              />
             </div>
           ))}
         </div>
