@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import Image from "next/image"
+import { motion } from "framer-motion"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import {
   Carousel,
@@ -39,6 +40,19 @@ const slides = [
   },
 ]
 
+const animationVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: (custom: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.4,
+      delay: custom,
+      ease: "easeOut",
+    },
+  }),
+}
+
 export default function Hero() {
   return (
     <Carousel className="relative w-full" opts={{ loop: true }}>
@@ -58,9 +72,8 @@ export default function Hero() {
                   <div className="grid grid-cols-12">
                     <div className="hidden lg:block lg:col-span-6" />
                     <div className="col-span-12 lg:col-span-6">
-                      <div className="hi-text text-white">
-                        {/* Animate from bottom with a slight delay */}
-                        <span
+                      <div className="text-white">
+                        <motion.span
                           className="
                             block 
                             text-lg 
@@ -70,11 +83,15 @@ export default function Hero() {
                             font-mulish 
                             tracking-[6px]
                           "
+                          initial="hidden"
+                          animate="visible"
+                          custom={0.2}
+                          variants={animationVariants}
                         >
                           {slide.span}
-                        </span>
+                        </motion.span>
 
-                        <h1
+                        <motion.h1
                           className="
                             text-4xl 
                             font-bold 
@@ -84,17 +101,26 @@ export default function Hero() {
                             text-[48px] 
                             md:text-[80px]
                           "
+                          initial="hidden"
+                          animate="visible"
+                          custom={0.4}
+                          variants={animationVariants}
                         >
                           {slide.heading}
-                        </h1>
+                        </motion.h1>
 
-                        <div>
+                        <motion.div
+                          initial="hidden"
+                          animate="visible"
+                          custom={0.6}
+                          variants={animationVariants}
+                        >
                           <Cta
                             href={slide.linkHref}
                             label={slide.linkLabel}
                             className="bg-brand-orange"
                           />
-                        </div>
+                        </motion.div>
                       </div>
                     </div>
                   </div>
