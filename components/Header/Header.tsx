@@ -25,13 +25,6 @@ const Header: React.FC = () => {
           <NavItem href="/pricing" label="Pricing" />
           <NavItem href="/contact" label="Contact" />
         </nav>
-        {/* <div className="hidden items-center gap-2 md:flex">
-          <Button asChild>
-            <Link href="#" className="cursor-pointer">
-              Get Started
-            </Link>
-          </Button>
-        </div> */}
       </div>
       <MobileNavbar>
         <div className="rounded-b-lg bg-background py-4 text-foreground shadow-xl z-50">
@@ -41,11 +34,6 @@ const Header: React.FC = () => {
             <MobileNavItem href="/classes" label="Classes" />
             <MobileNavItem href="/pricing" label="Pricing" />
             <MobileNavItem href="/contact" label="Contact" />
-            {/* <Button size="lg" asChild className="mt-2 w-full">
-              <Link href="#" className="cursor-pointer">
-                Get Started
-              </Link>
-            </Button> */}
           </nav>
         </div>
       </MobileNavbar>
