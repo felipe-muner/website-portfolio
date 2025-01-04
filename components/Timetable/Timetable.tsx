@@ -13,7 +13,6 @@ import {
 type TimetableDay = {
   name?: string;
   instructor?: string;
-  type?: "dark";
 };
 
 type TimetableRow = {
@@ -25,37 +24,37 @@ const TIMETABLE_DATA: TimetableRow[] = [
   {
     time: "6.00am - 8.00am",
     days: [
-      { name: "Weight Loss", instructor: "RLefew D. Loee", type: "dark" },
+      { name: "Weight Loss", instructor: "RLefew D. Loee" },
       { name: "Cardio", instructor: "RLefew D. Loee" },
-      { name: "Yoga", instructor: "Keaf Shen", type: "dark" },
+      { name: "Yoga", instructor: "Keaf Shen" },
       { name: "Fitness", instructor: "Kimberly Stone" },
-      {},
+      { name: "Yoga", instructor: "Kimberly Stone" },
       { name: "Boxing", instructor: "Rachel Adam" },
-      { name: "Body Building", instructor: "Robert Cage", type: "dark" },
+      { name: "Body Building", instructor: "Robert Cage" },
     ],
   },
   {
     time: "10.00am - 12.00am",
     days: [
       {},
-      { name: "Fitness", instructor: "Kimberly Stone", type: "dark" },
+      { name: "Fitness", instructor: "Kimberly Stone" },
       { name: "Weight Loss", instructor: "RLefew D. Loee" },
-      { name: "Cardio", instructor: "RLefew D. Loee", type: "dark" },
+      { name: "Cardio", instructor: "RLefew D. Loee" },
       { name: "Body Building", instructor: "Robert Cage" },
-      { name: "Karate", instructor: "Donald Grey", type: "dark" },
+      { name: "Karate", instructor: "Donald Grey" },
       {},
     ],
   },
   {
     time: "5.00pm - 7.00pm",
     days: [
-      { name: "Boxing", instructor: "Rachel Adam", type: "dark" },
+      { name: "Boxing", instructor: "Rachel Adam" },
       { name: "Karate", instructor: "Donald Grey" },
-      { name: "Body Building", instructor: "Robert Cage", type: "dark" },
+      { name: "Body Building", instructor: "Robert Cage" },
       {},
-      { name: "Yoga", instructor: "Keaf Shen", type: "dark" },
+      { name: "Yoga", instructor: "Keaf Shen" },
       { name: "Cardio", instructor: "RLefew D. Loee" },
-      { name: "Fitness", instructor: "Kimberly Stone", type: "dark" },
+      { name: "Fitness", instructor: "Kimberly Stone" },
     ],
   },
   {
@@ -64,9 +63,9 @@ const TIMETABLE_DATA: TimetableRow[] = [
       { name: "Cardio", instructor: "RLefew D. Loee" },
       {},
       { name: "Boxing", instructor: "Rachel Adam" },
-      { name: "Yoga", instructor: "Keaf Shen", type: "dark" },
+      { name: "Yoga", instructor: "Keaf Shen" },
       { name: "Karate", instructor: "Donald Grey" },
-      { name: "Boxing", instructor: "Rachel Adam", type: "dark" },
+      { name: "Boxing", instructor: "Rachel Adam" },
       { name: "Weight Loss", instructor: "RLefew D. Loee" },
     ],
   },
