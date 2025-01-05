@@ -206,23 +206,33 @@ export default function Timetable() {
         {/* TIMETABLE GRID */}
         <div className="overflow-x-auto">
           {/**
-           * Use 8 columns, each at least 145px, but can stretch to fill available space.
-           * This ensures a minimum 145px width per column, but on larger screens, columns expand.
+           * We use a container with:
+           *   - border (1px)
+           *   - background color = brand-gray-charcoal (our line color)
+           *   - gap-[1px] so there's exactly 1px between each cell
+           * We remove borders from individual cells to avoid double borders.
            */}
           <div
             className={cn(
-              "border border-brand-gray-charcoal", // Outer border
-              "grid",
-              // 8 columns, each min-w:145px and max up to 1fr
-              "grid-cols-[repeat(8,minmax(145px,1fr))]"
+              // Outer border: 1px
+              "border border-brand-gray-charcoal",
+              // Container background => gap color
+              "bg-brand-gray-charcoal",
+
+              // 8 columns, each min-w:145px, expands to fill available space
+              "grid grid-cols-[repeat(8,minmax(145px,1fr))]",
+
+              // 1px gap between cells
+              "gap-[1px]"
             )}
           >
             {/* HEADER ROW */}
             {/* Empty top-left cell */}
             <div
               className={cn(
-                "border border-brand-gray-charcoal bg-brand-orange font-mulish text-white",
-                "h-[60px] flex items-center justify-center"
+                "bg-brand-orange font-mulish text-white",
+                "h-[60px] flex items-center justify-center",
+                // No border here; the 1px gap is handled by the container
               )}
             >
               &nbsp;
@@ -231,7 +241,7 @@ export default function Timetable() {
               <div
                 key={day}
                 className={cn(
-                  "border border-brand-gray-charcoal bg-brand-orange font-mulish text-white text-sm font-normal",
+                  "bg-brand-orange font-mulish text-white text-sm font-normal",
                   "h-[60px] flex items-center justify-center p-2 text-center"
                 )}
               >
@@ -242,10 +252,10 @@ export default function Timetable() {
             {/* TIMETABLE ROWS */}
             {TIMETABLE_DATA.map((row, rowIndex) => (
               <React.Fragment key={rowIndex}>
-                {/* Time cell (also min-h-[120px]) */}
+                {/* Time cell */}
                 <div
                   className={cn(
-                    "border border-brand-gray-charcoal bg-brand-black text-brand-orange font-mulish text-xs",
+                    "bg-brand-black text-brand-orange font-mulish text-xs",
                     "min-h-[120px] flex items-center justify-center px-3 text-center"
                   )}
                 >
@@ -264,10 +274,10 @@ export default function Timetable() {
                     <div
                       key={dayIndex}
                       className={cn(
-                        "border border-brand-gray-charcoal",
+                        // Each cell has no border of its own, letting the container gap show
+                        backgroundClass,
                         "min-h-[120px] flex flex-col items-center justify-center relative",
                         "transition-colors text-center px-2 py-1",
-                        backgroundClass,
                         {
                           // Dim non-matching cells
                           "opacity-20 pointer-events-none": !isMatch,
@@ -297,7 +307,12 @@ export default function Timetable() {
                         </>
                       ) : (
                         // Slash line if no class
-                        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rotate-[-35deg] w-full h-[1px] bg-brand-gray-charcoal/40" />
+                        <div
+                          className={cn(
+                            "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
+                            "rotate-[-35deg] w-full h-[1px] bg-brand-gray-charcoal/40"
+                          )}
+                        />
                       )}
                     </div>
                   );
