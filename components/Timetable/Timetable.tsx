@@ -73,9 +73,7 @@ const TIMETABLE_DATA: TimetableRow[] = [
   },
 ];
 
-/**
- * Gather unique classes => gather their teachers => group by class
- */
+/** Gather unique classes => gather their teachers => group by class */
 function getClassTeacherStructure(data: TimetableRow[]) {
   const map = new Map<string, Set<string>>();
 
@@ -205,24 +203,16 @@ export default function Timetable() {
 
         {/* TIMETABLE GRID */}
         <div className="overflow-x-auto">
-          {/**
-           * We use a container with:
-           *   - border (1px)
-           *   - background color = brand-gray-charcoal (our line color)
-           *   - gap-[1px] so there's exactly 1px between each cell
-           * We remove borders from individual cells to avoid double borders.
-           */}
+          {/* 
+            - 1px border around the grid
+            - background color shows as the 1px gap
+            - no borders on individual cells => no "double" lines
+          */}
           <div
             className={cn(
-              // Outer border: 1px
               "border border-brand-gray-charcoal",
-              // Container background => gap color
               "bg-brand-gray-charcoal",
-
-              // 8 columns, each min-w:145px, expands to fill available space
               "grid grid-cols-[repeat(8,minmax(145px,1fr))]",
-
-              // 1px gap between cells
               "gap-[1px]"
             )}
           >
@@ -231,8 +221,7 @@ export default function Timetable() {
             <div
               className={cn(
                 "bg-brand-orange font-mulish text-white",
-                "h-[60px] flex items-center justify-center",
-                // No border here; the 1px gap is handled by the container
+                "h-[60px] flex items-center justify-center"
               )}
             >
               &nbsp;
@@ -274,7 +263,6 @@ export default function Timetable() {
                     <div
                       key={dayIndex}
                       className={cn(
-                        // Each cell has no border of its own, letting the container gap show
                         backgroundClass,
                         "min-h-[120px] flex flex-col items-center justify-center relative",
                         "transition-colors text-center px-2 py-1",
@@ -306,13 +294,24 @@ export default function Timetable() {
                           </span>
                         </>
                       ) : (
-                        // Slash line if no class
-                        <div
-                          className={cn(
-                            "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
-                            "rotate-[-35deg] w-full h-[1px] bg-brand-gray-charcoal/40"
-                          )}
-                        />
+                        // Single diagonal slash via SVG (bottom-left to top-right)
+                        <div className="absolute inset-0 pointer-events-none">
+                          <svg
+                            className="w-full h-full"
+                            viewBox="0 0 100 100"
+                            preserveAspectRatio="none"
+                          >
+                            <line
+                              x1="0"
+                              y1="100"
+                              x2="100"
+                              y2="0"
+                              stroke="currentColor"
+                              strokeWidth="0.5"
+                              strokeOpacity="0.2"
+                            />
+                          </svg>
+                        </div>
                       )}
                     </div>
                   );
