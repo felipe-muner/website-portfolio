@@ -112,7 +112,7 @@ const Footer: React.FC = () => {
 
             {/* col-lg-4 col-md-6 (Tips & Guides) */}
             <div className="w-full px-4 md:w-1/2 lg:w-1/3">
-              <h4 className="text-white font-semibold text-2xl mb-4">Tips & Guides</h4>
+              <h4 className="text-white font-semibold text-2xl mb-4">Blog — Tips & Guides</h4>
               <div className="space-y-6">
                 <div className="border-b border-[#1a1a1a] pb-4">
                   <h6 className="mb-2">
