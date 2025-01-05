@@ -73,7 +73,7 @@ const TIMETABLE_DATA: TimetableRow[] = [
   },
 ];
 
-/** 
+/**
  * Gather unique classes => gather their teachers => group by class
  */
 function getClassTeacherStructure(data: TimetableRow[]) {
@@ -93,12 +93,11 @@ function getClassTeacherStructure(data: TimetableRow[]) {
   // Convert Map => array of { className, teachers[] }
   const result = Array.from(map.entries()).map(([className, teacherSet]) => ({
     className,
-    teachers: Array.from(teacherSet).sort(), // sort teacher names
+    teachers: Array.from(teacherSet).sort(),
   }));
 
   // Sort by className
   result.sort((a, b) => a.className.localeCompare(b.className));
-
   return result;
 }
 
@@ -109,7 +108,7 @@ export default function Timetable() {
 
   /**
    * If "all" => show everything
-   * If "Yoga" => show only day.name = "Yoga" (all teachers)
+   * If "Yoga" => show only day.name = "Yoga"
    * If "Yoga|Keaf Shen" => exact match of class + teacher
    */
   function cellMatchesFilter(day: TimetableDay) {
@@ -125,6 +124,16 @@ export default function Timetable() {
     const [className, teacherName] = selectedPair.split("|");
     return day.name === className && day.instructor === teacherName;
   }
+
+  const daysOfWeek = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
 
   return (
     <section className="w-full bg-brand-background-2 py-10 lg:py-16 text-white font-semibold">
@@ -143,13 +152,11 @@ export default function Timetable() {
             >
               <SelectValue placeholder="Select class or teacher" />
             </SelectTrigger>
-
             <SelectContent
               className={cn(
                 "bg-brand-background-2 text-white border border-brand-gray-darker rounded-none font-mulish"
               )}
             >
-              {/* Keep original style for items */}
               <SelectItem
                 value="all"
                 className={cn(
@@ -163,12 +170,9 @@ export default function Timetable() {
               {/* Group by class */}
               {groupedData.map(({ className, teachers }) => (
                 <SelectGroup key={className}>
-                  {/* You can style the label if you like, or leave it minimal */}
                   <SelectLabel className="px-2 py-1 text-sm text-white/70">
                     {className}
                   </SelectLabel>
-
-                  {/* Class-only item => all teachers for this class */}
                   <SelectItem
                     value={className}
                     className={cn(
@@ -176,10 +180,8 @@ export default function Timetable() {
                       "data-[highlighted]:bg-brand-background-1 data-[highlighted]:text-brand-orange"
                     )}
                   >
-                    —  All teachers
+                    — All teachers
                   </SelectItem>
-
-                  {/* One <SelectItem> per teacher */}
                   {teachers.map((teacher) => {
                     const comboValue = `${className}|${teacher}`;
                     return (
@@ -201,98 +203,108 @@ export default function Timetable() {
           </Select>
         </div>
 
-        {/* TIMETABLE TABLE */}
+        {/* TIMETABLE GRID */}
         <div className="overflow-x-auto">
-          <table className="min-w-full table-fixed border-collapse border border-brand-gray-charcoal text-center">
-            <thead>
-              <tr className="bg-brand-orange font-mulish text-white">
-                <th className="p-4 w-24 text-sm border-r border-brand-gray-darker font-normal">
-                  &nbsp;
-                </th>
-                <th className="p-4 w-24 text-sm border-r border-brand-gray-darker font-normal">
-                  Monday
-                </th>
-                <th className="p-4 w-24 text-sm border-r border-brand-gray-darker font-normal">
-                  Tuesday
-                </th>
-                <th className="p-4 w-24 text-sm border-r border-brand-gray-darker font-normal">
-                  Wednesday
-                </th>
-                <th className="p-4 w-24 text-sm border-r border-brand-gray-darker font-normal">
-                  Thursday
-                </th>
-                <th className="p-4 w-24 text-sm border-r border-brand-gray-darker font-normal">
-                  Friday
-                </th>
-                <th className="p-4 w-24 text-sm border-r border-brand-gray-darker font-normal">
-                  Saturday
-                </th>
-                <th className="p-4 w-24 text-sm font-normal">Sunday</th>
-              </tr>
-            </thead>
-            <tbody>
-              {TIMETABLE_DATA.map((row, rowIndex) => (
-                <tr key={rowIndex}>
-                  {/* TIME CELL */}
-                  <td className="border border-brand-gray-charcoal bg-brand-black p-4 w-24 h-24 text-brand-orange font-mulish text-xs">
-                    {row.time}
-                  </td>
-                  {/* DAY CELLS */}
-                  {row.days.map((day, dayIndex) => {
-                    const isMatch = cellMatchesFilter(day);
+          {/**
+           * Use 8 columns, each at least 145px, but can stretch to fill available space.
+           * This ensures a minimum 145px width per column, but on larger screens, columns expand.
+           */}
+          <div
+            className={cn(
+              "border border-brand-gray-charcoal", // Outer border
+              "grid",
+              // 8 columns, each min-w:145px and max up to 1fr
+              "grid-cols-[repeat(8,minmax(145px,1fr))]"
+            )}
+          >
+            {/* HEADER ROW */}
+            {/* Empty top-left cell */}
+            <div
+              className={cn(
+                "border border-brand-gray-charcoal bg-brand-orange font-mulish text-white",
+                "h-[60px] flex items-center justify-center"
+              )}
+            >
+              &nbsp;
+            </div>
+            {daysOfWeek.map((day) => (
+              <div
+                key={day}
+                className={cn(
+                  "border border-brand-gray-charcoal bg-brand-orange font-mulish text-white text-sm font-normal",
+                  "h-[60px] flex items-center justify-center p-2 text-center"
+                )}
+              >
+                {day}
+              </div>
+            ))}
 
-                    // If there's a class => brand-background-1
-                    // If empty => brand-background-2
-                    const backgroundClass = day.name
-                      ? "bg-brand-background-1"
-                      : "bg-brand-background-2";
+            {/* TIMETABLE ROWS */}
+            {TIMETABLE_DATA.map((row, rowIndex) => (
+              <React.Fragment key={rowIndex}>
+                {/* Time cell (also min-h-[120px]) */}
+                <div
+                  className={cn(
+                    "border border-brand-gray-charcoal bg-brand-black text-brand-orange font-mulish text-xs",
+                    "min-h-[120px] flex items-center justify-center px-3 text-center"
+                  )}
+                >
+                  {row.time}
+                </div>
 
-                    return (
-                      <td
-                        key={dayIndex}
-                        className={cn(
-                          "border border-brand-gray-charcoal py-6 w-24 h-24 text-sm relative transition-colors",
-                          backgroundClass,
-                          {
-                            // Dim non-matching cells
-                            "opacity-20 pointer-events-none": !isMatch,
-                          }
-                        )}
-                      >
-                        {day.name ? (
-                          <div className="group">
-                            <h5
-                              className={cn(
-                                "mb-[10px] text-lg font-semibold uppercase transition",
-                                isMatch
-                                  ? "text-white"
-                                  : "text-white text-opacity-20"
-                              )}
-                            >
-                              {day.name}
-                            </h5>
-                            <span
-                              className={cn(
-                                "text-xs transition",
-                                isMatch
-                                  ? "text-brand-gray-medium group-hover:text-brand-gray-light"
-                                  : "text-white text-opacity-20"
-                              )}
-                            >
-                              {day.instructor}
-                            </span>
-                          </div>
-                        ) : (
-                          // Slash line if no class
-                          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rotate-[-35deg] w-[188px] h-[1px] bg-braborder-brand-gray-charcoal" />
-                        )}
-                      </td>
-                    );
-                  })}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                {/* 7 day-cells */}
+                {row.days.map((day, dayIndex) => {
+                  const isMatch = cellMatchesFilter(day);
+                  const hasClass = !!day.name;
+                  const backgroundClass = hasClass
+                    ? "bg-brand-background-1"
+                    : "bg-brand-background-2";
+
+                  return (
+                    <div
+                      key={dayIndex}
+                      className={cn(
+                        "border border-brand-gray-charcoal",
+                        "min-h-[120px] flex flex-col items-center justify-center relative",
+                        "transition-colors text-center px-2 py-1",
+                        backgroundClass,
+                        {
+                          // Dim non-matching cells
+                          "opacity-20 pointer-events-none": !isMatch,
+                        }
+                      )}
+                    >
+                      {hasClass ? (
+                        <>
+                          <h5
+                            className={cn(
+                              "mb-1 text-lg font-semibold uppercase",
+                              isMatch ? "text-white" : "text-white/20"
+                            )}
+                          >
+                            {day.name}
+                          </h5>
+                          <span
+                            className={cn(
+                              "text-xs",
+                              isMatch
+                                ? "text-brand-gray-medium hover:text-brand-gray-light"
+                                : "text-white/20"
+                            )}
+                          >
+                            {day.instructor}
+                          </span>
+                        </>
+                      ) : (
+                        // Slash line if no class
+                        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rotate-[-35deg] w-full h-[1px] bg-brand-gray-charcoal/40" />
+                      )}
+                    </div>
+                  );
+                })}
+              </React.Fragment>
+            ))}
+          </div>
         </div>
       </div>
     </section>
