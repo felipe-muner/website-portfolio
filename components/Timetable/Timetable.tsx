@@ -134,7 +134,7 @@ export default function Timetable() {
   ];
 
   return (
-    <section className="w-full bg-brand-background-2 py-10 lg:py-16 text-white font-semibold">
+    <section className="w-full bg-brand-background-2 py-10 lg:pt-28 lg:pb-36 text-white font-semibold">
       <div className="mx-auto w-full max-w-7xl px-4 flex flex-col gap-6">
         <h2 className="text-2xl">Classes Timetable</h2>
 
