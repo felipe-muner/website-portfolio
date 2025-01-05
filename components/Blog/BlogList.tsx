@@ -108,12 +108,6 @@ export default function BlogList() {
               }}
             />
           </div>
-
-          <DrawerFooter className="flex justify-end space-x-2 pt-4">
-            <DrawerClose className="text-sm bg-brand-gray-charcoal px-4 py-2 transition-colors text-white">
-              Close
-            </DrawerClose>
-          </DrawerFooter>
         </DrawerContent>
       </Drawer>
     </section>
