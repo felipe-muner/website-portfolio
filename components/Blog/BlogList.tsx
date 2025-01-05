@@ -1,5 +1,5 @@
 "use client"; // If you're using Next.js App Router and need client-side interactivity
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { blogPosts } from "./data";
 import { TitleSection } from "../TitleSection";
 import { X } from "lucide-react";
@@ -9,9 +9,7 @@ import {
   Drawer,
   DrawerContent,
   DrawerHeader,
-  DrawerFooter,
   DrawerTitle,
-  DrawerClose,
 } from "@/components/ui/drawer";
 import { Button } from "../ui/button";
 
@@ -24,6 +22,8 @@ export default function BlogList() {
     excerpt: string;
     content: string;
   } | null>(null);
+
+  const drawerRef = useRef<HTMLDivElement>(null); // Ref for the DrawerContent
 
   function handleOpenDrawer(post: {
     slug: string;
@@ -39,6 +39,15 @@ export default function BlogList() {
   function handleCloseDrawer() {
     setIsOpen(false);
   }
+
+  // Ensure focus is set to the DrawerContent when the Drawer opens
+  useEffect(() => {
+    if (isOpen && drawerRef.current) {
+      setTimeout(() => {
+        drawerRef.current?.focus(); // Ensure focus is set after rendering
+      }, 0);
+    }
+  }, [isOpen]);
 
   const sortedPosts = [...blogPosts].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
@@ -81,13 +90,16 @@ export default function BlogList() {
       </div>
 
       <Drawer open={isOpen} onOpenChange={handleCloseDrawer}>
-        <DrawerContent className="bg-brand-background-2 border-brand-gray-darkest h-[80vh] flex flex-col px-6 py-4 max-w-4xl mx-auto">
+        <DrawerContent
+          ref={drawerRef} // Attach the ref
+          className="bg-brand-background-2 border-brand-gray-darkest h-[80vh] flex flex-col px-6 py-4 max-w-4xl mx-auto focus:outline-none focus:ring-2 focus:ring-brand-orange rounded"
+        >
           <DrawerHeader className="flex justify-between items-center mb-4">
             <DrawerTitle className="text-white text-3xl">
               {selectedPost?.title ?? "Post Title"}
             </DrawerTitle>
             <button
-              className="text-brand-gray-light hover:text-white transition-colors"
+              className="text-brand-gray-light hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brand-orange rounded"
               onClick={handleCloseDrawer}
             >
               <X className="w-6 h-6" />
