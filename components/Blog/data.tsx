@@ -1,15 +1,14 @@
-// data/blogPosts.ts
-
-// 1. Define an interface for your blog post structure (now with date)
+// 1. Define an interface for your blog post structure (with readTime)
 export interface BlogPost {
   slug: string;
   title: string;
   date: string;
   excerpt: string;
   content: string;
+  readTime: number; // Added readTime property
 }
 
-// 2. Create an array of BlogPost objects (5 posts with dates)
+// 2. Create an array of BlogPost objects (5 posts with readTime)
 export const blogPosts: BlogPost[] = [
   {
     slug: "5-essential-workouts-for-busy-travelers",
@@ -27,6 +26,7 @@ export const blogPosts: BlogPost[] = [
       </ol>
       <p>Incorporating any of these five workouts into your day—morning, noon, or night—keeps your routine on track and your body in shape.</p>
     `,
+    readTime: 3, // Estimated based on word count
   },
   {
     slug: "keep-your-diet-on-track-while-on-the-road",
@@ -43,6 +43,7 @@ export const blogPosts: BlogPost[] = [
       </ul>
       <p>Whether you're flying cross-country or road-tripping to a new destination, these tips help you maintain a balanced diet on the go.</p>
     `,
+    readTime: 2, // Estimated based on word count
   },
   {
     slug: "best-gym-hacks-for-travelers",
@@ -59,6 +60,7 @@ export const blogPosts: BlogPost[] = [
       </ol>
       <p>By implementing these simple hacks, you'll stay consistent with your fitness routine, even when your schedule is anything but predictable.</p>
     `,
+    readTime: 3,
   },
   {
     slug: "5-travel-friendly-meal-prep-ideas",
@@ -76,6 +78,7 @@ export const blogPosts: BlogPost[] = [
       </ul>
       <p>Plan ahead, pack them in meal-prep containers, and keep them chilled with an insulated bag to ensure you always have a healthy option on hand.</p>
     `,
+    readTime: 2,
   },
   {
     slug: "staying-healthy-on-long-haul-flights",
@@ -93,5 +96,6 @@ export const blogPosts: BlogPost[] = [
       </ol>
       <p>With the right planning and a few healthy habits, you'll step off the plane feeling far more refreshed and ready for your destination.</p>
     `,
+    readTime: 3,
   },
 ];
