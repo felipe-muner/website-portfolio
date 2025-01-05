@@ -41,7 +41,7 @@ const BlogList: React.FC = () => {
               <p className="text-brand-gray-medium font-mulish group-hover:text-white">
                 {post.excerpt}
               </p>
-              <Button className="mt-4 px-4 py-2 bg-transparent border border-brand-orange text-brand-orange transition group-hover:bg-brand-orange group-hover:text-white">
+              <Button className="mt-4 px-4 py-2 bg-transparent border border-brand-orange text-brand-orange transition group-hover:bg-brand-orange group-hover:text-white rounded-none">
                 Read More &rarr;
               </Button>
             </article>
