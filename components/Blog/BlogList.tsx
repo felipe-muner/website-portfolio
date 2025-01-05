@@ -19,6 +19,7 @@ export default function BlogList() {
   const [selectedPost, setSelectedPost] = useState<{
     slug: string;
     title: string;
+    date: string;
     excerpt: string;
     content: string;
   } | null>(null);
@@ -26,6 +27,7 @@ export default function BlogList() {
   function handleOpenDrawer(post: {
     slug: string;
     title: string;
+    date: string;
     excerpt: string;
     content: string;
   }) {
@@ -37,9 +39,14 @@ export default function BlogList() {
     setIsOpen(false);
   }
 
+  // Sort blog posts by date descending
+  const sortedPosts = [...blogPosts].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
+
   return (
     <section
-      className={`relative bg-brand-background-1 text-brand-gray-light min-h-screen py-8 transition-transform duration-500 ${isOpen ? "scale-95 blur-sm" : "scale-100 blur-0"
+      className={`relative bg-brand-background-1 text-brand-gray-light min-h-screen py-8 pb-52 transition-transform duration-500 ${isOpen ? "scale-95 blur-sm" : "scale-100 blur-0"
         }`}
     >
       <div className="max-w-7xl mx-auto px-4">
@@ -51,12 +58,15 @@ export default function BlogList() {
 
         {/* Blog Posts List */}
         <div className="grid gap-8">
-          {blogPosts.map((post) => (
+          {sortedPosts.map((post) => (
             <article
               key={post.slug}
               onClick={() => handleOpenDrawer(post)}
               className="border border-brand-gray-darkest hover:border-white bg-brand-background-2 rounded-lg p-6 cursor-pointer transition"
             >
+              <p className="text-sm text-brand-gray-medium mb-1">
+                Published on {post.date}
+              </p>
               <h2 className="text-3xl font-semibold text-white mb-2">
                 {post.title}
               </h2>
@@ -73,23 +83,22 @@ export default function BlogList() {
 
       {/* Drawer Component */}
       <Drawer open={isOpen} onOpenChange={handleCloseDrawer}>
-        {/* 
-          We add:
-          - "px-6 py-4" for comfortable space around content
-          - "max-w-4xl mx-auto" to limit width for better reading 
-          - "h-[80vh]" to set the drawer's height at 80% of viewport
-        */}
         <DrawerContent className="bg-brand-background-2 border-brand-gray-darkest h-[80vh] flex flex-col px-6 py-4 max-w-4xl mx-auto">
           <DrawerHeader className="mb-4">
             <DrawerTitle className="text-white text-3xl">
               {selectedPost?.title ?? "Post Title"}
             </DrawerTitle>
-            <DrawerDescription className="text-brand-gray-medium font-mulish">
-              {selectedPost?.excerpt ?? "Post excerpt..."}
-            </DrawerDescription>
+
+            {/* Include the Date + Excerpt in Drawer */}
+            <div className="text-brand-gray-medium font-mulish">
+
+              <div className="mb-2">
+                Published on {selectedPost?.date ?? "Unknown date"}
+              </div>
+              {selectedPost?.excerpt ?? "Post excerpt..."}            
+            </div>
           </DrawerHeader>
 
-          {/* The scrollable content area */}
           <div className="flex-1 overflow-y-auto text-brand-gray-light font-mulish">
             <div
               dangerouslySetInnerHTML={{
