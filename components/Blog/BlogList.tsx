@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { blogPosts } from "./data";
 import { TitleSection } from "../TitleSection";
+import { X } from "lucide-react";
 
 // Import Drawer components from shadcn/ui
 import {
@@ -39,7 +40,6 @@ export default function BlogList() {
     setIsOpen(false);
   }
 
-  // Sort blog posts by date descending
   const sortedPosts = [...blogPosts].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
@@ -56,7 +56,6 @@ export default function BlogList() {
           className="mb-20 mt-16"
         />
 
-        {/* Blog Posts List */}
         <div className="grid gap-8">
           {sortedPosts.map((post) => (
             <article
@@ -81,24 +80,28 @@ export default function BlogList() {
         </div>
       </div>
 
-      {/* Drawer Component */}
       <Drawer open={isOpen} onOpenChange={handleCloseDrawer}>
         <DrawerContent className="bg-brand-background-2 border-brand-gray-darkest h-[80vh] flex flex-col px-6 py-4 max-w-4xl mx-auto">
-          <DrawerHeader className="mb-4">
+          <DrawerHeader className="flex justify-between items-center mb-4">
             <DrawerTitle className="text-white text-3xl">
               {selectedPost?.title ?? "Post Title"}
             </DrawerTitle>
-
-            {/* Include the Date + Excerpt in Drawer */}
-            <div className="text-brand-gray-medium font-mulish">
-              <div className="mb-2">
-                Published on {selectedPost?.date ?? "Unknown date"}
-              </div>
-              {selectedPost?.excerpt ?? "Post excerpt..."}
-            </div>
+            <button
+              className="text-brand-gray-light hover:text-white transition-colors"
+              onClick={handleCloseDrawer}
+            >
+              <X className="w-6 h-6" />
+            </button>
           </DrawerHeader>
 
-          <div className="flex-1 overflow-y-auto text-brand-gray-light font-mulish">
+          <div className="text-brand-gray-medium font-mulish">
+            <div className="mb-2">
+              Published on {selectedPost?.date ?? "Unknown date"}
+            </div>
+            {selectedPost?.excerpt ?? "Post excerpt..."}
+          </div>
+
+          <div className="flex-1 overflow-y-auto text-brand-gray-light font-mulish mt-4">
             <div
               dangerouslySetInnerHTML={{
                 __html: selectedPost?.content ?? "",
@@ -107,7 +110,7 @@ export default function BlogList() {
           </div>
 
           <DrawerFooter className="flex justify-end space-x-2 pt-4">
-            <DrawerClose className="text-sm bg-brand-orange px-4 py-2 rounded hover:bg-orange-600 transition-colors">
+            <DrawerClose className="text-sm bg-brand-gray-charcoal px-4 py-2 transition-colors text-white">
               Close
             </DrawerClose>
           </DrawerFooter>
