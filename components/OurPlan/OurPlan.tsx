@@ -62,13 +62,14 @@ export default function OurPlan() {
               className={`
                 w-full
                 relative 
-                border border-brand-gray-darkest
                 text-center 
                 p-10
                 transition-all 
                 duration-500
-                hover:bg-white 
-                hover:border-white 
+                border
+              border-brand-gray-darkest
+              hover:border-white 
+              hover:bg-white 
                 group
               `}
               style={{ transform: "skewY(-4deg)" }} // Outer skew
