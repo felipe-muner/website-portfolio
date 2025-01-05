@@ -69,7 +69,7 @@ export default function BlogList() {
 
       {/* Drawer Component */}
       <Drawer open={isOpen} onOpenChange={handleCloseDrawer}>
-        <DrawerContent className="bg-brand-background-2 flex flex-col border-brand-gray-darkest">
+        <DrawerContent className="bg-brand-background-2 flex flex-col border-brand-gray-darkest h-[80vh]">
           <DrawerHeader>
             <DrawerTitle className="text-white text-3xl">
               {selectedPost?.title ?? "Post Title"}
@@ -93,6 +93,7 @@ export default function BlogList() {
             </DrawerClose>
           </DrawerFooter>
         </DrawerContent>
+
       </Drawer>
     </section>
   );
