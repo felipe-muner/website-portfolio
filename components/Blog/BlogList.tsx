@@ -12,6 +12,7 @@ import {
   DrawerTitle,
   DrawerClose,
 } from "@/components/ui/drawer";
+import { Button } from "../ui/button";
 
 export default function BlogList() {
   const [isOpen, setIsOpen] = useState(false);
@@ -61,20 +62,20 @@ export default function BlogList() {
             <article
               key={post.slug}
               onClick={() => handleOpenDrawer(post)}
-              className="border border-brand-gray-darkest hover:border-white bg-brand-background-2 rounded-lg p-6 cursor-pointer transition"
+              className="group border border-brand-gray-darkest hover:border-white bg-brand-background-2 p-6 cursor-pointer transition"
             >
-              <p className="text-sm text-brand-gray-medium mb-1">
+              <p className="text-sm text-brand-gray-medium mb-1 group-hover:text-white">
                 Published on {post.date}
               </p>
-              <h2 className="text-3xl font-semibold text-white mb-2">
+              <h2 className="text-3xl font-semibold text-white mb-2 group-hover:text-white">
                 {post.title}
               </h2>
-              <p className="text-brand-gray-medium font-mulish">
+              <p className="text-brand-gray-medium font-mulish group-hover:text-white">
                 {post.excerpt}
               </p>
-              <span className="inline-block mt-4 text-brand-orange hover:underline">
+              <Button className="font-mulish mt-4 px-4 py-2 rounded-none  bg-transparent border border-brand-orange text-brand-orange transition group-hover:bg-brand-orange group-hover:text-white">
                 Read More &rarr;
-              </span>
+              </Button>
             </article>
           ))}
         </div>
@@ -90,11 +91,10 @@ export default function BlogList() {
 
             {/* Include the Date + Excerpt in Drawer */}
             <div className="text-brand-gray-medium font-mulish">
-
               <div className="mb-2">
                 Published on {selectedPost?.date ?? "Unknown date"}
               </div>
-              {selectedPost?.excerpt ?? "Post excerpt..."}            
+              {selectedPost?.excerpt ?? "Post excerpt..."}
             </div>
           </DrawerHeader>
 
