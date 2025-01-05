@@ -82,14 +82,14 @@ const BMICalculator: React.FC = () => {
               subtitle="Track your health"
               className="text-left"
             />
-            <p className="text-brand-gray-light mb-6">
+            <p className="text-brand-gray-light mb-6 font-mulish">
               Body Mass Index (BMI) is a quick way to estimate if you’re at a
               healthy weight. It factors in your height and weight to categorize
               you as underweight, healthy, overweight, or obese. Remember that
               BMI alone doesn’t account for muscle mass or overall body
               composition, so use it as a general guide.
             </p>
-            <form className="space-y-4" onSubmit={handleCalculate}>
+            <form className="space-y-4 font-mulish" onSubmit={handleCalculate}>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Height Input */}
                 <input
@@ -129,19 +129,18 @@ const BMICalculator: React.FC = () => {
                     <RadioGroupItem
                       id="male"
                       value="Male"
-                      // These Tailwind classes style the radio circle when checked
                       className="peer h-4 w-4 
-                                 border border-brand-gray-darker rounded-full 
-                                 text-brand-orange ring-offset-2 ring-brand-orange 
-                                 focus:outline-none focus:ring-2 focus:ring-brand-orange
-                                 data-[state=checked]:bg-brand-orange data-[state=checked]:border-brand-orange 
-                                 data-[state=checked]:text-white"
+                 border border-brand-gray-darker rounded-full 
+                 text-brand-orange ring-offset-2 ring-brand-orange 
+                 focus:outline-none focus:ring-2 focus:ring-brand-orange
+                 data-[state=checked]:bg-brand-orange data-[state=checked]:border-brand-orange 
+                 data-[state=checked]:text-white"
                     />
                     <Label
                       htmlFor="male"
                       className="text-brand-gray-light 
-                                 cursor-pointer peer-checked:font-semibold
-                                 peer-checked:text-brand-orange"
+                 cursor-pointer peer-checked:font-semibold
+                 peer-checked:text-brand-orange"
                     >
                       Male
                     </Label>
@@ -153,17 +152,17 @@ const BMICalculator: React.FC = () => {
                       id="female"
                       value="Female"
                       className="peer h-4 w-4 
-                                 border border-brand-gray-darker rounded-full 
-                                 text-brand-orange ring-offset-2 ring-brand-orange 
-                                 focus:outline-none focus:ring-2 focus:ring-brand-orange
-                                 data-[state=checked]:bg-brand-orange data-[state=checked]:border-brand-orange 
-                                 data-[state=checked]:text-white"
+                 border border-brand-gray-darker rounded-full 
+                 text-brand-orange ring-offset-2 ring-brand-orange 
+                 focus:outline-none focus:ring-2 focus:ring-brand-orange
+                 data-[state=checked]:bg-brand-orange data-[state=checked]:border-brand-orange 
+                 data-[state=checked]:text-white"
                     />
                     <Label
                       htmlFor="female"
                       className="text-brand-gray-light 
-                                 cursor-pointer peer-checked:font-semibold
-                                 peer-checked:text-brand-orange"
+                 cursor-pointer peer-checked:font-semibold
+                 peer-checked:text-brand-orange"
                     >
                       Female
                     </Label>
