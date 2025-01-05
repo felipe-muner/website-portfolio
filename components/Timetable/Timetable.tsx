@@ -8,6 +8,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  SelectGroup,
+  SelectLabel,
 } from "@/components/ui/select"; // Adjust path for your shadcn exports
 
 type TimetableDay = {
@@ -72,56 +74,56 @@ const TIMETABLE_DATA: TimetableRow[] = [
 ];
 
 /** 
- * 1) Gather all unique (teacher, class) pairs from the timetable
+ * Gather unique classes => gather their teachers => group by class
  */
-function getTeacherClassCombos(data: TimetableRow[]) {
-  const pairs = new Set<string>(); // We'll store "teacher|className" to ensure uniqueness
+function getClassTeacherStructure(data: TimetableRow[]) {
+  const map = new Map<string, Set<string>>();
 
   data.forEach((row) => {
     row.days.forEach((day) => {
-      if (day.instructor && day.name) {
-        const combo = `${day.instructor}|${day.name}`;
-        pairs.add(combo);
+      if (day.name && day.instructor) {
+        if (!map.has(day.name)) {
+          map.set(day.name, new Set());
+        }
+        map.get(day.name)!.add(day.instructor);
       }
     });
   });
 
-  // Convert each unique pair string into a structured object
-  const teacherClassCombos = Array.from(pairs).map((pair) => {
-    const [teacher, className] = pair.split("|");
-    return { teacher, className };
-  });
+  // Convert Map => array of { className, teachers[] }
+  const result = Array.from(map.entries()).map(([className, teacherSet]) => ({
+    className,
+    teachers: Array.from(teacherSet).sort(), // sort teacher names
+  }));
 
-  // 2) Sort by teacher, then class name (alphabetically)
-  teacherClassCombos.sort((a, b) => {
-    // Compare teacher first
-    const teacherCompare = a.teacher.localeCompare(b.teacher);
-    if (teacherCompare !== 0) {
-      return teacherCompare;
-    }
-    // If same teacher, compare by className
-    return a.className.localeCompare(b.className);
-  });
+  // Sort by className
+  result.sort((a, b) => a.className.localeCompare(b.className));
 
-  return teacherClassCombos;
+  return result;
 }
 
-const teacherClassCombos = getTeacherClassCombos(TIMETABLE_DATA);
+const groupedData = getClassTeacherStructure(TIMETABLE_DATA);
 
 export default function Timetable() {
   const [selectedPair, setSelectedPair] = useState("all");
 
   /**
-   * Filtering logic:
-   * If selectedPair is "all", show everything.
-   * Otherwise, only highlight cells that match teacher + class.
+   * If "all" => show everything
+   * If "Yoga" => show only day.name = "Yoga" (all teachers)
+   * If "Yoga|Keaf Shen" => exact match of class + teacher
    */
   function cellMatchesFilter(day: TimetableDay) {
     if (selectedPair === "all") return true;
-    if (!day.instructor || !day.name) return false;
+    if (!day.name || !day.instructor) return false;
 
-    const [selectedTeacher, selectedClass] = selectedPair.split("|");
-    return day.instructor === selectedTeacher && day.name === selectedClass;
+    // If user chose a single class only (e.g. "Yoga")
+    if (!selectedPair.includes("|")) {
+      return day.name === selectedPair;
+    }
+
+    // Otherwise user chose "class|teacher"
+    const [className, teacherName] = selectedPair.split("|");
+    return day.name === className && day.instructor === teacherName;
   }
 
   return (
@@ -139,19 +141,15 @@ export default function Timetable() {
                 "focus:outline-none focus:ring-2 focus:ring-brand-orange font-mulish"
               )}
             >
-              <SelectValue placeholder="Select teacher & class" />
+              <SelectValue placeholder="Select class or teacher" />
             </SelectTrigger>
 
-            {/* 
-              Use data-[highlighted] to override Radix UI’s default highlight. 
-              We change the background to brand-background-1 & text to brand-orange 
-              when hovered/focused.
-            */}
             <SelectContent
               className={cn(
                 "bg-brand-background-2 text-white border border-brand-gray-darker rounded-none font-mulish"
               )}
             >
+              {/* Keep original style for items */}
               <SelectItem
                 value="all"
                 className={cn(
@@ -162,24 +160,43 @@ export default function Timetable() {
                 All classes
               </SelectItem>
 
-              {teacherClassCombos.map(({ teacher, className }) => {
-                const comboValue = `${teacher}|${className}`;
-                const comboLabel = `${teacher} • ${className}`;
+              {/* Group by class */}
+              {groupedData.map(({ className, teachers }) => (
+                <SelectGroup key={className}>
+                  {/* You can style the label if you like, or leave it minimal */}
+                  <SelectLabel className="px-2 py-1 text-sm text-white/70">
+                    {className}
+                  </SelectLabel>
 
-                return (
+                  {/* Class-only item => all teachers for this class */}
                   <SelectItem
-                    key={comboValue}
-                    value={comboValue}
+                    value={className}
                     className={cn(
                       "bg-brand-background-2 text-white cursor-pointer rounded-none",
-                      // Highlight => switch background to background-1 and text to brand-orange
                       "data-[highlighted]:bg-brand-background-1 data-[highlighted]:text-brand-orange"
                     )}
                   >
-                    {comboLabel}
+                    —  All teachers
                   </SelectItem>
-                );
-              })}
+
+                  {/* One <SelectItem> per teacher */}
+                  {teachers.map((teacher) => {
+                    const comboValue = `${className}|${teacher}`;
+                    return (
+                      <SelectItem
+                        key={comboValue}
+                        value={comboValue}
+                        className={cn(
+                          "bg-brand-background-2 text-white cursor-pointer rounded-none",
+                          "data-[highlighted]:bg-brand-background-1 data-[highlighted]:text-brand-orange"
+                        )}
+                      >
+                        — {teacher}
+                      </SelectItem>
+                    );
+                  })}
+                </SelectGroup>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -248,7 +265,7 @@ export default function Timetable() {
                               className={cn(
                                 "mb-[10px] text-lg font-semibold uppercase transition",
                                 isMatch
-                                  ? "text-white group-hover:text-opacity-100"
+                                  ? "text-white"
                                   : "text-white text-opacity-20"
                               )}
                             >
@@ -266,7 +283,7 @@ export default function Timetable() {
                             </span>
                           </div>
                         ) : (
-                          // No class => slash line
+                          // Slash line if no class
                           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rotate-[-35deg] w-[188px] h-[1px] bg-[#363636]" />
                         )}
                       </td>
