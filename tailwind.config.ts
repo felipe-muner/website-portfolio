@@ -23,6 +23,7 @@ export default {
             dark: '#5c5c5c',
             darker: '#4d4d4d',
             darkest: '#464646',
+            charcoal: '#363636',
           },
           'background-1': '#0a0a0a',
           'background-2': '#151515',

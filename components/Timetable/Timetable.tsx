@@ -203,7 +203,7 @@ export default function Timetable() {
 
         {/* TIMETABLE TABLE */}
         <div className="overflow-x-auto">
-          <table className="min-w-full table-fixed border-collapse border border-[#363636] text-center">
+          <table className="min-w-full table-fixed border-collapse border border-brand-gray-charcoal text-center">
             <thead>
               <tr className="bg-brand-orange font-mulish text-white">
                 <th className="p-4 w-24 text-sm border-r border-brand-gray-darker font-normal">
@@ -234,7 +234,7 @@ export default function Timetable() {
               {TIMETABLE_DATA.map((row, rowIndex) => (
                 <tr key={rowIndex}>
                   {/* TIME CELL */}
-                  <td className="border border-[#363636] bg-brand-black p-4 w-24 h-24 text-brand-orange font-mulish text-xs">
+                  <td className="border border-brand-gray-charcoal bg-brand-black p-4 w-24 h-24 text-brand-orange font-mulish text-xs">
                     {row.time}
                   </td>
                   {/* DAY CELLS */}
@@ -251,7 +251,7 @@ export default function Timetable() {
                       <td
                         key={dayIndex}
                         className={cn(
-                          "border border-[#363636] py-6 w-24 h-24 text-sm relative transition-colors",
+                          "border border-brand-gray-charcoal py-6 w-24 h-24 text-sm relative transition-colors",
                           backgroundClass,
                           {
                             // Dim non-matching cells
@@ -284,7 +284,7 @@ export default function Timetable() {
                           </div>
                         ) : (
                           // Slash line if no class
-                          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rotate-[-35deg] w-[188px] h-[1px] bg-[#363636]" />
+                          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rotate-[-35deg] w-[188px] h-[1px] bg-braborder-brand-gray-charcoal" />
                         )}
                       </td>
                     );

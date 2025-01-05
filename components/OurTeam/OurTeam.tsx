@@ -30,7 +30,7 @@ export default function OurTeam() {
   ]
 
   return (
-    <section className="bg-[#151515] pt-32 pb-52 w-full">
+    <section className="bg-brand-background-2 pt-32 pb-52 w-full">
       <div className="container w-full mx-auto px-4 flex flex-col">
         {/* Top row: Title + Button */}
         <div className="flex justify-between items-start mb-8">
@@ -55,7 +55,7 @@ export default function OurTeam() {
                     objectFit="cover"
                     className="transition-transform duration-300 group-hover:scale-110"
                   />
-                  <div className="absolute bottom-[-250px] left-0 w-full bg-[#0a0a0a] border-t-4 border-[#464646] skew-y-[-5deg] transition-all duration-300 group-hover:-bottom-10 group-hover:pb-10">
+                  <div className="absolute bottom-[-250px] left-0 w-full bg-brand-background-1 border-t-4 border-brand-gray-darkest skew-y-[-5deg] transition-all duration-300 group-hover:-bottom-10 group-hover:pb-10">
                     <div className="text-center p-6 skew-y-[5deg]">
                       <h4 className="text-white font-semibold text-2xl mb-1">{member.name}</h4>
                       <span className="text-gray-400 uppercase text-xs font-bold font-mulish">
