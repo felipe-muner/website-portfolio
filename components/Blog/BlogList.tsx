@@ -50,27 +50,37 @@ export default function BlogList() {
         />
 
         {/* Blog Posts List */}
-        {blogPosts.map((post) => (
-          <article
-            key={post.slug}
-            onClick={() => handleOpenDrawer(post)}
-            className="border border-brand-gray-darkest hover:border-white mb-8 p-6 bg-brand-background-2 rounded-lg cursor-pointer transform transition-transform "
-          >
-            <h2 className="text-3xl font-semibold text-white mb-2">
-              {post.title}
-            </h2>
-            <p className="text-brand-gray-medium font-mulish">{post.excerpt}</p>
-            <span className="inline-block mt-4 text-brand-orange hover:underline">
-              Read More &rarr;
-            </span>
-          </article>
-        ))}
+        <div className="grid gap-8">
+          {blogPosts.map((post) => (
+            <article
+              key={post.slug}
+              onClick={() => handleOpenDrawer(post)}
+              className="border border-brand-gray-darkest hover:border-white bg-brand-background-2 rounded-lg p-6 cursor-pointer transition"
+            >
+              <h2 className="text-3xl font-semibold text-white mb-2">
+                {post.title}
+              </h2>
+              <p className="text-brand-gray-medium font-mulish">
+                {post.excerpt}
+              </p>
+              <span className="inline-block mt-4 text-brand-orange hover:underline">
+                Read More &rarr;
+              </span>
+            </article>
+          ))}
+        </div>
       </div>
 
       {/* Drawer Component */}
       <Drawer open={isOpen} onOpenChange={handleCloseDrawer}>
-        <DrawerContent className="bg-brand-background-2 flex flex-col border-brand-gray-darkest h-[80vh]">
-          <DrawerHeader>
+        {/* 
+          We add:
+          - "px-6 py-4" for comfortable space around content
+          - "max-w-4xl mx-auto" to limit width for better reading 
+          - "h-[80vh]" to set the drawer's height at 80% of viewport
+        */}
+        <DrawerContent className="bg-brand-background-2 border-brand-gray-darkest h-[80vh] flex flex-col px-6 py-4 max-w-4xl mx-auto">
+          <DrawerHeader className="mb-4">
             <DrawerTitle className="text-white text-3xl">
               {selectedPost?.title ?? "Post Title"}
             </DrawerTitle>
@@ -79,7 +89,8 @@ export default function BlogList() {
             </DrawerDescription>
           </DrawerHeader>
 
-          <div className="flex-1 overflow-y-auto px-4 py-2 text-brand-gray-light font-mulish">
+          {/* The scrollable content area */}
+          <div className="flex-1 overflow-y-auto text-brand-gray-light font-mulish">
             <div
               dangerouslySetInnerHTML={{
                 __html: selectedPost?.content ?? "",
@@ -87,13 +98,12 @@ export default function BlogList() {
             />
           </div>
 
-          <DrawerFooter className="flex justify-end space-x-2">
-            <DrawerClose className="text-sm bg-brand-orange px-4 py-2 rounded">
+          <DrawerFooter className="flex justify-end space-x-2 pt-4">
+            <DrawerClose className="text-sm bg-brand-orange px-4 py-2 rounded hover:bg-orange-600 transition-colors">
               Close
             </DrawerClose>
           </DrawerFooter>
         </DrawerContent>
-
       </Drawer>
     </section>
   );
