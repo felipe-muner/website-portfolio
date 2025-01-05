@@ -140,6 +140,8 @@ const Footer: React.FC = () => {
           </div>
           {/* END ROW */}
 
+          
+
           {/* COPYRIGHT SECTION */}
           <div className="mt-12 py-8 border-t border-brand-gray-dark text-center">
             <p className="text-sm text-brand-gray-light">

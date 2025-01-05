@@ -1,63 +1,23 @@
-"use client"; // If you're using Next.js App Router and need client-side interactivity
-import React, { useState, useRef, useEffect } from "react";
-import { blogPosts } from "./data";
+"use client";
+import React from "react";
+import { useRouter } from "next/navigation";
+import { blogPosts, BlogPost } from "./data";
 import { TitleSection } from "../TitleSection";
-import { X } from "lucide-react";
-
-// Import Drawer components from shadcn/ui
-import {
-  Drawer,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/components/ui/drawer";
 import { Button } from "../ui/button";
 
-export default function BlogList() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedPost, setSelectedPost] = useState<{
-    slug: string;
-    title: string;
-    date: string;
-    excerpt: string;
-    content: string;
-  } | null>(null);
-
-  const drawerRef = useRef<HTMLDivElement>(null); // Ref for the DrawerContent
-
-  function handleOpenDrawer(post: {
-    slug: string;
-    title: string;
-    date: string;
-    excerpt: string;
-    content: string;
-  }) {
-    setSelectedPost(post);
-    setIsOpen(true);
-  }
-
-  function handleCloseDrawer() {
-    setIsOpen(false);
-  }
-
-  // Ensure focus is set to the DrawerContent when the Drawer opens
-  useEffect(() => {
-    if (isOpen && drawerRef.current) {
-      setTimeout(() => {
-        drawerRef.current?.focus(); // Ensure focus is set after rendering
-      }, 0);
-    }
-  }, [isOpen]);
+const BlogList: React.FC = () => {
+  const router = useRouter();
 
   const sortedPosts = [...blogPosts].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
 
+  const handlePostClick = (slug: string) => {
+    router.push(`/blog/${slug}`);
+  };
+
   return (
-    <section
-      className={`relative bg-brand-background-1 text-brand-gray-light min-h-screen py-8 pb-52 transition-transform duration-500 ${isOpen ? "scale-95 blur-sm" : "scale-100 blur-0"
-        }`}
-    >
+    <section className="bg-brand-background-1 text-brand-gray-light min-h-screen py-8">
       <div className="max-w-7xl mx-auto px-4">
         <TitleSection
           subtitle="Your Guide"
@@ -66,10 +26,10 @@ export default function BlogList() {
         />
 
         <div className="grid gap-8">
-          {sortedPosts.map((post) => (
+          {sortedPosts.map((post: BlogPost) => (
             <article
               key={post.slug}
-              onClick={() => handleOpenDrawer(post)}
+              onClick={() => handlePostClick(post.slug)}
               className="group border border-brand-gray-darkest hover:border-white bg-brand-background-2 p-6 cursor-pointer transition"
             >
               <p className="text-sm text-brand-gray-medium mb-1 group-hover:text-white">
@@ -81,47 +41,15 @@ export default function BlogList() {
               <p className="text-brand-gray-medium font-mulish group-hover:text-white">
                 {post.excerpt}
               </p>
-              <Button className="font-mulish mt-4 px-4 py-2 rounded-none  bg-transparent border border-brand-orange text-brand-orange transition group-hover:bg-brand-orange group-hover:text-white">
+              <Button className="mt-4 px-4 py-2 bg-transparent border border-brand-orange text-brand-orange transition group-hover:bg-brand-orange group-hover:text-white">
                 Read More &rarr;
               </Button>
             </article>
           ))}
         </div>
       </div>
-
-      <Drawer open={isOpen} onOpenChange={handleCloseDrawer}>
-        <DrawerContent
-          ref={drawerRef} // Attach the ref
-          className="bg-brand-background-2 border-brand-gray-darkest h-[80vh] flex flex-col px-6 py-4 max-w-4xl mx-auto focus:outline-none focus:ring-2 focus:ring-brand-orange rounded"
-        >
-          <DrawerHeader className="flex justify-between items-center mb-4">
-            <DrawerTitle className="text-white text-3xl">
-              {selectedPost?.title ?? "Post Title"}
-            </DrawerTitle>
-            <button
-              className="text-brand-gray-light hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-brand-orange rounded"
-              onClick={handleCloseDrawer}
-            >
-              <X className="w-6 h-6" />
-            </button>
-          </DrawerHeader>
-
-          <div className="text-brand-gray-medium font-mulish">
-            <div className="mb-2">
-              Published on {selectedPost?.date ?? "Unknown date"}
-            </div>
-            {selectedPost?.excerpt ?? "Post excerpt..."}
-          </div>
-
-          <div className="flex-1 overflow-y-auto text-brand-gray-light font-mulish mt-4">
-            <div
-              dangerouslySetInnerHTML={{
-                __html: selectedPost?.content ?? "",
-              }}
-            />
-          </div>
-        </DrawerContent>
-      </Drawer>
     </section>
   );
-}
+};
+
+export default BlogList;
