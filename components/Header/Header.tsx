@@ -11,6 +11,7 @@ const NAV_ITEMS = [
   { href: "/about-us", label: "About us" },
   { href: "/classes", label: "Classes" },
   { href: "/pricing", label: "Pricing" },
+  { href: "/blog", label: "Blog" },
   { href: "/contact", label: "Contact" },
 ];
 
