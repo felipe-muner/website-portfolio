@@ -9,7 +9,8 @@ interface BlogPostPageProps {
   };
 }
 
-const BlogPostPage: React.FC<BlogPostPageProps> = async ({ params }) => {
+// const BlogPostPage: React.FC<BlogPostPageProps> = ({ params }) => {
+async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params
   const post = blogPosts.find((p) => p.slug === slug);
 
