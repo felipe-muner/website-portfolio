@@ -52,8 +52,8 @@ const OurClasses: React.FC = () => {
                 <Image
                   src={classItem.img}
                   alt={classItem.title}
-                  layout="fill"
-                  objectFit="cover"
+                  width={370}
+                  height={450}
                   className="rounded-t-lg"
                 />
               </div>

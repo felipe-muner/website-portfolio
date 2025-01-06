@@ -51,8 +51,8 @@ export default function OurTeam() {
                   <Image
                     src={member.image}
                     alt={`${member.name} - ${member.role}`}
-                    layout="fill"
-                    objectFit="cover"
+                    width={600}
+                    height={450}
                     className="transition-transform duration-300 group-hover:scale-110"
                   />
                   <div className="absolute bottom-[-250px] left-0 w-full bg-brand-background-1 border-t-4 border-brand-gray-darkest skew-y-[-5deg] transition-all duration-300 group-hover:-bottom-10 group-hover:pb-10">
