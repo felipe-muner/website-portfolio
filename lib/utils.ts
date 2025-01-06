@@ -37,7 +37,7 @@ export function getMetadata({ routeName }: GetMetadataProps): Metadata {
       card: "summary_large_image",
       title: `${siteName} - ${routeName}`,
       description: "Empower your fitness journey with Gym.",
-      images: [`${baseUrl}/twitter-image.jpg`],
+      images: [`${baseUrl}/opengraph-image.png`],
     },
     robots: {
       index: true,
