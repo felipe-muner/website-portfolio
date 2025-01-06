@@ -12,7 +12,7 @@ interface GetMetadataProps {
 
 export function getMetadata({ routeName }: GetMetadataProps): Metadata {
   const siteName = "Gym";
-  const baseUrl = "https://gym-kappa-pied.vercel.app/"
+  const baseUrl = "https://gym-kappa-pied.vercel.app"
 
   return {
     title: `${siteName} - ${routeName}`,
