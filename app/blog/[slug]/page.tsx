@@ -25,7 +25,7 @@ const BlogPostPage: React.FC<BlogPostPageProps> = async ({ params }) => {
       />
 
       {/* Blog Post Content */}
-      <div className="bg-brand-background-2 text-brand-gray-light min-h-screen py-8">
+      <div className="bg-brand-background-2 text-brand-gray-light min-h-screen py-8 mt-20">
         <div className="max-w-4xl mx-auto px-4">
           {/* Title Section */}
           <h1 className="text-5xl font-extrabold text-white mb-6 leading-tight">
