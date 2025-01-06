@@ -52,7 +52,6 @@ export function getMetadata({ routeName }: GetMetadataProps): Metadata {
         "max-image-preview": "large",
       },
     },
-    viewport: "width=device-width, initial-scale=1",
     icons: {
       icon: `${baseUrl}/favicon.ico`,
       shortcut: `${baseUrl}/favicon.ico`,
