@@ -9,8 +9,9 @@ interface BlogPostPageProps {
   };
 }
 
-const BlogPostPage: React.FC<BlogPostPageProps> = ({ params }) => {
-  const post = blogPosts.find((p) => p.slug === params.slug);
+const BlogPostPage: React.FC<BlogPostPageProps> = async ({ params }) => {
+  const { slug } = await params
+  const post = blogPosts.find((p) => p.slug === slug);
 
   if (!post) {
     notFound(); // Display a 404 page if the post is not found
