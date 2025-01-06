@@ -1,4 +1,4 @@
-export const APP_NAME = 'Zen Muscle'
+export const APP_NAME = 'Gym'
 
 interface RouteProps {
   name: string
