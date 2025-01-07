@@ -25,7 +25,7 @@ export function MobileNavbar({ children }: { children: ReactNode }) {
 
   return (
     <>
-      <Button className="md:hidden text-white border p-2" onClick={() => setIsOpen(!isOpen)}>
+      <Button className="md:hidden text-white border p-2 rounded-none" onClick={() => setIsOpen(!isOpen)}>
         {isOpen ? <X /> : <Menu />}
       </Button>
       {isOpen && (
