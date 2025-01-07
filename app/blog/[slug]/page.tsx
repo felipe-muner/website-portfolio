@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { blogPosts } from "@/components/Blog/data";
 import { Breadcrumb } from "@/components/Breadcrumb";
@@ -26,6 +27,14 @@ const BlogPostPage = async (props: BlogPostPageProps) => {
       {/* Blog Post Content */}
       <div className="bg-brand-background-2 text-brand-gray-light min-h-screen py-8 mt-20">
         <div className="max-w-4xl mx-auto px-4">
+          {/* Back Button */}
+          <Link
+            href="/blog"
+            className="inline-block mb-6 text-brand-orange font-medium hover:underline"
+          >
+            ← Back to Blog
+          </Link>
+
           {/* Title Section */}
           <h1 className="text-5xl font-extrabold text-white mb-6 leading-tight">
             {post.title}
