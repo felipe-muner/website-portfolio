@@ -12,7 +12,11 @@ interface MobileNavItemProps {
 
 export function MobileNavItem({ label, href, className }: MobileNavItemProps) {
   const pathname = usePathname();
-  const isActive = pathname === href;
+  const isActive =
+    href === "/blog"
+      ? pathname.startsWith("/blog")
+      : pathname === href;
+
   return (
     <Link
       href={href}

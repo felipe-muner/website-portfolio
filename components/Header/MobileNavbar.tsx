@@ -2,6 +2,7 @@
 
 import { Menu, X } from "lucide-react";
 import { ReactNode, useEffect, useState } from "react";
+import { Button } from "../ui/button";
 
 export function MobileNavbar({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,9 +25,9 @@ export function MobileNavbar({ children }: { children: ReactNode }) {
 
   return (
     <>
-      <button className="md:hidden text-white border p-2" onClick={() => setIsOpen(!isOpen)}>
+      <Button className="md:hidden text-white border p-2" onClick={() => setIsOpen(!isOpen)}>
         {isOpen ? <X /> : <Menu />}
-      </button>
+      </Button>
       {isOpen && (
         <div
           className="fixed inset-0 top-[70px] z-40 size-full overflow-auto bg-black/50 animate-in slide-in-from-bottom-24 md:hidden"
