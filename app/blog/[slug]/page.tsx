@@ -15,7 +15,7 @@ const BlogPostPage = async (props: BlogPostPageProps) => {
   const post = blogPosts.find((p) => p.slug === slug);
 
   if (!post) {
-    notFound(); // Trigger a 404 page if the post is not found
+    notFound();
   }
 
   return (
