@@ -16,7 +16,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ route, isClass }) => {
             <h2 className="text-6xl text-white font-semibold uppercase mb-4">
               {route}
             </h2>            
-            {isClass && <Button className="mt-4 bg-transparent hover:bg-brand-orange px-8 py-6 uppercase border hover:border-brand-orange">
+            {isClass && <Button className="mt-4 bg-transparent hover:bg-brand-orange px-8 py-6 uppercase border-2 hover:border-brand-orange font-mulish font-bold">
               Take a tour
             </Button>}
           </div>
