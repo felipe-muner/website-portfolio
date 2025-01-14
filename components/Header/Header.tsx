@@ -17,11 +17,11 @@ const NAV_ITEMS = [
     href: "/classes",
     label: "Fitness Classes",
     children: [
-      { label: "Classes Schedule", href: "/classes/class-1" },
-      { label: "Breathwork & Ice Bath", href: "/classes/class-2" },
-      { label: "HIIT Classes", href: "/classes/class-3" },
-      { label: "Pilates Mobility", href: "/classes/class-4" },
-      { label: "Tabata", href: "/classes/class-5" },
+      { label: "Classes Schedule", href: "/classes" },
+      { label: "Breathwork & Ice Bath", href: "/classes/breathwork-ice-bath" },
+      { label: "HIIT Classes", href: "/classes/hiit" },
+      { label: "Pilates Mobility", href: "/classes/pilates-mobility" },
+      { label: "Tabata", href: "/classes/tabata" },
     ],
   },
   {
@@ -73,7 +73,7 @@ export default function Header() {
           {/* Your nav items go here */}
           <nav className="flex flex-col p-2">
             <NavItems navItems={NAV_ITEMS} />
-          </nav>          
+          </nav>
         </SheetContent>
       </Sheet>
 
