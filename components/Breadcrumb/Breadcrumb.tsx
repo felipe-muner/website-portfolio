@@ -36,14 +36,13 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ route, isClass }) => {
                     <DialogHeader>
                       <DialogTitle></DialogTitle>
                     </DialogHeader>
-                    {/* Embedded YouTube video with autoplay */}
                     <div className="w-full aspect-w-16 aspect-h-9">
                       <iframe
                         width="100%"
                         height="500"
                         frameBorder={0}
                         className="w-full"
-                        src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1"
+                        src="https://www.youtube.com/embed/qPU8mENUBXk?autoplay=1&mute=1"
                         title="YouTube video player"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen
