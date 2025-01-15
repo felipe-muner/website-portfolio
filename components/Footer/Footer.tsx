@@ -3,15 +3,8 @@ import Link from "next/link";
 import { APP_NAME } from "@/constants";
 import Image from "next/image";
 import { ContactData } from "@/components/ContactData";
-import { blogPosts } from "../Blog/data";
 
-
-const Footer: React.FC = () => {
-  // Sort blog posts by date and take the latest 2
-  const latestBlogPosts = [...blogPosts]
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(0, 2);
-
+const Footer: React.FC = () => {  
   return (
     <>
       <ContactData />
@@ -87,11 +80,6 @@ const Footer: React.FC = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/blog" className="text-brand-gray-light text-sm">
-                    Blog
-                  </Link>
-                </li>
-                <li>
                   <Link href="/classes" className="text-brand-gray-light text-sm">
                     Classes
                   </Link>
@@ -117,25 +105,7 @@ const Footer: React.FC = () => {
             </div>
 
             {/* col-lg-4 col-md-6 (Tips & Guides) */}
-            <div className="w-full px-4 md:w-1/2 lg:w-1/3">
-              <h4 className="text-white font-semibold text-2xl mb-4">Blog — Tips & Guides</h4>
-              <div className="space-y-6">
-                {latestBlogPosts.map((post) => (
-                  <div key={post.slug} className="border-b border-[#1a1a1a] pb-4">
-                    <h6 className="mb-2">
-                      <Link
-                        href={`/blog/${post.slug}`}
-                        className="text-brand-gray-light text-base leading-6"
-                      >
-                        {post.title}
-                      </Link>
-                    </h6>
-                    <ul className="text-xs text-brand-gray-darker font-mulish">
-                      <li>{post.readTime} min read</li>
-                    </ul>
-                  </div>
-                ))}
-              </div>
+            <div className="w-full px-4 md:w-1/2 lg:w-1/3">              
             </div>
           </div>
           {/* END ROW */}

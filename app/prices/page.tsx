@@ -4,13 +4,13 @@ import { TitleSection } from "@/components/TitleSection";
 import { WhatWeDo } from "@/components/WhatWeDo";
 import { getMetadata } from "@/lib/utils";
 
-export const metadata = getMetadata({ routeName: "Pricing" });
+export const metadata = getMetadata({ routeName: "Prices" });
 
 
-export default function Pricing() {
+export default function Prices() {
   return (
     <>
-      <Breadcrumb route={'Pricing'} />
+      <Breadcrumb route={'Prices'} />
       <TitleSection title="PUSH YOUR LIMITS FORWARD" subtitle="What we do?" className="mt-24" />
       <WhatWeDo />
       <OurPlan />

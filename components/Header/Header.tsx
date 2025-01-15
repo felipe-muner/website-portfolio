@@ -34,7 +34,7 @@ const NAV_ITEMS = [
       { label: "another-topic-4", href: "/another-topic/topic-4" },
     ],
   },
-  { href: "/pricing", label: "Pricing" },
+  { href: "/prices", label: "Prices" },
   { href: "/blog", label: "Blog" },
   { href: "/contact", label: "Contact" },
 ];

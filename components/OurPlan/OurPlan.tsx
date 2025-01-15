@@ -54,7 +54,7 @@ export default function OurPlan() {
           <TitleSection subtitle="Our Plans" title="Choose your pricing plan" />
         </div>
 
-        {/* Pricing cards */}
+        {/* Prices cards */}
         <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-3 justify-items-center">
           {plans.map((plan, idx) => (
             <div

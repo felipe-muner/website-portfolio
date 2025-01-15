@@ -23,8 +23,8 @@ export const ROUTES: RouteProps[] = [
     path: '/contact',
   },
   {
-    name: 'Pricing',
-    path: '/pricing',
+    name: 'Prices',
+    path: '/prices',
   },
   {
     name: 'Blog',
