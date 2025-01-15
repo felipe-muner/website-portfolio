@@ -26,7 +26,7 @@ const services = [
 
 const WhatWeDo: React.FC = () => {
   return (
-    <section className="bg-brand-background-2 py-12">
+    <section className="bg-brand-background-2 pt-12 pb-36">
       <div className="container mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2">
           {services.map((service, index) => (

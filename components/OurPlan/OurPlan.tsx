@@ -47,10 +47,10 @@ export default function OurPlan() {
   ]
 
   return (
-    <section className="bg-brand-background-2 pt-32 pb-52 w-full">
+    <section className="bg-brand-background-2 pt-32 w-full">
       <div className="container mx-auto px-4">
         {/* Heading */}
-        <div className="text-center mb-14">
+        <div className="text-center mb-20">
           <TitleSection subtitle="Our Plans" title="Choose your pricing plan" />
         </div>
 

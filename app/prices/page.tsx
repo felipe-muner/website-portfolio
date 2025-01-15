@@ -11,9 +11,9 @@ export default function Prices() {
   return (
     <>
       <Breadcrumb route={'Prices'} />
-      <TitleSection title="PUSH YOUR LIMITS FORWARD" subtitle="What we do?" className="mt-24" />
-      <WhatWeDo />
       <OurPlan />
+      <TitleSection title="PUSH YOUR LIMITS FORWARD" subtitle="What we do?" className="mt-36" />
+      <WhatWeDo />
     </>
   );
 }

@@ -30,31 +30,23 @@ const Footer: React.FC = () => {
               </p>
               <div className="flex space-x-4 mt-4">
                 <Link
-                  href="#"
+                  href="https://www.facebook.com/SummitGym"
                   target="_blank"
                   rel="noreferrer"
                   className="text-brand-gray-light text-sm"
                 >
                   <Facebook size={16} />
                 </Link>
-                <Link
-                  href="#"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-brand-gray-light text-sm"
-                >
-                  <Twitter size={16} />
-                </Link>
-                <Link
+                {/* <Link
                   href="#"
                   target="_blank"
                   rel="noreferrer"
                   className="text-brand-gray-light text-sm"
                 >
                   <Youtube size={16} />
-                </Link>
+                </Link> */}
                 <Link
-                  href="#"
+                  href="https://www.instagram.com/summit.gym"
                   target="_blank"
                   rel="noreferrer"
                   className="text-brand-gray-light text-sm"
@@ -62,7 +54,7 @@ const Footer: React.FC = () => {
                   <Instagram size={16} />
                 </Link>
                 <Link
-                  href="mailto:yourgym@example.com"
+                  href="mailto:info@summitgym.example.com"
                   className="text-brand-gray-light text-sm"
                 >
                   <Mail size={16} />
@@ -82,6 +74,11 @@ const Footer: React.FC = () => {
                 <li>
                   <Link href="/classes" className="text-brand-gray-light text-sm">
                     Classes
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/prices" className="text-brand-gray-light text-sm">
+                    Prices
                   </Link>
                 </li>
               </ul>
