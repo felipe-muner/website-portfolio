@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -33,18 +32,18 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ route, isClass }) => {
                       Take a tour
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="p-0 bg-transparent border-0">
+                  <DialogContent className="p-0 bg-transparent border-0 max-w-[800px]">
                     <DialogHeader>
                       <DialogTitle></DialogTitle>
                     </DialogHeader>
-                    {/* Embedded YouTube video */}
+                    {/* Embedded YouTube video with autoplay */}
                     <div className="w-full aspect-w-16 aspect-h-9">
                       <iframe
                         width="100%"
-                        height="315"
+                        height="500"
                         frameBorder={0}
                         className="w-full"
-                        src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                        src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1"
                         title="YouTube video player"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen
