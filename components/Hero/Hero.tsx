@@ -22,7 +22,7 @@ const slides = [
     span: "Shape your body",
     heading: (
       <>
-        Be <strong className="text-brand-orange">strong</strong> training hard
+        The <strong className="text-brand-orange">best gym</strong> and <strong className="text-brand-orange">crossfit</strong> in Koh Phangan
       </>
     ),
     linkHref: "#",
@@ -143,7 +143,7 @@ export default function Hero() {
                             {slide.heading}
                           </motion.h1>
 
-                          <motion.div
+                          {/* <motion.div
                             key={`cta-${activeSlide}`}
                             initial="hidden"
                             animate="visible"
@@ -155,7 +155,7 @@ export default function Hero() {
                               label={slide.linkLabel}
                               className="bg-brand-orange"
                             />
-                          </motion.div>
+                          </motion.div> */}
                         </div>
                       )}
                     </div>
