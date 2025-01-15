@@ -33,27 +33,22 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ route, isClass }) => {
                       Take a tour
                     </Button>
                   </DialogTrigger>
-                  <DialogContent>
+                  <DialogContent className="p-0 bg-transparent border-0">
                     <DialogHeader>
-                      <DialogTitle>Take a Tour</DialogTitle>
-                      <DialogDescription>
-                        Watch this video to learn more about our services and
-                        explore what we offer.
-                      </DialogDescription>
+                      <DialogTitle></DialogTitle>
                     </DialogHeader>
-                    <div className="grid gap-4 py-4">
-                      {/* Embedded YouTube video */}
-                      <div className="w-full aspect-w-16 aspect-h-9">
-                        <iframe
-                          width="100%"
-                          height="315"
-                          src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-                          title="YouTube video player"
-                          frameBorder="0"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                        ></iframe>
-                      </div>
+                    {/* Embedded YouTube video */}
+                    <div className="w-full aspect-w-16 aspect-h-9">
+                      <iframe
+                        width="100%"
+                        height="315"
+                        frameBorder={0}
+                        className="w-full"
+                        src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                        title="YouTube video player"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      ></iframe>
                     </div>
                   </DialogContent>
                 </Dialog>
