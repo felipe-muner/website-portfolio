@@ -1,10 +1,10 @@
-import { Facebook, Twitter, Youtube, Instagram, Mail } from "lucide-react";
+import { Facebook, Youtube, Instagram, Mail } from "lucide-react";
 import Link from "next/link";
 import { APP_NAME } from "@/constants";
 import Image from "next/image";
 import { ContactData } from "@/components/ContactData";
 
-const Footer: React.FC = () => {  
+const Footer: React.FC = () => {
   return (
     <>
       <ContactData />
@@ -68,12 +68,7 @@ const Footer: React.FC = () => {
               <ul className="space-y-2 font-mulish leading-6">
                 <li>
                   <Link href="/about-us" className="text-brand-gray-light text-sm">
-                    About us
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/classes" className="text-brand-gray-light text-sm">
-                    Classes
+                    About
                   </Link>
                 </li>
                 <li>
@@ -102,26 +97,42 @@ const Footer: React.FC = () => {
             </div>
 
             {/* col-lg-4 col-md-6 (Tips & Guides) */}
-            <div className="w-full px-4 md:w-1/2 lg:w-1/3">              
+            <div className="w-full px-4 md:w-1/2 lg:w-1/3">
+              <h4 className="text-white font-semibold text-2xl mb-4">Group Classes</h4>
+              <ul className="space-y-2 font-mulish leading-6">
+                <li>
+                  <Link href="/classes/breathwork-ice-bath" className="text-brand-gray-light text-sm">
+                    Breathwork & Ice Bath
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/classes/hiit" className="text-brand-gray-light text-sm">
+                    HIIT
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/classes/pilates-mobility" className="text-brand-gray-light text-sm">
+                    Pilates Mobility
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/classes/tabata" className="text-brand-gray-light text-sm">
+                    Tabata
+                  </Link>
+                </li>
+              </ul>
             </div>
           </div>
           {/* END ROW */}
-
-          
 
           {/* COPYRIGHT SECTION */}
           <div className="mt-12 py-8 border-t border-brand-gray-dark text-center">
             <p className="text-sm text-brand-gray-light">
               Copyright &copy; {new Date().getFullYear() + ' '}
-              All rights reserved | This template is made by{" "}
-              <Link
-                href="https://felipemuner.com/portfolio"
-                target="_blank"
-                rel="noreferrer"
-                className="text-brand-orange"
-              >
-                Felipe Muner
-              </Link>
+              All rights reserved | {' '}
+              <span className="text-brand-orange">
+                Summit Gym & CrossFit
+              </span>
             </p>
           </div>
         </div>

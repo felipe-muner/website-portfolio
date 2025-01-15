@@ -35,9 +35,8 @@ const ContactData: React.FC<ContactDataProps> = ({ className }) => {
               <div className="bg-brand-orange text-white flex items-center justify-center h-16 w-16 rounded-full shrink-0">
                 <MapPin size={30} className="h-8 w-8" />
               </div>
-              <p>
-                333 Middle Winchendon Rd, Rindge,
-                <br /> NH 03461
+              <p className="pr-8">
+                203/13 MOO 1, KO PHA-NGAN, KOH PHANGAN DISTRICT, SURAT THANI 84280
               </p>
             </div>
           </div>
@@ -54,9 +53,7 @@ const ContactData: React.FC<ContactDataProps> = ({ className }) => {
                 <Smartphone size={30} className="h-8 w-8" />
               </div>
               <ul className="flex flex-wrap items-center space-x-4">
-                <li className="relative">125-711-811</li>
-                <li className="relative">|</li>
-                <li className="relative">202-123-4567</li>
+                <li className="relative">+66 828454756</li>
               </ul>
             </div>
           </div>
@@ -72,7 +69,7 @@ const ContactData: React.FC<ContactDataProps> = ({ className }) => {
               <div className="bg-brand-orange text-white flex items-center justify-center h-16 w-16 rounded-full shrink-0">
                 <Mail size={30} className="h-8 w-8" />
               </div>
-              <p>Support.gymcenter@gmail.com</p>
+              <p>info@summitgym.example.com</p>
             </div>
           </div>
         </div>
