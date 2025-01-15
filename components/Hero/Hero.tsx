@@ -13,7 +13,6 @@ import {
   CarouselPrevious,
   type CarouselApi,
 } from "@/components/ui/carousel"
-import { Cta } from "../Cta"
 
 const slides = [
   {
