@@ -1,4 +1,4 @@
-import { Facebook, Youtube, Instagram, Mail } from "lucide-react";
+import { Facebook, Instagram, Mail } from "lucide-react";
 import Link from "next/link";
 import { APP_NAME } from "@/constants";
 import Image from "next/image";

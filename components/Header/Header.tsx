@@ -2,14 +2,12 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useState } from "react";
 import { APP_NAME } from "@/constants";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { NavItems } from "./NavItems"; // we'll define NavItems separately, see below
+import { NavItems } from "./NavItems";
 
-/**
- * Define your navigation items
- */
 const NAV_ITEMS = [
   { href: "/", label: "Home" },
   { href: "/about-us", label: "About us" },
@@ -24,29 +22,24 @@ const NAV_ITEMS = [
       { label: "Tabata", href: "/classes/tabata" },
     ],
   },
-  {
-    href: "/another-topic",
-    label: "Another Dropdown",
-    children: [
-      { label: "another-topic-1", href: "/another-topic/topic-1" },
-      { label: "another-topic-2", href: "/another-topic/topic-2" },
-      { label: "another-topic-3", href: "/another-topic/topic-3" },
-      { label: "another-topic-4", href: "/another-topic/topic-4" },
-    ],
-  },
   { href: "/prices", label: "Prices" },
   { href: "/blog", label: "Blog" },
   { href: "/contact", label: "Contact" },
 ];
 
 export default function Header() {
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+
+  const handleLinkClick = () => {
+    setIsSheetOpen(false);
+  };
+
   return (
     <header className="fixed top-0 left-0 z-50 flex h-16 w-full items-center justify-between bg-black px-4 md:px-8">
       {/* 1) Hamburger trigger on the left */}
-      <Sheet>
+      <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
         <SheetTrigger asChild>
           <Button variant="ghost" className="p-2 text-white scale-110">
-            {/* Simple Hamburger icon (replace with your own icon if desired) */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6"
@@ -70,9 +63,9 @@ export default function Header() {
             <SheetTitle className="text-lg">Menu</SheetTitle>
           </SheetHeader>
 
-          {/* Your nav items go here */}
+          {/* Nav items with link click handler */}
           <nav className="flex flex-col p-2">
-            <NavItems navItems={NAV_ITEMS} />
+            <NavItems navItems={NAV_ITEMS} onLinkClick={handleLinkClick} />
           </nav>
         </SheetContent>
       </Sheet>
