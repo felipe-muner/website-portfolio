@@ -1,5 +1,4 @@
-import React from "react"
-
+import React from "react";
 
 const GoogleMapEmbed: React.FC = () => {
   return (
@@ -14,7 +13,7 @@ const GoogleMapEmbed: React.FC = () => {
         referrerPolicy="no-referrer-when-downgrade"
       ></iframe>
     </section>
-  )
-}
+  );
+};
 
 export default GoogleMapEmbed;
