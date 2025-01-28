@@ -18,9 +18,7 @@ const Footer: React.FC = () => {
                 <Link href="#">
                   <Image
                     src="/img/logo.png"
-                    alt={APP_NAME}
-                    width={182}
-                    height={41}
+                    alt={APP_NAME} width={300} height={60}
                   />
                 </Link>
               </div>
