@@ -10,7 +10,7 @@ export default function Weightlifting() {
         <h1 className="text-2xl font-bold text-center">Weightlifting</h1>
         <p className="text-center">
           Weightlifting is a sport that involves lifting heavy weights in a controlled manner to build strength and muscle mass. This class
-          is designed to improve your technique, increase your strength, and help you reach your fitness goals. Whether you're new to weightlifting
+          is designed to improve your technique, increase your strength, and help you reach your fitness goals. Whether you&apos;re new to weightlifting
           or an experienced lifter, our classes are suitable for all levels and will help you become a better athlete.
         </p>
       </div>
