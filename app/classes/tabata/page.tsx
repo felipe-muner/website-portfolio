@@ -2,7 +2,7 @@ import { Breadcrumb } from "@/components/Breadcrumb";
 import { getMetadata } from "@/lib/utils";
 
 export const metadata = getMetadata({ routeName: "Tabata" });
-export default function BreathworkIceBath() {
+export default function Tabata() {
   return (
     <>
       <Breadcrumb route={'Tabata'} isClass />
