@@ -9,22 +9,66 @@ import { Button } from "@/components/ui/button";
 import { NavItems } from "./NavItems";
 
 const NAV_ITEMS = [
-  { href: "/", label: "Home" },
-  { href: "/about-us", label: "About us" },
+  {
+    href: "/", label: "The Club",
+    children: [
+      { label: "Overview", href: "/the-club/overview" },
+      { label: "Equipment", href: "/the-club/equipment" },
+      { label: "Ice bath & Steam Room", href: "/the-club/ice-bath-and-steam-room" },
+      { label: "Protein bar & Shop", href: "/the-club/protein-bar-and-shop" },
+
+    ],
+  },
   {
     href: "/classes",
     label: "Fitness Classes",
     children: [
       { label: "Classes Schedule", href: "/classes" },
-      { label: "Breathwork & Ice Bath", href: "/classes/breathwork-ice-bath" },
-      { label: "HIIT Classes", href: "/classes/hiit" },
+      { label: "Primal Power Yoga", href: "/classes/primal-power-yoga" },
+      { label: "HIIT", href: "/classes/hiit" },
       { label: "Pilates Mobility", href: "/classes/pilates-mobility" },
       { label: "Tabata", href: "/classes/tabata" },
+      // { label: "Breathwork & Ice Bath", href: "/classes/breathwork-ice-bath" },
     ],
   },
+  {
+    href: "/cross-fit-and-hyrox",
+    label: "CrossFit and Hyrox",
+    children: [
+      { label: "Schedule", href: "/cross-fit-and-hyrox/schedule" },
+      { label: "WOD", href: "/cross-fit-and-hyrox/wod" },
+      { label: "Team WOD", href: "/cross-fit-and-hyrox/team-wod" },
+      { label: "Gymnastics", href: "/cross-fit-and-hyrox/gymnastics" },
+      { label: "Weightlifting", href: "/cross-fit-and-hyrox/weightlifting" },
+      { label: "Mobility", href: "/cross-fit-and-hyrox/mobility" },
+      { label: "Hyrox", href: "/cross-fit-and-hyrox/Hyrox" },
+      { label: "Kids", href: "/cross-fit-and-hyrox/Kids" },
+      { label: "Open Gym", href: "/cross-fit-and-hyrox/open-gym" },
+      // { label: "Breathwork & Ice Bath", href: "/classes/breathwork-ice-bath" },
+    ],
+  },
+  {
+    href: "/schedule",
+    label: "Schedule",
+    children: [
+      { label: "CrossFit", href: "/cross-fit-and-hyrox/schedule" },
+      { label: "Group Fitness Classes", href: "/cross-fit-and-hyrox/wod" },
+      // { label: "Breathwork & Ice Bath", href: "/classes/breathwork-ice-bath" },
+    ],
+  },
+  {
+    href: "/personal-training",
+    label: "Personal Trainer",
+    children: [
+      { label: "Namwan", href: "/personal-training/Namwan" },
+      { label: "Other PT", href: "/cross-fit-and-hyrox/wod" },
+      // { label: "Breathwork & Ice Bath", href: "/classes/breathwork-ice-bath" },
+    ],
+  },
+  { href: "/about-us", label: "About us" },  
   { href: "/prices", label: "Prices" },
-  { href: "/blog", label: "Blog" },
-  { href: "/contact", label: "Contact" },
+  { href: "/contact-gym", label: "Contact Gym" },
+  { href: "/contact-cross-fit", label: "Contact CrossFit" },
 ];
 
 export default function Header() {
