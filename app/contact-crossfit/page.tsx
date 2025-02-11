@@ -3,12 +3,12 @@ import { GetInTouch } from "@/components/GetInTouch";
 import { GoogleMapEmbed } from "@/components/GoogleMapEmbed";
 import { getMetadata } from "@/lib/utils";
 
-export const metadata = getMetadata({ routeName: "Contact" });
+export const metadata = getMetadata({ routeName: "Contact CrossFit" });
 
-export default function Contact() {
+export default function ContactCrossFit() {
   return (
     <>
-      <Breadcrumb route={'Contact'} />
+      <Breadcrumb route={'Contact CrossFit'} />
       <GetInTouch />
       <GoogleMapEmbed />
     </>
