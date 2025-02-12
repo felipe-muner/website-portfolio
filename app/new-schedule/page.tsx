@@ -32,9 +32,10 @@ export default async function HomePage() {
   monday.setDate(today.getDate() - diffToMonday);
 
   // Helper function to format a Date as "MM/DD"
-  const formatDate = (date: Date): string => {
-    return date.toLocaleDateString([], { month: "2-digit", day: "2-digit" });
-  };
+  const formatDate = (date: Date): string =>
+    date
+      .toLocaleDateString("en-GB", { day: "2-digit", month: "2-digit" })
+
 
   // Helper function to format a Date as "HH:MM"
   const formatTime = (date: Date): string => {
