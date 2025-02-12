@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { X } from 'lucide-react';
 
 interface DeleteSessionButtonProps {
-  sessionId: string;
+  sessionId: number;
 }
 
 export default function DeleteSessionButton({ sessionId }: DeleteSessionButtonProps) {
