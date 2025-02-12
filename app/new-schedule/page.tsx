@@ -73,7 +73,7 @@ export default async function HomePage() {
         {/* Form Section */}
         <div className="bg-brand-background-1 p-6 border border-brand-gray-charcoal rounded-md shadow-lg">
           <h2 className="font-oswald text-2xl font-semibold mb-4 text-white">
-            Add a New Session
+            Create
           </h2>
           <SessionForm />
         </div>
