@@ -13,7 +13,7 @@ export async function GET() {
     return NextResponse.json(sessions);
   } catch (error) {
     return NextResponse.json(
-      { error: "Failed to fetch sessions" },
+      { error: error instanceof Error ? error.message : "An unexpected error occurred" },
       { status: 500 }
     );
   }
