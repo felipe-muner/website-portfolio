@@ -98,11 +98,11 @@ export default async function HomePage() {
                   <div
                     key={session.id}
                     className={cn(
-                      "relative bg-brand-background-1 p-1 border border-brand-gray-darker rounded-lg flex flex-col gap-2 mb-4 hover:shadow-lg transition-shadow duration-300"
+                      "bg-brand-background-1 p-1 border border-brand-gray-darker rounded-lg flex flex-col gap-2 mb-4 hover:shadow-lg transition-shadow duration-300"
                     )}
                   >
-                    {/* Delete Button positioned at top right */}
-                    <div className="absolute top-1 right-1">
+                    {/* Delete Button on its own line, right aligned */}
+                    <div className="w-full flex justify-end">
                       <DeleteSessionButton sessionId={session.id} />
                     </div>
                     {/* Time Range */}
@@ -117,6 +117,7 @@ export default async function HomePage() {
                       {capitalizeWords(session.teacher)}
                     </p>
                   </div>
+
                 ))
               )}
             </div>
