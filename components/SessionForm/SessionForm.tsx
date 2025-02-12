@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 export default function SessionForm() {
   const [teacher, setTeacher] = useState("");
@@ -26,7 +27,6 @@ export default function SessionForm() {
         const data = await res.json();
         setError(data.error || "Failed to create session");
       } else {
-        // Reload the page to display the new session
         window.location.reload();
       }
     } catch (err) {
@@ -39,54 +39,61 @@ export default function SessionForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-md mx-auto bg-white p-4 rounded shadow mb-8"
+      className={cn(
+        "max-w-lg mx-auto bg-brand-background-1 p-6 border border-brand-gray-charcoal rounded-lg shadow-lg flex flex-col gap-4"
+      )}
     >
-      <h2 className="text-xl font-bold mb-4">Add New Session</h2>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-      <div className="mb-4">
-        <label className="block mb-1">Teacher</label>
+      <h2 className="text-lg font-semibold text-brand-orange">Add New Session</h2>
+      {error && <p className="text-red-500 text-sm">{error}</p>}
+
+      <div className="flex flex-col gap-2">
+        <label className="text-white/80">Teacher</label>
         <input
           type="text"
           value={teacher}
           onChange={(e) => setTeacher(e.target.value)}
-          className="w-full border px-3 py-2 rounded"
+          className="w-full bg-brand-background-2 text-white border border-brand-gray-darker rounded px-4 py-2 focus:ring-2 focus:ring-brand-orange focus:outline-none"
           required
         />
       </div>
-      <div className="mb-4">
-        <label className="block mb-1">Classname</label>
+
+      <div className="flex flex-col gap-2">
+        <label className="text-white/80">Classname</label>
         <input
           type="text"
           value={classname}
           onChange={(e) => setClassname(e.target.value)}
-          className="w-full border px-3 py-2 rounded"
+          className="w-full bg-brand-background-2 text-white border border-brand-gray-darker rounded px-4 py-2 focus:ring-2 focus:ring-brand-orange focus:outline-none"
           required
         />
       </div>
-      <div className="mb-4">
-        <label className="block mb-1">Start Date and Time</label>
+
+      <div className="flex flex-col gap-2">
+        <label className="text-white/80">Start Date and Time</label>
         <input
           type="datetime-local"
           value={startDatetime}
           onChange={(e) => setStartDatetime(e.target.value)}
-          className="w-full border px-3 py-2 rounded"
+          className="w-full bg-brand-background-2 text-white border border-brand-gray-darker rounded px-4 py-2 focus:ring-2 focus:ring-brand-orange focus:outline-none"
           required
         />
       </div>
-      <div className="mb-4">
-        <label className="block mb-1">End Date and Time</label>
+
+      <div className="flex flex-col gap-2">
+        <label className="text-white/80">End Date and Time</label>
         <input
           type="datetime-local"
           value={endDatetime}
           onChange={(e) => setEndDatetime(e.target.value)}
-          className="w-full border px-3 py-2 rounded"
+          className="w-full bg-brand-background-2 text-white border border-brand-gray-darker rounded px-4 py-2 focus:ring-2 focus:ring-brand-orange focus:outline-none"
           required
         />
       </div>
+
       <button
         type="submit"
         disabled={loading}
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        className="bg-brand-orange text-white font-semibold px-6 py-2 rounded-md hover:bg-brand-orange-dark transition duration-300 disabled:opacity-50"
       >
         {loading ? "Saving..." : "Save Session"}
       </button>
