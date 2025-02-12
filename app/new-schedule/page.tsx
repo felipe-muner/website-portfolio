@@ -1,8 +1,12 @@
 import { DeleteSessionButton } from "@/components/DeleteSessionButton";
 import { SessionForm } from "@/components/SessionForm";
-
 import { prisma } from "@/lib/prisma";
 import { cn } from "@/lib/utils";
+
+// Force dynamic rendering so the page is always server-rendered with fresh data.
+// Alternatively, you can use:
+// export const revalidate = 0;
+export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   // Fetch all sessions ordered by their start datetime
@@ -117,7 +121,6 @@ export default async function HomePage() {
                       {capitalizeWords(session.teacher)}
                     </p>
                   </div>
-
                 ))
               )}
             </div>
