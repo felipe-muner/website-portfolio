@@ -1,4 +1,6 @@
+import { DeleteSessionButton } from "@/components/DeleteSessionButton";
 import { SessionForm } from "@/components/SessionForm";
+
 import { prisma } from "@/lib/prisma";
 import { cn } from "@/lib/utils";
 
@@ -20,9 +22,8 @@ export default async function HomePage() {
   ];
 
   // Calculate Monday's date for the current week.
-  // Note: In JavaScript, getDay() returns 0 for Sunday, 1 for Monday, etc.
   const today = new Date();
-  const diffToMonday = (today.getDay() + 6) % 7; // If today is Sunday (0), diff will be 6; if Monday (1), diff is 0, etc.
+  const diffToMonday = (today.getDay() + 6) % 7; // Sunday (0) => 6, Monday (1) => 0, etc.
   const monday = new Date(today);
   monday.setDate(today.getDate() - diffToMonday);
 
@@ -97,9 +98,13 @@ export default async function HomePage() {
                   <div
                     key={session.id}
                     className={cn(
-                      "bg-brand-background-1 p-1 border border-brand-gray-darker rounded-lg flex flex-col gap-2 mb-4 hover:shadow-lg transition-shadow duration-300"
+                      "relative bg-brand-background-1 p-1 border border-brand-gray-darker rounded-lg flex flex-col gap-2 mb-4 hover:shadow-lg transition-shadow duration-300"
                     )}
                   >
+                    {/* Delete Button positioned at top right */}
+                    <div className="absolute top-1 right-1">
+                      <DeleteSessionButton sessionId={session.id} />
+                    </div>
                     {/* Time Range */}
                     <p className="text-sm font-bold text-white text-center">
                       {formatTime(session.startDatetime)} - {formatTime(session.endDatetime)}

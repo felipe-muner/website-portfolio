@@ -50,3 +50,29 @@ export async function POST(request: Request) {
     );
   }
 }
+
+export async function DELETE(request: Request) {
+  try {
+    const body = await request.json();
+    const { sessionId } = body;
+
+    if (!sessionId) {
+      return NextResponse.json(
+        { error: "Missing sessionId" },
+        { status: 400 }
+      );
+    }
+
+    await prisma.classSession.delete({
+      where: { id: sessionId },
+    });
+
+    return NextResponse.json({ message: "Session deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { error: error instanceof Error ? error.message : "Failed to delete session" },
+      { status: 500 }
+    );
+  }
+}
