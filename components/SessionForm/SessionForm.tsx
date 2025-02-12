@@ -14,6 +14,27 @@ export default function SessionForm() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Function to update the end time
+  function handleStartChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const newStart = e.target.value;
+    setStartDatetime(newStart);
+
+    if (newStart) {
+      const startDate = new Date(newStart);
+      startDate.setHours(startDate.getHours() + 1); // Add 1 hour
+
+      // Manually format to `YYYY-MM-DDTHH:MM` to avoid UTC conversion
+      const year = startDate.getFullYear();
+      const month = String(startDate.getMonth() + 1).padStart(2, "0");
+      const day = String(startDate.getDate()).padStart(2, "0");
+      const hours = String(startDate.getHours()).padStart(2, "0");
+      const minutes = String(startDate.getMinutes()).padStart(2, "0");
+
+      const updatedEnd = `${year}-${month}-${day}T${hours}:${minutes}`;
+      setEndDatetime(updatedEnd);
+    }
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
@@ -43,7 +64,7 @@ export default function SessionForm() {
     <form
       onSubmit={handleSubmit}
       className={cn(
-        "bg-brand-background-1 border-brand-gray-charcoal rounded-lg shadow-lg flex flex-col gap-4"
+        "bg-brand-background-1 border border-brand-gray-charcoal rounded-lg shadow-lg flex flex-col gap-4 p-6"
       )}
     >
       {error && <p className="text-red-500 text-sm">{error}</p>}
@@ -67,7 +88,7 @@ export default function SessionForm() {
             type="text"
             value={classname}
             onChange={(e) => setClassname(e.target.value)}
-            className="w-full bg-brand-background-2 text-white border border-brand-gray-darker rounded px-4 py-2"              
+            className="w-full bg-brand-background-2 text-white border border-brand-gray-darker rounded px-4 py-2"
             required
           />
         </div>
@@ -77,7 +98,7 @@ export default function SessionForm() {
           <Input
             type="datetime-local"
             value={startDatetime}
-            onChange={(e) => setStartDatetime(e.target.value)}
+            onChange={handleStartChange} // Calls function to update end time
             className="w-full bg-brand-background-2 text-white border border-brand-gray-darker rounded px-4 py-2"
             required
           />
