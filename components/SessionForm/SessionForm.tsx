@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
 export default function SessionForm() {
+  const router = useRouter();
   const [teacher, setTeacher] = useState("");
   const [classname, setClassname] = useState("");
   const [startDatetime, setStartDatetime] = useState("");
@@ -14,7 +16,7 @@ export default function SessionForm() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Function to update the end time
+  // Update endDatetime based on startDatetime change (add 1 hour)
   function handleStartChange(e: React.ChangeEvent<HTMLInputElement>) {
     const newStart = e.target.value;
     setStartDatetime(newStart);
@@ -23,7 +25,6 @@ export default function SessionForm() {
       const startDate = new Date(newStart);
       startDate.setHours(startDate.getHours() + 1); // Add 1 hour
 
-      // Manually format to `YYYY-MM-DDTHH:MM` to avoid UTC conversion
       const year = startDate.getFullYear();
       const month = String(startDate.getMonth() + 1).padStart(2, "0");
       const day = String(startDate.getDate()).padStart(2, "0");
@@ -51,7 +52,14 @@ export default function SessionForm() {
         const data = await res.json();
         setError(data.error || "Failed to create session");
       } else {
-        window.location.reload();
+        // Refresh the data on the page without a full reload.
+        router.refresh();
+
+        // Optionally reset form fields.
+        // setTeacher("");
+        // setClassname("");
+        setStartDatetime("");
+        setEndDatetime("");
       }
     } catch (err) {
       console.error(err);
@@ -63,13 +71,10 @@ export default function SessionForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className={cn(
-        "bg-brand-background-1 border border-brand-gray-charcoal rounded-lg shadow-lg flex flex-col gap-4 p-6"
-      )}
+      className={cn("bg-brand-background-1 border-brand-gray-charcoal rounded-lg shadow-lg flex flex-col gap-4")}
     >
       {error && <p className="text-red-500 text-sm">{error}</p>}
 
-      {/* Fields in a row on larger screens, stacked on mobile */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="flex flex-col gap-2">
           <Label className="text-white/80">Teacher</Label>
@@ -98,7 +103,7 @@ export default function SessionForm() {
           <Input
             type="datetime-local"
             value={startDatetime}
-            onChange={handleStartChange} // Calls function to update end time
+            onChange={handleStartChange}
             className="w-full bg-brand-background-2 text-white border border-brand-gray-darker rounded px-4 py-2"
             required
           />
@@ -116,7 +121,6 @@ export default function SessionForm() {
         </div>
       </div>
 
-      {/* Button on a separate line */}
       <div className="mt-2">
         <Button
           type="submit"
