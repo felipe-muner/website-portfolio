@@ -28,6 +28,7 @@ const NAV_ITEMS = [
       { label: "HIIT", href: "/classes/hiit" },
       { label: "Pilates Mobility", href: "/classes/pilates-mobility" },
       { label: "Tabata", href: "/classes/tabata" },
+      { label: "Body Balance", href: "/classes/body-balance" },
       // { label: "Breathwork & Ice Bath", href: "/classes/breathwork-ice-bath" },
     ],
   },
