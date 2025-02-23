@@ -10,8 +10,7 @@ export default function Overview() {
       <Breadcrumb route={'Overview'} isClass />
       <div className="flex flex-col gap-4 items-start justify-center p-4 my-20 text-brand-gray-medium container mx-auto max-w-[700px] font-mulish">
         <h1 className="text-3xl font-semibold text-white text-left">Experience Premium Fitness in the Heart of Koh Phangan</h1>
-        <p className="text-white font-semibold">Open daily from <span className="text-white flex items-center gap-1"><Clock7 className="text-brand-orange" size={20} /> 7:00 to <Clock10 className="text-brand-orange" size={20} /> 22:00</span></p>
-        
+        <p className="text-white font-semibold">Open daily from <span className="text-white flex items-center gap-1"><Clock7 className="text-brand-orange" size={20} /> 7:00 to <Clock10 className="text-brand-orange" size={20} /> 22:00</span></p>      
         <p>Spanning 1,000m² (5,400 sq. ft.), our modern fitness center is designed for those who prioritize performance, hygiene, and well-being.</p>
         
         <ul className="space-y-3">
