@@ -1,7 +1,7 @@
-// components/SessionsList.tsx
 import React from "react";
 import { DeleteSessionButton } from "@/components/DeleteSessionButton";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 interface ClassSession {
   id: number;
@@ -18,8 +18,37 @@ interface SessionsListProps {
   isTv?: boolean;
 }
 
+const gridContainerVariants = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const gridItemVariants = {
+  hidden: { opacity: 0, x: -20, y: -20 },
+  show: { opacity: 1, x: 0, y: 0 },
+};
+
+const sessionContainerVariants = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const sessionItemVariants = {
+  hidden: { opacity: 0, y: 10 },
+  show: { opacity: 1, y: 0 },
+};
+
 export default function SessionsList(props: SessionsListProps) {
-  const p = {...props}
+  const p = { ...props };
+
   // Define days of the week
   const daysOfWeek = [
     { name: "Monday", index: 1 },
@@ -62,6 +91,12 @@ export default function SessionsList(props: SessionsListProps) {
     return { ...day, sessions: daySessions, date: dateForDay };
   });
 
+  // Conditionally use motion components when isTv is true.
+  const GridContainer = p.isTv ? motion.div : "div";
+  const GridItem = p.isTv ? motion.div : "div";
+  const SessionContainer = p.isTv ? motion.div : "div";
+  const SessionItem = p.isTv ? motion.div : "div";
+
   return (
     <section className={cn("py-16 px-4 w-full", p.className)}>
       {!p.isAdmin && (
@@ -69,11 +104,15 @@ export default function SessionsList(props: SessionsListProps) {
           Schedule
         </h2>
       )}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-2">
+      <GridContainer
+        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-2"
+        {...(p.isTv && { initial: "hidden", animate: "show", variants: gridContainerVariants })}
+      >
         {sessionsByDay.map((day) => (
-          <div
+          <GridItem
             key={day.name}
             className="bg-brand-gray-charcoal p-2 border border-brand-gray-darker rounded-lg shadow-md flex flex-col"
+            {...(p.isTv && { variants: gridItemVariants })}
           >
             <h3 className="font-oswald text-xl font-bold text-brand-orange mb-4 border-b border-brand-gray-darker pb-2 text-center">
               {day.name}
@@ -82,33 +121,43 @@ export default function SessionsList(props: SessionsListProps) {
               </span>
             </h3>
             {day.sessions.length === 0 ? (
-              <p className="text-white/70 text-center mt-4"></p>
+              <p className="text-white/70 text-center mt-4">No Sessions</p>
             ) : (
-              day.sessions.map((session) => (
-                <div
-                  key={session.id}
-                  className="bg-brand-background-1 p-4 border border-brand-gray-darker rounded-lg flex flex-col gap-2 hover:shadow-lg transition-shadow duration-300"
-                >
-                  {p.isAdmin && (
-                    <div className="w-full flex justify-end">
-                      <DeleteSessionButton sessionId={session.id} />
-                    </div>
-                  )}
-                  <p className="text-sm font-bold text-white text-center">
-                    {formatTime(session.startDatetime)} - {formatTime(session.endDatetime)}
-                  </p>
-                  <p className="text-md font-semibold text-white text-center">
-                    {capitalizeWords(session.classname)}
-                  </p>
-                  <p className="text-md text-white/70 text-center">
-                    {capitalizeWords(session.teacher)}
-                  </p>
-                </div>
-              ))
+              <SessionContainer
+                className="flex flex-col gap-2"
+                {...(p.isTv && {
+                  initial: "hidden",
+                  animate: "show",
+                  variants: sessionContainerVariants,
+                })}
+              >
+                {day.sessions.map((session) => (
+                  <SessionItem
+                    key={session.id}
+                    className="bg-brand-background-1 p-4 border border-brand-gray-darker rounded-lg flex flex-col gap-2 hover:shadow-lg transition-shadow duration-300"
+                    {...(p.isTv && { variants: sessionItemVariants })}
+                  >
+                    {p.isAdmin && (
+                      <div className="w-full flex justify-end">
+                        <DeleteSessionButton sessionId={session.id} />
+                      </div>
+                    )}
+                    <p className="text-sm font-bold text-white text-center">
+                      {formatTime(session.startDatetime)} - {formatTime(session.endDatetime)}
+                    </p>
+                    <p className="text-md font-semibold text-white text-center">
+                      {capitalizeWords(session.classname)}
+                    </p>
+                    <p className="text-md text-white/70 text-center">
+                      {capitalizeWords(session.teacher)}
+                    </p>
+                  </SessionItem>
+                ))}
+              </SessionContainer>
             )}
-          </div>
+          </GridItem>
         ))}
-      </div>
+      </GridContainer>
     </section>
   );
 }
