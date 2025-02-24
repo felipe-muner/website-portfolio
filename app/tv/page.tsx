@@ -1,4 +1,4 @@
-// pages/tv.tsx (or wherever your TV page is defined)
+// /app/tv/page.tsx
 
 import { TvClient } from "@/components/TvClient";
 import { prisma } from "@/lib/prisma";

@@ -1,4 +1,4 @@
-// pages/index.tsx (or wherever your HomePage component is defined)
+// /app/new-schedule/page.tsx
 import { SessionForm } from "@/components/SessionForm";
 import SessionsList from "@/components/SessionList/SessionList";
 
