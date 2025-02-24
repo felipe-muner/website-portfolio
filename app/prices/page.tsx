@@ -13,7 +13,7 @@ export default function Prices() {
   return (
     <>
       <Breadcrumb route={'Prices'} />
-      <OurPlan className="pt-24"/>
+      <OurPlan className="pt-24" />
       <TitleSection title="PUSH YOUR LIMITS FORWARD" subtitle="What we do?" className="mt-36" />
       <WhatWeDo />
     </>
