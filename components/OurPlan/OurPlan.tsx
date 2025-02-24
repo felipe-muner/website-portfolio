@@ -66,10 +66,19 @@ export default function OurPlan(props: OurPlanProps) {
   const p = { ...props };
 
   // Define the 6 plan types (rows)
-  const planTypes = ["Drop-in", "5-pass", "1-month", "3-month", "6-month", "12-month"];
+  const planTypes = [
+    "Drop-in",
+    "5-pass",
+    "1-month",
+    "3-month",
+    "6-month",
+    "12-month",
+  ];
 
   // Flatten the subcategories in order
-  const subCategories = membershipPlans.flatMap(membership => membership.plans);
+  const subCategories = membershipPlans.flatMap(
+    (membership) => membership.plans
+  );
 
   return (
     <section className={cn("bg-brand-background-2 py-16", p.className)}>
@@ -112,13 +121,18 @@ export default function OurPlan(props: OurPlanProps) {
               {planTypes.map((type, rowIndex) => (
                 <tr key={rowIndex} className="border-t border-brand-gray-light">
                   {/* Row header for the plan type with full border */}
-                  <th className="px-4 py-2 text-left text-white font-mulish border border-brand-gray-light">
+                  <th className="px-4 py-2 text-left text-white font-mulish border border-brand-gray-light bg-brand-gray-dark">
                     {type}
+                    {type.toLowerCase() === "5-pass" && (
+                      <div className="text-xs text-gray-400">
+                        Validity: 1 month - Cannot be shared
+                      </div>
+                    )}
                   </th>
                   {subCategories.map((sub, colIndex) => {
                     // Find matching plan (case-insensitive)
                     const plan = sub.plans.find(
-                      p => p.name.toLowerCase() === type.toLowerCase()
+                      (p) => p.name.toLowerCase() === type.toLowerCase()
                     );
                     return (
                       <td
