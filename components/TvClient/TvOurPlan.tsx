@@ -1,27 +1,51 @@
 import { cn } from "@/lib/utils";
 import { membershipPlans } from "../OurPlan/membershipData";
+import { motion } from "framer-motion";
 
 interface TvOurPlanProps {
   className?: string;
 }
 
+const planTypes = [
+  "Drop-in",
+  "5-pass",
+  "1-month",
+  "3-month",
+  "6-month",
+  "12-month",
+];
+
+const subCategories = membershipPlans.flatMap(
+  (membership) => membership.plans
+);
+
+const containerVariants = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.15,
+    },
+  },
+};
+
+const rowVariants = {
+  hidden: { opacity: 0, y: 10 },
+  show: { opacity: 1, y: 0 },
+};
+
+// Delay the paragraphs container to run after the table rows have finished animating.
+const paragraphsContainerVariants = {
+  hidden: {},
+  show: {
+    transition: {
+      delayChildren: planTypes.length * 0.15, // 6 rows * 0.15 = 0.9 seconds
+      staggerChildren: 0.15,
+    },
+  },
+};
+
 export default function TvOurPlan(props: TvOurPlanProps) {
   const p = { ...props };
-
-  // Define the 6 plan types (rows)
-  const planTypes = [
-    "Drop-in",
-    "5-pass",
-    "1-month",
-    "3-month",
-    "6-month",
-    "12-month",
-  ];
-
-  // Flatten the subcategories in order
-  const subCategories = membershipPlans.flatMap(
-    (membership) => membership.plans
-  );
 
   return (
     <section className={cn("py-16 px-4 w-full", p.className)}>
@@ -55,9 +79,17 @@ export default function TvOurPlan(props: TvOurPlanProps) {
               ))}
             </tr>
           </thead>
-          <tbody>
+          <motion.tbody
+            initial="hidden"
+            animate="show"
+            variants={containerVariants}
+          >
             {planTypes.map((type, rowIndex) => (
-              <tr key={rowIndex} className="border-t border-brand-gray-light">
+              <motion.tr
+                key={rowIndex}
+                className="border-t border-brand-gray-light"
+                variants={rowVariants}
+              >
                 <th className="px-4 py-3 text-left text-white font-mulish bg-brand-gray-dark text-xl font-semibold border border-brand-gray-light">
                   {type}
                   {type.toLowerCase() === "5-pass" && (
@@ -79,18 +111,29 @@ export default function TvOurPlan(props: TvOurPlanProps) {
                     </td>
                   );
                 })}
-              </tr>
+              </motion.tr>
             ))}
-          </tbody>
+          </motion.tbody>
         </table>
-        <div className="mt-4 space-y-2">
-          <p className="px-4 text-left text-gray-400 font-mulish text-base">
+        <motion.div
+          className="mt-4 space-y-2"
+          initial="hidden"
+          animate="show"
+          variants={paragraphsContainerVariants}
+        >
+          <motion.p
+            className="px-4 text-left text-gray-400 font-mulish text-base"
+            variants={rowVariants}
+          >
             * CrossFit 1, 3, 6 months & Fitness Classes 1-month = 500 ฿ / month for Gym, Steam & Ice-bath access - NOT valid for Open-gym only.
-          </p>
-          <p className="px-4 text-left text-gray-400 font-mulish text-base">
+          </motion.p>
+          <motion.p
+            className="px-4 text-left text-gray-400 font-mulish text-base"
+            variants={rowVariants}
+          >
             * Membership PAUSE = 1 month: 1, 3-month: 2, 6-month: 3, 12-month: 4. Duration: maximum 3 weeks per time.
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
       </div>
     </section>
   );
