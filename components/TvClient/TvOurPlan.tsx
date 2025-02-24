@@ -1,4 +1,3 @@
-import { TitleSection } from "@/components/TitleSection";
 import { cn } from "@/lib/utils";
 
 const membershipPlans = [
