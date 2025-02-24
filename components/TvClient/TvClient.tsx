@@ -26,8 +26,6 @@ export default function TvClient() {
   const { data: sessions, error } = useSWR<Session[]>("/api/sessions", fetcher, {
     refreshInterval: 60000,
   });
-
-  console.log('123123', sessions);
   
   // Define the rotating components.
   const components = [
