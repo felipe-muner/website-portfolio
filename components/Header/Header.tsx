@@ -66,7 +66,7 @@ const NAV_ITEMS = [
       // { label: "Breathwork & Ice Bath", href: "/classes/breathwork-ice-bath" },
     ],
   },
-  { href: "/about-us", label: "About us" },  
+  // { href: "/about-us", label: "About us" },  
   { href: "/prices", label: "Prices" },
   { href: "/contact-gym", label: "Contact Gym" },
   { href: "/contact-crossfit", label: "Contact CrossFit" },
