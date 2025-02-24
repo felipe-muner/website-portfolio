@@ -86,7 +86,7 @@ export default function SessionsList(props: SessionsListProps) {
               day.sessions.map((session) => (
                 <div
                   key={session.id}
-                  className="bg-brand-background-1 p-1 border border-brand-gray-darker rounded-lg flex flex-col gap-2 mb-4 hover:shadow-lg transition-shadow duration-300"
+                  className="bg-brand-background-1 p-4 border border-brand-gray-darker rounded-lg flex flex-col gap-2 mb-4 hover:shadow-lg transition-shadow duration-300"
                 >
                   {p.isAdmin && (
                     <div className="w-full flex justify-end">
@@ -99,7 +99,7 @@ export default function SessionsList(props: SessionsListProps) {
                   <p className="text-md font-semibold text-white text-center">
                     {capitalizeWords(session.classname)}
                   </p>
-                  <p className="text-sm text-white/70 text-center">
+                  <p className="text-md text-white/70 text-center">
                     {capitalizeWords(session.teacher)}
                   </p>
                 </div>

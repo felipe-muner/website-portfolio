@@ -1,8 +1,5 @@
-// /components/TvClient/TvOurPlan.tsx
-
 import { cn } from "@/lib/utils";
 import { membershipPlans } from "../OurPlan/membershipData";
-
 
 interface OurPlanProps {
   className?: string;
@@ -35,23 +32,23 @@ export default function TvOurPlan(props: OurPlanProps) {
         <table className="min-w-full border-collapse border border-brand-gray-light rounded-xl shadow-lg">
           <thead>
             <tr className="bg-brand-gray-darker">
-              <th className="px-4 py-2 border-brand-gray-light"></th>
+              <th className="px-4 py-3 border-brand-gray-light"></th>
               {membershipPlans.map((membership, index) => (
                 <th
                   key={index}
                   colSpan={membership.plans.length}
-                  className="px-4 py-2 text-center text-white text-xl border border-brand-gray-light"
+                  className="px-4 py-3 text-center text-white text-xl font-semibold border border-brand-gray-light"
                 >
                   {membership.type}
                 </th>
               ))}
             </tr>
             <tr className="bg-brand-gray-darker">
-              <th className="px-4 py-2 border-brand-gray-light"></th>
+              <th className="px-4 py-3 border-brand-gray-light"></th>
               {subCategories.map((sub, index) => (
                 <th
                   key={index}
-                  className="px-4 py-2 text-center text-white border border-brand-gray-light"
+                  className="px-4 py-3 text-center text-white text-lg font-medium border border-brand-gray-light"
                 >
                   {sub.category}
                 </th>
@@ -61,10 +58,10 @@ export default function TvOurPlan(props: OurPlanProps) {
           <tbody>
             {planTypes.map((type, rowIndex) => (
               <tr key={rowIndex} className="border-t border-brand-gray-light">
-                <th className="px-4 py-2 text-left text-white font-mulish border border-brand-gray-light bg-brand-gray-dark">
+                <th className="px-4 py-3 text-left text-white font-mulish bg-brand-gray-dark text-xl font-semibold border border-brand-gray-light">
                   {type}
                   {type.toLowerCase() === "5-pass" && (
-                    <div className="text-xs text-gray-400">
+                    <div className="text-xs text-gray-400 mt-1">
                       Validity: 1 month - Cannot be shared
                     </div>
                   )}
@@ -76,7 +73,7 @@ export default function TvOurPlan(props: OurPlanProps) {
                   return (
                     <td
                       key={colIndex}
-                      className="px-4 py-2 text-center text-brand-orange font-bold border border-brand-gray-light"
+                      className="px-4 py-3 text-center text-brand-orange font-bold text-xl border border-brand-gray-light"
                     >
                       {plan ? plan.price : "-"}
                     </td>
@@ -87,10 +84,10 @@ export default function TvOurPlan(props: OurPlanProps) {
           </tbody>
         </table>
         <div className="mt-4 space-y-2">
-          <p className="px-4 text-left text-gray-400 font-mulish">
+          <p className="px-4 text-left text-gray-400 font-mulish text-base">
             * CrossFit 1, 3, 6 months & Fitness Classes 1-month = 500 ฿ / month for Gym, Steam & Ice-bath access - NOT valid for Open-gym only.
           </p>
-          <p className="px-4 text-left text-gray-400 font-mulish">
+          <p className="px-4 text-left text-gray-400 font-mulish text-base">
             * Membership PAUSE = 1 month: 1, 3-month: 2, 6-month: 3, 12-month: 4. Duration: maximum 3 weeks per time.
           </p>
         </div>
