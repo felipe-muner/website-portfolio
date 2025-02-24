@@ -60,7 +60,6 @@ const membershipPlans = [
 
 interface OurPlanProps {
   className?: string;
-  isAdmin?: boolean;
 }
 
 export default function OurPlan(props: OurPlanProps) {

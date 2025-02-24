@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import SessionsList from "@/components/SessionList/SessionList";
-import { OurPlan } from "../OurPlan";
+import TvOurPlan from "./TvOurPlan";
 
 interface Session {
   id: number;
@@ -33,11 +33,8 @@ export default function TvClient({ sessions }: TvClientProps) {
 
   // Define the rotating components. One of these is the sessions list.
   const components = [
-    () => <SessionsList sessions={sessions} isAdmin={false} />,
-    () => <OurPlan isAdmin={false} />,
-    // () => <div className="text-3xl font-bold text-white">Component 2</div>,
-    // () => <div className="text-3xl font-bold text-white">Component 4</div>,
-    // () => <div className="text-3xl font-bold text-white">Component 5</div>,
+    () => <SessionsList sessions={sessions} />,
+    () => <TvOurPlan />,
   ];
 
   // Rotate through components every 5 seconds.

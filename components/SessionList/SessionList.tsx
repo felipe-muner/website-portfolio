@@ -61,7 +61,7 @@ export default function SessionsList({ sessions, isAdmin = false }: SessionsList
   return (
     <>
       {!isAdmin && (
-        <h2 className="text-[40px] font-bold text-white uppercase text-center mb-10">
+        <h2 className="text-5xl font-bold text-white uppercase text-center mb-10 font-mulish">
           Schedule
         </h2>
       )}
