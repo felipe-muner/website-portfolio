@@ -1,3 +1,5 @@
+'use client';
+
 import React from "react";
 import { DeleteSessionButton } from "@/components/DeleteSessionButton";
 import { cn } from "@/lib/utils";
