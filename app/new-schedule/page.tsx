@@ -1,11 +1,10 @@
+// Force dynamic rendering so the page always uses fresh data.
+export const dynamic = "force-dynamic";
+
 // /app/new-schedule/page.tsx
 import { SessionForm } from "@/components/SessionForm";
 import SessionsList from "@/components/SessionList/SessionList";
-
 import { prisma } from "@/lib/prisma";
-
-// Force dynamic rendering so the page always uses fresh data.
-export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   // Fetch sessions ordered by their start datetime
@@ -30,7 +29,7 @@ export default async function HomePage() {
         <h2 className="font-oswald text-2xl font-bold mt-8 text-brand-orange text-center">
           Sessions List
         </h2>
-        <SessionsList sessions={sessions} />
+        <SessionsList sessions={sessions} isAdmin={true} />
       </div>
     </section>
   );

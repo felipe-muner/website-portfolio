@@ -2,23 +2,6 @@ import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 
-// GET: Retrieve all sessions
-export async function GET() {
-  try {
-    const sessions = await prisma.classSession.findMany({
-      orderBy: { startDatetime: "asc" }
-    });
-    console.log('sessions', sessions);
-
-    return NextResponse.json(sessions);
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "An unexpected error occurred" },
-      { status: 500 }
-    );
-  }
-}
-
 // POST: Create a new session
 export async function POST(request: Request) {
   try {

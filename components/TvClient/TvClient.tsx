@@ -22,9 +22,9 @@ export default function TvClient({ sessions }: TvClientProps) {
 
   // Define the rotating components. One of these is the sessions list.
   const components = [
+    () => <SessionsList sessions={sessions} isAdmin={false} />,
     () => <div className="text-3xl font-bold text-white">Component 1</div>,
     () => <div className="text-3xl font-bold text-white">Component 2</div>,
-    () => <SessionsList sessions={sessions} />,
     () => <div className="text-3xl font-bold text-white">Component 4</div>,
     () => <div className="text-3xl font-bold text-white">Component 5</div>,
   ];
