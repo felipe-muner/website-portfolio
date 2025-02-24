@@ -1,5 +1,3 @@
-// /components/SessionForm/SessionForm.tsx
-
 "use client";
 
 import { useState } from "react";
@@ -18,48 +16,32 @@ export default function SessionForm() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Update endDatetime based on startDatetime change (add 1 hour)
-  function handleStartChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const newStart = e.target.value;
-    setStartDatetime(newStart);
-
-    if (newStart) {
-      const startDate = new Date(newStart);
-      startDate.setHours(startDate.getHours() + 1); // Add 1 hour
-
-      const year = startDate.getFullYear();
-      const month = String(startDate.getMonth() + 1).padStart(2, "0");
-      const day = String(startDate.getDate()).padStart(2, "0");
-      const hours = String(startDate.getHours()).padStart(2, "0");
-      const minutes = String(startDate.getMinutes()).padStart(2, "0");
-
-      const updatedEnd = `${year}-${month}-${day}T${hours}:${minutes}`;
-      setEndDatetime(updatedEnd);
-    }
-  }
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError("");
-
+  
     try {
+      // Convert local time input to UTC before sending
+      const startUTC = new Date(startDatetime).toISOString();
+      const endUTC = new Date(endDatetime).toISOString();
+  
       const res = await fetch("/api/sessions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ teacher, classname, startDatetime, endDatetime }),
+        body: JSON.stringify({
+          teacher,
+          classname,
+          startDatetime: startUTC, // Ensure UTC
+          endDatetime: endUTC, // Ensure UTC
+        }),
       });
-
+  
       if (!res.ok) {
         const data = await res.json();
         setError(data.error || "Failed to create session");
       } else {
-        // Refresh the data on the page without a full reload.
         router.refresh();
-
-        // Optionally reset form fields.
-        // setTeacher("");
-        // setClassname("");
         setStartDatetime("");
         setEndDatetime("");
       }
@@ -69,6 +51,7 @@ export default function SessionForm() {
     }
     setLoading(false);
   }
+  
 
   return (
     <form
@@ -105,7 +88,7 @@ export default function SessionForm() {
           <Input
             type="datetime-local"
             value={startDatetime}
-            onChange={handleStartChange}
+            onChange={(e) => setStartDatetime(e.target.value)}
             className="w-full bg-brand-background-2 text-white border border-brand-gray-darker rounded px-4 py-2"
             required
           />
@@ -124,11 +107,7 @@ export default function SessionForm() {
       </div>
 
       <div className="mt-2">
-        <Button
-          type="submit"
-          disabled={loading}
-          className="bg-brand-orange text-white font-semibold px-6 py-2 rounded-md hover:bg-brand-orange-dark transition duration-300 disabled:opacity-50 w-full md:w-auto"
-        >
+        <Button type="submit" disabled={loading} className="bg-brand-orange text-white font-semibold px-6 py-2 rounded-md">
           {loading ? "Saving..." : "Save Session"}
         </Button>
       </div>

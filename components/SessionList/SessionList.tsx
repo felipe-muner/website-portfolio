@@ -70,7 +70,10 @@ export default function SessionsList(props: SessionsListProps) {
     date.toLocaleDateString("en-GB", { day: "2-digit", month: "2-digit" });
 
   const formatTime = (date: string | Date): string => {
-    return new Date(date).toISOString().slice(11, 16); // Extracts HH:mm in UTC
+    return new Date(date).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    }); // Converts to local time
   };
 
   const capitalizeWords = (str: string): string =>
