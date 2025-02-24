@@ -1,6 +1,7 @@
 // components/SessionsList.tsx
 import React from "react";
 import { DeleteSessionButton } from "@/components/DeleteSessionButton";
+import { cn } from "@/lib/utils";
 
 interface ClassSession {
   id: number;
@@ -13,9 +14,11 @@ interface ClassSession {
 interface SessionsListProps {
   sessions: ClassSession[];
   isAdmin?: boolean;
+  className?: string;
 }
 
-export default function SessionsList({ sessions, isAdmin = false }: SessionsListProps) {
+export default function SessionsList(props: SessionsListProps) {
+  const p = {...props}
   // Define days of the week
   const daysOfWeek = [
     { name: "Monday", index: 1 },
@@ -52,16 +55,16 @@ export default function SessionsList({ sessions, isAdmin = false }: SessionsList
     const dateForDay = new Date(monday);
     dateForDay.setDate(monday.getDate() + offset);
 
-    const daySessions = sessions.filter(
+    const daySessions = p.sessions.filter(
       (session) => new Date(session.startDatetime).getDay() === day.index
     );
     return { ...day, sessions: daySessions, date: dateForDay };
   });
 
   return (
-    <>
-      {!isAdmin && (
-        <h2 className="text-5xl font-bold text-white uppercase text-center mb-10 font-mulish">
+    <section className={cn("py-16 px-4 w-full", p.className)}>
+      {!p.isAdmin && (
+        <h2 className="text-5xl font-bold text-white uppercase text-center py-20 font-mulish">
           Schedule
         </h2>
       )}
@@ -85,7 +88,7 @@ export default function SessionsList({ sessions, isAdmin = false }: SessionsList
                   key={session.id}
                   className="bg-brand-background-1 p-1 border border-brand-gray-darker rounded-lg flex flex-col gap-2 mb-4 hover:shadow-lg transition-shadow duration-300"
                 >
-                  {isAdmin && (
+                  {p.isAdmin && (
                     <div className="w-full flex justify-end">
                       <DeleteSessionButton sessionId={session.id} />
                     </div>
@@ -105,6 +108,6 @@ export default function SessionsList({ sessions, isAdmin = false }: SessionsList
           </div>
         ))}
       </div>
-    </>
+    </section>
   );
 }

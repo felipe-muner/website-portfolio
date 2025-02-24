@@ -33,15 +33,15 @@ export default function TvClient({ sessions }: TvClientProps) {
 
   // Define the rotating components. One of these is the sessions list.
   const components = [
-    () => <SessionsList sessions={sessions} />,
     () => <TvOurPlan />,
+    () => <SessionsList sessions={sessions} />,
   ];
 
   // Rotate through components every 5 seconds.
   useEffect(() => {
     const interval = setInterval(() => {
       setIndex((prevIndex) => (prevIndex + 1) % components.length);
-    }, 15000);
+    }, 50000);
     return () => clearInterval(interval);
   }, [components.length]);
 
@@ -54,7 +54,7 @@ export default function TvClient({ sessions }: TvClientProps) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 1 }}
-          className="absolute w-full px-8"
+          className="absolute w-full h-full flex flex-col justify-start items-center px-8"
         >
           {components[index]()}
         </motion.div>
