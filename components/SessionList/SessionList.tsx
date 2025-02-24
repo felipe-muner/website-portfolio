@@ -99,7 +99,7 @@ export default function SessionsList(props: SessionsListProps) {
 
   return (
     <section className={cn("py-16 px-4 w-full", p.className)}>
-      {!p.isAdmin && (
+      {p.isTv && (
         <h2 className="text-5xl font-bold text-white uppercase text-center py-20 font-mulish">
           Schedule
         </h2>
@@ -137,7 +137,7 @@ export default function SessionsList(props: SessionsListProps) {
                     className="bg-brand-background-1 p-4 border border-brand-gray-darker rounded-lg flex flex-col gap-2 hover:shadow-lg transition-shadow duration-300"
                     {...(p.isTv && { variants: sessionItemVariants })}
                   >
-                    {p.isAdmin && (
+                    {!p.isTv && (
                       <div className="w-full flex justify-end">
                         <DeleteSessionButton sessionId={session.id} />
                       </div>
