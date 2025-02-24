@@ -1,3 +1,5 @@
+// /app/prices/page.tsx
+
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { OurPlan } from "@/components/OurPlan";
 import { TitleSection } from "@/components/TitleSection";
@@ -11,7 +13,7 @@ export default function Prices() {
   return (
     <>
       <Breadcrumb route={'Prices'} />
-      <OurPlan />
+      <OurPlan className="pt-20"/>
       <TitleSection title="PUSH YOUR LIMITS FORWARD" subtitle="What we do?" className="mt-36" />
       <WhatWeDo />
     </>

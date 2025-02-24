@@ -1,139 +1,140 @@
-"use client"
+import { TitleSection } from "@/components/TitleSection";
+import { cn } from "@/lib/utils";
 
-import React from "react"
-import { TitleSection } from "../TitleSection"
+const membershipPlans = [
+  {
+    type: "Gym",
+    plans: [
+      {
+        category: "Gym / Steam / Ice-bath",
+        plans: [
+          { name: "Drop-in", price: "300 ฿" },
+          { name: "5-pass", price: "1,250 ฿" },
+          { name: "1-month", price: "1,900 ฿" },
+          { name: "3-month", price: "5,100 ฿" },
+          { name: "6-month", price: "9,000 ฿" },
+          { name: "12-month", price: "16,000 ฿" },
+        ],
+      },
+      {
+        category: "Fitness Classes",
+        plans: [
+          { name: "Drop-in", price: "300 ฿" },
+          { name: "5-pass", price: "1,250 ฿" },
+          { name: "1-month", price: "2,800 ฿" },
+        ],
+      },
+    ],
+  },
+  {
+    type: "Crossfit",
+    plans: [
+      {
+        category: "Group Training",
+        plans: [
+          { name: "Drop-in", price: "600 ฿" },
+          { name: "5-pass", price: "2,250 ฿" },
+          { name: "1-month", price: "4,200 ฿" },
+          { name: "3-month", price: "11,400 ฿" },
+          { name: "6-month", price: "21,600 ฿" },
+        ],
+      },
+      {
+        category: "Open-Gym",
+        plans: [
+          { name: "Drop-in", price: "450 ฿" },
+          { name: "1-month", price: "3,000 ฿" },
+        ],
+      },
+      {
+        category: "Group Training + Open-Gym",
+        plans: [
+          { name: "1-month", price: "5,000 ฿" },
+          { name: "3-month", price: "13,500 ฿" },
+          { name: "6-month", price: "25,800 ฿" },
+        ],
+      },
+    ],
+  },
+];
 
-export default function OurPlan() {
-  const plans = [
-    {
-      title: "Class drop-in",
-      price: "$39.0",
-      label: "Single Class",
-      features: [
-        "Free riding",
-        "Unlimited equipments",
-        "Personal trainer",
-        "Weight losing classes",
-        "Month to mouth",
-        "No time restriction",
-      ],
-    },
-    {
-      title: "12 Month unlimited",
-      price: "$99.0",
-      label: "Single Class",
-      features: [
-        "Free riding",
-        "Unlimited equipments",
-        "Personal trainer",
-        "Weight losing classes",
-        "Month to mouth",
-        "No time restriction",
-      ],
-    },
-    {
-      title: "6 Month unlimited",
-      price: "$59.0",
-      label: "Single Class",
-      features: [
-        "Free riding",
-        "Unlimited equipments",
-        "Personal trainer",
-        "Weight losing classes",
-        "Month to mouth",
-        "No time restriction",
-      ],
-    },
-  ]
+interface OurPlanProps {
+  className?: string;
+}
+
+export default function OurPlan(props: OurPlanProps) {
+  const p = { ...props };
+
+  // Define the 6 plan types (rows)
+  const planTypes = ["Drop-in", "5-pass", "1-month", "3-month", "6-month", "12-month"];
+
+  // Flatten the subcategories in order
+  const subCategories = membershipPlans.flatMap(membership => membership.plans);
 
   return (
-    <section className="bg-brand-background-2 pt-32 w-full">
+    <section className={cn("bg-brand-background-2 py-16", p.className)}>
       <div className="container mx-auto px-4">
-        {/* Heading */}
-        <div className="text-center mb-20">
-          <TitleSection subtitle="Our Plans" title="Choose your pricing plan" />
-        </div>
-
-        {/* Prices cards */}
-        <div className="grid gap-8 sm:grid-cols-1 md:grid-cols-3 justify-items-center">
-          {plans.map((plan, idx) => (
-            <div
-              key={idx}
-              className={`
-                w-full
-                relative 
-                text-center 
-                p-10
-                transition-all 
-                duration-500
-                border
-              border-brand-gray-darkest
-              hover:border-white 
-              hover:bg-white 
-                group
-              `}
-              style={{ transform: "skewY(-4deg)" }} // Outer skew
-            >
-              {/* Title */}
-              <h3
-                className="text-[28px] font-semibold mb-4 text-white transition-colors duration-500 group-hover:text-brand-black"
-                style={{ transform: "skewY(4deg)" }} // Opposite skew for content
-              >
-                {plan.title}
-              </h3>
-
-              {/* Price + Label */}
-              <div
-                className="mb-6"
-                style={{ transform: "skewY(4deg)" }}
-              >
-                <h2 className="text-[48px] md:text-[60px] text-brand-orange font-semibold leading-none">
-                  {plan.price}
-                </h2>
-                <span className="block text-base font-bold uppercase text-brand-gray-light font-mulish group-hover:text-[#444]">
-                  {plan.label}
-                </span>
-              </div>
-
-              {/* Features */}
-              <ul
-                className="mb-8"
-                style={{ transform: "skewY(4deg)" }}
-              >
-                {plan.features.map((feature, i) => (
-                  <li
-                    key={i}
-                    className="text-sm leading-8 text-brand-gray-light transition-colors duration-300 group-hover:text-brand-black font-mulish"
+        <TitleSection
+          title="Your membership, an investment in your health"
+          subtitle="Choose your plan"
+          className="pb-10"
+        />
+        <div className="overflow-x-auto mt-10">
+          <table className="min-w-full border-collapse border border-brand-gray-light rounded-xl shadow-lg">
+            <thead>
+              {/* First header row: Group columns by membership type */}
+              <tr className="bg-brand-gray-darker">
+                <th className="px-4 py-2 border border-brand-gray-light"></th>
+                {membershipPlans.map((membership, index) => (
+                  <th
+                    key={index}
+                    colSpan={membership.plans.length}
+                    className="px-4 py-2 text-center text-white text-xl border border-brand-gray-light"
                   >
-                    {feature}
-                  </li>
+                    {membership.type}
+                  </th>
                 ))}
-              </ul>
-
-              {/* Enroll button */}
-              <a
-                href="#"
-                className={`
-                  block 
-                  bg-[#333] 
-                  text-white 
-                  py-4 px-[30px] mt-2
-                  font-mulish
-                  uppercase 
-                  transition-colors 
-                  duration-300
-                  group-hover:bg-brand-orange
-                  font-bold
-                `}
-                style={{ transform: "skewY(4deg)" }}
-              >
-                Enroll now
-              </a>
-
-            </div>
-          ))}
+              </tr>
+              {/* Second header row: Display subcategory names */}
+              <tr className="bg-brand-gray-darker">
+                <th className="px-4 py-2 border border-brand-gray-light"></th>
+                {subCategories.map((sub, index) => (
+                  <th
+                    key={index}
+                    className="px-4 py-2 text-center text-white border border-brand-gray-light"
+                  >
+                    {sub.category}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {planTypes.map((type, rowIndex) => (
+                <tr key={rowIndex} className="border-t border-brand-gray-light">
+                  {/* Row header for the plan type with full border */}
+                  <th className="px-4 py-2 text-left text-white font-mulish border border-brand-gray-light">
+                    {type}
+                  </th>
+                  {subCategories.map((sub, colIndex) => {
+                    // Find matching plan (case-insensitive)
+                    const plan = sub.plans.find(
+                      p => p.name.toLowerCase() === type.toLowerCase()
+                    );
+                    return (
+                      <td
+                        key={colIndex}
+                        className="px-4 py-2 text-center text-brand-orange font-bold border border-brand-gray-light"
+                      >
+                        {plan ? plan.price : "-"}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </section>
-  )
+  );
 }
