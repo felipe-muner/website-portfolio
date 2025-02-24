@@ -59,45 +59,52 @@ export default function SessionsList({ sessions, isAdmin = false }: SessionsList
   });
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-2">
-      {sessionsByDay.map((day) => (
-        <div
-          key={day.name}
-          className="bg-brand-gray-charcoal p-2 border border-brand-gray-darker rounded-lg shadow-md flex flex-col"
-        >
-          <h3 className="font-oswald text-xl font-bold text-brand-orange mb-4 border-b border-brand-gray-darker pb-2 text-center">
-            {day.name}
-            <span className="block text-xs font-normal text-white/70">
-              {formatDate(day.date)}
-            </span>
-          </h3>
-          {day.sessions.length === 0 ? (
-            <p className="text-white/70 text-center mt-4">No sessions found.</p>
-          ) : (
-            day.sessions.map((session) => (
-              <div
-                key={session.id}
-                className="bg-brand-background-1 p-1 border border-brand-gray-darker rounded-lg flex flex-col gap-2 mb-4 hover:shadow-lg transition-shadow duration-300"
-              >
-                {isAdmin && (
-                  <div className="w-full flex justify-end">
-                    <DeleteSessionButton sessionId={session.id} />
-                  </div>
-                )}
-                <p className="text-sm font-bold text-white text-center">
-                  {formatTime(session.startDatetime)} - {formatTime(session.endDatetime)}
-                </p>
-                <p className="text-md font-semibold text-white text-center">
-                  {capitalizeWords(session.classname)}
-                </p>
-                <p className="text-sm text-white/70 text-center">
-                  {capitalizeWords(session.teacher)}
-                </p>
-              </div>
-            ))
-          )}
-        </div>
-      ))}
-    </div>
+    <>
+      {!isAdmin && (
+        <h2 className="text-[40px] font-bold text-white uppercase text-center mb-10">
+          Schedule
+        </h2>
+      )}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-2">
+        {sessionsByDay.map((day) => (
+          <div
+            key={day.name}
+            className="bg-brand-gray-charcoal p-2 border border-brand-gray-darker rounded-lg shadow-md flex flex-col"
+          >
+            <h3 className="font-oswald text-xl font-bold text-brand-orange mb-4 border-b border-brand-gray-darker pb-2 text-center">
+              {day.name}
+              <span className="block text-xs font-normal text-white/70">
+                {formatDate(day.date)}
+              </span>
+            </h3>
+            {day.sessions.length === 0 ? (
+              <p className="text-white/70 text-center mt-4"></p>
+            ) : (
+              day.sessions.map((session) => (
+                <div
+                  key={session.id}
+                  className="bg-brand-background-1 p-1 border border-brand-gray-darker rounded-lg flex flex-col gap-2 mb-4 hover:shadow-lg transition-shadow duration-300"
+                >
+                  {isAdmin && (
+                    <div className="w-full flex justify-end">
+                      <DeleteSessionButton sessionId={session.id} />
+                    </div>
+                  )}
+                  <p className="text-sm font-bold text-white text-center">
+                    {formatTime(session.startDatetime)} - {formatTime(session.endDatetime)}
+                  </p>
+                  <p className="text-md font-semibold text-white text-center">
+                    {capitalizeWords(session.classname)}
+                  </p>
+                  <p className="text-sm text-white/70 text-center">
+                    {capitalizeWords(session.teacher)}
+                  </p>
+                </div>
+              ))
+            )}
+          </div>
+        ))}
+      </div>
+    </>
   );
 }

@@ -1,3 +1,5 @@
+// /app/new-schedule/page.tsx
+
 // Force dynamic rendering so the page always uses fresh data.
 export const dynamic = "force-dynamic";
 
