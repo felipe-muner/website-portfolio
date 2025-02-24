@@ -91,7 +91,6 @@ export default function OurPlan(props: OurPlanProps) {
         <div className="overflow-x-auto mt-10">
           <table className="min-w-full border-collapse border border-brand-gray-light rounded-xl shadow-lg">
             <thead>
-              {/* First header row: Group columns by membership type */}
               <tr className="bg-brand-gray-darker">
                 <th className="px-4 py-2 border-brand-gray-light"></th>
                 {membershipPlans.map((membership, index) => (
@@ -104,7 +103,6 @@ export default function OurPlan(props: OurPlanProps) {
                   </th>
                 ))}
               </tr>
-              {/* Second header row: Display subcategory names */}
               <tr className="bg-brand-gray-darker">
                 <th className="px-4 py-2 border-brand-gray-light"></th>
                 {subCategories.map((sub, index) => (
@@ -120,7 +118,6 @@ export default function OurPlan(props: OurPlanProps) {
             <tbody>
               {planTypes.map((type, rowIndex) => (
                 <tr key={rowIndex} className="border-t border-brand-gray-light">
-                  {/* Row header for the plan type with full border */}
                   <th className="px-4 py-2 text-left text-white font-mulish border border-brand-gray-light bg-brand-gray-dark">
                     {type}
                     {type.toLowerCase() === "5-pass" && (
@@ -130,7 +127,6 @@ export default function OurPlan(props: OurPlanProps) {
                     )}
                   </th>
                   {subCategories.map((sub, colIndex) => {
-                    // Find matching plan (case-insensitive)
                     const plan = sub.plans.find(
                       (p) => p.name.toLowerCase() === type.toLowerCase()
                     );
@@ -147,6 +143,14 @@ export default function OurPlan(props: OurPlanProps) {
               ))}
             </tbody>
           </table>
+          <div className="mt-4 space-y-2">
+            <p className="px-4 text-left text-gray-400">
+              * CrossFit 1, 3, 6 months & Fitness Classes 1-month = 500 ฿ / month for Gym, Steam & Ice-bath access - NOT valid for Open-gym only.
+            </p>
+            <p className="px-4 text-left text-gray-400">
+              * Membership PAUSE = 1 month: 1, 3-month: 2, 6-month: 3, 12-month: 4. Duration: maximum 3 weeks per time.
+            </p>
+          </div>
         </div>
       </div>
     </section>
