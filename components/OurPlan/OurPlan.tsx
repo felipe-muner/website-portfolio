@@ -84,7 +84,7 @@ export default function OurPlan(props: OurPlanProps) {
             <thead>
               {/* First header row: Group columns by membership type */}
               <tr className="bg-brand-gray-darker">
-                <th className="px-4 py-2 border border-brand-gray-light"></th>
+                <th className="px-4 py-2 border-brand-gray-light"></th>
                 {membershipPlans.map((membership, index) => (
                   <th
                     key={index}
@@ -97,7 +97,7 @@ export default function OurPlan(props: OurPlanProps) {
               </tr>
               {/* Second header row: Display subcategory names */}
               <tr className="bg-brand-gray-darker">
-                <th className="px-4 py-2 border border-brand-gray-light"></th>
+                <th className="px-4 py-2 border-brand-gray-light"></th>
                 {subCategories.map((sub, index) => (
                   <th
                     key={index}
