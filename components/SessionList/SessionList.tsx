@@ -13,7 +13,6 @@ interface ClassSession {
 
 interface SessionsListProps {
   sessions: ClassSession[];
-  isAdmin?: boolean;
   className?: string;
   isTv?: boolean;
 }
@@ -70,8 +69,9 @@ export default function SessionsList(props: SessionsListProps) {
   const formatDate = (date: Date): string =>
     date.toLocaleDateString("en-GB", { day: "2-digit", month: "2-digit" });
 
-  const formatTime = (date: string | Date): string =>
-    new Date(date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  const formatTime = (date: string | Date): string => {
+    return new Date(date).toISOString().slice(11, 16); // Extracts HH:mm in UTC
+  };
 
   const capitalizeWords = (str: string): string =>
     str

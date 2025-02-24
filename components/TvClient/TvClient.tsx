@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import useSWR from "swr";
 import { motion, AnimatePresence } from "framer-motion";
 import SessionsList from "@/components/SessionList/SessionList";
 import TvTips from "./TvTips";
@@ -16,36 +16,42 @@ interface Session {
   endDatetime: string | Date;
 }
 
-interface TvClientProps {
-  sessions: Session[];
-}
+// Define a simple fetcher function.
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-export default function TvClient({ sessions }: TvClientProps) {
+export default function TvClient() {
   const [index, setIndex] = useState(0);
-  const router = useRouter();
 
-  // Refresh the page every 60 seconds to fetch updated sessions.
-  useEffect(() => {
-    const refreshInterval = setInterval(() => {
-      router.refresh();
-    }, 60000);
-    return () => clearInterval(refreshInterval);
-  }, [router]);
+  // Use SWR to fetch sessions from the API endpoint every 60 seconds.
+  const { data: sessions, error } = useSWR<Session[]>("/api/sessions", fetcher, {
+    refreshInterval: 60000,
+  });
 
-  // Define the rotating components. One of these is the sessions list.
+  console.log('123123', sessions);
+  
+  // Define the rotating components.
   const components = [
+    () =>
+      sessions ? (
+        <SessionsList sessions={sessions} isTv />
+      ) : (
+        <div className="text-white">Loading sessions...</div>
+      ),
     () => <OurPlan isTv />,
-    () => <SessionsList sessions={sessions} isTv />,
     () => <TvTips />,
   ];
 
-  // Rotate through components every 5 seconds.
+  // Rotate through components every 20 seconds.
   useEffect(() => {
     const interval = setInterval(() => {
       setIndex((prevIndex) => (prevIndex + 1) % components.length);
-    }, 50000);
+    }, 20000);
     return () => clearInterval(interval);
   }, [components.length]);
+
+  if (error) {
+    return <div className="text-red-500">Error loading sessions</div>;
+  }
 
   return (
     <div className="flex items-center justify-center h-screen bg-black relative">

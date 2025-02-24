@@ -31,7 +31,7 @@ export default async function HomePage() {
         <h2 className="font-oswald text-2xl font-bold mt-8 text-brand-orange text-center">
           Sessions List
         </h2>
-        <SessionsList sessions={sessions} isAdmin={true} />
+        <SessionsList sessions={sessions} />
       </div>
     </section>
   );

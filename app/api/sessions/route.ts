@@ -1,6 +1,23 @@
+// /app/api/sessions/route.ts
+
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
+export async function GET() {
+  try {
+    const sessions = await prisma.classSession.findMany({
+      orderBy: { startDatetime: "asc" },
+    });
+
+    return NextResponse.json(sessions, { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { error: "Failed to fetch sessions" },
+      { status: 500 }
+    );
+  }
+}
 
 // POST: Create a new session
 export async function POST(request: Request) {
