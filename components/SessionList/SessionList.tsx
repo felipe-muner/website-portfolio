@@ -15,6 +15,7 @@ interface SessionsListProps {
   sessions: ClassSession[];
   isAdmin?: boolean;
   className?: string;
+  isTv?: boolean;
 }
 
 export default function SessionsList(props: SessionsListProps) {
@@ -86,7 +87,7 @@ export default function SessionsList(props: SessionsListProps) {
               day.sessions.map((session) => (
                 <div
                   key={session.id}
-                  className="bg-brand-background-1 p-4 border border-brand-gray-darker rounded-lg flex flex-col gap-2 mb-4 hover:shadow-lg transition-shadow duration-300"
+                  className="bg-brand-background-1 p-4 border border-brand-gray-darker rounded-lg flex flex-col gap-2 hover:shadow-lg transition-shadow duration-300"
                 >
                   {p.isAdmin && (
                     <div className="w-full flex justify-end">

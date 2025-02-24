@@ -53,7 +53,7 @@ export default function TvOurPlan(props: TvOurPlanProps) {
         Prices
       </h2>
       <div className="overflow-x-auto">
-        <table className="min-w-full border-collapse border border-brand-gray-light rounded-xl shadow-lg">
+        <table className="min-w-full border-collapse border border-brand-gray-light rounded-xl shadow-lg font-mulish">
           <thead>
             <tr className="bg-brand-gray-darker">
               <th className="px-4 py-3 border-brand-gray-light"></th>
@@ -105,7 +105,7 @@ export default function TvOurPlan(props: TvOurPlanProps) {
                   return (
                     <td
                       key={colIndex}
-                      className="px-4 py-3 text-center text-brand-orange font-bold text-xl border border-brand-gray-light"
+                      className="px-4 py-3 text-center text-brand-orange text-xl border border-brand-gray-light"
                     >
                       {plan ? plan.price : "-"}
                     </td>

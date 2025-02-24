@@ -34,9 +34,9 @@ export default function TvClient({ sessions }: TvClientProps) {
 
   // Define the rotating components. One of these is the sessions list.
   const components = [
-    () => <TvTips />,
-    () => <SessionsList sessions={sessions} />,
+    () => <SessionsList sessions={sessions} isTv />,
     () => <TvOurPlan />,
+    () => <TvTips />,
   ];
 
   // Rotate through components every 5 seconds.
