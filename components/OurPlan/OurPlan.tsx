@@ -50,8 +50,12 @@ export default function OurPlan(props: OurPlanProps) {
   const p = { ...props };
 
   return (
-    <section className={cn("py-16", p.className)}>
-      <div className="max-w-7xl mx-auto px-4">
+    <section className={cn({ "w-full": p.isTv }, "py-16", p.className)}>
+      <div
+        className={cn(
+          p.isTv ? "w-full mx-auto px-4" : "max-w-7xl mx-auto px-4"
+        )}
+      >
         {/* Conditional title/header */}
         {p.isTv ? (
           <h2 className="text-5xl font-bold text-white uppercase text-center py-20 font-mulish">
