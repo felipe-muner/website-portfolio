@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import SessionsList from "@/components/SessionList/SessionList";
 import TvOurPlan from "./TvOurPlan";
+import TvTips from "./TvTips";
 
 interface Session {
   id: number;
@@ -33,6 +34,7 @@ export default function TvClient({ sessions }: TvClientProps) {
 
   // Define the rotating components. One of these is the sessions list.
   const components = [
+    () => <TvTips />,
     () => <SessionsList sessions={sessions} />,
     () => <TvOurPlan />,
   ];

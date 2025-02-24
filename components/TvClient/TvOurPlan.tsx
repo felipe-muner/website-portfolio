@@ -1,11 +1,11 @@
 import { cn } from "@/lib/utils";
 import { membershipPlans } from "../OurPlan/membershipData";
 
-interface OurPlanProps {
+interface TvOurPlanProps {
   className?: string;
 }
 
-export default function TvOurPlan(props: OurPlanProps) {
+export default function TvOurPlan(props: TvOurPlanProps) {
   const p = { ...props };
 
   // Define the 6 plan types (rows)
