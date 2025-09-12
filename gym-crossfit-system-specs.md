@@ -18,12 +18,14 @@ Comprehensive gym and crossfit management system with manual payment processing,
 
 ```sql
 admin_users
-- id (cuid2)
+- id (crypto.randomUUID())
 - email (gmail address)
 - name
 - role (owner, manager, staff)
 - is_active (boolean)
 - created_at
+- updated_at
+- deleted_at (soft delete)
 - last_login
 ```
 
@@ -31,7 +33,7 @@ admin_users
 
 ```sql
 members
-- id (cuid2)
+- id (crypto.randomUUID())
 - passport_id (unique)
 - email (unique)
 - name
@@ -46,37 +48,44 @@ members
 - pause_count (track how many times paused)
 - remaining_visits (for 5-pass plans)
 - created_at
+- updated_at
+- deleted_at (soft delete)
+
 ```
 
 ### Membership Pauses
 
 ```sql
 membership_pauses
-- id (cuid2)
+- id (crypto.randomUUID())
 - member_id (foreign key)
 - pause_start_date
 - pause_end_date (null if still paused)
 - pause_reason (optional)
 - paused_by_admin
 - created_at
+- updated_at
+- deleted_at (soft delete)
 ```
 
 ### Check-ins
 
 ```sql
 check_ins
-- id (cuid2)
+- id (crypto.randomUUID())
 - member_id (foreign key)
 - facility_type (gym, crossfit, fitness_class)
 - check_in_time
 - created_at
+- updated_at
+- deleted_at (soft delete)
 ```
 
 ### Day Passes
 
 ```sql
 day_passes
-- id (cuid2)
+- id (crypto.randomUUID())
 - customer_name
 - passport_id/email (optional for drop-ins)
 - pass_type (gym_dropin, fitness_class, crossfit_dropin)
@@ -90,7 +99,7 @@ day_passes
 
 ```sql
 payments
-- id (cuid2)
+- id (crypto.randomUUID())
 - member_id (foreign key, nullable for day passes)
 - day_pass_id (foreign key, nullable for memberships)
 - amount
@@ -106,7 +115,7 @@ payments
 
 ```sql
 shop_items
-- id (cuid2)
+- id (crypto.randomUUID())
 - name
 - price
 - stock_quantity
@@ -119,7 +128,7 @@ shop_items
 
 ```sql
 shop_sales
-- id (cuid2)
+- id (crypto.randomUUID())
 - item_id (foreign key)
 - quantity
 - unit_price
