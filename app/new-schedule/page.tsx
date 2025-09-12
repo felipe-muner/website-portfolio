@@ -5,14 +5,15 @@ export const dynamic = "force-dynamic";
 
 // /app/new-schedule/page.tsx
 import { SessionForm } from "@/components/SessionForm";
-import SessionsList from "@/components/SessionList/SessionList";
-import { prisma } from "@/lib/prisma";
+// import SessionsList from "@/components/SessionList/SessionList";
+// import { prisma } from "@/lib/prisma";
 
 export default async function HomePage() {
   // Fetch sessions ordered by their start datetime
-  const sessions = await prisma.classSession.findMany({
-    orderBy: { startDatetime: "asc" },
-  });
+  // const sessions = await prisma.classSession.findMany({
+  //   orderBy: { startDatetime: "asc" },
+  // });
+  // const sessions: any[] = []; // Placeholder - Prisma removed
 
   return (
     <section className="w-full bg-brand-background-2 py-10 lg:pt-28 lg:pb-36 text-white font-mulish">
@@ -31,7 +32,8 @@ export default async function HomePage() {
         <h2 className="font-oswald text-2xl font-bold mt-8 text-brand-orange text-center">
           Sessions List
         </h2>
-        <SessionsList sessions={sessions} />
+        {/* <SessionsList sessions={sessions} /> */}
+        <div className="text-center text-gray-400">Database functionality disabled - Prisma removed</div>
       </div>
     </section>
   );
