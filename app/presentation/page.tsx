@@ -23,7 +23,7 @@ export default function PresentationPage() {
             Complete Management System Proposal
           </h2>
           <div className="flex justify-center gap-4">
-            <Badge variant="secondary" className="px-4 py-2 text-lg">Next.js 14</Badge>
+            <Badge variant="secondary" className="px-4 py-2 text-lg">Next.js 15</Badge>
             <Badge variant="secondary" className="px-4 py-2 text-lg">Neon Database</Badge>
             <Badge variant="secondary" className="px-4 py-2 text-lg">Gmail Auth</Badge>
             <Badge variant="secondary" className="px-4 py-2 text-lg">Tailwind + shadcn/ui</Badge>

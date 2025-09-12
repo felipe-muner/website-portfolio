@@ -1,6 +1,21 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+/* Custom theme configuration for Tailwind CSS v4 */
+@theme {
+  --font-family-oswald: "Oswald", var(--font-family-sans);
+  --font-family-mulish: "Mulish", var(--font-family-sans);
+  
+  --color-brand-black: #000000;
+  --color-brand-orange: #f36100;
+  --color-brand-gray-light: #c4c4c4;
+  --color-brand-gray-medium: #a9a9a9;
+  --color-brand-gray-dark: #5c5c5c;
+  --color-brand-gray-darker: #4d4d4d;
+  --color-brand-gray-darkest: #464646;
+  --color-brand-gray-charcoal: #363636;
+  --color-brand-background-1: #0a0a0a;
+  --color-brand-background-2: #151515;
+}
 
 @layer base {
   :root {
@@ -60,10 +75,11 @@
 
 @layer base {
   * {
-    @apply border-border;
+    border-color: hsl(var(--border));
   }
   body {
     font-family: var(--font-oswald), Arial, Helvetica, sans-serif;
-    @apply bg-background text-foreground;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
   }
 }
