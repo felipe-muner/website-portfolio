@@ -2,13 +2,13 @@
 
 import { useState } from 'react'
 import { MembersTable } from '@/components/admin/members/members-table'
-import { AddMemberDialog } from '@/components/admin/members/add-member-dialog'
+import { AddMemberSheet } from '@/components/admin/members/add-member-sheet'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Plus, Search } from 'lucide-react'
 
 export default function MembersPage() {
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
+  const [isAddSheetOpen, setIsAddSheetOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
 
   return (
@@ -18,7 +18,7 @@ export default function MembersPage() {
           <h1 className="text-3xl font-bold text-gray-900">Members</h1>
           <p className="text-gray-600">Manage gym and CrossFit members</p>
         </div>
-        <Button onClick={() => setIsAddDialogOpen(true)}>
+        <Button onClick={() => setIsAddSheetOpen(true)}>
           <Plus className="h-4 w-4 mr-2" />
           Add Member
         </Button>
@@ -38,9 +38,9 @@ export default function MembersPage() {
 
       <MembersTable searchQuery={searchQuery} />
       
-      <AddMemberDialog 
-        open={isAddDialogOpen} 
-        onOpenChange={setIsAddDialogOpen}
+      <AddMemberSheet
+        open={isAddSheetOpen}
+        onOpenChange={setIsAddSheetOpen}
       />
     </div>
   )
