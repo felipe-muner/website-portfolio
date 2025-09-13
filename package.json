@@ -11,7 +11,12 @@
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
-    "db:seed": "tsx scripts/create-admin.ts"
+    "db:seed": "bun scripts/create-admin.ts",
+    "db:setup": "npm run db:push && npm run db:seed",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:restart": "docker compose down && docker compose up -d && sleep 3 && npm run db:setup",
+    "docker:up:db": "docker compose up -d && sleep 3 && npm run db:push && npm run db:seed"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.10.0",
@@ -38,18 +43,20 @@
     "lucide-react": "^0.469.0",
     "next": "^15.5.3",
     "next-auth": "^5.0.0-beta.29",
+    "pg": "^8.16.3",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-intersection-observer": "^9.14.1",
     "swr": "^2.3.2",
-    "vaul": "^1.1.2",
     "tailwind-merge": "^3.3.1",
+    "vaul": "^1.1.2",
     "zod": "^4.1.7"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/pg": "^8.15.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
