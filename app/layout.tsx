@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/next';
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { AuthProvider } from "@/components/providers/auth-provider";
 import { APP_NAME } from "@/constants";
 
 const oswald = Oswald({
@@ -34,10 +35,12 @@ export default function RootLayout({
       <body
         className={`${oswald.variable} ${mulish.variable} antialiased bg-brand-background-2`}
       >
-        <Header />
-        <main className="flex flex-col">{children}</main>
-        <Footer />
-        <Analytics />
+        <AuthProvider>
+          <Header />
+          <main className="flex flex-col">{children}</main>
+          <Footer />
+          <Analytics />
+        </AuthProvider>
       </body>
     </html>
   );
