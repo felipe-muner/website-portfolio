@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
 /* Custom theme configuration for Tailwind CSS v4 */
 @theme {
