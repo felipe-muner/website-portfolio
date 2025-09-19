@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import Link from 'next/link'
+import { planOptions, getPlanById } from '@/lib/config/plans'
 
 export default function NewMember() {
   const [formData, setFormData] = useState({
@@ -26,18 +27,32 @@ export default function NewMember() {
     setIsSubmitting(true)
 
     try {
+      // Get plan details from configuration if plan is selected
+      const selectedPlan = formData.planType ? getPlanById(formData.planType) : null
+
       const endDate = new Date(formData.startDate)
-      endDate.setMonth(endDate.getMonth() + parseInt(formData.planDuration))
+      if (selectedPlan?.duration) {
+        endDate.setMonth(endDate.getMonth() + selectedPlan.duration)
+      } else if (selectedPlan?.visits) {
+        endDate.setMonth(endDate.getMonth() + 1) // 5-pass expires in 1 month
+      } else if (formData.planDuration) {
+        endDate.setMonth(endDate.getMonth() + parseInt(formData.planDuration))
+      }
 
       const memberData = {
-        ...formData,
+        name: formData.name,
+        email: formData.email || null,
+        phone: formData.phone || null,
+        passportId: formData.passportId || null,
+        planType: selectedPlan?.type || formData.planType || null,
+        planDuration: selectedPlan?.duration || (formData.planDuration ? parseInt(formData.planDuration) : null),
+        startDate: formData.startDate,
         originalEndDate: endDate.toISOString(),
         currentEndDate: endDate.toISOString(),
-        planDuration: parseInt(formData.planDuration),
         isActive: true,
         isPaused: false,
         pauseCount: 0,
-        remainingVisits: formData.planType.includes('5pass') ? 5 : null,
+        remainingVisits: selectedPlan?.visits || (formData.planType.includes('5pass') ? 5 : null),
       }
 
       const response = await fetch('/api/admin/members', {
@@ -135,41 +150,40 @@ export default function NewMember() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="planType">Plan Type *</Label>
+                <Label htmlFor="planType">Plan Type</Label>
                 <Select
                   value={formData.planType}
                   onValueChange={(value) => setFormData({ ...formData, planType: value })}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select plan type" />
+                    <SelectValue placeholder="Select plan type (optional)" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="gym_only">Gym Only</SelectItem>
-                    <SelectItem value="gym_crossfit">Gym + CrossFit</SelectItem>
-                    <SelectItem value="gym_5pass">Gym 5-Pass</SelectItem>
-                    <SelectItem value="fitness_5pass">Fitness 5-Pass</SelectItem>
-                    <SelectItem value="crossfit_5pass">CrossFit 5-Pass</SelectItem>
+                    <optgroup label="Drop-in">
+                      {planOptions.filter(p => p.id.includes('dropin')).map(plan => (
+                        <SelectItem key={plan.id} value={plan.id}>
+                          {plan.name} - {plan.price}
+                        </SelectItem>
+                      ))}
+                    </optgroup>
+                    <optgroup label="5-Pass Options">
+                      {planOptions.filter(p => p.visits && !p.id.includes('dropin')).map(plan => (
+                        <SelectItem key={plan.id} value={plan.id}>
+                          {plan.name} - {plan.price}
+                        </SelectItem>
+                      ))}
+                    </optgroup>
+                    <optgroup label="Monthly Plans">
+                      {planOptions.filter(p => p.duration).map(plan => (
+                        <SelectItem key={plan.id} value={plan.id}>
+                          {plan.name} - {plan.price}
+                        </SelectItem>
+                      ))}
+                    </optgroup>
                   </SelectContent>
                 </Select>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="planDuration">Plan Duration (months) *</Label>
-                <Select
-                  value={formData.planDuration}
-                  onValueChange={(value) => setFormData({ ...formData, planDuration: value })}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select duration" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="1">1 Month</SelectItem>
-                    <SelectItem value="3">3 Months</SelectItem>
-                    <SelectItem value="6">6 Months</SelectItem>
-                    <SelectItem value="12">12 Months</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
 
               <div className="space-y-2 md:col-span-2">
                 <Label htmlFor="startDate">Start Date *</Label>

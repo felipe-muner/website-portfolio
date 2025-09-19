@@ -13,7 +13,9 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { PhoneDisplay } from '@/components/ui/phone-display'
-import { Edit, Pause, Play } from 'lucide-react'
+import { Edit, Pause, Play, AlertTriangle, Eye } from 'lucide-react'
+import { checkMembershipValidity, getMembershipStatusBadge } from '@/lib/utils/membership'
+import Link from 'next/link'
 
 interface Member {
   id: string
@@ -92,13 +94,32 @@ export const MembersTable = forwardRef<MembersTableRef, MembersTableProps>(
   })
 
   const getStatusBadge = (member: Member) => {
-    if (!member.isActive) {
-      return <Badge variant="secondary">Inactive</Badge>
-    }
-    if (member.isPaused) {
-      return <Badge className="bg-yellow-100 text-yellow-800">Paused</Badge>
-    }
-    return <Badge className="bg-green-100 text-green-800">Active</Badge>
+    const membershipStatus = checkMembershipValidity({
+      planType: member.planType,
+      planDuration: member.planDuration,
+      currentEndDate: member.currentEndDate,
+      isActive: member.isActive,
+      isPaused: member.isPaused,
+      remainingVisits: member.remainingVisits,
+    })
+
+    const badgeConfig = getMembershipStatusBadge(membershipStatus)
+
+    return (
+      <div className="flex items-center gap-2">
+        <Badge
+          variant={badgeConfig.variant}
+          className={badgeConfig.className}
+        >
+          {badgeConfig.text}
+        </Badge>
+        {membershipStatus.reason && membershipStatus.daysRemaining <= 7 && membershipStatus.daysRemaining > 0 && (
+          <div title={membershipStatus.reason}>
+            <AlertTriangle className="h-4 w-4 text-orange-500" />
+          </div>
+        )}
+      </div>
+    )
   }
 
   const formatDate = (dateString: string) => {
@@ -136,55 +157,92 @@ export const MembersTable = forwardRef<MembersTableRef, MembersTableProps>(
               <TableHead>End Date</TableHead>
               <TableHead>Visits</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead>Valid</TableHead>
               <TableHead className="w-[50px]"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredMembers.map((member) => (
-              <TableRow key={member.id}>
-                <TableCell>
-                  <div>
-                    <div className="font-medium">{member.name}</div>
-                    <div className="text-sm text-gray-500">{member.passportId}</div>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div>
-                    <div className="text-sm">{member.email || 'No email'}</div>
-                    <div className="text-sm text-gray-500">
-                      {member.phone ? (
-                        <PhoneDisplay phoneNumber={member.phone} flagSize="sm" />
+            {filteredMembers.map((member) => {
+              const membershipStatus = checkMembershipValidity({
+                planType: member.planType,
+                planDuration: member.planDuration,
+                currentEndDate: member.currentEndDate,
+                isActive: member.isActive,
+                isPaused: member.isPaused,
+                remainingVisits: member.remainingVisits,
+              })
+
+              return (
+                <TableRow key={member.id}>
+                  <TableCell>
+                    <div>
+                      <div className="font-medium">{member.name}</div>
+                      <div className="text-sm text-gray-500">{member.passportId}</div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div>
+                      <div className="text-sm">{member.email || 'No email'}</div>
+                      <div className="text-sm text-gray-500">
+                        {member.phone ? (
+                          <PhoneDisplay phoneNumber={member.phone} flagSize="sm" />
+                        ) : (
+                          'No phone'
+                        )}
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    {member.planType ? (
+                      <Badge variant="outline">
+                        {planTypeLabels[member.planType as keyof typeof planTypeLabels] || member.planType}
+                      </Badge>
+                    ) : (
+                      <Badge variant="secondary">No Plan</Badge>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {member.planDuration ? `${member.planDuration} months` : member.planType?.includes('5pass') ? '5-Pass' : '-'}
+                  </TableCell>
+                  <TableCell>{formatDate(member.currentEndDate)}</TableCell>
+                  <TableCell>
+                    {member.remainingVisits !== null ? member.remainingVisits : '-'}
+                  </TableCell>
+                  <TableCell>{getStatusBadge(member)}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-1">
+                      {membershipStatus.isValid ? (
+                        <Badge variant="default" className="bg-green-100 text-green-800 text-xs">
+                          ✓
+                        </Badge>
                       ) : (
-                        'No phone'
+                        <Badge variant="destructive" className="text-xs" title={membershipStatus.reason}>
+                          ✗
+                        </Badge>
+                      )}
+                      {membershipStatus.daysRemaining <= 30 && membershipStatus.daysRemaining > 0 && (
+                        <span className="text-xs text-gray-500">{membershipStatus.daysRemaining}d</span>
                       )}
                     </div>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Badge variant="outline">
-                    {planTypeLabels[member.planType as keyof typeof planTypeLabels]}
-                  </Badge>
-                </TableCell>
-                <TableCell>
-                  {member.planDuration ? `${member.planDuration} months` : '5-Pass'}
-                </TableCell>
-                <TableCell>{formatDate(member.currentEndDate)}</TableCell>
-                <TableCell>
-                  {member.remainingVisits !== null ? member.remainingVisits : '-'}
-                </TableCell>
-                <TableCell>{getStatusBadge(member)}</TableCell>
-                <TableCell>
-                  <div className="flex gap-1">
-                    <Button variant="ghost" size="sm">
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="sm">
-                      {member.isPaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex gap-1">
+                      <Button variant="ghost" size="sm" asChild>
+                        <Link href={`/admin/members/${member.id}`}>
+                          <Eye className="h-4 w-4" />
+                        </Link>
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        {member.isPaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              )
+            })}
           </TableBody>
         </Table>
       </CardContent>

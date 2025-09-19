@@ -15,6 +15,7 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Combobox } from '@/components/ui/combobox'
 import { PhoneInput } from '@/components/ui/phone-input'
+import { planOptions, getPlanById } from '@/lib/config/plans'
 
 interface AddMemberSheetProps {
   open: boolean
@@ -44,18 +45,20 @@ export function AddMemberSheet({ open, onOpenChange, onMemberAdded }: AddMemberS
     e.preventDefault()
 
     try {
-      // Parse plan data
-      const [planType, duration] = formData.plan.includes('_')
-        ? formData.plan.split('_')
-        : [formData.plan, null]
+      // Get plan details from configuration
+      const selectedPlan = getPlanById(formData.plan)
+      if (!selectedPlan && formData.plan) {
+        console.error('Invalid plan selected')
+        return
+      }
 
       // Calculate dates
       const startDate = new Date()
       const endDate = new Date(startDate)
 
-      if (duration && !isNaN(Number(duration))) {
-        endDate.setMonth(endDate.getMonth() + Number(duration))
-      } else if (planType.includes('5pass')) {
+      if (selectedPlan?.duration) {
+        endDate.setMonth(endDate.getMonth() + selectedPlan.duration)
+      } else if (selectedPlan?.visits) {
         endDate.setMonth(endDate.getMonth() + 1) // 5-pass expires in 1 month
       }
 
@@ -65,15 +68,15 @@ export function AddMemberSheet({ open, onOpenChange, onMemberAdded }: AddMemberS
         passportId: formData.passportId || null,
         phone: formData.phone || null,
         nationalityId: formData.nationalityId || null,
-        planType: planType as 'gym_only' | 'gym_crossfit' | 'gym_5pass' | 'fitness_5pass' | 'crossfit_5pass',
-        planDuration: duration ? Number(duration) : null,
+        planType: selectedPlan?.type || null,
+        planDuration: selectedPlan?.duration || null,
         startDate: startDate.toISOString(),
         originalEndDate: endDate.toISOString(),
         currentEndDate: endDate.toISOString(),
         isActive: true,
         isPaused: false,
         pauseCount: 0,
-        remainingVisits: planType.includes('5pass') ? 5 : null,
+        remainingVisits: selectedPlan?.visits || null,
       }
 
       const response = await fetch('/api/admin/members', {
@@ -99,7 +102,9 @@ export function AddMemberSheet({ open, onOpenChange, onMemberAdded }: AddMemberS
         // Trigger a refresh of the members list
         onMemberAdded?.()
       } else {
-        console.error('Failed to create member')
+        const errorData = await response.text()
+        console.error('Failed to create member:', response.status, response.statusText, errorData)
+        alert(`Failed to create member: ${response.status} ${response.statusText}`)
       }
     } catch (error) {
       console.error('Error creating member:', error)
@@ -199,31 +204,51 @@ export function AddMemberSheet({ open, onOpenChange, onMemberAdded }: AddMemberS
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="plan">Plan & Duration *</Label>
+            <Label htmlFor="plan">Plan & Duration</Label>
             <Select value={formData.plan} onValueChange={(value) => handleInputChange('plan', value)}>
               <SelectTrigger>
-                <SelectValue placeholder="Select plan and duration" />
+                <SelectValue placeholder="Select plan and duration (optional)" />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectLabel>Gym Only</SelectLabel>
-                  <SelectItem value="gym_only_1">1 Month</SelectItem>
-                  <SelectItem value="gym_only_3">3 Months</SelectItem>
-                  <SelectItem value="gym_only_6">6 Months</SelectItem>
-                  <SelectItem value="gym_only_12">12 Months</SelectItem>
-                </SelectGroup>
-                <SelectGroup>
-                  <SelectLabel>Gym + CrossFit</SelectLabel>
-                  <SelectItem value="gym_crossfit_1">1 Month</SelectItem>
-                  <SelectItem value="gym_crossfit_3">3 Months</SelectItem>
-                  <SelectItem value="gym_crossfit_6">6 Months</SelectItem>
-                  <SelectItem value="gym_crossfit_12">12 Months</SelectItem>
+                  <SelectLabel>Drop-in</SelectLabel>
+                  {planOptions.filter(p => p.id.includes('dropin')).map(plan => (
+                    <SelectItem key={plan.id} value={plan.id}>
+                      {plan.name} - {plan.price}
+                    </SelectItem>
+                  ))}
                 </SelectGroup>
                 <SelectGroup>
                   <SelectLabel>5-Pass Options</SelectLabel>
-                  <SelectItem value="gym_5pass">Gym 5-Pass</SelectItem>
-                  <SelectItem value="fitness_5pass">Fitness 5-Pass</SelectItem>
-                  <SelectItem value="crossfit_5pass">CrossFit 5-Pass</SelectItem>
+                  {planOptions.filter(p => p.visits && !p.id.includes('dropin')).map(plan => (
+                    <SelectItem key={plan.id} value={plan.id}>
+                      {plan.name} - {plan.price}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+                <SelectGroup>
+                  <SelectLabel>Gym Monthly</SelectLabel>
+                  {planOptions.filter(p => p.type === 'gym_only' && p.duration && !p.id.includes('dropin')).map(plan => (
+                    <SelectItem key={plan.id} value={plan.id}>
+                      {plan.name} - {plan.price}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+                <SelectGroup>
+                  <SelectLabel>Fitness Classes</SelectLabel>
+                  {planOptions.filter(p => p.id.includes('fitness') && p.duration).map(plan => (
+                    <SelectItem key={plan.id} value={plan.id}>
+                      {plan.name} - {plan.price}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+                <SelectGroup>
+                  <SelectLabel>CrossFit</SelectLabel>
+                  {planOptions.filter(p => (p.id.includes('crossfit') || p.type === 'gym_crossfit') && p.duration).map(plan => (
+                    <SelectItem key={plan.id} value={plan.id}>
+                      {plan.name} - {plan.price}
+                    </SelectItem>
+                  ))}
                 </SelectGroup>
               </SelectContent>
             </Select>
