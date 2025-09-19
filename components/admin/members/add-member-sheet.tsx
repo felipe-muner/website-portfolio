@@ -30,6 +30,7 @@ interface Nationality {
   flag: string
 }
 
+
 export function AddMemberSheet({ open, onOpenChange, onMemberAdded }: AddMemberSheetProps) {
   const [formData, setFormData] = useState({
     name: '',
@@ -43,19 +44,6 @@ export function AddMemberSheet({ open, onOpenChange, onMemberAdded }: AddMemberS
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-<<<<<<< HEAD
-    // TODO: Implement member creation
-    console.log('Creating member:', formData)
-    onOpenChange(false)
-    setFormData({
-      name: '',
-      email: '',
-      passportId: '',
-      phone: '',
-      nationalityId: '',
-      plan: '',
-    })
-=======
 
     try {
       // Get plan details from configuration
@@ -122,7 +110,6 @@ export function AddMemberSheet({ open, onOpenChange, onMemberAdded }: AddMemberS
     } catch (error) {
       console.error('Error creating member:', error)
     }
->>>>>>> 675a55288d6a244896156c4baae8a6a1a7a39ed1
   }
 
   const handleInputChange = (field: string, value: string) => {
@@ -218,33 +205,6 @@ export function AddMemberSheet({ open, onOpenChange, onMemberAdded }: AddMemberS
           </div>
 
           <div className="space-y-2">
-<<<<<<< HEAD
-            <Label htmlFor="plan">Plan & Duration *</Label>
-            <Select value={formData.plan} onValueChange={(value) => handleInputChange('plan', value)}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select plan and duration" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Gym Only</SelectLabel>
-                  <SelectItem value="gym_only_1">1 Month</SelectItem>
-                  <SelectItem value="gym_only_3">3 Months</SelectItem>
-                  <SelectItem value="gym_only_6">6 Months</SelectItem>
-                  <SelectItem value="gym_only_12">12 Months</SelectItem>
-                </SelectGroup>
-                <SelectGroup>
-                  <SelectLabel>Gym + CrossFit</SelectLabel>
-                  <SelectItem value="gym_crossfit_1">1 Month</SelectItem>
-                  <SelectItem value="gym_crossfit_3">3 Months</SelectItem>
-                  <SelectItem value="gym_crossfit_6">6 Months</SelectItem>
-                  <SelectItem value="gym_crossfit_12">12 Months</SelectItem>
-                </SelectGroup>
-                <SelectGroup>
-                  <SelectLabel>5-Pass Options</SelectLabel>
-                  <SelectItem value="gym_5pass">Gym 5-Pass</SelectItem>
-                  <SelectItem value="fitness_5pass">Fitness 5-Pass</SelectItem>
-                  <SelectItem value="crossfit_5pass">CrossFit 5-Pass</SelectItem>
-=======
             <Label htmlFor="plan">Plan & Duration</Label>
             <Select value={formData.plan} onValueChange={(value) => handleInputChange('plan', value)}>
               <SelectTrigger>
@@ -290,7 +250,6 @@ export function AddMemberSheet({ open, onOpenChange, onMemberAdded }: AddMemberS
                       {plan.name} - {plan.price}
                     </SelectItem>
                   ))}
->>>>>>> 675a55288d6a244896156c4baae8a6a1a7a39ed1
                 </SelectGroup>
               </SelectContent>
             </Select>
