@@ -95,6 +95,19 @@ export const authenticators = pgTable(
 )
 
 // gym management tables
+export const nationalities = pgTable('nationality', {
+  id: text('id')
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  name: text('name').notNull().unique(),
+  code: text('code').notNull().unique(), // ISO 3166-1 alpha-2 country code
+  flag: text('flag').notNull(), // Unicode flag emoji
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+}, (t) => [
+  index('nationalities_name_idx').on(t.name),
+  index('nationalities_code_idx').on(t.code),
+])
+
 export const adminUsers = pgTable('admin_user', {
   id: text('id')
     .primaryKey()
@@ -119,6 +132,8 @@ export const members = pgTable('member', {
   email: text('email').unique(),
   name: text('name').notNull(),
   phone: text('phone'),
+  nationalityId: text('nationality_id')
+    .references(() => nationalities.id, { onDelete: 'set null' }),
   planType: text('plan_type').$type<'gym_only' | 'gym_crossfit' | 'gym_5pass' | 'fitness_5pass' | 'crossfit_5pass'>().notNull(),
   planDuration: integer('plan_duration'), // 1,3,6,12 months
   startDate: timestamp('start_date').notNull(),
@@ -135,6 +150,7 @@ export const members = pgTable('member', {
   index('members_passport_id_idx').on(t.passportId),
   index('members_email_idx').on(t.email),
   index('members_is_active_idx').on(t.isActive),
+  index('members_nationality_id_idx').on(t.nationalityId),
 ])
 
 export const membershipPauses = pgTable('membership_pause', {
