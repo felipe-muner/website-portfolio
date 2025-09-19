@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { checkIns, members } from '@/lib/db/schema'
 import { eq, and, isNull } from 'drizzle-orm'
-import { type CheckInRequest, type CheckInResponse } from '@/lib/types'
+import { type CheckInRequest } from '@/lib/types'
+import { checkMembershipValidity, canAccessFacility } from '@/lib/utils/membership'
 
 export async function POST(request: NextRequest) {
   try {
@@ -34,70 +35,35 @@ export async function POST(request: NextRequest) {
 
     const memberData = member[0]
 
-    // Check if member is active
-    if (!memberData.isActive) {
+    // Use our enhanced membership validity checking
+    const membershipStatus = checkMembershipValidity({
+      planType: memberData.planType,
+      planDuration: memberData.planDuration,
+      currentEndDate: memberData.currentEndDate.toISOString(),
+      isActive: memberData.isActive,
+      isPaused: memberData.isPaused,
+      remainingVisits: memberData.remainingVisits,
+    })
+
+    // Check if membership is valid
+    if (!membershipStatus.isValid) {
       return NextResponse.json(
-        { error: 'Membership is inactive' },
+        { error: membershipStatus.reason || 'Membership is not valid for access' },
         { status: 403 }
       )
     }
 
-    // Check if membership is paused
-    if (memberData.isPaused) {
-      return NextResponse.json(
-        { error: 'Membership is currently paused' },
-        { status: 403 }
-      )
-    }
-
-    // Check if membership is expired
-    const currentDate = new Date()
-    const endDate = new Date(memberData.currentEndDate)
-    if (currentDate > endDate) {
-      return NextResponse.json(
-        { error: 'Membership has expired' },
-        { status: 403 }
-      )
-    }
-
-    // Check plan type permissions
-    const planType = memberData.planType
-    let canAccess = false
-
-    switch (facilityType) {
-      case 'gym':
-        canAccess = planType.includes('gym')
-        break
-      case 'crossfit':
-        canAccess = planType.includes('crossfit')
-        break
-      case 'fitness_class':
-        canAccess = planType.includes('fitness')
-        break
-      default:
-        return NextResponse.json(
-          { error: 'Invalid facility type' },
-          { status: 400 }
-        )
-    }
-
-    if (!canAccess) {
+    // Check facility access permissions
+    const hasAccess = canAccessFacility(membershipStatus, memberData, facilityType)
+    if (!hasAccess) {
       return NextResponse.json(
         { error: `Your plan does not include access to ${facilityType}` },
         { status: 403 }
       )
     }
 
-    // For 5-pass plans, check remaining visits
-    if (planType.includes('5pass')) {
-      if (!memberData.remainingVisits || memberData.remainingVisits <= 0) {
-        return NextResponse.json(
-          { error: 'No remaining visits on your 5-pass plan' },
-          { status: 403 }
-        )
-      }
-
-      // Decrease remaining visits
+    // For 5-pass plans, decrease remaining visits
+    if (memberData.planType?.includes('5pass')) {
       await db
         .update(members)
         .set({
@@ -120,7 +86,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       checkIn: checkIn[0],
-      remainingVisits: planType.includes('5pass') ? (memberData.remainingVisits || 0) - 1 : null
+      remainingVisits: memberData.planType?.includes('5pass') ? (memberData.remainingVisits || 0) - 1 : null
     })
   } catch (error) {
     console.error('Error during check-in:', error)

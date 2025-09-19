@@ -145,7 +145,7 @@ export default function MemberPortal() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                   <div>
                     <p className="font-medium text-gray-500">Plan Type</p>
-                    <p className="capitalize">{member.planType.replace('_', ' ')}</p>
+                    <p className="capitalize">{member.planType ? member.planType.replace('_', ' ') : 'No Plan'}</p>
                   </div>
                   <div>
                     <p className="font-medium text-gray-500">End Date</p>
@@ -183,7 +183,7 @@ export default function MemberPortal() {
                   <CardContent>
                     {member.isActive && !member.isPaused ? (
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        {member.planType.includes('gym') && (
+                        {member.planType?.includes('gym') && (
                           <Button
                             onClick={() => handleCheckIn('gym')}
                             className="h-20"
@@ -195,7 +195,7 @@ export default function MemberPortal() {
                           </Button>
                         )}
 
-                        {member.planType.includes('crossfit') && (
+                        {member.planType?.includes('crossfit') && (
                           <Button
                             onClick={() => handleCheckIn('crossfit')}
                             className="h-20"
@@ -208,7 +208,7 @@ export default function MemberPortal() {
                           </Button>
                         )}
 
-                        {member.planType.includes('fitness') && (
+                        {member.planType?.includes('fitness') && (
                           <Button
                             onClick={() => handleCheckIn('fitness_class')}
                             className="h-20"

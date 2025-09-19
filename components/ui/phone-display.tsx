@@ -83,7 +83,6 @@ export function PhoneDisplay({
             '62': 'ID',
             '63': 'PH',
             '84': 'VN',
-            '886': 'TW',
             '852': 'HK',
             '853': 'MO',
             '20': 'EG',

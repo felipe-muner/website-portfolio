@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { members } from '@/lib/db/schema'
-import { eq, desc, isNull } from 'drizzle-orm'
+import { desc, isNull } from 'drizzle-orm'
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,15 +14,16 @@ export async function POST(request: NextRequest) {
         email: data.email || null,
         phone: data.phone || null,
         passportId: data.passportId || null,
-        planType: data.planType,
-        planDuration: data.planDuration,
-        startDate: new Date(data.startDate),
-        originalEndDate: new Date(data.originalEndDate),
-        currentEndDate: new Date(data.currentEndDate),
+        nationalityId: data.nationalityId || null,
+        planType: data.planType || null,
+        planDuration: data.planDuration || null,
+        startDate: new Date(data.startDate || new Date()),
+        originalEndDate: new Date(data.originalEndDate || new Date()),
+        currentEndDate: new Date(data.currentEndDate || new Date()),
         isActive: data.isActive ?? true,
         isPaused: data.isPaused ?? false,
         pauseCount: data.pauseCount ?? 0,
-        remainingVisits: data.remainingVisits,
+        remainingVisits: data.remainingVisits || null,
       })
       .returning()
 
