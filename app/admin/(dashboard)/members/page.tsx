@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { MembersTable } from '@/components/admin/members/members-table'
+import { useState, useRef } from 'react'
+import { MembersTable, type MembersTableRef } from '@/components/admin/members/members-table'
 import { AddMemberSheet } from '@/components/admin/members/add-member-sheet'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -10,6 +10,7 @@ import { Plus, Search } from 'lucide-react'
 export default function MembersPage() {
   const [isAddSheetOpen, setIsAddSheetOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const membersTableRef = useRef<MembersTableRef>(null)
 
   return (
     <div className="p-6">
@@ -36,11 +37,15 @@ export default function MembersPage() {
         </div>
       </div>
 
-      <MembersTable searchQuery={searchQuery} />
-      
+      <MembersTable
+        ref={membersTableRef}
+        searchQuery={searchQuery}
+      />
+
       <AddMemberSheet
         open={isAddSheetOpen}
         onOpenChange={setIsAddSheetOpen}
+        onMemberAdded={() => membersTableRef.current?.refreshMembers()}
       />
     </div>
   )

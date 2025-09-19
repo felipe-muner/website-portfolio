@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { checkIns, members } from '@/lib/db/schema'
 import { eq, and, isNull } from 'drizzle-orm'
-import { type CheckInRequest, type CheckInResponse } from '@/lib/types'
+import { type CheckInRequest } from '@/lib/types'
 
 export async function POST(request: NextRequest) {
   try {

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
 import {
   Table,
   TableBody,
@@ -12,53 +12,29 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { PhoneDisplay } from '@/components/ui/phone-display'
 import { Edit, Pause, Play } from 'lucide-react'
 
-// Mock data - will be replaced with real API calls
-const mockMembers = [
-  {
-    id: '1',
-    name: 'John Doe',
-    email: 'john@example.com',
-    passportId: 'A123456789',
-    phone: '+66 81 234 5678',
-    planType: 'gym_crossfit',
-    planDuration: 3,
-    startDate: '2024-01-15',
-    currentEndDate: '2024-04-15',
-    isActive: true,
-    isPaused: false,
-    remainingVisits: null,
-  },
-  {
-    id: '2',
-    name: 'Jane Smith',
-    email: 'jane@example.com',
-    passportId: 'B987654321',
-    phone: '+66 89 876 5432',
-    planType: 'gym_5pass',
-    planDuration: null,
-    startDate: '2024-03-01',
-    currentEndDate: '2024-04-01',
-    isActive: true,
-    isPaused: false,
-    remainingVisits: 3,
-  },
-  {
-    id: '3',
-    name: 'Mike Johnson',
-    email: 'mike@example.com',
-    passportId: 'C456789123',
-    phone: '+66 82 345 6789',
-    planType: 'gym_only',
-    planDuration: 12,
-    startDate: '2024-01-01',
-    currentEndDate: '2024-12-31',
-    isActive: true,
-    isPaused: true,
-    remainingVisits: null,
-  },
-]
+interface Member {
+  id: string
+  name: string
+  email: string | null
+  passportId: string | null
+  phone: string | null
+  nationalityId: string | null
+  planType: string
+  planDuration: number | null
+  startDate: string
+  originalEndDate: string
+  currentEndDate: string
+  isActive: boolean
+  isPaused: boolean
+  pauseCount: number
+  remainingVisits: number | null
+  createdAt: string
+  updatedAt: string
+  deletedAt: string | null
+}
 
 const planTypeLabels = {
   gym_only: 'Gym Only',
@@ -72,19 +48,50 @@ interface MembersTableProps {
   searchQuery: string
 }
 
-export function MembersTable({ searchQuery }: MembersTableProps) {
-  const [members] = useState(mockMembers)
+export interface MembersTableRef {
+  refreshMembers: () => void
+}
+
+export const MembersTable = forwardRef<MembersTableRef, MembersTableProps>(
+  function MembersTable({ searchQuery }, ref) {
+  const [members, setMembers] = useState<Member[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchMembers()
+  }, [])
+
+  useImperativeHandle(ref, () => ({
+    refreshMembers: fetchMembers
+  }))
+
+  const fetchMembers = async () => {
+    try {
+      setLoading(true)
+      const response = await fetch('/api/admin/members')
+      if (response.ok) {
+        const data = await response.json()
+        setMembers(data)
+      } else {
+        console.error('Failed to fetch members')
+      }
+    } catch (error) {
+      console.error('Error fetching members:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const filteredMembers = members.filter((member) => {
     const query = searchQuery.toLowerCase()
     return (
       member.name.toLowerCase().includes(query) ||
-      member.email.toLowerCase().includes(query) ||
-      member.passportId.toLowerCase().includes(query)
+      (member.email && member.email.toLowerCase().includes(query)) ||
+      (member.passportId && member.passportId.toLowerCase().includes(query))
     )
   })
 
-  const getStatusBadge = (member: typeof mockMembers[0]) => {
+  const getStatusBadge = (member: Member) => {
     if (!member.isActive) {
       return <Badge variant="secondary">Inactive</Badge>
     }
@@ -96,6 +103,21 @@ export function MembersTable({ searchQuery }: MembersTableProps) {
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-GB')
+  }
+
+  if (loading) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>All Members</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-center py-8">
+            <div className="text-gray-500">Loading members...</div>
+          </div>
+        </CardContent>
+      </Card>
+    )
   }
 
   return (
@@ -128,8 +150,14 @@ export function MembersTable({ searchQuery }: MembersTableProps) {
                 </TableCell>
                 <TableCell>
                   <div>
-                    <div className="text-sm">{member.email}</div>
-                    <div className="text-sm text-gray-500">{member.phone}</div>
+                    <div className="text-sm">{member.email || 'No email'}</div>
+                    <div className="text-sm text-gray-500">
+                      {member.phone ? (
+                        <PhoneDisplay phoneNumber={member.phone} flagSize="sm" />
+                      ) : (
+                        'No phone'
+                      )}
+                    </div>
                   </div>
                 </TableCell>
                 <TableCell>
@@ -162,4 +190,4 @@ export function MembersTable({ searchQuery }: MembersTableProps) {
       </CardContent>
     </Card>
   )
-}
+})

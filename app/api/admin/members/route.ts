@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { members } from '@/lib/db/schema'
-import { eq, desc, isNull } from 'drizzle-orm'
+import { desc, isNull } from 'drizzle-orm'
 
 export async function POST(request: NextRequest) {
   try {
