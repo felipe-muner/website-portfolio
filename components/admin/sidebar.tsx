@@ -36,7 +36,7 @@ const sidebarItems = [
   },
   {
     title: 'Check-in',
-    href: '/checkin',
+    href: '/admin/checkin',
     icon: Calendar,
   },
   {
