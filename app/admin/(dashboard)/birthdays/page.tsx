@@ -67,7 +67,8 @@ export default function BirthdaysPage() {
 
   if (loading) {
     return (
-      <div className="space-y-6">
+      <div className="p-6">
+        <div className="space-y-6">
         <div className="flex items-center gap-2">
           <Cake className="h-6 w-6 text-orange-500" />
           <h1 className="text-2xl font-bold text-gray-900">Today&apos;s Birthdays</h1>
@@ -78,12 +79,14 @@ export default function BirthdaysPage() {
             <div className="text-gray-500">Loading birthday members...</div>
           </CardContent>
         </Card>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="space-y-6">
+    <div className="p-6">
+      <div className="space-y-6">
       <div className="flex items-center gap-2">
         <Cake className="h-6 w-6 text-orange-500" />
         <h1 className="text-2xl font-bold text-gray-900">Today&apos;s Birthdays</h1>
@@ -148,6 +151,7 @@ export default function BirthdaysPage() {
           ))}
         </div>
       )}
+      </div>
     </div>
   )
 }
