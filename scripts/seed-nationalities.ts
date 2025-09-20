@@ -9,13 +9,22 @@ async function seedNationalities() {
   try {
     console.log('🌍 Seeding nationalities...')
 
+    // Check if nationalities already exist
+    const existingNationalities = await db.select().from(nationalities).limit(1)
+
+    if (existingNationalities.length > 0) {
+      console.log('📝 Nationalities already seeded, skipping...')
+      return
+    }
+
     // Insert all nationalities
     await db.insert(nationalities).values(nationalitiesWithFlags)
 
     console.log(`✅ Successfully seeded ${nationalitiesWithFlags.length} nationalities`)
   } catch (error) {
     console.error('❌ Error seeding nationalities:', error)
-    throw error
+    console.error('Make sure the database is running and accessible')
+    process.exit(1)
   }
 }
 
