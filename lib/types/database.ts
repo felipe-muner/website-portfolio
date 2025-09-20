@@ -13,6 +13,7 @@ import {
   payments,
   shopItems,
   shopSales,
+  nationalities,
 } from '@/lib/db/schema'
 
 // Auth types
@@ -55,6 +56,9 @@ export type NewShopItem = InferInsertModel<typeof shopItems>
 
 export type ShopSale = InferSelectModel<typeof shopSales>
 export type NewShopSale = InferInsertModel<typeof shopSales>
+
+export type Nationality = InferSelectModel<typeof nationalities>
+export type NewNationality = InferInsertModel<typeof nationalities>
 
 // Additional utility types
 export type MemberWithCheckIns = Member & {
