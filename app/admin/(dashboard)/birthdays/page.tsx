@@ -1,10 +1,20 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { PhoneDisplay } from '@/components/ui/phone-display'
-import { Cake } from 'lucide-react'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import { Cake, Eye } from 'lucide-react'
+import Link from 'next/link'
 
 interface BirthdayMember {
   id: string
@@ -104,52 +114,60 @@ export default function BirthdaysPage() {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {birthdayMembers.map((member) => (
-            <Card key={member.id} className="hover:shadow-lg transition-shadow">
-              <CardHeader className="pb-3">
-                <div className="flex items-center gap-3">
-                  <Avatar name={member.name} />
-                  <div className="flex-1">
-                    <CardTitle className="text-lg flex items-center gap-2">
-                      {member.name}
-                      <Cake className="h-4 w-4 text-orange-500" />
-                    </CardTitle>
-                    {member.birthday && (
-                      <p className="text-sm text-gray-600">
-                        Born on {formatDate(member.birthday)}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-500">Age</span>
-                    <Badge variant="outline">{member.age} years old</Badge>
-                  </div>
-
-                  {member.email && (
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-500">Email</span>
-                      <span className="text-sm font-medium truncate max-w-32" title={member.email}>
-                        {member.email}
-                      </span>
-                    </div>
-                  )}
-
-                  {member.phone && (
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-500">Phone</span>
-                      <PhoneDisplay phoneNumber={member.phone} flagSize="sm" />
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        <Card>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Birthday</TableHead>
+                  <TableHead>Age</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Phone</TableHead>
+                  <TableHead className="w-[50px]"></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {birthdayMembers.map((member) => (
+                  <TableRow key={member.id}>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <Avatar name={member.name} />
+                        <div className="flex items-center gap-2">
+                          <Cake className="h-4 w-4 text-orange-500" />
+                          <div className="font-medium">{member.name}</div>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      {member.birthday ? formatDate(member.birthday) : '-'}
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="outline">{member.age} years old</Badge>
+                    </TableCell>
+                    <TableCell>
+                      {member.email || 'No email'}
+                    </TableCell>
+                    <TableCell>
+                      {member.phone ? (
+                        <PhoneDisplay phoneNumber={member.phone} flagSize="sm" />
+                      ) : (
+                        'No phone'
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <Button variant="ghost" size="sm" asChild>
+                        <Link href={`/admin/members/${member.id}`}>
+                          <Eye className="h-4 w-4" />
+                        </Link>
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
       )}
       </div>
     </div>
