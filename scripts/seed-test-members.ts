@@ -5,7 +5,7 @@ import { db } from '../lib/db'
 import { members, payments, membershipPauses, dayPasses } from '../lib/db/schema'
 import { eq } from 'drizzle-orm'
 import { type InferInsertModel } from 'drizzle-orm'
-import { addDays, subDays, addMonths, subMonths } from 'date-fns'
+import { addDays, subDays, addMonths, subMonths, subYears } from 'date-fns'
 
 type NewMember = InferInsertModel<typeof members>
 type NewPayment = InferInsertModel<typeof payments>
@@ -61,7 +61,7 @@ async function seedTestMembers() {
       // 1. Active gym-only 1 month (PAID) - HAS BIRTHDAY TODAY!
       {
         name: 'Alice Johnson', email: 'member01@test.com', phone: '+1234567001',
-        birthday: now, // Birthday today for testing birthday feature!
+        birthday: subYears(now, 20), // 20 years old, birthday today!
         planType: 'gym_only' as const, planDuration: 1, startDate: subDays(now, 15),
         originalEndDate: addDays(now, 15), currentEndDate: addDays(now, 15),
         isActive: true, isPaused: false, payment: { amount: '50.00', method: 'card' as const }
@@ -70,6 +70,7 @@ async function seedTestMembers() {
       // 2. Active gym-only 3 months (PAID)
       {
         name: 'Bob Smith', email: 'member02@test.com', phone: '+1234567002',
+        birthday: subYears(now, 28),
         planType: 'gym_only' as const, planDuration: 3, startDate: subMonths(now, 1),
         originalEndDate: addMonths(now, 2), currentEndDate: addMonths(now, 2),
         isActive: true, isPaused: false, payment: { amount: '130.00', method: 'card' as const }
@@ -78,6 +79,7 @@ async function seedTestMembers() {
       // 3. Active gym-only 6 months with pause history (PAID)
       {
         name: 'Carol Davis', email: 'member03@test.com', phone: '+1234567003',
+        birthday: subYears(now, 35),
         planType: 'gym_only' as const, planDuration: 6, startDate: subMonths(now, 2),
         originalEndDate: addMonths(now, 4), currentEndDate: addDays(addMonths(now, 4), 7), // Extended due to pause
         isActive: true, isPaused: false, payment: { amount: '240.00', method: 'cash' as const },
@@ -87,6 +89,7 @@ async function seedTestMembers() {
       // 4. Active gym-only 12 months (PAID)
       {
         name: 'David Wilson', email: 'member04@test.com', phone: '+1234567004',
+        birthday: subYears(now, 42),
         planType: 'gym_only' as const, planDuration: 12, startDate: subMonths(now, 3),
         originalEndDate: addMonths(now, 9), currentEndDate: addMonths(now, 9),
         isActive: true, isPaused: false, payment: { amount: '480.00', method: 'card' as const }
@@ -95,6 +98,7 @@ async function seedTestMembers() {
       // 5. Currently PAUSED gym-only member (PAID)
       {
         name: 'Eva Martinez', email: 'member05@test.com', phone: '+1234567005',
+        birthday: subYears(now, 31),
         planType: 'gym_only' as const, planDuration: 6, startDate: subDays(now, 45),
         originalEndDate: addMonths(now, 4), currentEndDate: addMonths(now, 4),
         isActive: true, isPaused: true, payment: { amount: '240.00', method: 'card' as const },
@@ -112,6 +116,7 @@ async function seedTestMembers() {
       // 7. Active gym_crossfit 1 month (PAID)
       {
         name: 'Grace Lee', email: 'member07@test.com', phone: '+1234567007',
+        birthday: subYears(now, 26),
         planType: 'gym_crossfit' as const, planDuration: 1, startDate: subDays(now, 10),
         originalEndDate: addDays(now, 20), currentEndDate: addDays(now, 20),
         isActive: true, isPaused: false, payment: { amount: '90.00', method: 'card' as const }
@@ -120,6 +125,7 @@ async function seedTestMembers() {
       // 8. Active gym_crossfit 6 months (PAID)
       {
         name: 'Henry Taylor', email: 'member08@test.com', phone: '+1234567008',
+        birthday: subYears(now, 38),
         planType: 'gym_crossfit' as const, planDuration: 6, startDate: subMonths(now, 1),
         originalEndDate: addMonths(now, 5), currentEndDate: addMonths(now, 5),
         isActive: true, isPaused: false, payment: { amount: '480.00', method: 'card' as const }
@@ -128,6 +134,7 @@ async function seedTestMembers() {
       // 9. Active gym_5pass with 5 visits remaining (PAID)
       {
         name: 'Ivy Chen', email: 'member09@test.com', phone: '+1234567009',
+        birthday: subYears(now, 24),
         planType: 'gym_5pass' as const, planDuration: null, startDate: subDays(now, 2),
         originalEndDate: addDays(now, 28), currentEndDate: addDays(now, 28),
         isActive: true, isPaused: false, remainingVisits: 5,
@@ -137,6 +144,7 @@ async function seedTestMembers() {
       // 10. Active gym_5pass with 2 visits remaining (PAID)
       {
         name: 'Jack Wilson', email: 'member10@test.com', phone: '+1234567010',
+        birthday: subYears(now, 29),
         planType: 'gym_5pass' as const, planDuration: null, startDate: subDays(now, 10),
         originalEndDate: addDays(now, 20), currentEndDate: addDays(now, 20),
         isActive: true, isPaused: false, remainingVisits: 2,
@@ -146,6 +154,7 @@ async function seedTestMembers() {
       // 11. Expired gym_5pass with 0 visits (PAID)
       {
         name: 'Kate Davis', email: 'member11@test.com', phone: '+1234567011',
+        birthday: subYears(now, 33),
         planType: 'gym_5pass' as const, planDuration: null, startDate: subDays(now, 35),
         originalEndDate: subDays(now, 5), currentEndDate: subDays(now, 5),
         isActive: false, isPaused: false, remainingVisits: 0,
@@ -155,6 +164,7 @@ async function seedTestMembers() {
       // 12. Active fitness_5pass with 4 visits remaining (PAID)
       {
         name: 'Liam Rodriguez', email: 'member12@test.com', phone: '+1234567012',
+        birthday: subYears(now, 27),
         planType: 'fitness_5pass' as const, planDuration: null, startDate: subDays(now, 3),
         originalEndDate: addDays(now, 27), currentEndDate: addDays(now, 27),
         isActive: true, isPaused: false, remainingVisits: 4,
@@ -164,6 +174,7 @@ async function seedTestMembers() {
       // 13. Active crossfit_5pass with 3 visits remaining (PAID)
       {
         name: 'Mia Johnson', email: 'member13@test.com', phone: '+1234567013',
+        birthday: subYears(now, 22),
         planType: 'crossfit_5pass' as const, planDuration: null, startDate: subDays(now, 7),
         originalEndDate: addDays(now, 23), currentEndDate: addDays(now, 23),
         isActive: true, isPaused: false, remainingVisits: 3,
@@ -173,6 +184,7 @@ async function seedTestMembers() {
       // 14. UNPAID gym-only 1 month
       {
         name: 'Noah Garcia', email: 'member14@test.com', phone: '+1234567014',
+        birthday: subYears(now, 30),
         planType: 'gym_only' as const, planDuration: 1, startDate: subDays(now, 5),
         originalEndDate: addDays(now, 25), currentEndDate: addDays(now, 25),
         isActive: true, isPaused: false
@@ -181,6 +193,7 @@ async function seedTestMembers() {
       // 15. UNPAID gym_crossfit 3 months
       {
         name: 'Olivia Anderson', email: 'member15@test.com', phone: '+1234567015',
+        birthday: subYears(now, 25),
         planType: 'gym_crossfit' as const, planDuration: 3, startDate: subDays(now, 10),
         originalEndDate: addMonths(now, 2.5), currentEndDate: addMonths(now, 2.5),
         isActive: true, isPaused: false
@@ -205,6 +218,7 @@ async function seedTestMembers() {
       // 18. Member with multiple pause history (PAID)
       {
         name: 'Ryan Thompson', email: 'member18@test.com', phone: '+1234567018',
+        birthday: subYears(now, 36),
         planType: 'gym_only' as const, planDuration: 6, startDate: subDays(now, 100),
         originalEndDate: addDays(now, 65), currentEndDate: addDays(now, 79), // Extended due to pauses
         isActive: true, isPaused: false, payment: { amount: '240.00', method: 'card' as const },
@@ -214,6 +228,7 @@ async function seedTestMembers() {
       // 19. Recently joined gym_crossfit (PAID)
       {
         name: 'Sophia Kim', email: 'member19@test.com', phone: '+1234567019',
+        birthday: subYears(now, 23),
         planType: 'gym_crossfit' as const, planDuration: 12, startDate: subDays(now, 3),
         originalEndDate: addMonths(now, 12), currentEndDate: addMonths(now, 12),
         isActive: true, isPaused: false, payment: { amount: '960.00', method: 'card' as const }
