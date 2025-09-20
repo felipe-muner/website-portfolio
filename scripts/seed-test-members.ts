@@ -4,6 +4,13 @@ dotenvFlow.config()
 import { db } from '../lib/db'
 import { members, payments, membershipPauses, dayPasses } from '../lib/db/schema'
 import { eq } from 'drizzle-orm'
+import { type InferInsertModel } from 'drizzle-orm'
+import { addDays, subDays, addMonths, subMonths } from 'date-fns'
+
+type NewMember = InferInsertModel<typeof members>
+type NewPayment = InferInsertModel<typeof payments>
+type NewMembershipPause = InferInsertModel<typeof membershipPauses>
+type NewDayPass = InferInsertModel<typeof dayPasses>
 
 async function seedTestMembers() {
   try {
@@ -19,82 +26,78 @@ async function seedTestMembers() {
 
     const now = new Date()
 
-    // Helper function to create dates
-    const daysFromNow = (days: number) => new Date(now.getTime() + days * 24 * 60 * 60 * 1000)
-    const daysAgo = (days: number) => new Date(now.getTime() - days * 24 * 60 * 60 * 1000)
-
     const testMembers = [
       // 1. Active gym-only 1 month (PAID)
       {
         name: 'Alice Johnson', email: 'member01@test.com', phone: '+1234567001',
-        planType: 'gym_only', planDuration: 1, startDate: daysAgo(15),
-        originalEndDate: daysFromNow(15), currentEndDate: daysFromNow(15),
+        planType: 'gym_only', planDuration: 1, startDate: subDays(now, 15),
+        originalEndDate: addDays(now, 15), currentEndDate: addDays(now, 15),
         isActive: true, isPaused: false, payment: { amount: '50.00', method: 'card' }
       },
 
       // 2. Active gym-only 3 months (PAID)
       {
         name: 'Bob Smith', email: 'member02@test.com', phone: '+1234567002',
-        planType: 'gym_only', planDuration: 3, startDate: daysAgo(30),
-        originalEndDate: daysFromNow(60), currentEndDate: daysFromNow(60),
+        planType: 'gym_only', planDuration: 3, startDate: subMonths(now, 1),
+        originalEndDate: addMonths(now, 2), currentEndDate: addMonths(now, 2),
         isActive: true, isPaused: false, payment: { amount: '130.00', method: 'card' }
       },
 
       // 3. Active gym-only 6 months with pause history (PAID)
       {
         name: 'Carol Davis', email: 'member03@test.com', phone: '+1234567003',
-        planType: 'gym_only', planDuration: 6, startDate: daysAgo(60),
-        originalEndDate: daysFromNow(120), currentEndDate: daysFromNow(127), // Extended due to pause
+        planType: 'gym_only', planDuration: 6, startDate: subMonths(now, 2),
+        originalEndDate: addMonths(now, 4), currentEndDate: addDays(addMonths(now, 4), 7), // Extended due to pause
         isActive: true, isPaused: false, payment: { amount: '240.00', method: 'cash' },
-        pauseHistory: { start: daysAgo(20), end: daysAgo(13), reason: 'vacation' }
+        pauseHistory: { start: subDays(now, 20), end: subDays(now, 13), reason: 'vacation' }
       },
 
       // 4. Active gym-only 12 months (PAID)
       {
         name: 'David Wilson', email: 'member04@test.com', phone: '+1234567004',
-        planType: 'gym_only', planDuration: 12, startDate: daysAgo(90),
-        originalEndDate: daysFromNow(275), currentEndDate: daysFromNow(275),
+        planType: 'gym_only', planDuration: 12, startDate: subMonths(now, 3),
+        originalEndDate: addMonths(now, 9), currentEndDate: addMonths(now, 9),
         isActive: true, isPaused: false, payment: { amount: '480.00', method: 'card' }
       },
 
       // 5. Currently PAUSED gym-only member (PAID)
       {
         name: 'Eva Martinez', email: 'member05@test.com', phone: '+1234567005',
-        planType: 'gym_only', planDuration: 6, startDate: daysAgo(45),
-        originalEndDate: daysFromNow(135), currentEndDate: daysFromNow(135),
+        planType: 'gym_only', planDuration: 6, startDate: subDays(now, 45),
+        originalEndDate: addMonths(now, 4), currentEndDate: addMonths(now, 4),
         isActive: true, isPaused: true, payment: { amount: '240.00', method: 'card' },
-        activePause: { start: daysAgo(5), reason: 'medical' }
+        activePause: { start: subDays(now, 5), reason: 'medical' }
       },
 
       // 6. Expired gym-only member (PAID)
       {
         name: 'Frank Brown', email: 'member06@test.com', phone: '+1234567006',
-        planType: 'gym_only', planDuration: 1, startDate: daysAgo(45),
-        originalEndDate: daysAgo(15), currentEndDate: daysAgo(15),
+        planType: 'gym_only', planDuration: 1, startDate: subDays(now, 45),
+        originalEndDate: subDays(now, 15), currentEndDate: subDays(now, 15),
         isActive: false, isPaused: false, payment: { amount: '50.00', method: 'card' }
       },
 
       // 7. Active gym_crossfit 1 month (PAID)
       {
         name: 'Grace Lee', email: 'member07@test.com', phone: '+1234567007',
-        planType: 'gym_crossfit', planDuration: 1, startDate: daysAgo(10),
-        originalEndDate: daysFromNow(20), currentEndDate: daysFromNow(20),
+        planType: 'gym_crossfit', planDuration: 1, startDate: subDays(now, 10),
+        originalEndDate: addDays(now, 20), currentEndDate: addDays(now, 20),
         isActive: true, isPaused: false, payment: { amount: '90.00', method: 'card' }
       },
 
       // 8. Active gym_crossfit 6 months (PAID)
       {
         name: 'Henry Taylor', email: 'member08@test.com', phone: '+1234567008',
-        planType: 'gym_crossfit', planDuration: 6, startDate: daysAgo(30),
-        originalEndDate: daysFromNow(150), currentEndDate: daysFromNow(150),
+        planType: 'gym_crossfit', planDuration: 6, startDate: subMonths(now, 1),
+        originalEndDate: addMonths(now, 5), currentEndDate: addMonths(now, 5),
         isActive: true, isPaused: false, payment: { amount: '480.00', method: 'card' }
       },
 
       // 9. Active gym_5pass with 5 visits remaining (PAID)
       {
         name: 'Ivy Chen', email: 'member09@test.com', phone: '+1234567009',
-        planType: 'gym_5pass', planDuration: null, startDate: daysAgo(2),
-        originalEndDate: daysFromNow(28), currentEndDate: daysFromNow(28),
+        planType: 'gym_5pass', planDuration: null, startDate: subDays(now, 2),
+        originalEndDate: addDays(now, 28), currentEndDate: addDays(now, 28),
         isActive: true, isPaused: false, remainingVisits: 5,
         payment: { amount: '75.00', method: 'card' }
       },
@@ -102,8 +105,8 @@ async function seedTestMembers() {
       // 10. Active gym_5pass with 2 visits remaining (PAID)
       {
         name: 'Jack Wilson', email: 'member10@test.com', phone: '+1234567010',
-        planType: 'gym_5pass', planDuration: null, startDate: daysAgo(10),
-        originalEndDate: daysFromNow(20), currentEndDate: daysFromNow(20),
+        planType: 'gym_5pass', planDuration: null, startDate: subDays(now, 10),
+        originalEndDate: addDays(now, 20), currentEndDate: addDays(now, 20),
         isActive: true, isPaused: false, remainingVisits: 2,
         payment: { amount: '75.00', method: 'card' }
       },
@@ -111,8 +114,8 @@ async function seedTestMembers() {
       // 11. Expired gym_5pass with 0 visits (PAID)
       {
         name: 'Kate Davis', email: 'member11@test.com', phone: '+1234567011',
-        planType: 'gym_5pass', planDuration: null, startDate: daysAgo(35),
-        originalEndDate: daysAgo(5), currentEndDate: daysAgo(5),
+        planType: 'gym_5pass', planDuration: null, startDate: subDays(now, 35),
+        originalEndDate: subDays(now, 5), currentEndDate: subDays(now, 5),
         isActive: false, isPaused: false, remainingVisits: 0,
         payment: { amount: '75.00', method: 'cash' }
       },
@@ -120,8 +123,8 @@ async function seedTestMembers() {
       // 12. Active fitness_5pass with 4 visits remaining (PAID)
       {
         name: 'Liam Rodriguez', email: 'member12@test.com', phone: '+1234567012',
-        planType: 'fitness_5pass', planDuration: null, startDate: daysAgo(3),
-        originalEndDate: daysFromNow(27), currentEndDate: daysFromNow(27),
+        planType: 'fitness_5pass', planDuration: null, startDate: subDays(now, 3),
+        originalEndDate: addDays(now, 27), currentEndDate: addDays(now, 27),
         isActive: true, isPaused: false, remainingVisits: 4,
         payment: { amount: '60.00', method: 'cash' }
       },
@@ -129,8 +132,8 @@ async function seedTestMembers() {
       // 13. Active crossfit_5pass with 3 visits remaining (PAID)
       {
         name: 'Mia Johnson', email: 'member13@test.com', phone: '+1234567013',
-        planType: 'crossfit_5pass', planDuration: null, startDate: daysAgo(7),
-        originalEndDate: daysFromNow(23), currentEndDate: daysFromNow(23),
+        planType: 'crossfit_5pass', planDuration: null, startDate: subDays(now, 7),
+        originalEndDate: addDays(now, 23), currentEndDate: addDays(now, 23),
         isActive: true, isPaused: false, remainingVisits: 3,
         payment: { amount: '85.00', method: 'card' }
       },
@@ -138,57 +141,57 @@ async function seedTestMembers() {
       // 14. UNPAID gym-only 1 month
       {
         name: 'Noah Garcia', email: 'member14@test.com', phone: '+1234567014',
-        planType: 'gym_only', planDuration: 1, startDate: daysAgo(5),
-        originalEndDate: daysFromNow(25), currentEndDate: daysFromNow(25),
+        planType: 'gym_only', planDuration: 1, startDate: subDays(now, 5),
+        originalEndDate: addDays(now, 25), currentEndDate: addDays(now, 25),
         isActive: true, isPaused: false
       },
 
       // 15. UNPAID gym_crossfit 3 months
       {
         name: 'Olivia Anderson', email: 'member15@test.com', phone: '+1234567015',
-        planType: 'gym_crossfit', planDuration: 3, startDate: daysAgo(10),
-        originalEndDate: daysFromNow(80), currentEndDate: daysFromNow(80),
+        planType: 'gym_crossfit', planDuration: 3, startDate: subDays(now, 10),
+        originalEndDate: addMonths(now, 2.5), currentEndDate: addMonths(now, 2.5),
         isActive: true, isPaused: false
       },
 
       // 16. UNPAID gym_5pass with 5 visits
       {
         name: 'Paul Martinez', email: 'member16@test.com', phone: '+1234567016',
-        planType: 'gym_5pass', planDuration: null, startDate: daysAgo(1),
-        originalEndDate: daysFromNow(29), currentEndDate: daysFromNow(29),
+        planType: 'gym_5pass', planDuration: null, startDate: subDays(now, 1),
+        originalEndDate: addDays(now, 29), currentEndDate: addDays(now, 29),
         isActive: true, isPaused: false, remainingVisits: 5
       },
 
       // 17. UNPAID fitness_5pass with 3 visits remaining
       {
         name: 'Quinn White', email: 'member17@test.com', phone: '+1234567017',
-        planType: 'fitness_5pass', planDuration: null, startDate: daysAgo(8),
-        originalEndDate: daysFromNow(22), currentEndDate: daysFromNow(22),
+        planType: 'fitness_5pass', planDuration: null, startDate: subDays(now, 8),
+        originalEndDate: addDays(now, 22), currentEndDate: addDays(now, 22),
         isActive: true, isPaused: false, remainingVisits: 3
       },
 
       // 18. Member with multiple pause history (PAID)
       {
         name: 'Ryan Thompson', email: 'member18@test.com', phone: '+1234567018',
-        planType: 'gym_only', planDuration: 6, startDate: daysAgo(100),
-        originalEndDate: daysFromNow(65), currentEndDate: daysFromNow(79), // Extended due to pauses
+        planType: 'gym_only', planDuration: 6, startDate: subDays(now, 100),
+        originalEndDate: addDays(now, 65), currentEndDate: addDays(now, 79), // Extended due to pauses
         isActive: true, isPaused: false, payment: { amount: '240.00', method: 'card' },
-        pauseHistory: { start: daysAgo(50), end: daysAgo(36), reason: 'travel' }
+        pauseHistory: { start: subDays(now, 50), end: subDays(now, 36), reason: 'travel' }
       },
 
       // 19. Recently joined gym_crossfit (PAID)
       {
         name: 'Sophia Kim', email: 'member19@test.com', phone: '+1234567019',
-        planType: 'gym_crossfit', planDuration: 12, startDate: daysAgo(3),
-        originalEndDate: daysFromNow(362), currentEndDate: daysFromNow(362),
+        planType: 'gym_crossfit', planDuration: 12, startDate: subDays(now, 3),
+        originalEndDate: addMonths(now, 12), currentEndDate: addMonths(now, 12),
         isActive: true, isPaused: false, payment: { amount: '960.00', method: 'card' }
       },
 
       // 20. About to expire gym-only member (PAID)
       {
         name: 'Tyler Scott', email: 'member20@test.com', phone: '+1234567020',
-        planType: 'gym_only', planDuration: 1, startDate: daysAgo(28),
-        originalEndDate: daysFromNow(2), currentEndDate: daysFromNow(2),
+        planType: 'gym_only', planDuration: 1, startDate: subDays(now, 28),
+        originalEndDate: addDays(now, 2), currentEndDate: addDays(now, 2),
         isActive: true, isPaused: false, payment: { amount: '50.00', method: 'card' }
       }
     ]
@@ -196,11 +199,11 @@ async function seedTestMembers() {
     // Create members and their related data
     for (const memberData of testMembers) {
       // Create member
-      const [newMember] = await db.insert(members).values({
+      const memberInsert: NewMember = {
         name: memberData.name,
         email: memberData.email,
         phone: memberData.phone,
-        planType: memberData.planType as 'gym_only' | 'gym_crossfit' | 'gym_5pass' | 'fitness_5pass' | 'crossfit_5pass',
+        planType: memberData.planType,
         planDuration: memberData.planDuration,
         startDate: memberData.startDate,
         originalEndDate: memberData.originalEndDate,
@@ -208,57 +211,67 @@ async function seedTestMembers() {
         isActive: memberData.isActive,
         isPaused: memberData.isPaused,
         remainingVisits: memberData.remainingVisits || null
-      }).returning()
+      }
+
+      const [newMember] = await db.insert(members).values(memberInsert).returning()
 
       // Create payment if exists
       if (memberData.payment) {
-        await db.insert(payments).values({
+        const paymentInsert: NewPayment = {
           memberId: newMember.id,
           amount: memberData.payment.amount,
           paymentDate: memberData.startDate,
-          paymentMethod: memberData.payment.method as 'cash' | 'card',
+          paymentMethod: memberData.payment.method,
           paymentType: 'membership'
-        })
+        }
+        await db.insert(payments).values(paymentInsert)
       }
 
       // Create pause history if exists
       if (memberData.pauseHistory) {
-        await db.insert(membershipPauses).values({
+        const pauseInsert: NewMembershipPause = {
           memberId: newMember.id,
           pauseStartDate: memberData.pauseHistory.start,
           pauseEndDate: memberData.pauseHistory.end,
           pauseReason: memberData.pauseHistory.reason
-        })
+        }
+        await db.insert(membershipPauses).values(pauseInsert)
       }
 
       // Create active pause if exists
       if (memberData.activePause) {
-        await db.insert(membershipPauses).values({
+        const activePauseInsert: NewMembershipPause = {
           memberId: newMember.id,
           pauseStartDate: memberData.activePause.start,
           pauseEndDate: null, // Still active
           pauseReason: memberData.activePause.reason
-        })
+        }
+        await db.insert(membershipPauses).values(activePauseInsert)
       }
     }
 
     // Create some day passes (not tied to members)
     const dayPassData = [
-      { name: 'Walk-in Customer 1', passType: 'gym_dropin', price: '15.00', used: false },
-      { name: 'Walk-in Customer 2', passType: 'crossfit_dropin', price: '25.00', used: true },
-      { name: 'Walk-in Customer 3', passType: 'fitness_class', price: '20.00', used: false },
-      { name: 'Walk-in Customer 4', passType: 'open_gym', price: '12.00', used: true }
+      { name: 'Walk-in Customer 1', passType: 'gym_dropin' as const, price: '15.00', used: false },
+      { name: 'Walk-in Customer 2', passType: 'crossfit_dropin' as const, price: '25.00', used: true },
+      { name: 'Walk-in Customer 3', passType: 'fitness_class' as const, price: '20.00', used: false },
+      { name: 'Walk-in Customer 4', passType: 'open_gym' as const, price: '12.00', used: true }
     ]
 
     for (const dayPass of dayPassData) {
-      await db.insert(dayPasses).values({
+      const randomPurchaseDays = Math.floor(Math.random() * 7)
+      const randomUsedDays = Math.floor(Math.random() * 5)
+
+      const dayPassInsert: NewDayPass = {
         customerName: dayPass.name,
-        passType: dayPass.passType as 'gym_dropin' | 'fitness_class' | 'crossfit_dropin' | 'open_gym',
+        passType: dayPass.passType,
         pricePaid: dayPass.price,
-        purchaseDate: daysAgo(Math.floor(Math.random() * 7)),
+        purchaseDate: subDays(now, randomPurchaseDays),
         isUsed: dayPass.used,
-        usedAt: dayPass.used ? daysAgo(Math.floor(Math.random() * 5)) : null
-      })
+        usedAt: dayPass.used ? subDays(now, randomUsedDays) : null
+      }
+
+      await db.insert(dayPasses).values(dayPassInsert)
     }
 
     console.log('✅ Successfully seeded 20 diverse test members:')
