@@ -135,7 +135,24 @@ export const members = pgTable('member', {
   birthday: timestamp('birthday'),
   nationalityId: text('nationality_id')
     .references(() => nationalities.id, { onDelete: 'set null' }),
-  planType: text('plan_type').$type<'gym_only' | 'gym_crossfit' | 'gym_5pass' | 'fitness_5pass' | 'crossfit_5pass'>(),
+  planType: text('plan_type').$type<
+    // Gym Plans
+    | 'gym_only_dropin' | 'gym_5pass' | 'gym_only_1month' | 'gym_only_3month' | 'gym_only_6month' | 'gym_only_12month'
+    // Fitness Classes
+    | 'fitness_dropin' | 'fitness_5pass' | 'fitness_1month'
+    // Fitness + Gym Combo
+    | 'fitness_gym_1month'
+    // CrossFit
+    | 'crossfit_dropin' | 'crossfit_1week' | 'crossfit_10pass' | 'crossfit_1month' | 'crossfit_3month'
+    // Group Classes Combo
+    | 'group_classes_1month' | 'group_classes_3month'
+    // Open Gym
+    | 'open_gym_dropin' | 'open_gym_5pass' | 'open_gym_1month'
+    // Open Gym Combo
+    | 'open_gym_combo_1month'
+    // Legacy types for backward compatibility
+    | 'gym_only' | 'gym_crossfit' | 'fitness_5pass' | 'crossfit_5pass'
+  >(),
   planDuration: integer('plan_duration'), // 1,3,6,12 months
   startDate: timestamp('start_date').notNull(),
   originalEndDate: timestamp('original_end_date').notNull(),

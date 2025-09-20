@@ -1,31 +1,45 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import { members } from '@/lib/db/schema'
+import { members, payments } from '@/lib/db/schema'
 import { desc, isNull } from 'drizzle-orm'
 
 export async function POST(request: NextRequest) {
   try {
-    const data = await request.json()
+    const { memberData, paymentData } = await request.json()
 
+    // Create member first
     const newMember = await db
       .insert(members)
       .values({
-        name: data.name,
-        email: data.email || null,
-        phone: data.phone || null,
-        passportId: data.passportId || null,
-        nationalityId: data.nationalityId || null,
-        planType: data.planType || null,
-        planDuration: data.planDuration || null,
-        startDate: new Date(data.startDate || new Date()),
-        originalEndDate: new Date(data.originalEndDate || new Date()),
-        currentEndDate: new Date(data.currentEndDate || new Date()),
-        isActive: data.isActive ?? true,
-        isPaused: data.isPaused ?? false,
-        pauseCount: data.pauseCount ?? 0,
-        remainingVisits: data.remainingVisits || null,
+        name: memberData.name,
+        email: memberData.email || null,
+        phone: memberData.phone || null,
+        passportId: memberData.passportId || null,
+        nationalityId: memberData.nationalityId || null,
+        planType: memberData.planType || null,
+        planDuration: memberData.planDuration || null,
+        startDate: new Date(memberData.startDate || new Date()),
+        originalEndDate: new Date(memberData.originalEndDate || new Date()),
+        currentEndDate: new Date(memberData.currentEndDate || new Date()),
+        isActive: memberData.isActive ?? true,
+        isPaused: memberData.isPaused ?? false,
+        pauseCount: memberData.pauseCount ?? 0,
+        remainingVisits: memberData.remainingVisits || null,
       })
       .returning()
+
+    // Create payment record if payment data is provided
+    if (paymentData && paymentData.amount) {
+      await db
+        .insert(payments)
+        .values({
+          memberId: newMember[0].id,
+          amount: paymentData.amount,
+          paymentDate: new Date(paymentData.paymentDate || new Date()),
+          paymentMethod: paymentData.paymentMethod || 'cash',
+          paymentType: paymentData.paymentType || 'membership',
+        })
+    }
 
     return NextResponse.json(newMember[0], { status: 201 })
   } catch (error) {
