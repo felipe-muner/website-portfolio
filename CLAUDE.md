@@ -1,0 +1,1 @@
+- never add any as type, first always read this file, drizzle orm, so you are sure what have to be done: /lib/types/database.ts
