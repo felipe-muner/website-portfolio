@@ -132,6 +132,7 @@ export const members = pgTable('member', {
   email: text('email').unique(),
   name: text('name').notNull(),
   phone: text('phone'),
+  birthday: timestamp('birthday'),
   nationalityId: text('nationality_id')
     .references(() => nationalities.id, { onDelete: 'set null' }),
   planType: text('plan_type').$type<'gym_only' | 'gym_crossfit' | 'gym_5pass' | 'fitness_5pass' | 'crossfit_5pass'>(),

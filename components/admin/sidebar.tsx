@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
   BarChart3,
+  Cake,
   Calendar,
   CreditCard,
   Home,
@@ -27,6 +28,11 @@ const sidebarItems = [
     title: 'Members',
     href: '/admin/members',
     icon: Users,
+  },
+  {
+    title: 'Birthdays',
+    href: '/admin/birthdays',
+    icon: Cake,
   },
   {
     title: 'Check-in',

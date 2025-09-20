@@ -13,7 +13,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { PhoneDisplay } from '@/components/ui/phone-display'
-import { Edit, Pause, Play, AlertTriangle, Eye } from 'lucide-react'
+import { Edit, Pause, Play, AlertTriangle, Eye, Cake } from 'lucide-react'
 import { checkMembershipValidity, getMembershipStatusBadge, shouldShowPauseButton, validatePauseAction } from '@/lib/utils/membership'
 import Link from 'next/link'
 
@@ -23,6 +23,7 @@ interface Member {
   email: string | null
   passportId: string | null
   phone: string | null
+  birthday: string | null
   nationalityId: string | null
   planType: string
   planDuration: number | null
@@ -44,6 +45,36 @@ const planTypeLabels = {
   gym_5pass: 'Gym 5-Pass',
   fitness_5pass: 'Fitness 5-Pass',
   crossfit_5pass: 'CrossFit 5-Pass',
+}
+
+function getInitials(name: string): string {
+  return name
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase())
+    .slice(0, 2)
+    .join('')
+}
+
+function Avatar({ name }: { name: string }) {
+  const initials = getInitials(name)
+
+  return (
+    <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-medium">
+      {initials}
+    </div>
+  )
+}
+
+function isBirthdayToday(birthday: string | null): boolean {
+  if (!birthday) return false
+
+  const today = new Date()
+  const birthDate = new Date(birthday)
+
+  return (
+    today.getMonth() === birthDate.getMonth() &&
+    today.getDate() === birthDate.getDate()
+  )
 }
 
 interface MembersTableProps {
@@ -220,9 +251,19 @@ export const MembersTable = forwardRef<MembersTableRef, MembersTableProps>(
               return (
                 <TableRow key={member.id}>
                   <TableCell>
-                    <div>
-                      <div className="font-medium">{member.name}</div>
-                      <div className="text-sm text-gray-500">{member.passportId}</div>
+                    <div className="flex items-center gap-3">
+                      <Avatar name={member.name} />
+                      <div className="flex items-center gap-2">
+                        {isBirthdayToday(member.birthday) && (
+                          <div title="Birthday today!">
+                            <Cake className="h-4 w-4 text-orange-500" />
+                          </div>
+                        )}
+                        <div>
+                          <div className="font-medium">{member.name}</div>
+                          <div className="text-sm text-gray-500">{member.passportId}</div>
+                        </div>
+                      </div>
                     </div>
                   </TableCell>
                   <TableCell>
