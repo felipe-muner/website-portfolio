@@ -7,13 +7,18 @@ import { eq } from 'drizzle-orm'
 import { type InferInsertModel } from 'drizzle-orm'
 import { addDays, subDays, addMonths, subMonths, subYears, setMonth, setDate } from 'date-fns'
 import { nationalitiesWithFlags } from './nationalities-with-flags'
+import { getPlanPrice, formatCurrency, PLAN_TYPES } from '../lib/constants/pricing'
 
 type NewMember = InferInsertModel<typeof members>
 type NewPayment = InferInsertModel<typeof payments>
 type NewMembershipPause = InferInsertModel<typeof membershipPauses>
 type NewDayPass = InferInsertModel<typeof dayPasses>
 
-type PlanType = 'gym_only' | 'gym_crossfit' | 'gym_5pass' | 'fitness_5pass' | 'crossfit_5pass'
+type PlanType =
+  | 'gym_only_1month' | 'gym_only_3month' | 'gym_only_6month' | 'gym_only_12month'
+  | 'gym_5pass' | 'fitness_5pass' | 'fitness_1month'
+  | 'crossfit_1month' | 'crossfit_3month' | 'crossfit_10pass'
+  | 'open_gym_1month' | 'open_gym_5pass'
 type PaymentMethod = 'cash' | 'card'
 
 type TestMemberData = {
@@ -115,6 +120,11 @@ function generateRandomBirthday(): Date {
   return new Date(baseYear, month, day)
 }
 
+function generatePaymentAmount(planType: PlanType, isThaiNational: boolean = false): string {
+  const price = getPlanPrice(planType, isThaiNational)
+  return price.toString()
+}
+
 async function seedTestMembers() {
   try {
     console.log('👥 Seeding 20 diverse test members...')
@@ -138,18 +148,18 @@ async function seedTestMembers() {
       {
         name: 'Alice Johnson', email: 'member01@test.com', phone: '+1234567001',
         birthday: sharedBirthday1, // Shared birthday - 25 years old
-        planType: 'gym_only' as const, planDuration: 1, startDate: subDays(now, 15),
+        planType: 'gym_only_1month' as const, planDuration: 1, startDate: subDays(now, 15),
         originalEndDate: addDays(now, 15), currentEndDate: addDays(now, 15),
-        isActive: true, isPaused: false, payment: { amount: '50.00', method: 'card' as const }
+        isActive: true, isPaused: false, payment: { amount: generatePaymentAmount('gym_only_1month'), method: 'card' as const }
       },
 
       // 2. Active gym-only 3 months (PAID) - ALSO HAS BIRTHDAY TODAY!
       {
         name: 'Bob Smith', email: 'member02@test.com', phone: '+1234567002',
         birthday: sharedBirthday2, // Shared birthday - 32 years old
-        planType: 'gym_only' as const, planDuration: 3, startDate: subMonths(now, 1),
+        planType: 'gym_only_3month' as const, planDuration: 3, startDate: subMonths(now, 1),
         originalEndDate: addMonths(now, 2), currentEndDate: addMonths(now, 2),
-        isActive: true, isPaused: false, payment: { amount: '130.00', method: 'card' as const }
+        isActive: true, isPaused: false, payment: { amount: generatePaymentAmount('gym_only_3month'), method: 'card' as const }
       },
 
       // 3-20: All other members get random birthdays

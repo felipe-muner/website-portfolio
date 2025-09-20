@@ -44,7 +44,7 @@ export default function NewMember() {
         email: formData.email || null,
         phone: formData.phone || null,
         passportId: formData.passportId || null,
-        planType: selectedPlan?.type || formData.planType || null,
+        planType: selectedPlan?.planType || formData.planType || null,
         planDuration: selectedPlan?.duration || (formData.planDuration ? parseInt(formData.planDuration) : null),
         startDate: formData.startDate,
         originalEndDate: endDate.toISOString(),
@@ -60,7 +60,7 @@ export default function NewMember() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(memberData),
+        body: JSON.stringify({ memberData }),
       })
 
       if (response.ok) {

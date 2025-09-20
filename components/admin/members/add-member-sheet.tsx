@@ -16,6 +16,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { Combobox } from '@/components/ui/combobox'
 import { PhoneInput } from '@/components/ui/phone-input'
 import { planOptions, getPlanById } from '@/lib/config/plans'
+import { getPlanPrice, getPlanDuration, formatCurrency } from '@/lib/constants/pricing'
 
 interface AddMemberSheetProps {
   open: boolean
@@ -40,6 +41,8 @@ export function AddMemberSheet({ open, onOpenChange, onMemberAdded }: AddMemberS
     nationalityId: '',
     plan: '',
   })
+  const [selectedPlanPrice, setSelectedPlanPrice] = useState<number>(0)
+  const [isThaiNational, setIsThaiNational] = useState(false)
   const [nationalities, setNationalities] = useState<Nationality[]>([])
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -53,14 +56,15 @@ export function AddMemberSheet({ open, onOpenChange, onMemberAdded }: AddMemberS
         return
       }
 
-      // Calculate dates
+      // Calculate dates using the new pricing structure
       const startDate = new Date()
       const endDate = new Date(startDate)
+      const planDuration = getPlanDuration(formData.plan)
 
-      if (selectedPlan?.duration) {
-        endDate.setMonth(endDate.getMonth() + selectedPlan.duration)
+      if (planDuration) {
+        endDate.setMonth(endDate.getMonth() + planDuration)
       } else if (selectedPlan?.visits) {
-        endDate.setMonth(endDate.getMonth() + 1) // 5-pass expires in 1 month
+        endDate.setMonth(endDate.getMonth() + 1) // Pass expires in 1 month
       }
 
       const memberData = {
@@ -69,8 +73,8 @@ export function AddMemberSheet({ open, onOpenChange, onMemberAdded }: AddMemberS
         passportId: formData.passportId || null,
         phone: formData.phone || null,
         nationalityId: formData.nationalityId || null,
-        planType: selectedPlan?.type || null,
-        planDuration: selectedPlan?.duration || null,
+        planType: selectedPlan?.planType || null,
+        planDuration: planDuration || null,
         startDate: startDate.toISOString(),
         originalEndDate: endDate.toISOString(),
         currentEndDate: endDate.toISOString(),
@@ -80,12 +84,20 @@ export function AddMemberSheet({ open, onOpenChange, onMemberAdded }: AddMemberS
         remainingVisits: selectedPlan?.visits || null,
       }
 
+      // Also create the payment record
+      const paymentData = {
+        amount: selectedPlanPrice.toString(),
+        paymentDate: startDate.toISOString(),
+        paymentMethod: 'cash', // Default, can be changed later
+        paymentType: 'membership'
+      }
+
       const response = await fetch('/api/admin/members', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(memberData),
+        body: JSON.stringify({ memberData, paymentData }),
       })
 
       if (response.ok) {
@@ -114,6 +126,25 @@ export function AddMemberSheet({ open, onOpenChange, onMemberAdded }: AddMemberS
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))
+
+    // Check if nationality changed to Thai
+    if (field === 'nationalityId') {
+      const selectedNationality = nationalities.find(n => n.id === value)
+      const isThaiSelected = selectedNationality?.code === 'TH'
+      setIsThaiNational(isThaiSelected)
+
+      // Update price if plan is already selected
+      if (formData.plan) {
+        const newPrice = getPlanPrice(formData.plan, isThaiSelected)
+        setSelectedPlanPrice(newPrice)
+      }
+    }
+
+    // Update price when plan changes
+    if (field === 'plan') {
+      const newPrice = getPlanPrice(value, isThaiNational)
+      setSelectedPlanPrice(newPrice)
+    }
   }
 
   useEffect(() => {
@@ -212,47 +243,48 @@ export function AddMemberSheet({ open, onOpenChange, onMemberAdded }: AddMemberS
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectLabel>Drop-in</SelectLabel>
-                  {planOptions.filter(p => p.id.includes('dropin')).map(plan => (
+                  <SelectLabel>Gym & Fitness</SelectLabel>
+                  {planOptions.filter(p =>
+                    p.planType.includes('gym_only') ||
+                    p.planType.includes('fitness') ||
+                    p.planType.includes('gym_5pass')
+                  ).map(plan => (
                     <SelectItem key={plan.id} value={plan.id}>
-                      {plan.name} - {plan.price}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-                <SelectGroup>
-                  <SelectLabel>5-Pass Options</SelectLabel>
-                  {planOptions.filter(p => p.visits && !p.id.includes('dropin')).map(plan => (
-                    <SelectItem key={plan.id} value={plan.id}>
-                      {plan.name} - {plan.price}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-                <SelectGroup>
-                  <SelectLabel>Gym Monthly</SelectLabel>
-                  {planOptions.filter(p => p.type === 'gym_only' && p.duration && !p.id.includes('dropin')).map(plan => (
-                    <SelectItem key={plan.id} value={plan.id}>
-                      {plan.name} - {plan.price}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-                <SelectGroup>
-                  <SelectLabel>Fitness Classes</SelectLabel>
-                  {planOptions.filter(p => p.id.includes('fitness') && p.duration).map(plan => (
-                    <SelectItem key={plan.id} value={plan.id}>
-                      {plan.name} - {plan.price}
+                      {plan.name} - {isThaiNational && plan.priceThaiDiscount ? plan.priceThaiDiscount : plan.price}
+                      {isThaiNational && plan.hasThaiDiscount && ' (Thai Discount)'}
                     </SelectItem>
                   ))}
                 </SelectGroup>
                 <SelectGroup>
                   <SelectLabel>CrossFit</SelectLabel>
-                  {planOptions.filter(p => (p.id.includes('crossfit') || p.type === 'gym_crossfit') && p.duration).map(plan => (
+                  {planOptions.filter(p => p.planType.includes('crossfit')).map(plan => (
                     <SelectItem key={plan.id} value={plan.id}>
-                      {plan.name} - {plan.price}
+                      {plan.name} - {isThaiNational && plan.priceThaiDiscount ? plan.priceThaiDiscount : plan.price}
+                      {isThaiNational && plan.hasThaiDiscount && ' (Thai Discount)'}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+                <SelectGroup>
+                  <SelectLabel>Group Classes & Combos</SelectLabel>
+                  {planOptions.filter(p =>
+                    p.planType.includes('group_classes') ||
+                    p.planType.includes('open_gym')
+                  ).map(plan => (
+                    <SelectItem key={plan.id} value={plan.id}>
+                      {plan.name} - {isThaiNational && plan.priceThaiDiscount ? plan.priceThaiDiscount : plan.price}
+                      {isThaiNational && plan.hasThaiDiscount && ' (Thai Discount)'}
                     </SelectItem>
                   ))}
                 </SelectGroup>
               </SelectContent>
             </Select>
+            {selectedPlanPrice > 0 && (
+              <div className="text-sm text-muted-foreground">
+                Selected price: {formatCurrency(selectedPlanPrice)}
+                {isThaiNational && planOptions.find(p => p.id === formData.plan)?.hasThaiDiscount &&
+                  ' (50% Thai National Discount Applied)'}
+              </div>
+            )}
           </div>
 
             <SheetFooter className="pt-6 mt-8 border-t">
