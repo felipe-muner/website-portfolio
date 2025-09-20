@@ -135,3 +135,89 @@ export function canAccessFacility(
       return false
   }
 }
+
+export interface PauseValidationResult {
+  canPause: boolean
+  canUnpause: boolean
+  maxPauses: number
+  currentPauses: number
+  reason?: string
+}
+
+export function validatePauseAction(member: {
+  planType: string | null
+  planDuration: number | null
+  isPaused: boolean
+  pauseCount: number
+}): PauseValidationResult {
+  const result: PauseValidationResult = {
+    canPause: false,
+    canUnpause: false,
+    maxPauses: 0,
+    currentPauses: member.pauseCount,
+  }
+
+  // Check if this is a plan that can be paused
+  if (!member.planType) {
+    result.reason = 'Plan does not support pausing'
+    return result
+  }
+
+  // 5-pass plans cannot be paused
+  if (member.planType.includes('5pass')) {
+    result.reason = '5-pass plans cannot be paused'
+    return result
+  }
+
+  // Plans without duration cannot be paused
+  if (!member.planDuration) {
+    result.reason = 'Plan does not support pausing'
+    return result
+  }
+
+  // Determine maximum pauses based on plan duration
+  // 1 month: 1 pause, 3 months: 2 pauses, 6 months: 3 pauses, 12 months: 4 pauses
+  switch (member.planDuration) {
+    case 1:
+      result.maxPauses = 1
+      break
+    case 3:
+      result.maxPauses = 2
+      break
+    case 6:
+      result.maxPauses = 3
+      break
+    case 12:
+      result.maxPauses = 4
+      break
+    default:
+      result.reason = 'Invalid plan duration'
+      return result
+  }
+
+  // If currently paused, check if can unpause
+  if (member.isPaused) {
+    result.canUnpause = true
+    result.reason = 'Membership is currently paused'
+    return result
+  }
+
+  // If not paused, check if can pause
+  if (member.pauseCount >= result.maxPauses) {
+    result.reason = `Maximum pause limit reached (${result.maxPauses})`
+    return result
+  }
+
+  result.canPause = true
+  return result
+}
+
+export function shouldShowPauseButton(member: {
+  planType: string | null
+  planDuration: number | null
+  isPaused: boolean
+  pauseCount: number
+}): boolean {
+  const validation = validatePauseAction(member)
+  return validation.canPause || validation.canUnpause
+}

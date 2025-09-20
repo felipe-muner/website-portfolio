@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { PhoneDisplay } from '@/components/ui/phone-display'
 import { Edit, Pause, Play, AlertTriangle, Eye } from 'lucide-react'
-import { checkMembershipValidity, getMembershipStatusBadge } from '@/lib/utils/membership'
+import { checkMembershipValidity, getMembershipStatusBadge, shouldShowPauseButton, validatePauseAction } from '@/lib/utils/membership'
 import Link from 'next/link'
 
 interface Member {
@@ -126,6 +126,51 @@ export const MembersTable = forwardRef<MembersTableRef, MembersTableProps>(
     return new Date(dateString).toLocaleDateString('en-GB')
   }
 
+  const handlePauseToggle = async (member: Member) => {
+    const validation = validatePauseAction({
+      planType: member.planType,
+      planDuration: member.planDuration,
+      isPaused: member.isPaused,
+      pauseCount: member.pauseCount,
+    })
+
+    const action = member.isPaused ? 'unpause' : 'pause'
+
+    if (action === 'pause' && !validation.canPause) {
+      alert(validation.reason || 'Cannot pause membership')
+      return
+    }
+
+    if (action === 'unpause' && !validation.canUnpause) {
+      alert(validation.reason || 'Cannot unpause membership')
+      return
+    }
+
+    try {
+      const response = await fetch(`/api/admin/members/${member.id}/pause`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action,
+          reason: action === 'pause' ? 'Paused by admin' : 'Resumed by admin',
+        }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        fetchMembers() // Refresh the members list
+      } else {
+        alert(data.error || 'Failed to update membership status')
+      }
+    } catch (error) {
+      console.error('Error updating membership status:', error)
+      alert('Failed to update membership status')
+    }
+  }
+
   if (loading) {
     return (
       <Card>
@@ -235,9 +280,21 @@ export const MembersTable = forwardRef<MembersTableRef, MembersTableProps>(
                       <Button variant="ghost" size="sm">
                         <Edit className="h-4 w-4" />
                       </Button>
-                      <Button variant="ghost" size="sm">
-                        {member.isPaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
-                      </Button>
+                      {shouldShowPauseButton({
+                        planType: member.planType,
+                        planDuration: member.planDuration,
+                        isPaused: member.isPaused,
+                        pauseCount: member.pauseCount,
+                      }) && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handlePauseToggle(member)}
+                          title={member.isPaused ? 'Resume membership' : 'Pause membership'}
+                        >
+                          {member.isPaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
+                        </Button>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>

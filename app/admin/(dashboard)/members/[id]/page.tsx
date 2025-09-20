@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { PaymentHistory } from '@/components/admin/members/payment-history'
-import { checkMembershipValidity, getMembershipStatusBadge } from '@/lib/utils/membership'
+import { checkMembershipValidity, getMembershipStatusBadge, shouldShowPauseButton, validatePauseAction } from '@/lib/utils/membership'
 import { ArrowLeft, Edit, Pause, Play, Calendar, CreditCard, Phone, Mail, User } from 'lucide-react'
 import Link from 'next/link'
 
@@ -66,6 +66,53 @@ export default function MemberDetailsPage() {
     })
   }
 
+  const handlePauseToggle = async () => {
+    if (!member) return
+
+    const validation = validatePauseAction({
+      planType: member.planType,
+      planDuration: member.planDuration,
+      isPaused: member.isPaused,
+      pauseCount: member.pauseCount,
+    })
+
+    const action = member.isPaused ? 'unpause' : 'pause'
+
+    if (action === 'pause' && !validation.canPause) {
+      alert(validation.reason || 'Cannot pause membership')
+      return
+    }
+
+    if (action === 'unpause' && !validation.canUnpause) {
+      alert(validation.reason || 'Cannot unpause membership')
+      return
+    }
+
+    try {
+      const response = await fetch(`/api/admin/members/${member.id}/pause`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action,
+          reason: action === 'pause' ? 'Paused by admin' : 'Resumed by admin',
+        }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        fetchMember() // Refresh the member data
+      } else {
+        alert(data.error || 'Failed to update membership status')
+      }
+    } catch (error) {
+      console.error('Error updating membership status:', error)
+      alert('Failed to update membership status')
+    }
+  }
+
   if (loading) {
     return (
       <div className="p-6 max-w-6xl mx-auto">
@@ -114,10 +161,17 @@ export default function MemberDetailsPage() {
             <Edit className="h-4 w-4 mr-2" />
             Edit Member
           </Button>
-          <Button variant="outline" size="sm">
-            {member.isPaused ? <Play className="h-4 w-4 mr-2" /> : <Pause className="h-4 w-4 mr-2" />}
-            {member.isPaused ? 'Resume' : 'Pause'} Membership
-          </Button>
+          {shouldShowPauseButton({
+            planType: member.planType,
+            planDuration: member.planDuration,
+            isPaused: member.isPaused,
+            pauseCount: member.pauseCount,
+          }) && (
+            <Button variant="outline" size="sm" onClick={handlePauseToggle}>
+              {member.isPaused ? <Play className="h-4 w-4 mr-2" /> : <Pause className="h-4 w-4 mr-2" />}
+              {member.isPaused ? 'Resume' : 'Pause'} Membership
+            </Button>
+          )}
         </div>
       </div>
 

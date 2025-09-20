@@ -237,4 +237,213 @@ describe('Gym Business Logic Tests', () => {
       expect(result.reason).toBe('No remaining visits on your 5-pass plan')
     })
   })
+
+  describe('Membership Pause System', () => {
+    const { validatePauseAction, shouldShowPauseButton } = require('../../lib/utils/membership')
+
+    describe('Pause Validation Rules', () => {
+      it('should allow pause for 1-month plan with 0 pauses', () => {
+        const member = {
+          planType: 'gym_only',
+          planDuration: 1,
+          isPaused: false,
+          pauseCount: 0,
+        }
+
+        const result = validatePauseAction(member)
+        expect(result.canPause).toBe(true)
+        expect(result.canUnpause).toBe(false)
+        expect(result.maxPauses).toBe(1)
+      })
+
+      it('should reject pause for 1-month plan with 1 pause already used', () => {
+        const member = {
+          planType: 'gym_only',
+          planDuration: 1,
+          isPaused: false,
+          pauseCount: 1,
+        }
+
+        const result = validatePauseAction(member)
+        expect(result.canPause).toBe(false)
+        expect(result.canUnpause).toBe(false)
+        expect(result.maxPauses).toBe(1)
+        expect(result.reason).toBe('Maximum pause limit reached (1)')
+      })
+
+      it('should allow pause for 3-month plan with 1 pause used', () => {
+        const member = {
+          planType: 'gym_crossfit',
+          planDuration: 3,
+          isPaused: false,
+          pauseCount: 1,
+        }
+
+        const result = validatePauseAction(member)
+        expect(result.canPause).toBe(true)
+        expect(result.maxPauses).toBe(2)
+      })
+
+      it('should allow pause for 6-month plan with 2 pauses used', () => {
+        const member = {
+          planType: 'gym_only',
+          planDuration: 6,
+          isPaused: false,
+          pauseCount: 2,
+        }
+
+        const result = validatePauseAction(member)
+        expect(result.canPause).toBe(true)
+        expect(result.maxPauses).toBe(3)
+      })
+
+      it('should allow pause for 12-month plan with 3 pauses used', () => {
+        const member = {
+          planType: 'gym_crossfit',
+          planDuration: 12,
+          isPaused: false,
+          pauseCount: 3,
+        }
+
+        const result = validatePauseAction(member)
+        expect(result.canPause).toBe(true)
+        expect(result.maxPauses).toBe(4)
+      })
+
+      it('should reject pause for 12-month plan with 4 pauses used (limit reached)', () => {
+        const member = {
+          planType: 'gym_crossfit',
+          planDuration: 12,
+          isPaused: false,
+          pauseCount: 4,
+        }
+
+        const result = validatePauseAction(member)
+        expect(result.canPause).toBe(false)
+        expect(result.maxPauses).toBe(4)
+        expect(result.reason).toBe('Maximum pause limit reached (4)')
+      })
+
+      it('should reject pause for 5-pass plans', () => {
+        const member = {
+          planType: 'gym_5pass',
+          planDuration: null,
+          isPaused: false,
+          pauseCount: 0,
+        }
+
+        const result = validatePauseAction(member)
+        expect(result.canPause).toBe(false)
+        expect(result.canUnpause).toBe(false)
+        expect(result.reason).toBe('5-pass plans cannot be paused')
+      })
+
+      it('should allow unpause for currently paused membership', () => {
+        const member = {
+          planType: 'gym_only',
+          planDuration: 6,
+          isPaused: true,
+          pauseCount: 2,
+        }
+
+        const result = validatePauseAction(member)
+        expect(result.canPause).toBe(false)
+        expect(result.canUnpause).toBe(true)
+        expect(result.reason).toBe('Membership is currently paused')
+      })
+
+      it('should reject pause for plans without duration', () => {
+        const member = {
+          planType: 'gym_only',
+          planDuration: null,
+          isPaused: false,
+          pauseCount: 0,
+        }
+
+        const result = validatePauseAction(member)
+        expect(result.canPause).toBe(false)
+        expect(result.reason).toBe('Plan does not support pausing')
+      })
+    })
+
+    describe('Pause Button Display Logic', () => {
+      it('should show pause button for eligible plans that can pause', () => {
+        const member = {
+          planType: 'gym_only',
+          planDuration: 3,
+          isPaused: false,
+          pauseCount: 0,
+        }
+
+        expect(shouldShowPauseButton(member)).toBe(true)
+      })
+
+      it('should show pause button for currently paused plans (to unpause)', () => {
+        const member = {
+          planType: 'gym_crossfit',
+          planDuration: 6,
+          isPaused: true,
+          pauseCount: 1,
+        }
+
+        expect(shouldShowPauseButton(member)).toBe(true)
+      })
+
+      it('should not show pause button for 5-pass plans', () => {
+        const member = {
+          planType: 'crossfit_5pass',
+          planDuration: null,
+          isPaused: false,
+          pauseCount: 0,
+        }
+
+        expect(shouldShowPauseButton(member)).toBe(false)
+      })
+
+      it('should not show pause button when pause limit reached', () => {
+        const member = {
+          planType: 'gym_only',
+          planDuration: 1,
+          isPaused: false,
+          pauseCount: 1,
+        }
+
+        expect(shouldShowPauseButton(member)).toBe(false)
+      })
+
+      it('should not show pause button for plans without duration', () => {
+        const member = {
+          planType: 'gym_only',
+          planDuration: null,
+          isPaused: false,
+          pauseCount: 0,
+        }
+
+        expect(shouldShowPauseButton(member)).toBe(false)
+      })
+    })
+
+    describe('Pause Limit Rules', () => {
+      const testCases = [
+        { duration: 1, expectedMaxPauses: 1 },
+        { duration: 3, expectedMaxPauses: 2 },
+        { duration: 6, expectedMaxPauses: 3 },
+        { duration: 12, expectedMaxPauses: 4 },
+      ]
+
+      testCases.forEach(({ duration, expectedMaxPauses }) => {
+        it(`should set max pauses to ${expectedMaxPauses} for ${duration}-month plan`, () => {
+          const member = {
+            planType: 'gym_only',
+            planDuration: duration,
+            isPaused: false,
+            pauseCount: 0,
+          }
+
+          const result = validatePauseAction(member)
+          expect(result.maxPauses).toBe(expectedMaxPauses)
+        })
+      })
+    })
+  })
 })
