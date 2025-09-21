@@ -163,11 +163,11 @@ export function PhoneInput({
 
   return (
     <div className={cn("flex gap-1", className)}>
-      <div className="w-48">
+      <div className="w-28">
         <Combobox
           options={countries.map(country => ({
             value: country.value,
-            label: `${country.flag} ${country.callingCode}`,
+            label: `${country.callingCode}`,
             flag: country.flag,
             searchValue: country.searchText
           }))}
