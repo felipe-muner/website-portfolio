@@ -167,7 +167,7 @@ export function AddMemberSheet({ open, onOpenChange, onMemberAdded }: AddMemberS
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="bottom" className="max-h-[90vh] overflow-y-auto p-0">
+      <SheetContent side="bottom" className="max-h-[90vh] overflow-y-auto p-0" data-testid="add-member-sheet">
         <div className="p-6">
           <SheetHeader className="pb-4">
             <SheetTitle>Add New Member</SheetTitle>
@@ -231,6 +231,7 @@ export function AddMemberSheet({ open, onOpenChange, onMemberAdded }: AddMemberS
                 searchPlaceholder="Search nationalities..."
                 emptyText="No nationality found."
                 className="w-full"
+                data-testid="nationality-combobox"
               />
             </div>
           </div>
@@ -238,43 +239,79 @@ export function AddMemberSheet({ open, onOpenChange, onMemberAdded }: AddMemberS
           <div className="space-y-2">
             <Label htmlFor="plan">Plan & Duration</Label>
             <Select value={formData.plan} onValueChange={(value) => handleInputChange('plan', value)}>
-              <SelectTrigger>
+              <SelectTrigger data-testid="plan-select">
                 <SelectValue placeholder="Select plan and duration (optional)" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="max-h-[300px] overflow-y-auto" position="popper" side="bottom" align="start">
                 <SelectGroup>
                   <SelectLabel>Gym & Fitness</SelectLabel>
-                  {planOptions.filter(p =>
-                    p.planType.includes('gym_only') ||
-                    p.planType.includes('fitness') ||
-                    p.planType.includes('gym_5pass')
-                  ).map(plan => (
-                    <SelectItem key={plan.id} value={plan.id}>
-                      {plan.name} - {isThaiNational && plan.priceThaiDiscount ? plan.priceThaiDiscount : plan.price}
-                      {isThaiNational && plan.hasThaiDiscount && ' (Thai Discount)'}
-                    </SelectItem>
-                  ))}
+                  {planOptions
+                    .filter(p =>
+                      p.planType.includes('gym_only') ||
+                      p.planType.includes('fitness') ||
+                      p.planType.includes('gym_5pass')
+                    )
+                    .map(plan => ({
+                      ...plan,
+                      currentPrice: isThaiNational && plan.priceThaiDiscount ?
+                        parseFloat(plan.priceThaiDiscount.replace(/[₿,]/g, '')) :
+                        parseFloat(plan.price.replace(/[₿,]/g, ''))
+                    }))
+                    .sort((a, b) => a.currentPrice - b.currentPrice)
+                    .map(plan => {
+                      const price = isThaiNational && plan.priceThaiDiscount ? plan.priceThaiDiscount : plan.price
+                      const discount = isThaiNational && plan.hasThaiDiscount ? ' (Thai Discount)' : ''
+                      return (
+                        <SelectItem key={plan.id} value={plan.id}>
+                          <span className="font-mono text-right inline-block w-20">{price}</span> - {plan.name}{discount}
+                        </SelectItem>
+                      )
+                    })}
                 </SelectGroup>
                 <SelectGroup>
                   <SelectLabel>CrossFit</SelectLabel>
-                  {planOptions.filter(p => p.planType.includes('crossfit')).map(plan => (
-                    <SelectItem key={plan.id} value={plan.id}>
-                      {plan.name} - {isThaiNational && plan.priceThaiDiscount ? plan.priceThaiDiscount : plan.price}
-                      {isThaiNational && plan.hasThaiDiscount && ' (Thai Discount)'}
-                    </SelectItem>
-                  ))}
+                  {planOptions
+                    .filter(p => p.planType.includes('crossfit'))
+                    .map(plan => ({
+                      ...plan,
+                      currentPrice: isThaiNational && plan.priceThaiDiscount ?
+                        parseFloat(plan.priceThaiDiscount.replace(/[₿,]/g, '')) :
+                        parseFloat(plan.price.replace(/[₿,]/g, ''))
+                    }))
+                    .sort((a, b) => a.currentPrice - b.currentPrice)
+                    .map(plan => {
+                      const price = isThaiNational && plan.priceThaiDiscount ? plan.priceThaiDiscount : plan.price
+                      const discount = isThaiNational && plan.hasThaiDiscount ? ' (Thai Discount)' : ''
+                      return (
+                        <SelectItem key={plan.id} value={plan.id}>
+                          <span className="font-mono text-right inline-block w-20">{price}</span> - {plan.name}{discount}
+                        </SelectItem>
+                      )
+                    })}
                 </SelectGroup>
                 <SelectGroup>
                   <SelectLabel>Group Classes & Combos</SelectLabel>
-                  {planOptions.filter(p =>
-                    p.planType.includes('group_classes') ||
-                    p.planType.includes('open_gym')
-                  ).map(plan => (
-                    <SelectItem key={plan.id} value={plan.id}>
-                      {plan.name} - {isThaiNational && plan.priceThaiDiscount ? plan.priceThaiDiscount : plan.price}
-                      {isThaiNational && plan.hasThaiDiscount && ' (Thai Discount)'}
-                    </SelectItem>
-                  ))}
+                  {planOptions
+                    .filter(p =>
+                      p.planType.includes('group_classes') ||
+                      p.planType.includes('open_gym')
+                    )
+                    .map(plan => ({
+                      ...plan,
+                      currentPrice: isThaiNational && plan.priceThaiDiscount ?
+                        parseFloat(plan.priceThaiDiscount.replace(/[₿,]/g, '')) :
+                        parseFloat(plan.price.replace(/[₿,]/g, ''))
+                    }))
+                    .sort((a, b) => a.currentPrice - b.currentPrice)
+                    .map(plan => {
+                      const price = isThaiNational && plan.priceThaiDiscount ? plan.priceThaiDiscount : plan.price
+                      const discount = isThaiNational && plan.hasThaiDiscount ? ' (Thai Discount)' : ''
+                      return (
+                        <SelectItem key={plan.id} value={plan.id}>
+                          <span className="font-mono text-right inline-block w-20">{price}</span> - {plan.name}{discount}
+                        </SelectItem>
+                      )
+                    })}
                 </SelectGroup>
               </SelectContent>
             </Select>
