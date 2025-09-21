@@ -24,7 +24,6 @@ export async function POST(request: NextRequest) {
         id: payments.id,
         amount: payments.amount,
         paymentDate: payments.paymentDate,
-        paymentType: payments.paymentType,
         memberName: members.name,
         planType: members.planType,
       })
@@ -33,8 +32,7 @@ export async function POST(request: NextRequest) {
       .where(
         and(
           gte(payments.paymentDate, start),
-          lte(payments.paymentDate, end),
-          eq(payments.paymentType, 'membership') // Only membership payments for income
+          lte(payments.paymentDate, end)
         )
       )
       .orderBy(desc(payments.paymentDate))
@@ -88,8 +86,7 @@ export async function POST(request: NextRequest) {
       .where(
         and(
           gte(payments.paymentDate, previousPeriodStart),
-          lte(payments.paymentDate, previousPeriodEnd),
-          eq(payments.paymentType, 'membership')
+          lte(payments.paymentDate, previousPeriodEnd)
         )
       )
 

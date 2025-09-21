@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   Sheet,
@@ -32,15 +32,7 @@ export function AddPaymentSheet({ open, onOpenChange, memberId, memberName, onPa
   const [plans, setPlans] = useState<Plan[]>([])
   const [loadingPlans, setLoadingPlans] = useState(false)
 
-  // Fetch member nationality and plans when sheet opens
-  useEffect(() => {
-    if (open && memberId) {
-      fetchMemberNationality()
-      fetchPlans()
-    }
-  }, [open, memberId])
-
-  const fetchMemberNationality = async () => {
+  const fetchMemberNationality = useCallback(async () => {
     try {
       const response = await fetch(`/api/admin/members/${memberId}`)
       if (response.ok) {
@@ -51,7 +43,15 @@ export function AddPaymentSheet({ open, onOpenChange, memberId, memberName, onPa
     } catch (error) {
       console.error('Error fetching member nationality:', error)
     }
-  }
+  }, [memberId])
+
+  // Fetch member nationality and plans when sheet opens
+  useEffect(() => {
+    if (open && memberId) {
+      fetchMemberNationality()
+      fetchPlans()
+    }
+  }, [open, memberId, fetchMemberNationality])
 
   const fetchPlans = async () => {
     try {

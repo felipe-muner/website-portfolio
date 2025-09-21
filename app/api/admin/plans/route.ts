@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { plans } from '@/lib/db/schema'
-import { eq, desc } from 'drizzle-orm'
+import { eq } from 'drizzle-orm'
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const activeOnly = searchParams.get('active') === 'true'
 
-    let query = db
+    const baseQuery = db
       .select({
         id: plans.id,
         name: plans.name,
@@ -26,11 +26,9 @@ export async function GET(request: NextRequest) {
       })
       .from(plans)
 
-    if (activeOnly) {
-      query = query.where(eq(plans.isActive, true))
-    }
-
-    const allPlans = await query.orderBy(plans.planCategory, plans.name)
+    const allPlans = activeOnly
+      ? await baseQuery.where(eq(plans.isActive, true)).orderBy(plans.planCategory, plans.name)
+      : await baseQuery.orderBy(plans.planCategory, plans.name)
 
     return NextResponse.json(allPlans)
   } catch (error) {

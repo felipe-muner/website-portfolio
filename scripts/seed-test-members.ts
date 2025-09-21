@@ -265,14 +265,10 @@ async function seedTestMembers() {
 
       // Create payment if exists
       if (memberData.payment) {
-        const paymentInsert: NewPayment = {
-          memberId: newMember.id,
-          amount: memberData.payment.amount,
-          paymentDate: memberData.startDate,
-          paymentMethod: memberData.payment.method,
-          paymentType: 'membership'
-        }
-        await db.insert(payments).values(paymentInsert)
+        // Note: This legacy script doesn't have planId mapping,
+        // so we'll skip payment creation for now
+        // In real usage, planId would be required
+        console.log(`Skipping payment creation for ${memberData.name} - planId required for new schema`)
       }
 
       // Create pause history if exists

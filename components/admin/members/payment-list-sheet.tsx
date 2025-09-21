@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import {
   Sheet,
   SheetContent,
@@ -20,6 +20,7 @@ import { Button } from '@/components/ui/button'
 import { Plus, Receipt, CreditCard, Banknote } from 'lucide-react'
 import { AddPaymentSheet } from './add-payment-sheet'
 import { Payment } from '@/lib/types/database'
+import { format } from 'date-fns'
 
 // Extended payment type with plan information from JOIN
 interface PaymentWithPlan extends Payment {
@@ -43,13 +44,7 @@ export function PaymentListSheet({ open, onOpenChange, memberId, memberName }: P
   const [loading, setLoading] = useState(true)
   const [showAddPayment, setShowAddPayment] = useState(false)
 
-  useEffect(() => {
-    if (open) {
-      fetchPayments()
-    }
-  }, [open, memberId])
-
-  const fetchPayments = async () => {
+  const fetchPayments = useCallback(async () => {
     try {
       setLoading(true)
       const response = await fetch(`/api/admin/members/${memberId}/payments`)
@@ -64,14 +59,16 @@ export function PaymentListSheet({ open, onOpenChange, memberId, memberName }: P
     } finally {
       setLoading(false)
     }
-  }
+  }, [memberId])
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    })
+  useEffect(() => {
+    if (open) {
+      fetchPayments()
+    }
+  }, [open, memberId, fetchPayments])
+
+  const formatDate = (date: Date) => {
+    return format(date, 'dd/MM/yyyy')
   }
 
   const formatCurrency = (amount: string) => {

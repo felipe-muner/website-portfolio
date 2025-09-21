@@ -29,15 +29,15 @@ export async function POST(request: NextRequest) {
       .returning()
 
     // Create payment record if payment data is provided
-    if (paymentData && paymentData.amount) {
+    if (paymentData && paymentData.amount && paymentData.planId) {
       await db
         .insert(payments)
         .values({
           memberId: newMember[0].id,
+          planId: paymentData.planId,
           amount: paymentData.amount,
           paymentDate: new Date(paymentData.paymentDate || new Date()),
           paymentMethod: paymentData.paymentMethod || 'cash',
-          paymentType: paymentData.paymentType || 'membership',
         })
     }
 

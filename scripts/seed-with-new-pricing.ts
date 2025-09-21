@@ -8,7 +8,7 @@ import { addDays, subDays, addMonths, subMonths, subYears } from 'date-fns'
 import { nationalitiesWithFlags } from './nationalities-with-flags'
 import { getPlanPrice, formatCurrency, PLAN_TYPES, PRICING } from '../lib/constants/pricing'
 
-import { NewMember, NewPayment, NewDayPass, NewPlan } from '../lib/types/database'
+import { NewMember, NewPayment, NewDayPass, NewPlan, Member } from '../lib/types/database'
 
 async function createInitialAdmin() {
   const email = process.env.INITIAL_ADMIN_EMAIL
@@ -158,7 +158,18 @@ async function seedMembersWithNewPricing() {
     const now = new Date()
 
     // Create diverse members with new plan types and exact pricing
-    const memberData = [
+    type MemberSeedData = {
+      name: string
+      email: string
+      phone: string
+      planType: NonNullable<Member['planType']>
+      duration: number
+      isThaiNational: boolean
+      remainingVisits?: number
+      isExpired?: boolean
+    }
+
+    const memberData: MemberSeedData[] = [
       // Gym Only Plans
       {
         name: 'Alice Johnson', email: 'member01@test.com', phone: '+66812345001',

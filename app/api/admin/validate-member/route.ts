@@ -132,7 +132,7 @@ export async function POST(request: NextRequest) {
         lastPayment: lastPayment.length > 0 ? {
           date: lastPayment[0].paymentDate.toISOString(),
           amount: lastPayment[0].amount,
-          type: lastPayment[0].paymentType
+          type: 'membership'
         } : undefined
       }
     }
