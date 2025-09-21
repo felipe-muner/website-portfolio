@@ -2,16 +2,13 @@ import dotenvFlow from 'dotenv-flow'
 dotenvFlow.config()
 
 import { db } from '../lib/db'
-import { adminUsers, nationalities, members, payments, dayPasses } from '../lib/db/schema'
+import { adminUsers, nationalities, members, payments, dayPasses, plans } from '../lib/db/schema'
 import { eq } from 'drizzle-orm'
-import { type InferInsertModel } from 'drizzle-orm'
 import { addDays, subDays, addMonths, subMonths, subYears } from 'date-fns'
 import { nationalitiesWithFlags } from './nationalities-with-flags'
 import { getPlanPrice, formatCurrency, PLAN_TYPES, PRICING } from '../lib/constants/pricing'
 
-type NewMember = InferInsertModel<typeof members>
-type NewPayment = InferInsertModel<typeof payments>
-type NewDayPass = InferInsertModel<typeof dayPasses>
+import { NewMember, NewPayment, NewDayPass, NewPlan } from '../lib/types/database'
 
 async function createInitialAdmin() {
   const email = process.env.INITIAL_ADMIN_EMAIL
@@ -46,6 +43,68 @@ async function createInitialAdmin() {
     console.log('Created initial admin user:', newAdmin[0])
   } catch (error) {
     console.error('Error creating admin user:', error)
+    throw error
+  }
+}
+
+async function seedPlans() {
+  try {
+    console.log('💡 Seeding plans...')
+
+    const existingPlans = await db.select().from(plans).limit(1)
+
+    if (existingPlans.length > 0) {
+      console.log('📝 Plans already seeded, skipping...')
+      return
+    }
+
+    const planInserts: NewPlan[] = PLAN_TYPES.map(planType => {
+      const regularPrice = getPlanPrice(planType.value, false)
+      const thaiPrice = getPlanPrice(planType.value, true)
+      const hasThaiDiscount = regularPrice !== thaiPrice
+
+      // Determine plan category
+      let planCategory: 'gym' | 'crossfit' | 'fitness' | 'combo'
+      if (planType.value.includes('crossfit')) {
+        planCategory = 'crossfit'
+      } else if (planType.value.includes('fitness')) {
+        planCategory = 'fitness'
+      } else if (planType.value.includes('group_classes') || planType.value.includes('combo')) {
+        planCategory = 'combo'
+      } else {
+        planCategory = 'gym'
+      }
+
+      // Determine visit limit for pass-based plans
+      let visitLimit = null
+      if (planType.value.includes('5pass')) {
+        visitLimit = 5
+      } else if (planType.value.includes('10pass')) {
+        visitLimit = 10
+      } else if (planType.value.includes('dropin')) {
+        visitLimit = 1
+      } else if (planType.value === 'crossfit_1week') {
+        visitLimit = 7
+      }
+
+      return {
+        name: planType.label,
+        planType: planType.value,
+        price: regularPrice.toString(),
+        priceThaiDiscount: hasThaiDiscount ? thaiPrice.toString() : null,
+        duration: planType.duration,
+        visitLimit,
+        planCategory,
+        isActive: true,
+        isDropIn: planType.value.includes('dropin'),
+        description: null,
+      }
+    })
+
+    await db.insert(plans).values(planInserts)
+    console.log(`✅ Successfully seeded ${planInserts.length} plans`)
+  } catch (error) {
+    console.error('❌ Error seeding plans:', error)
     throw error
   }
 }
@@ -88,6 +147,13 @@ async function seedMembersWithNewPricing() {
       console.log('📝 Members already seeded, skipping...')
       return
     }
+
+    // Get all plans from database
+    const allPlans = await db.select().from(plans).where(eq(plans.isActive, true))
+    const plansByType = allPlans.reduce((acc, plan) => {
+      acc[plan.planType] = plan
+      return acc
+    }, {} as Record<string, typeof allPlans[0]>)
 
     const now = new Date()
 
@@ -216,7 +282,7 @@ async function seedMembersWithNewPricing() {
         phone: member.phone,
         birthday: generateRandomBirthday(),
         nationalityId: member.isThaiNational ? thaiNationalityId : null,
-        planType: member.planType as any,
+        planType: member.planType,
         planDuration: member.duration,
         startDate,
         originalEndDate: endDate,
@@ -229,13 +295,22 @@ async function seedMembersWithNewPricing() {
       memberInserts.push(memberInsert)
 
       // Create payment record with exact pricing
-      const paymentAmount = getPlanPrice(member.planType, member.isThaiNational)
+      const selectedPlan = plansByType[member.planType]
+      if (!selectedPlan) {
+        console.warn(`Plan not found for type: ${member.planType}`)
+        continue
+      }
+
+      const paymentAmount = member.isThaiNational && selectedPlan.priceThaiDiscount
+        ? parseFloat(selectedPlan.priceThaiDiscount)
+        : parseFloat(selectedPlan.price)
+
       const paymentInsert: NewPayment = {
         memberId: '', // Will be filled after insert
+        planId: selectedPlan.id, // Store the database plan ID
         amount: paymentAmount.toString(),
         paymentDate: startDate,
-        paymentMethod: Math.random() > 0.5 ? 'card' : 'cash',
-        paymentType: 'membership'
+        paymentMethod: Math.random() > 0.5 ? 'card' : 'cash'
       }
 
       paymentInserts.push(paymentInsert)
@@ -309,14 +384,20 @@ async function seedWithNewPricing() {
   try {
     console.log('🚀 Starting database seeding with new pricing structure...')
 
+    // Run admin and nationalities seeding in parallel
     await Promise.all([
       createInitialAdmin(),
-      seedNationalities(),
-      seedMembersWithNewPricing()
+      seedNationalities()
     ])
 
+    // Seed plans first (required for members)
+    await seedPlans()
+
+    // Then seed members (which depends on plans)
+    await seedMembersWithNewPricing()
+
     console.log('✅ All seeding operations completed successfully!')
-    console.log('💡 All prices now match the official pricing table!')
+    console.log('💡 All plans are now stored in database with flexible pricing!')
     process.exit(0)
   } catch (error) {
     console.error('❌ Error during seeding:', error)

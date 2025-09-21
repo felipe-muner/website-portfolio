@@ -11,6 +11,7 @@ import {
   checkIns,
   dayPasses,
   payments,
+  plans,
   shopItems,
   shopSales,
   nationalities,
@@ -50,6 +51,9 @@ export type NewDayPass = InferInsertModel<typeof dayPasses>
 
 export type Payment = InferSelectModel<typeof payments>
 export type NewPayment = InferInsertModel<typeof payments>
+
+export type Plan = InferSelectModel<typeof plans>
+export type NewPlan = InferInsertModel<typeof plans>
 
 export type ShopItem = InferSelectModel<typeof shopItems>
 export type NewShopItem = InferInsertModel<typeof shopItems>

@@ -223,6 +223,28 @@ export const dayPasses = pgTable('day_pass', {
   index('day_passes_is_used_idx').on(t.isUsed),
 ])
 
+export const plans = pgTable('plan', {
+  id: text('id')
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  name: text('name').notNull(), // Display name: "Gym Drop-in", "Gym 1 Month"
+  planType: text('plan_type').notNull().unique(), // Unique identifier: "gym_only_dropin", "crossfit_1month"
+  price: decimal('price', { precision: 10, scale: 2 }).notNull(), // Regular price
+  priceThaiDiscount: decimal('price_thai_discount', { precision: 10, scale: 2 }), // Discounted price for Thai nationals
+  duration: integer('duration'), // Duration in months (null for day passes)
+  visitLimit: integer('visit_limit'), // Number of visits allowed (null for unlimited time-based plans)
+  planCategory: text('plan_category').$type<'gym' | 'crossfit' | 'fitness' | 'combo'>().notNull(), // Plan category
+  isActive: boolean('is_active').default(true).notNull(), // Enable/disable plan
+  isDropIn: boolean('is_drop_in').default(false).notNull(), // Easy identification of day passes
+  description: text('description'), // Optional description
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').$defaultFn(() => new Date()),
+}, (t) => [
+  index('plans_plan_type_idx').on(t.planType),
+  index('plans_is_active_idx').on(t.isActive),
+  index('plans_category_idx').on(t.planCategory),
+])
+
 export const payments = pgTable('payment', {
   id: text('id')
     .primaryKey()
@@ -231,16 +253,17 @@ export const payments = pgTable('payment', {
     .references(() => members.id, { onDelete: 'set null' }),
   dayPassId: text('day_pass_id')
     .references(() => dayPasses.id, { onDelete: 'set null' }),
+  planId: text('plan_id')
+    .references(() => plans.id, { onDelete: 'set null' }), // Reference to plans table
   amount: decimal('amount', { precision: 10, scale: 2 }).notNull(),
   gymShare: decimal('gym_share', { precision: 5, scale: 2 }), // percentage for combo plans
   crossfitShare: decimal('crossfit_share', { precision: 5, scale: 2 }), // percentage for combo plans
   paymentDate: timestamp('payment_date').defaultNow().notNull(),
   paymentMethod: text('payment_method').$type<'cash' | 'card'>().notNull(),
-  paymentType: text('payment_type').$type<'membership' | 'day_pass' | 'shop_item'>().notNull(),
-  serviceType: text('service_type').$type<'gym' | 'crossfit' | 'fitness_class'>(),
 }, (t) => [
   index('payments_member_id_idx').on(t.memberId),
   index('payments_payment_date_idx').on(t.paymentDate),
+  index('payments_plan_id_idx').on(t.planId),
 ])
 
 export const shopItems = pgTable('shop_item', {

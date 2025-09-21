@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import { payments, members } from '@/lib/db/schema'
+import { payments, members, plans } from '@/lib/db/schema'
 import { eq, desc, and, isNull } from 'drizzle-orm'
 
 export async function GET(
@@ -24,23 +24,30 @@ export async function GET(
       )
     }
 
-    // Fetch payments for the member
+    // Fetch payments for the member with plan information
     const memberPayments = await db
       .select({
         id: payments.id,
         amount: payments.amount,
         paymentDate: payments.paymentDate,
         paymentMethod: payments.paymentMethod,
-        paymentType: payments.paymentType,
-        serviceType: payments.serviceType,
+        planId: payments.planId,
         gymShare: payments.gymShare,
         crossfitShare: payments.crossfitShare,
+        // Plan information
+        planName: plans.name,
+        planType: plans.planType,
+        planCategory: plans.planCategory,
+        isDropIn: plans.isDropIn,
       })
       .from(payments)
+      .leftJoin(plans, eq(payments.planId, plans.id))
       .where(eq(payments.memberId, memberId))
       .orderBy(desc(payments.paymentDate))
 
-    return NextResponse.json(memberPayments)
+    return NextResponse.json({
+      payments: memberPayments
+    })
   } catch (error) {
     console.error('Error fetching member payments:', error)
     return NextResponse.json(
@@ -77,11 +84,10 @@ export async function POST(
       .insert(payments)
       .values({
         memberId,
+        planId: data.planId || null,
         amount: data.amount,
         paymentDate: data.paymentDate ? new Date(data.paymentDate) : new Date(),
         paymentMethod: data.paymentMethod,
-        paymentType: data.paymentType,
-        serviceType: data.serviceType || null,
         gymShare: data.gymShare || null,
         crossfitShare: data.crossfitShare || null,
       })

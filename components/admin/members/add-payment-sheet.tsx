@@ -13,8 +13,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { planOptions } from '@/lib/config/plans'
-import { getPlanPrice, formatCurrency } from '@/lib/constants/pricing'
+import { Plan } from '@/lib/types/database'
 
 interface AddPaymentSheetProps {
   open: boolean
@@ -31,11 +30,14 @@ export function AddPaymentSheet({ open, onOpenChange, memberId, memberName, onPa
   const [selectedPlanPrice, setSelectedPlanPrice] = useState<number>(0)
   const [isThaiNational, setIsThaiNational] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [plans, setPlans] = useState<Plan[]>([])
+  const [loadingPlans, setLoadingPlans] = useState(false)
 
-  // Fetch member nationality to determine pricing
+  // Fetch member nationality and plans when sheet opens
   useEffect(() => {
     if (open && memberId) {
       fetchMemberNationality()
+      fetchPlans()
     }
   }, [open, memberId])
 
@@ -52,6 +54,23 @@ export function AddPaymentSheet({ open, onOpenChange, memberId, memberName, onPa
     }
   }
 
+  const fetchPlans = async () => {
+    try {
+      setLoadingPlans(true)
+      const response = await fetch('/api/admin/plans?active=true')
+      if (response.ok) {
+        const data = await response.json()
+        setPlans(data)
+      } else {
+        console.error('Failed to fetch plans')
+      }
+    } catch (error) {
+      console.error('Error fetching plans:', error)
+    } finally {
+      setLoadingPlans(false)
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -64,10 +83,9 @@ export function AddPaymentSheet({ open, onOpenChange, memberId, memberName, onPa
       setIsSubmitting(true)
 
       const paymentData = {
+        planId: formData.planId,
         amount: selectedPlanPrice.toString(),
         paymentMethod: 'cash',
-        paymentType: 'membership',
-        serviceType: null,
         gymShare: null,
         crossfitShare: null,
         paymentDate: new Date().toISOString(),
@@ -108,8 +126,13 @@ export function AddPaymentSheet({ open, onOpenChange, memberId, memberName, onPa
 
   const handlePlanChange = (planId: string) => {
     setFormData(prev => ({ ...prev, planId }))
-    const price = getPlanPrice(planId, isThaiNational)
-    setSelectedPlanPrice(price)
+    const selectedPlan = plans.find(p => p.id === planId)
+    if (selectedPlan) {
+      const price = isThaiNational && selectedPlan.priceThaiDiscount
+        ? parseFloat(selectedPlan.priceThaiDiscount)
+        : parseFloat(selectedPlan.price)
+      setSelectedPlanPrice(price)
+    }
   }
 
   return (
@@ -132,55 +155,76 @@ export function AddPaymentSheet({ open, onOpenChange, memberId, memberName, onPa
                     <SelectValue placeholder="Select a plan" />
                   </SelectTrigger>
                   <SelectContent className="max-h-[300px] overflow-y-auto">
-                    <SelectGroup>
-                      <SelectLabel>Gym & Fitness</SelectLabel>
-                      {planOptions
-                        .filter(p =>
-                          p.planType.includes('gym_only') ||
-                          p.planType.includes('fitness') ||
-                          (p.planType.includes('gym_5pass') && !p.planType.includes('open_gym'))
-                        )
-                        .map(plan => {
-                          const price = isThaiNational && plan.priceThaiDiscount ? plan.priceThaiDiscount : plan.price
-                          const discount = isThaiNational && plan.hasThaiDiscount ? ' (Thai Discount)' : ''
-                          return (
-                            <SelectItem key={plan.id} value={plan.id}>
-                              <span className="font-mono text-right inline-block w-20">{price}</span> - {plan.name}{discount}
-                            </SelectItem>
-                          )
-                        })}
-                    </SelectGroup>
-                    <SelectGroup>
-                      <SelectLabel>CrossFit</SelectLabel>
-                      {planOptions
-                        .filter(p => p.planType.includes('crossfit'))
-                        .map(plan => {
-                          const price = isThaiNational && plan.priceThaiDiscount ? plan.priceThaiDiscount : plan.price
-                          const discount = isThaiNational && plan.hasThaiDiscount ? ' (Thai Discount)' : ''
-                          return (
-                            <SelectItem key={plan.id} value={plan.id}>
-                              <span className="font-mono text-right inline-block w-20">{price}</span> - {plan.name}{discount}
-                            </SelectItem>
-                          )
-                        })}
-                    </SelectGroup>
-                    <SelectGroup>
-                      <SelectLabel>Group Classes & Combos</SelectLabel>
-                      {planOptions
-                        .filter(p =>
-                          p.planType.includes('group_classes') ||
-                          p.planType.includes('open_gym')
-                        )
-                        .map(plan => {
-                          const price = isThaiNational && plan.priceThaiDiscount ? plan.priceThaiDiscount : plan.price
-                          const discount = isThaiNational && plan.hasThaiDiscount ? ' (Thai Discount)' : ''
-                          return (
-                            <SelectItem key={plan.id} value={plan.id}>
-                              <span className="font-mono text-right inline-block w-20">{price}</span> - {plan.name}{discount}
-                            </SelectItem>
-                          )
-                        })}
-                    </SelectGroup>
+                    {loadingPlans ? (
+                      <div className="p-4 text-center text-gray-500">Loading plans...</div>
+                    ) : (
+                      <>
+                        <SelectGroup>
+                          <SelectLabel>Gym & Fitness</SelectLabel>
+                          {plans
+                            .filter(p => p.planCategory === 'gym')
+                            .map(plan => {
+                              const price = isThaiNational && plan.priceThaiDiscount
+                                ? parseFloat(plan.priceThaiDiscount)
+                                : parseFloat(plan.price)
+                              const discount = isThaiNational && plan.priceThaiDiscount ? ' (Thai Discount)' : ''
+                              return (
+                                <SelectItem key={plan.id} value={plan.id}>
+                                  <span className="font-mono text-right inline-block w-20">{price}฿</span> - {plan.name}{discount}
+                                </SelectItem>
+                              )
+                            })}
+                        </SelectGroup>
+                        <SelectGroup>
+                          <SelectLabel>CrossFit</SelectLabel>
+                          {plans
+                            .filter(p => p.planCategory === 'crossfit')
+                            .map(plan => {
+                              const price = isThaiNational && plan.priceThaiDiscount
+                                ? parseFloat(plan.priceThaiDiscount)
+                                : parseFloat(plan.price)
+                              const discount = isThaiNational && plan.priceThaiDiscount ? ' (Thai Discount)' : ''
+                              return (
+                                <SelectItem key={plan.id} value={plan.id}>
+                                  <span className="font-mono text-right inline-block w-20">{price}฿</span> - {plan.name}{discount}
+                                </SelectItem>
+                              )
+                            })}
+                        </SelectGroup>
+                        <SelectGroup>
+                          <SelectLabel>Fitness Classes</SelectLabel>
+                          {plans
+                            .filter(p => p.planCategory === 'fitness')
+                            .map(plan => {
+                              const price = isThaiNational && plan.priceThaiDiscount
+                                ? parseFloat(plan.priceThaiDiscount)
+                                : parseFloat(plan.price)
+                              const discount = isThaiNational && plan.priceThaiDiscount ? ' (Thai Discount)' : ''
+                              return (
+                                <SelectItem key={plan.id} value={plan.id}>
+                                  <span className="font-mono text-right inline-block w-20">{price}฿</span> - {plan.name}{discount}
+                                </SelectItem>
+                              )
+                            })}
+                        </SelectGroup>
+                        <SelectGroup>
+                          <SelectLabel>Combo Plans</SelectLabel>
+                          {plans
+                            .filter(p => p.planCategory === 'combo')
+                            .map(plan => {
+                              const price = isThaiNational && plan.priceThaiDiscount
+                                ? parseFloat(plan.priceThaiDiscount)
+                                : parseFloat(plan.price)
+                              const discount = isThaiNational && plan.priceThaiDiscount ? ' (Thai Discount)' : ''
+                              return (
+                                <SelectItem key={plan.id} value={plan.id}>
+                                  <span className="font-mono text-right inline-block w-20">{price}฿</span> - {plan.name}{discount}
+                                </SelectItem>
+                              )
+                            })}
+                        </SelectGroup>
+                      </>
+                    )}
                   </SelectContent>
                 </Select>
               </div>
@@ -188,10 +232,10 @@ export function AddPaymentSheet({ open, onOpenChange, memberId, memberName, onPa
               {selectedPlanPrice > 0 && (
                 <div className="text-center p-4 bg-gray-50 rounded-lg">
                   <div className="text-lg font-semibold">
-                    Amount: {formatCurrency(selectedPlanPrice)}
+                    Amount: {selectedPlanPrice.toLocaleString()}฿
                   </div>
-                  {isThaiNational && planOptions.find(p => p.id === formData.planId)?.hasThaiDiscount && (
-                    <div className="text-sm text-green-600">50% Thai National Discount Applied</div>
+                  {isThaiNational && plans.find(p => p.id === formData.planId)?.priceThaiDiscount && (
+                    <div className="text-sm text-green-600">Thai National Discount Applied</div>
                   )}
                 </div>
               )}

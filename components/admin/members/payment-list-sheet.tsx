@@ -19,17 +19,17 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Plus, Receipt, CreditCard, Banknote } from 'lucide-react'
 import { AddPaymentSheet } from './add-payment-sheet'
+import { Payment } from '@/lib/types/database'
 
-interface Payment {
-  id: string
-  amount: string
-  paymentDate: string
-  paymentMethod: 'cash' | 'card'
-  paymentType: 'membership' | 'day_pass' | 'shop_item'
-  serviceType?: 'gym' | 'crossfit' | 'fitness_class'
-  gymShare?: string
-  crossfitShare?: string
+// Extended payment type with plan information from JOIN
+interface PaymentWithPlan extends Payment {
+  // Plan information from join
+  planName?: string
+  planType?: string
+  planCategory?: string
+  isDropIn?: boolean
 }
+
 
 interface PaymentListSheetProps {
   open: boolean
@@ -39,7 +39,7 @@ interface PaymentListSheetProps {
 }
 
 export function PaymentListSheet({ open, onOpenChange, memberId, memberName }: PaymentListSheetProps) {
-  const [payments, setPayments] = useState<Payment[]>([])
+  const [payments, setPayments] = useState<PaymentWithPlan[]>([])
   const [loading, setLoading] = useState(true)
   const [showAddPayment, setShowAddPayment] = useState(false)
 
@@ -55,7 +55,7 @@ export function PaymentListSheet({ open, onOpenChange, memberId, memberName }: P
       const response = await fetch(`/api/admin/members/${memberId}/payments`)
       if (response.ok) {
         const data = await response.json()
-        setPayments(data)
+        setPayments(data.payments)
       } else {
         console.error('Failed to fetch payments')
       }
@@ -82,20 +82,23 @@ export function PaymentListSheet({ open, onOpenChange, memberId, memberName }: P
     return method === 'cash' ? <Banknote className="h-4 w-4" /> : <CreditCard className="h-4 w-4" />
   }
 
-  const getPaymentTypeBadge = (type: 'membership' | 'day_pass' | 'shop_item') => {
-    const variants = {
-      membership: { variant: 'default' as const, text: 'Membership' },
-      day_pass: { variant: 'secondary' as const, text: 'Day Pass' },
-      shop_item: { variant: 'outline' as const, text: 'Shop Item' },
+  const getPaymentTypeBadge = (payment: PaymentWithPlan) => {
+    // If we have plan information from the database join, use it
+    if (payment.planName) {
+      return (
+        <Badge className="bg-gray-100 text-gray-800 hover:bg-gray-200">
+          {payment.planName}
+        </Badge>
+      )
     }
 
-    const config = variants[type]
-    return <Badge variant={config.variant}>{config.text}</Badge>
+    return <Badge variant="default">Payment</Badge>
   }
 
   const getTotalRevenue = () => {
     return payments.reduce((total, payment) => total + parseFloat(payment.amount), 0)
   }
+
 
   return (
     <>
@@ -136,8 +139,7 @@ export function PaymentListSheet({ open, onOpenChange, memberId, memberName }: P
                     <TableHead>Date</TableHead>
                     <TableHead>Amount</TableHead>
                     <TableHead>Method</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Service</TableHead>
+                    <TableHead>Plan</TableHead>
                     <TableHead>Split</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -154,15 +156,8 @@ export function PaymentListSheet({ open, onOpenChange, memberId, memberName }: P
                           <span className="capitalize">{payment.paymentMethod}</span>
                         </div>
                       </TableCell>
-                      <TableCell>{getPaymentTypeBadge(payment.paymentType)}</TableCell>
                       <TableCell>
-                        {payment.serviceType ? (
-                          <Badge variant="outline" className="capitalize">
-                            {payment.serviceType}
-                          </Badge>
-                        ) : (
-                          '-'
-                        )}
+                        {getPaymentTypeBadge(payment)}
                       </TableCell>
                       <TableCell>
                         {payment.gymShare && payment.crossfitShare ? (

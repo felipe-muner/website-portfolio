@@ -213,6 +213,7 @@ export function formatCurrency(amount: number): string {
   return `${amount.toLocaleString()}₿`
 }
 
+
 // Membership pause limits (from pricing table)
 export const PAUSE_LIMITS = {
   MONTH_1: 1,   // 1 time
