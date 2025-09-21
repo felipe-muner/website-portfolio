@@ -88,7 +88,7 @@ export function AddMemberSheet({ open, onOpenChange, onMemberAdded }: AddMemberS
       const paymentData = {
         amount: selectedPlanPrice.toString(),
         paymentDate: startDate.toISOString(),
-        paymentMethod: 'cash', // Default, can be changed later
+        paymentMethod: 'cash',
         paymentType: 'membership'
       }
 
@@ -249,7 +249,7 @@ export function AddMemberSheet({ open, onOpenChange, onMemberAdded }: AddMemberS
                     .filter(p =>
                       p.planType.includes('gym_only') ||
                       p.planType.includes('fitness') ||
-                      p.planType.includes('gym_5pass')
+                      (p.planType.includes('gym_5pass') && !p.planType.includes('open_gym'))
                     )
                     .map(plan => ({
                       ...plan,

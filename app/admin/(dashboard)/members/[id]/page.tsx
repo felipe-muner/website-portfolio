@@ -245,15 +245,15 @@ export default function MemberDetailsPage() {
             </div>
             <div>
               <label className="text-sm font-medium text-gray-500">Plan Type</label>
-              <p>{member.planType ? (
+              <div>{member.planType ? (
                 <Badge variant="outline">{member.planType.replace('_', ' ').toUpperCase()}</Badge>
               ) : (
                 'No plan assigned'
-              )}</p>
+              )}</div>
             </div>
             <div>
               <label className="text-sm font-medium text-gray-500">Validity</label>
-              <p className="flex items-center gap-2">
+              <div className="flex items-center gap-2">
                 {membershipStatus.isValid ? (
                   <Badge variant="default" className="bg-green-100 text-green-800">
                     Valid
@@ -266,7 +266,7 @@ export default function MemberDetailsPage() {
                 {membershipStatus.reason && (
                   <span className="text-sm text-gray-500">{membershipStatus.reason}</span>
                 )}
-              </p>
+              </div>
             </div>
             {member.remainingVisits !== null && (
               <div>

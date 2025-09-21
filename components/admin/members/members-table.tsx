@@ -13,8 +13,9 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { PhoneDisplay } from '@/components/ui/phone-display'
-import { Edit, Pause, Play, AlertTriangle, Eye, Cake } from 'lucide-react'
+import { Edit, Pause, Play, AlertTriangle, Receipt, Cake } from 'lucide-react'
 import { checkMembershipValidity, getMembershipStatusBadge, shouldShowPauseButton, validatePauseAction } from '@/lib/utils/membership'
+import { PaymentListSheet } from './payment-list-sheet'
 import Link from 'next/link'
 
 interface Member {
@@ -89,6 +90,7 @@ export const MembersTable = forwardRef<MembersTableRef, MembersTableProps>(
   function MembersTable({ searchQuery }, ref) {
   const [members, setMembers] = useState<Member[]>([])
   const [loading, setLoading] = useState(true)
+  const [selectedMemberForPayments, setSelectedMemberForPayments] = useState<{ id: string; name: string } | null>(null)
 
   useEffect(() => {
     fetchMembers()
@@ -229,9 +231,7 @@ export const MembersTable = forwardRef<MembersTableRef, MembersTableProps>(
               <TableHead>Name</TableHead>
               <TableHead>Contact</TableHead>
               <TableHead>Plan</TableHead>
-              <TableHead>Duration</TableHead>
               <TableHead>End Date</TableHead>
-              <TableHead>Visits</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Valid</TableHead>
               <TableHead className="w-[50px]"></TableHead>
@@ -280,20 +280,20 @@ export const MembersTable = forwardRef<MembersTableRef, MembersTableProps>(
                   </TableCell>
                   <TableCell>
                     {member.planType ? (
-                      <Badge variant="outline">
-                        {planTypeLabels[member.planType as keyof typeof planTypeLabels] || member.planType}
-                      </Badge>
+                      <div className="flex items-center gap-1">
+                        <Badge className="bg-gray-100 text-gray-800 hover:bg-gray-200">
+                          {planTypeLabels[member.planType as keyof typeof planTypeLabels] ||
+                           member.planType.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                        </Badge>
+                        {member.planType.includes('5pass') && member.remainingVisits !== null && (
+                          <span className="text-xs text-gray-500">({member.remainingVisits} visits)</span>
+                        )}
+                      </div>
                     ) : (
                       <Badge variant="secondary">No Plan</Badge>
                     )}
                   </TableCell>
-                  <TableCell>
-                    {member.planDuration ? `${member.planDuration} months` : member.planType?.includes('5pass') ? '5-Pass' : '-'}
-                  </TableCell>
                   <TableCell>{formatDate(member.currentEndDate)}</TableCell>
-                  <TableCell>
-                    {member.remainingVisits !== null ? member.remainingVisits : '-'}
-                  </TableCell>
                   <TableCell>{getStatusBadge(member)}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-1">
@@ -313,13 +313,18 @@ export const MembersTable = forwardRef<MembersTableRef, MembersTableProps>(
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-1">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setSelectedMemberForPayments({ id: member.id, name: member.name })}
+                        title="View payments"
+                      >
+                        <Receipt className="h-4 w-4" />
+                      </Button>
                       <Button variant="ghost" size="sm" asChild>
                         <Link href={`/admin/members/${member.id}`}>
-                          <Eye className="h-4 w-4" />
+                          <Edit className="h-4 w-4" />
                         </Link>
-                      </Button>
-                      <Button variant="ghost" size="sm">
-                        <Edit className="h-4 w-4" />
                       </Button>
                       {shouldShowPauseButton({
                         planType: member.planType,
@@ -344,6 +349,15 @@ export const MembersTable = forwardRef<MembersTableRef, MembersTableProps>(
           </TableBody>
         </Table>
       </CardContent>
+
+      {selectedMemberForPayments && (
+        <PaymentListSheet
+          open={!!selectedMemberForPayments}
+          onOpenChange={(open) => !open && setSelectedMemberForPayments(null)}
+          memberId={selectedMemberForPayments.id}
+          memberName={selectedMemberForPayments.name}
+        />
+      )}
     </Card>
   )
 })

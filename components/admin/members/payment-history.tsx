@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Plus, Receipt, CreditCard, Banknote } from 'lucide-react'
+import { AddPaymentSheet } from './add-payment-sheet'
 
 interface Payment {
   id: string
@@ -33,7 +34,7 @@ interface PaymentHistoryProps {
 export function PaymentHistory({ memberId, memberName }: PaymentHistoryProps) {
   const [payments, setPayments] = useState<Payment[]>([])
   const [loading, setLoading] = useState(true)
-  // const [showAddPayment] = useState(false)
+  const [showAddPayment, setShowAddPayment] = useState(false)
 
   useEffect(() => {
     fetchPayments()
@@ -114,7 +115,7 @@ export function PaymentHistory({ memberId, memberName }: PaymentHistoryProps) {
               {payments.length} payment{payments.length !== 1 ? 's' : ''}
             </p>
           </div>
-          <Button onClick={() => {}} size="sm">
+          <Button onClick={() => setShowAddPayment(true)} size="sm">
             <Plus className="h-4 w-4 mr-2" />
             Add Payment
           </Button>
@@ -178,6 +179,14 @@ export function PaymentHistory({ memberId, memberName }: PaymentHistoryProps) {
           </Table>
         )}
       </CardContent>
+
+      <AddPaymentSheet
+        open={showAddPayment}
+        onOpenChange={setShowAddPayment}
+        memberId={memberId}
+        memberName={memberName}
+        onPaymentAdded={fetchPayments}
+      />
     </Card>
   )
 }
