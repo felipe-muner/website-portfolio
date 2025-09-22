@@ -85,6 +85,7 @@ export const MembersTable = forwardRef<MembersTableRef, MembersTableProps>(
   const [members, setMembers] = useState<Member[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedMemberForPayments, setSelectedMemberForPayments] = useState<{ id: string; name: string } | null>(null)
+  const [pausingMemberId, setPausingMemberId] = useState<string | null>(null)
 
   useEffect(() => {
     fetchMembers()
@@ -120,34 +121,6 @@ export const MembersTable = forwardRef<MembersTableRef, MembersTableProps>(
     )
   })
 
-  const getStatusBadge = (member: Member) => {
-    const membershipStatus = checkMembershipValidity({
-      planType: member.planType,
-      planDuration: member.planDuration,
-      currentEndDate: member.currentEndDate,
-      isActive: member.isActive,
-      isPaused: member.isPaused,
-      remainingVisits: member.remainingVisits,
-    })
-
-    const badgeConfig = getMembershipStatusBadge(membershipStatus)
-
-    return (
-      <div className="flex items-center gap-2">
-        <Badge
-          variant={badgeConfig.variant}
-          className={badgeConfig.className}
-        >
-          {badgeConfig.text}
-        </Badge>
-        {membershipStatus.reason && membershipStatus.daysRemaining <= 7 && membershipStatus.daysRemaining > 0 && (
-          <div title={membershipStatus.reason}>
-            <AlertTriangle className="h-4 w-4 text-orange-500" />
-          </div>
-        )}
-      </div>
-    )
-  }
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-GB')
@@ -174,6 +147,8 @@ export const MembersTable = forwardRef<MembersTableRef, MembersTableProps>(
     }
 
     try {
+      setPausingMemberId(member.id)
+
       const response = await fetch(`/api/admin/members/${member.id}/pause`, {
         method: 'POST',
         headers: {
@@ -188,13 +163,22 @@ export const MembersTable = forwardRef<MembersTableRef, MembersTableProps>(
       const data = await response.json()
 
       if (response.ok) {
-        fetchMembers() // Refresh the members list
+        // Update the specific member in the state without reordering
+        setMembers(prevMembers =>
+          prevMembers.map(m =>
+            m.id === member.id
+              ? { ...m, isPaused: !m.isPaused, pauseCount: action === 'pause' ? m.pauseCount + 1 : m.pauseCount }
+              : m
+          )
+        )
       } else {
         alert(data.error || 'Failed to update membership status')
       }
     } catch (error) {
       console.error('Error updating membership status:', error)
       alert('Failed to update membership status')
+    } finally {
+      setPausingMemberId(null)
     }
   }
 
@@ -226,8 +210,6 @@ export const MembersTable = forwardRef<MembersTableRef, MembersTableProps>(
               <TableHead>Contact</TableHead>
               <TableHead>Plan</TableHead>
               <TableHead>End Date</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Valid</TableHead>
               <TableHead className="w-[50px]"></TableHead>
             </TableRow>
           </TableHeader>
@@ -274,36 +256,49 @@ export const MembersTable = forwardRef<MembersTableRef, MembersTableProps>(
                   </TableCell>
                   <TableCell>
                     {member.planName ? (
-                      <div className="flex items-center gap-1">
-                        <Badge className="bg-gray-100 text-gray-800 hover:bg-gray-200">
-                          {member.planName}
-                        </Badge>
-                        {member.planType && member.planType.includes('5pass') && member.remainingVisits !== null && (
-                          <span className="text-xs text-gray-500">({member.remainingVisits} visits)</span>
-                        )}
+                      <div className="flex flex-col gap-1">
+                        <div className="flex items-center gap-1">
+                          <Badge className="bg-gray-100 text-gray-800 hover:bg-gray-200">
+                            {member.planName}
+                          </Badge>
+                          {member.planType && member.planType.includes('5pass') && member.remainingVisits !== null && (
+                            <span className="text-xs text-gray-500">({member.remainingVisits} visits)</span>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Badge
+                            variant={getMembershipStatusBadge(membershipStatus).variant}
+                            className={`${getMembershipStatusBadge(membershipStatus).className} transition-all duration-500 ease-in-out transform hover:scale-105 text-xs`}
+                            title={membershipStatus.reason}
+                          >
+                            {getMembershipStatusBadge(membershipStatus).text}
+                          </Badge>
+                          {membershipStatus.isValid ? (
+                            <Badge variant="default" className="bg-green-100 text-green-800 text-xs" title="Membership is valid">
+                              ✓
+                            </Badge>
+                          ) : (
+                            <Badge variant="destructive" className="text-xs" title={`Invalid: ${membershipStatus.reason}`}>
+                              ✗
+                            </Badge>
+                          )}
+                          {membershipStatus.daysRemaining <= 30 && membershipStatus.daysRemaining > 0 && (
+                            <span className="text-xs text-gray-500" title={`${membershipStatus.daysRemaining} days remaining`}>
+                              {membershipStatus.daysRemaining}d
+                            </span>
+                          )}
+                          {membershipStatus.reason && membershipStatus.daysRemaining <= 7 && membershipStatus.daysRemaining > 0 && (
+                            <div title={membershipStatus.reason} className="animate-bounce">
+                              <AlertTriangle className="h-3 w-3 text-orange-500" />
+                            </div>
+                          )}
+                        </div>
                       </div>
                     ) : (
                       <Badge variant="secondary">No Plan</Badge>
                     )}
                   </TableCell>
                   <TableCell>{formatDate(member.currentEndDate)}</TableCell>
-                  <TableCell>{getStatusBadge(member)}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1">
-                      {membershipStatus.isValid ? (
-                        <Badge variant="default" className="bg-green-100 text-green-800 text-xs">
-                          ✓
-                        </Badge>
-                      ) : (
-                        <Badge variant="destructive" className="text-xs" title={membershipStatus.reason}>
-                          ✗
-                        </Badge>
-                      )}
-                      {membershipStatus.daysRemaining <= 30 && membershipStatus.daysRemaining > 0 && (
-                        <span className="text-xs text-gray-500">{membershipStatus.daysRemaining}d</span>
-                      )}
-                    </div>
-                  </TableCell>
                   <TableCell>
                     <div className="flex gap-1">
                       <Button
@@ -330,8 +325,20 @@ export const MembersTable = forwardRef<MembersTableRef, MembersTableProps>(
                           size="sm"
                           onClick={() => handlePauseToggle(member)}
                           title={member.isPaused ? 'Resume membership' : 'Pause membership'}
+                          disabled={pausingMemberId === member.id}
+                          className="transition-all duration-300 hover:scale-110 active:scale-95 disabled:opacity-50"
                         >
-                          {member.isPaused ? <Play className="h-4 w-4" /> : <Pause className="h-4 w-4" />}
+                          <div className="transition-all duration-500 ease-in-out transform">
+                            {pausingMemberId === member.id ? (
+                              <div className="animate-spin">
+                                <div className="h-4 w-4 border-2 border-gray-400 border-t-transparent rounded-full"></div>
+                              </div>
+                            ) : member.isPaused ? (
+                              <Play className="h-4 w-4 text-green-600 animate-pulse" />
+                            ) : (
+                              <Pause className="h-4 w-4 text-orange-600 transition-transform duration-300 hover:rotate-12" />
+                            )}
+                          </div>
                         </Button>
                       )}
                     </div>
