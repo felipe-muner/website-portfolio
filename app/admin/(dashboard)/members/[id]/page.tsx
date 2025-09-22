@@ -25,7 +25,7 @@ interface Member {
   isActive: boolean
   isPaused: boolean
   pauseCount: number
-  remainingVisits: number | null
+  usedVisits: number | null
   createdAt: string
   updatedAt: string
 }
@@ -135,7 +135,7 @@ export default function MemberDetailsPage() {
     currentEndDate: member.currentEndDate,
     isActive: member.isActive,
     isPaused: member.isPaused,
-    remainingVisits: member.remainingVisits,
+    usedVisits: member.usedVisits,
   })
 
   const statusBadgeConfig = getMembershipStatusBadge(membershipStatus)
@@ -268,10 +268,10 @@ export default function MemberDetailsPage() {
                 )}
               </div>
             </div>
-            {member.remainingVisits !== null && (
+            {member.usedVisits !== null && (
               <div>
-                <label className="text-sm font-medium text-gray-500">Remaining Visits</label>
-                <p className="font-medium">{member.remainingVisits}</p>
+                <label className="text-sm font-medium text-gray-500">Used Visits</label>
+                <p className="font-medium">{member.usedVisits}</p>
               </div>
             )}
           </CardContent>

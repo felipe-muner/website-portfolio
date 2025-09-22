@@ -3,6 +3,7 @@ import { db } from '@/lib/db'
 import { members, payments, checkIns, dayPasses } from '@/lib/db/schema'
 import { eq, or, desc, isNull, and, gte, lt } from 'drizzle-orm'
 import { isBefore, startOfDay, endOfDay } from 'date-fns'
+import { type Member, type DayPass } from '@/lib/types/database'
 
 type ValidationResult = {
   success: boolean
@@ -87,7 +88,7 @@ export async function POST(request: NextRequest) {
 }
 
 async function handleMemberCheckIn(
-  memberData: any,
+  memberData: Member,
   facilityType: string,
   now: Date
 ): Promise<NextResponse<ValidationResult>> {
@@ -160,7 +161,7 @@ async function handleMemberCheckIn(
 
     await db.insert(checkIns).values({
       memberId: memberData.id,
-      facilityType: facilityType,
+      facilityType: facilityType as 'gym' | 'crossfit' | 'fitness_class',
       checkInTime: now
     })
 
@@ -210,7 +211,7 @@ async function handleMemberCheckIn(
 }
 
 async function handleDayPassCheckIn(
-  dayPass: any,
+  dayPass: DayPass,
   facilityType: string,
   now: Date
 ): Promise<NextResponse<ValidationResult>> {

@@ -27,7 +27,7 @@ type TestMemberData = {
   currentEndDate: Date
   isActive: boolean
   isPaused: boolean
-  remainingVisits?: number
+  usedVisits?: number
   payment?: {
     amount: string
     method: PaymentMethod
@@ -137,7 +137,7 @@ async function seedTestMembers() {
         birthday: subYears(now, 24),
         planType: 'gym_5pass' as const, planDuration: null, startDate: subDays(now, 2),
         originalEndDate: addDays(now, 28), currentEndDate: addDays(now, 28),
-        isActive: true, isPaused: false, remainingVisits: 5,
+        isActive: true, isPaused: false, usedVisits: 0,
         payment: { amount: '75.00', method: 'card' as const }
       },
 
@@ -147,7 +147,7 @@ async function seedTestMembers() {
         birthday: subYears(now, 29),
         planType: 'gym_5pass' as const, planDuration: null, startDate: subDays(now, 10),
         originalEndDate: addDays(now, 20), currentEndDate: addDays(now, 20),
-        isActive: true, isPaused: false, remainingVisits: 2,
+        isActive: true, isPaused: false, usedVisits: 3,
         payment: { amount: '75.00', method: 'card' as const }
       },
 
@@ -157,7 +157,7 @@ async function seedTestMembers() {
         birthday: subYears(now, 33),
         planType: 'gym_5pass' as const, planDuration: null, startDate: subDays(now, 35),
         originalEndDate: subDays(now, 5), currentEndDate: subDays(now, 5),
-        isActive: false, isPaused: false, remainingVisits: 0,
+        isActive: false, isPaused: false, usedVisits: 5,
         payment: { amount: '75.00', method: 'cash' as const }
       },
 
@@ -167,7 +167,7 @@ async function seedTestMembers() {
         birthday: subYears(now, 27),
         planType: 'fitness_5pass' as const, planDuration: null, startDate: subDays(now, 3),
         originalEndDate: addDays(now, 27), currentEndDate: addDays(now, 27),
-        isActive: true, isPaused: false, remainingVisits: 4,
+        isActive: true, isPaused: false, usedVisits: 1,
         payment: { amount: '60.00', method: 'cash' as const }
       },
 
@@ -177,7 +177,7 @@ async function seedTestMembers() {
         birthday: subYears(now, 22),
         planType: 'crossfit_5pass' as const, planDuration: null, startDate: subDays(now, 7),
         originalEndDate: addDays(now, 23), currentEndDate: addDays(now, 23),
-        isActive: true, isPaused: false, remainingVisits: 3,
+        isActive: true, isPaused: false, usedVisits: 2,
         payment: { amount: '85.00', method: 'card' as const }
       },
 
@@ -204,7 +204,7 @@ async function seedTestMembers() {
         name: 'Paul Martinez', email: 'member16@test.com', phone: '+1234567016',
         planType: 'gym_5pass' as const, planDuration: null, startDate: subDays(now, 1),
         originalEndDate: addDays(now, 29), currentEndDate: addDays(now, 29),
-        isActive: true, isPaused: false, remainingVisits: 5
+        isActive: true, isPaused: false, usedVisits: 0
       },
 
       // 17. UNPAID fitness_5pass with 3 visits remaining
@@ -212,7 +212,7 @@ async function seedTestMembers() {
         name: 'Quinn White', email: 'member17@test.com', phone: '+1234567017',
         planType: 'fitness_5pass' as const, planDuration: null, startDate: subDays(now, 8),
         originalEndDate: addDays(now, 22), currentEndDate: addDays(now, 22),
-        isActive: true, isPaused: false, remainingVisits: 3
+        isActive: true, isPaused: false, usedVisits: 2
       },
 
       // 18. Member with multiple pause history (PAID)
@@ -258,7 +258,7 @@ async function seedTestMembers() {
         currentEndDate: memberData.currentEndDate,
         isActive: memberData.isActive,
         isPaused: memberData.isPaused,
-        remainingVisits: memberData.remainingVisits || null
+        usedVisits: memberData.usedVisits || null
       }
 
       const [newMember] = await db.insert(members).values(memberInsert).returning()

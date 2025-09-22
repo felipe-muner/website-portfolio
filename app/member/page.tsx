@@ -46,11 +46,17 @@ export default function MemberPortal() {
     if (!member) return
 
     try {
-      const response = await fetch('/api/member/checkin', {
+      const identifier = member.email || member.passportId
+      if (!identifier) {
+        alert('Member missing email and passport ID')
+        return
+      }
+
+      const response = await fetch('/api/checkin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          memberId: member.id,
+          identifier,
           facilityType
         })
       })
@@ -151,10 +157,10 @@ export default function MemberPortal() {
                     <p className="font-medium text-gray-500">End Date</p>
                     <p>{new Date(member.currentEndDate).toLocaleDateString()}</p>
                   </div>
-                  {member.remainingVisits && (
+                  {member.usedVisits !== null && member.planType && (member.planType.includes('5pass') || member.planType.includes('10pass')) && (
                     <div>
                       <p className="font-medium text-gray-500">Remaining Visits</p>
-                      <p>{member.remainingVisits}</p>
+                      <p>{(member.planType.includes('10pass') ? 10 : 5) - (member.usedVisits || 0)}</p>
                     </div>
                   )}
                   <div>

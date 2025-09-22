@@ -165,7 +165,7 @@ async function seedMembersWithNewPricing() {
       planType: NonNullable<Member['planType']>
       duration: number
       isThaiNational: boolean
-      remainingVisits?: number
+      usedVisits?: number
       isExpired?: boolean
     }
 
@@ -189,7 +189,7 @@ async function seedMembersWithNewPricing() {
       },
       {
         name: 'Carol Davis', email: 'member05@test.com', phone: '+66812345005',
-        planType: 'gym_5pass', duration: 1, isThaiNational: false, remainingVisits: 4
+        planType: 'gym_5pass', duration: 1, isThaiNational: false, usedVisits: 1
       },
 
       // Fitness Classes
@@ -199,7 +199,7 @@ async function seedMembersWithNewPricing() {
       },
       {
         name: 'Niran Pothong', email: 'member07@test.com', phone: '+66812345007',
-        planType: 'fitness_5pass', duration: 1, isThaiNational: true, remainingVisits: 3
+        planType: 'fitness_5pass', duration: 1, isThaiNational: true, usedVisits: 2
       },
 
       // CrossFit Plans (with Thai discounts)
@@ -221,7 +221,7 @@ async function seedMembersWithNewPricing() {
       },
       {
         name: 'Grace Lee', email: 'member12@test.com', phone: '+66812345012',
-        planType: 'crossfit_10pass', duration: 1, isThaiNational: false, remainingVisits: 8
+        planType: 'crossfit_10pass', duration: 1, isThaiNational: false, usedVisits: 2
       },
 
       // Open Gym Plans
@@ -231,7 +231,7 @@ async function seedMembersWithNewPricing() {
       },
       {
         name: 'Ivy Chen', email: 'member14@test.com', phone: '+66812345014',
-        planType: 'open_gym_5pass', duration: 1, isThaiNational: false, remainingVisits: 5
+        planType: 'open_gym_5pass', duration: 1, isThaiNational: false, usedVisits: 0
       },
 
       // Group Classes Combo (with Thai discounts)
@@ -300,7 +300,7 @@ async function seedMembersWithNewPricing() {
         currentEndDate: endDate,
         isActive: !isExpired,
         isPaused: false,
-        remainingVisits: member.remainingVisits || null
+        usedVisits: member.usedVisits || null
       }
 
       memberInserts.push(memberInsert)
