@@ -52,7 +52,7 @@ function getInitials(name: string): string {
     .join('')
 }
 
-function Avatar({ name, index }: { name: string; index: number }) {
+function Avatar({ name, index, hasBirthday }: { name: string; index: number; hasBirthday?: boolean }) {
   const initials = getInitials(name)
 
   // Create subtle gradient variations based on index
@@ -70,8 +70,15 @@ function Avatar({ name, index }: { name: string; index: number }) {
   const gradientClass = gradients[index % gradients.length]
 
   return (
-    <div className={`w-10 h-10 rounded-full ${gradientClass} flex items-center justify-center text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-300 hover:scale-110`}>
-      {initials}
+    <div className="relative">
+      <div className={`w-12 h-12 rounded-full ${gradientClass} flex items-center justify-center text-base font-semibold shadow-md hover:shadow-lg transition-all duration-300 hover:scale-110`}>
+        {initials}
+      </div>
+      {hasBirthday && (
+        <div className="absolute -top-1 -right-1 bg-orange-100 rounded-full p-1">
+          <Cake className="h-3 w-3 text-orange-600" />
+        </div>
+      )}
     </div>
   )
 }
@@ -225,8 +232,7 @@ export const MembersTable = forwardRef<MembersTableRef, MembersTableProps>(
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Contact</TableHead>
+              <TableHead>Member</TableHead>
               <TableHead>Plan</TableHead>
               <TableHead>End Date</TableHead>
               <TableHead className="w-[50px]"></TableHead>
@@ -246,30 +252,23 @@ export const MembersTable = forwardRef<MembersTableRef, MembersTableProps>(
               return (
                 <TableRow key={member.id}>
                   <TableCell>
-                    <div className="flex items-center gap-3">
-                      <Avatar name={member.name} index={index} />
-                      <div className="flex items-center gap-2">
-                        {isBirthdayToday(member.birthday) && (
-                          <div title="Birthday today!">
-                            <Cake className="h-4 w-4 text-orange-500" />
+                    <div className="flex items-center gap-4">
+                      <Avatar name={member.name} index={index} hasBirthday={isBirthdayToday(member.birthday)} />
+                      <div className="flex-1">
+                        <div className="text-base font-semibold text-gray-900 mb-1">{member.name}</div>
+                        <div className="space-y-0.5">
+                          <div className="text-sm text-gray-600">{member.email || 'No email'}</div>
+                          <div className="text-sm text-gray-500">
+                            {member.phone ? (
+                              <PhoneDisplay phoneNumber={member.phone} flagSize="sm" />
+                            ) : (
+                              'No phone'
+                            )}
                           </div>
-                        )}
-                        <div>
-                          <div className="font-medium">{member.name}</div>
-                          <div className="text-sm text-gray-500">{member.passportId}</div>
+                          {member.passportId && (
+                            <div className="text-xs text-gray-400">{member.passportId}</div>
+                          )}
                         </div>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div>
-                      <div className="text-sm">{member.email || 'No email'}</div>
-                      <div className="text-sm text-gray-500">
-                        {member.phone ? (
-                          <PhoneDisplay phoneNumber={member.phone} flagSize="sm" />
-                        ) : (
-                          'No phone'
-                        )}
                       </div>
                     </div>
                   </TableCell>
@@ -308,20 +307,27 @@ export const MembersTable = forwardRef<MembersTableRef, MembersTableProps>(
                             const totalPauses = pauseValidation.maxPauses
                             const remainingPauses = totalPauses - usedPauses
 
-                            if (totalPauses > 0 && !member.isPaused) {
+                            if (totalPauses > 0 && membershipStatus.isValid) {
                               return (
                                 <TooltipProvider>
                                   <Tooltip>
                                     <TooltipTrigger asChild>
                                       <Badge
                                         variant="outline"
-                                        className="bg-blue-50 text-blue-600 border-blue-200 text-xs cursor-help hover:bg-blue-100 transition-all duration-300"
+                                        className={`text-xs cursor-help transition-all duration-500 ease-in-out transform hover:scale-105 ${
+                                          member.isPaused
+                                            ? 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100'
+                                            : 'bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100'
+                                        }`}
                                       >
-                                        ({usedPauses}/{totalPauses} pauses)
+                                        {member.isPaused ? 'Paused' : `(${usedPauses}/${totalPauses} pauses)`}
                                       </Badge>
                                     </TooltipTrigger>
                                     <TooltipContent>
-                                      <p>{usedPauses} pauses used, {remainingPauses} remaining out of {totalPauses} total pauses allowed for this plan</p>
+                                      {member.isPaused
+                                        ? <p>Membership is currently paused</p>
+                                        : <p>{usedPauses} pauses used, {remainingPauses} remaining out of {totalPauses} total pauses allowed for this plan</p>
+                                      }
                                     </TooltipContent>
                                   </Tooltip>
                                 </TooltipProvider>
@@ -340,17 +346,13 @@ export const MembersTable = forwardRef<MembersTableRef, MembersTableProps>(
                               Expiring ({membershipStatus.daysRemaining}d)
                             </Badge>
                           )}
-                          {!membershipStatus.isValid && (
+                          {!membershipStatus.isValid && !membershipStatus.isPaused && (
                             <Badge
                               variant="outline"
-                              className={`text-xs transition-all duration-500 ease-in-out transform hover:scale-105 ${
-                                membershipStatus.isPaused
-                                  ? 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100'
-                                  : 'bg-red-50 text-red-600 border-red-200 hover:bg-red-100'
-                              }`}
+                              className="bg-red-50 text-red-600 border-red-200 hover:bg-red-100 text-xs transition-all duration-500 ease-in-out transform hover:scale-105"
                               title={membershipStatus.reason}
                             >
-                              {membershipStatus.isPaused ? 'Paused' : 'Expired'}
+                              Expired
                             </Badge>
                           )}
                         </div>
@@ -380,7 +382,7 @@ export const MembersTable = forwardRef<MembersTableRef, MembersTableProps>(
                         planDuration: member.planDuration,
                         isPaused: member.isPaused,
                         pauseCount: member.pauseCount,
-                      }) && (
+                      }) && membershipStatus.isValid && (
                         <Button
                           variant="ghost"
                           size="sm"

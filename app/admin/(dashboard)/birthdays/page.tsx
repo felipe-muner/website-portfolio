@@ -37,8 +37,14 @@ function Avatar({ name }: { name: string }) {
   const initials = getInitials(name)
 
   return (
-    <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-sm font-medium">
-      {initials}
+    <div className="relative">
+      <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-sm font-medium">
+        {initials}
+      </div>
+      {/* Floating birthday hat */}
+      <div className="absolute -top-1 -right-1 bg-orange-100 rounded-full p-1">
+        <Cake className="h-3 w-3 text-orange-600" />
+      </div>
     </div>
   )
 }
@@ -133,10 +139,7 @@ export default function BirthdaysPage() {
                     <TableCell>
                       <div className="flex items-center gap-3">
                         <Avatar name={member.name} />
-                        <div className="flex items-center gap-2">
-                          <Cake className="h-4 w-4 text-orange-500" />
-                          <div className="font-medium">{member.name}</div>
-                        </div>
+                        <div className="font-medium">{member.name}</div>
                       </div>
                     </TableCell>
                     <TableCell>
