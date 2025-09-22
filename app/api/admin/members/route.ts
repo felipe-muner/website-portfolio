@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import { members, payments } from '@/lib/db/schema'
-import { desc, isNull } from 'drizzle-orm'
+import { members, payments, plans } from '@/lib/db/schema'
+import { desc, isNull, eq } from 'drizzle-orm'
 
 export async function POST(request: NextRequest) {
   try {
@@ -54,8 +54,31 @@ export async function POST(request: NextRequest) {
 export async function GET() {
   try {
     const allMembers = await db
-      .select()
+      .select({
+        id: members.id,
+        name: members.name,
+        email: members.email,
+        passportId: members.passportId,
+        phone: members.phone,
+        birthday: members.birthday,
+        nationalityId: members.nationalityId,
+        planType: members.planType,
+        planDuration: members.planDuration,
+        startDate: members.startDate,
+        originalEndDate: members.originalEndDate,
+        currentEndDate: members.currentEndDate,
+        isActive: members.isActive,
+        isPaused: members.isPaused,
+        pauseCount: members.pauseCount,
+        remainingVisits: members.remainingVisits,
+        createdAt: members.createdAt,
+        updatedAt: members.updatedAt,
+        deletedAt: members.deletedAt,
+        // Plan information from join
+        planName: plans.name,
+      })
       .from(members)
+      .leftJoin(plans, eq(members.planType, plans.planType))
       .where(isNull(members.deletedAt))
       .orderBy(desc(members.createdAt))
 

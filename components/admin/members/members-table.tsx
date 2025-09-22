@@ -28,6 +28,7 @@ interface Member {
   nationalityId: string | null
   planType: string
   planDuration: number | null
+  planName?: string
   startDate: string
   originalEndDate: string
   currentEndDate: string
@@ -40,13 +41,6 @@ interface Member {
   deletedAt: string | null
 }
 
-const planTypeLabels = {
-  gym_only: 'Gym Only',
-  gym_crossfit: 'Gym + CrossFit',
-  gym_5pass: 'Gym 5-Pass',
-  fitness_5pass: 'Fitness 5-Pass',
-  crossfit_5pass: 'CrossFit 5-Pass',
-}
 
 function getInitials(name: string): string {
   return name
@@ -279,13 +273,12 @@ export const MembersTable = forwardRef<MembersTableRef, MembersTableProps>(
                     </div>
                   </TableCell>
                   <TableCell>
-                    {member.planType ? (
+                    {member.planName ? (
                       <div className="flex items-center gap-1">
                         <Badge className="bg-gray-100 text-gray-800 hover:bg-gray-200">
-                          {planTypeLabels[member.planType as keyof typeof planTypeLabels] ||
-                           member.planType.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                          {member.planName}
                         </Badge>
-                        {member.planType.includes('5pass') && member.remainingVisits !== null && (
+                        {member.planType && member.planType.includes('5pass') && member.remainingVisits !== null && (
                           <span className="text-xs text-gray-500">({member.remainingVisits} visits)</span>
                         )}
                       </div>
