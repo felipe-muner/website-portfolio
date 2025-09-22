@@ -24,6 +24,7 @@ interface Payment {
   serviceType?: 'gym' | 'crossfit' | 'fitness_class'
   gymShare?: string
   crossfitShare?: string
+  planName?: string
 }
 
 interface PaymentHistoryProps {
@@ -46,7 +47,7 @@ export function PaymentHistory({ memberId, memberName }: PaymentHistoryProps) {
       const response = await fetch(`/api/admin/members/${memberId}/payments`)
       if (response.ok) {
         const data = await response.json()
-        setPayments(data)
+        setPayments(Array.isArray(data) ? data : (data.payments || []))
       } else {
         console.error('Failed to fetch payments')
       }
@@ -85,6 +86,7 @@ export function PaymentHistory({ memberId, memberName }: PaymentHistoryProps) {
   }
 
   const getTotalRevenue = () => {
+    if (!Array.isArray(payments)) return 0
     return payments.reduce((total, payment) => total + parseFloat(payment.amount), 0)
   }
 
@@ -132,46 +134,16 @@ export function PaymentHistory({ memberId, memberName }: PaymentHistoryProps) {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Date</TableHead>
-                <TableHead>Amount</TableHead>
-                <TableHead>Method</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Service</TableHead>
-                <TableHead>Split</TableHead>
+                <TableHead>Payment Date</TableHead>
+                <TableHead>Plan</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {payments.map((payment) => (
                 <TableRow key={payment.id}>
                   <TableCell>{formatDate(payment.paymentDate)}</TableCell>
-                  <TableCell className="font-medium">
-                    {formatCurrency(payment.amount)}
-                  </TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-2">
-                      {getPaymentMethodIcon(payment.paymentMethod)}
-                      <span className="capitalize">{payment.paymentMethod}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell>{getPaymentTypeBadge(payment.paymentType)}</TableCell>
-                  <TableCell>
-                    {payment.serviceType ? (
-                      <Badge variant="outline" className="capitalize">
-                        {payment.serviceType}
-                      </Badge>
-                    ) : (
-                      '-'
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {payment.gymShare && payment.crossfitShare ? (
-                      <div className="text-xs space-y-1">
-                        <div>Gym: {payment.gymShare}%</div>
-                        <div>CrossFit: {payment.crossfitShare}%</div>
-                      </div>
-                    ) : (
-                      '-'
-                    )}
+                    {payment.planName || 'Plan not specified'}
                   </TableCell>
                 </TableRow>
               ))}

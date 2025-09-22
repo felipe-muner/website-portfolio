@@ -133,38 +133,16 @@ export function PaymentListSheet({ open, onOpenChange, memberId, memberName }: P
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Amount</TableHead>
-                    <TableHead>Method</TableHead>
+                    <TableHead>Payment Date</TableHead>
                     <TableHead>Plan</TableHead>
-                    <TableHead>Split</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {payments.map((payment) => (
                     <TableRow key={payment.id}>
                       <TableCell>{formatDate(payment.paymentDate)}</TableCell>
-                      <TableCell className="font-medium">
-                        {formatCurrency(payment.amount)}
-                      </TableCell>
                       <TableCell>
-                        <div className="flex items-center gap-2">
-                          {getPaymentMethodIcon(payment.paymentMethod)}
-                          <span className="capitalize">{payment.paymentMethod}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        {getPaymentTypeBadge(payment)}
-                      </TableCell>
-                      <TableCell>
-                        {payment.gymShare && payment.crossfitShare ? (
-                          <div className="text-xs space-y-1">
-                            <div>Gym: {payment.gymShare}%</div>
-                            <div>CrossFit: {payment.crossfitShare}%</div>
-                          </div>
-                        ) : (
-                          '-'
-                        )}
+                        {payment.planName || 'Plan not specified'}
                       </TableCell>
                     </TableRow>
                   ))}
