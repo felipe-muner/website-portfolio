@@ -289,12 +289,12 @@ export default function AdminCheckInPage() {
 
                       {/* Member Information */}
                       <div className="bg-white rounded border p-3">
-                        <div className="grid grid-cols-2 gap-3 mb-2">
-                          <div className="flex items-center gap-2">
+                        <div className="mb-2">
+                          <div className="flex items-center gap-2 mb-1">
                             <User className="h-4 w-4 text-gray-500" />
                             <span className="font-medium text-sm">{checkIn.memberName}</span>
                           </div>
-                          <div className="text-xs text-gray-600">{checkIn.email}</div>
+                          <div className="text-xs text-gray-600 ml-6">{checkIn.email}</div>
                         </div>
 
                         {checkIn.membershipStatus && checkIn.planType && (

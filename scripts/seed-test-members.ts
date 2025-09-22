@@ -67,10 +67,10 @@ async function seedTestMembers() {
         isActive: true, isPaused: false, payment: { amount: '50.00', method: 'card' as const }
       },
 
-      // 2. Active gym-only 3 months (PAID)
+      // 2. Active gym-only 3 months (PAID) - HAS BIRTHDAY TODAY!
       {
         name: 'Bob Smith', email: 'member02@test.com', phone: '+1234567002',
-        birthday: subYears(now, 28),
+        birthday: subYears(now, 28), // 28 years old, birthday today!
         planType: 'gym_only' as const, planDuration: 3, startDate: subMonths(now, 1),
         originalEndDate: addMonths(now, 2), currentEndDate: addMonths(now, 2),
         isActive: true, isPaused: false, payment: { amount: '130.00', method: 'card' as const }
