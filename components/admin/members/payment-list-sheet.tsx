@@ -75,23 +75,6 @@ export function PaymentListSheet({ open, onOpenChange, memberId, memberName }: P
     return `${amount} ฿`
   }
 
-  const getPaymentMethodIcon = (method: 'cash' | 'card') => {
-    return method === 'cash' ? <Banknote className="h-4 w-4" /> : <CreditCard className="h-4 w-4" />
-  }
-
-  const getPaymentTypeBadge = (payment: PaymentWithPlan) => {
-    // If we have plan information from the database join, use it
-    if (payment.planName) {
-      return (
-        <Badge className="bg-gray-100 text-gray-800 hover:bg-gray-200">
-          {payment.planName}
-        </Badge>
-      )
-    }
-
-    return <Badge variant="default">Payment</Badge>
-  }
-
   const getTotalRevenue = () => {
     return payments.reduce((total, payment) => total + parseFloat(payment.amount), 0)
   }
