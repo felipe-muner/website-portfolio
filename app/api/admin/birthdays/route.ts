@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { members } from '@/lib/db/schema'
-import { isNull, sql } from 'drizzle-orm'
+import { isNull, and, isNotNull, eq } from 'drizzle-orm'
 
 export async function GET() {
   try {
-    const birthdayMembers = await db
+    // Get all active members with birthdays
+    const allMembers = await db
       .select({
         id: members.id,
         name: members.name,
@@ -15,8 +16,24 @@ export async function GET() {
       })
       .from(members)
       .where(
-        sql`${isNull(members.deletedAt)} AND ${members.isActive} = true AND ${members.birthday} IS NOT NULL AND EXTRACT(MONTH FROM ${members.birthday}) = EXTRACT(MONTH FROM CURRENT_DATE) AND EXTRACT(DAY FROM ${members.birthday}) = EXTRACT(DAY FROM CURRENT_DATE)`
+        and(
+          isNull(members.deletedAt),
+          eq(members.isActive, true),
+          isNotNull(members.birthday)
+        )
       )
+
+    // Filter for today's birthdays using JavaScript (same logic as members table)
+    const today = new Date()
+    const birthdayMembers = allMembers.filter(member => {
+      if (!member.birthday) return false
+
+      const birthDate = new Date(member.birthday)
+      return (
+        today.getMonth() === birthDate.getMonth() &&
+        today.getDate() === birthDate.getDate()
+      )
+    })
 
     const membersWithAge = birthdayMembers.map(member => {
       if (!member.birthday) {
