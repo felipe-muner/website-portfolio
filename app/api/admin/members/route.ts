@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
         isActive: memberData.isActive ?? true,
         isPaused: memberData.isPaused ?? false,
         pauseCount: memberData.pauseCount ?? 0,
-        remainingVisits: memberData.remainingVisits || null,
+        usedVisits: memberData.usedVisits || 0,
       })
       .returning()
 
@@ -70,7 +70,7 @@ export async function GET() {
         isActive: members.isActive,
         isPaused: members.isPaused,
         pauseCount: members.pauseCount,
-        remainingVisits: members.remainingVisits,
+        usedVisits: members.usedVisits,
         createdAt: members.createdAt,
         updatedAt: members.updatedAt,
         deletedAt: members.deletedAt,

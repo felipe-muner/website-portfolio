@@ -78,7 +78,7 @@ export type MemberLookupResult = Pick<Member,
   | 'planType'
   | 'isActive'
   | 'isPaused'
-  | 'remainingVisits'
+  | 'usedVisits'
   | 'currentEndDate'
 >
 
@@ -90,5 +90,5 @@ export type CheckInRequest = {
 export type CheckInResponse = {
   success: boolean
   checkIn: CheckIn
-  remainingVisits: number | null
+  usedVisits: number | null
 }

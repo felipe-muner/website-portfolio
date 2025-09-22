@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1757693304015,
-      "tag": "0000_glamorous_punisher",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1758264019467,
-      "tag": "0001_absent_maverick",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1758293680510,
-      "tag": "0002_crazy_sersi",
+      "when": 1758528475201,
+      "tag": "0000_silky_gravity",
       "breakpoints": true
     }
   ]

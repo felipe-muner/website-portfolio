@@ -57,7 +57,7 @@ export async function PUT(
         isActive: data.isActive,
         isPaused: data.isPaused,
         pauseCount: data.pauseCount,
-        remainingVisits: data.remainingVisits,
+        usedVisits: data.usedVisits,
         updatedAt: new Date(),
       })
       .where(and(eq(members.id, memberId), isNull(members.deletedAt)))

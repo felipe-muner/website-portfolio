@@ -19,6 +19,9 @@ export const users = pgTable('user', {
   email: text('email').unique(),
   emailVerified: timestamp('emailVerified', { mode: 'date' }),
   image: text('image'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').$defaultFn(() => new Date()),
+  deletedAt: timestamp('deleted_at'),
 })
 
 export const accounts = pgTable(
@@ -37,6 +40,8 @@ export const accounts = pgTable(
     scope: text('scope'),
     id_token: text('id_token'),
     session_state: text('session_state'),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').$defaultFn(() => new Date()),
   },
   (account) => [
     {
@@ -84,6 +89,8 @@ export const authenticators = pgTable(
     credentialDeviceType: text('credentialDeviceType').notNull(),
     credentialBackedUp: boolean('credentialBackedUp').notNull(),
     transports: text('transports'),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').$defaultFn(() => new Date()),
   },
   (authenticator) => [
     {
@@ -103,6 +110,8 @@ export const nationalities = pgTable('nationality', {
   code: text('code').notNull().unique(), // ISO 3166-1 alpha-2 country code
   flag: text('flag').notNull(), // Unicode flag emoji
   createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').$defaultFn(() => new Date()),
+  deletedAt: timestamp('deleted_at'),
 }, (t) => [
   index('nationalities_name_idx').on(t.name),
   index('nationalities_code_idx').on(t.code),
@@ -160,7 +169,7 @@ export const members = pgTable('member', {
   isActive: boolean('is_active').default(true).notNull(),
   isPaused: boolean('is_paused').default(false).notNull(),
   pauseCount: integer('pause_count').default(0).notNull(),
-  remainingVisits: integer('remaining_visits'), // for 5-pass plans
+  usedVisits: integer('used_visits').default(0), // for pass-based plans (5-pass, 10-pass)
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').$defaultFn(() => new Date()),
   deletedAt: timestamp('deleted_at'),
@@ -218,6 +227,9 @@ export const dayPasses = pgTable('day_pass', {
   purchaseDate: timestamp('purchase_date').defaultNow().notNull(),
   isUsed: boolean('is_used').default(false).notNull(),
   usedAt: timestamp('used_at'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').$defaultFn(() => new Date()),
+  deletedAt: timestamp('deleted_at'),
 }, (t) => [
   index('day_passes_purchase_date_idx').on(t.purchaseDate),
   index('day_passes_is_used_idx').on(t.isUsed),
@@ -239,6 +251,7 @@ export const plans = pgTable('plan', {
   description: text('description'), // Optional description
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').$defaultFn(() => new Date()),
+  deletedAt: timestamp('deleted_at'),
 }, (t) => [
   index('plans_plan_type_idx').on(t.planType),
   index('plans_is_active_idx').on(t.isActive),
@@ -260,6 +273,9 @@ export const payments = pgTable('payment', {
   crossfitShare: decimal('crossfit_share', { precision: 5, scale: 2 }), // percentage for combo plans
   paymentDate: timestamp('payment_date').defaultNow().notNull(),
   paymentMethod: text('payment_method').$type<'cash' | 'card'>().notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').$defaultFn(() => new Date()),
+  deletedAt: timestamp('deleted_at'),
 }, (t) => [
   index('payments_member_id_idx').on(t.memberId),
   index('payments_payment_date_idx').on(t.paymentDate),
@@ -276,6 +292,8 @@ export const shopItems = pgTable('shop_item', {
   category: text('category').$type<'protein' | 'apparel' | 'accessories'>().notNull(),
   isActive: boolean('is_active').default(true).notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').$defaultFn(() => new Date()),
+  deletedAt: timestamp('deleted_at'),
 }, (t) => [
   index('shop_items_category_idx').on(t.category),
   index('shop_items_is_active_idx').on(t.isActive),
@@ -294,6 +312,9 @@ export const shopSales = pgTable('shop_sale', {
   saleDate: timestamp('sale_date').defaultNow().notNull(),
   soldByUserId: text('sold_by_user_id')
     .references(() => adminUsers.id, { onDelete: 'set null' }),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').$defaultFn(() => new Date()),
+  deletedAt: timestamp('deleted_at'),
 }, (t) => [
   index('shop_sales_item_id_idx').on(t.itemId),
   index('shop_sales_sale_date_idx').on(t.saleDate),

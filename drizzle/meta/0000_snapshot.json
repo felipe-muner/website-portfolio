@@ -1,5 +1,5 @@
 {
-  "id": "17facfbe-af34-428b-ae95-3248c55a971a",
+  "id": "2a0877b6-6c1a-45a7-aa6c-fd5a17448bc3",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -71,6 +71,19 @@
         "session_state": {
           "name": "session_state",
           "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": false
         }
@@ -239,6 +252,19 @@
         "transports": {
           "name": "transports",
           "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": false
         }
@@ -434,6 +460,25 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {
@@ -509,11 +554,23 @@
           "primaryKey": false,
           "notNull": false
         },
+        "birthday": {
+          "name": "birthday",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nationality_id": {
+          "name": "nationality_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "plan_type": {
           "name": "plan_type",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "plan_duration": {
           "name": "plan_duration",
@@ -560,11 +617,12 @@
           "notNull": true,
           "default": 0
         },
-        "remaining_visits": {
-          "name": "remaining_visits",
+        "used_visits": {
+          "name": "used_visits",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "default": 0
         },
         "created_at": {
           "name": "created_at",
@@ -631,9 +689,38 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "members_nationality_id_idx": {
+          "name": "members_nationality_id_idx",
+          "columns": [
+            {
+              "expression": "nationality_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
-      "foreignKeys": {},
+      "foreignKeys": {
+        "member_nationality_id_nationality_id_fk": {
+          "name": "member_nationality_id_nationality_id_fk",
+          "tableFrom": "member",
+          "tableTo": "nationality",
+          "columnsFrom": [
+            "nationality_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "member_passport_id_unique": {
@@ -766,6 +853,108 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.nationality": {
+      "name": "nationality",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "code": {
+          "name": "code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "flag": {
+          "name": "flag",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "nationalities_name_idx": {
+          "name": "nationalities_name_idx",
+          "columns": [
+            {
+              "expression": "name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "nationalities_code_idx": {
+          "name": "nationalities_code_idx",
+          "columns": [
+            {
+              "expression": "code",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "nationality_name_unique": {
+          "name": "nationality_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        },
+        "nationality_code_unique": {
+          "name": "nationality_code_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "code"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.payment": {
       "name": "payment",
       "schema": "",
@@ -784,6 +973,12 @@
         },
         "day_pass_id": {
           "name": "day_pass_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "plan_id": {
+          "name": "plan_id",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -819,15 +1014,22 @@
           "primaryKey": false,
           "notNull": true
         },
-        "payment_type": {
-          "name": "payment_type",
-          "type": "text",
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "now()"
         },
-        "service_type": {
-          "name": "service_type",
-          "type": "text",
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": false
         }
@@ -853,6 +1055,21 @@
           "columns": [
             {
               "expression": "payment_date",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "payments_plan_id_idx": {
+          "name": "payments_plan_id_idx",
+          "columns": [
+            {
+              "expression": "plan_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -890,10 +1107,177 @@
           ],
           "onDelete": "set null",
           "onUpdate": "no action"
+        },
+        "payment_plan_id_plan_id_fk": {
+          "name": "payment_plan_id_plan_id_fk",
+          "tableFrom": "payment",
+          "tableTo": "plan",
+          "columnsFrom": [
+            "plan_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.plan": {
+      "name": "plan",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "plan_type": {
+          "name": "plan_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "price": {
+          "name": "price",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "price_thai_discount": {
+          "name": "price_thai_discount",
+          "type": "numeric(10, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "duration": {
+          "name": "duration",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "visit_limit": {
+          "name": "visit_limit",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "plan_category": {
+          "name": "plan_category",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "is_drop_in": {
+          "name": "is_drop_in",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "plans_plan_type_idx": {
+          "name": "plans_plan_type_idx",
+          "columns": [
+            {
+              "expression": "plan_type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "plans_is_active_idx": {
+          "name": "plans_is_active_idx",
+          "columns": [
+            {
+              "expression": "is_active",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "plans_category_idx": {
+          "name": "plans_category_idx",
+          "columns": [
+            {
+              "expression": "plan_category",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "plan_plan_type_unique": {
+          "name": "plan_plan_type_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "plan_type"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -991,6 +1375,18 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {
@@ -1076,6 +1472,25 @@
         "sold_by_user_id": {
           "name": "sold_by_user_id",
           "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": false
         }
@@ -1177,6 +1592,25 @@
         "image": {
           "name": "image",
           "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
           "primaryKey": false,
           "notNull": false
         }

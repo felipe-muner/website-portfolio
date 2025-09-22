@@ -3,7 +3,8 @@ export interface MembershipStatus {
   isActive: boolean
   isPaused: boolean
   daysRemaining: number
-  visitsRemaining: number | null
+  visitsUsed: number | null
+  totalVisits: number | null
   expiryDate: Date
   reason?: string
 }
@@ -14,11 +15,16 @@ export function checkMembershipValidity(member: {
   currentEndDate: string
   isActive: boolean
   isPaused: boolean
-  remainingVisits: number | null
+  usedVisits: number | null
 }): MembershipStatus {
   const now = new Date()
   const expiryDate = new Date(member.currentEndDate)
   const daysRemaining = Math.ceil((expiryDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+
+  // Determine total visits for pass-based plans
+  let totalVisits = null
+  if (member.planType?.includes('5pass')) totalVisits = 5
+  else if (member.planType?.includes('10pass')) totalVisits = 10
 
   // Base status
   const status: MembershipStatus = {
@@ -26,7 +32,8 @@ export function checkMembershipValidity(member: {
     isActive: member.isActive,
     isPaused: member.isPaused,
     daysRemaining,
-    visitsRemaining: member.remainingVisits,
+    visitsUsed: member.usedVisits,
+    totalVisits,
     expiryDate,
   }
 
@@ -54,15 +61,18 @@ export function checkMembershipValidity(member: {
     return status
   }
 
-  // Check if 5-pass has remaining visits
-  if (member.planType.includes('5pass')) {
-    if (!member.remainingVisits || member.remainingVisits <= 0) {
-      status.reason = '5-pass has no remaining visits'
+  // Check if pass-based plan has used all visits
+  if (member.planType && (member.planType.includes('5pass') || member.planType.includes('10pass'))) {
+    const usedVisits = member.usedVisits || 0
+    const maxVisits = totalVisits || 0
+
+    if (usedVisits >= maxVisits) {
+      status.reason = `All ${maxVisits} visits have been used`
       return status
     }
-    // For 5-pass, also check if it has expired (1 month validity)
+    // For pass-based plans, also check if it has expired (1 month validity)
     if (daysRemaining <= 0) {
-      status.reason = '5-pass has expired'
+      status.reason = 'Pass has expired by date'
       return status
     }
   }

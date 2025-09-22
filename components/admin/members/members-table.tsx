@@ -12,10 +12,12 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { PhoneDisplay } from '@/components/ui/phone-display'
-import { Edit, Pause, Play, AlertTriangle, Receipt, Cake } from 'lucide-react'
-import { checkMembershipValidity, getMembershipStatusBadge, shouldShowPauseButton, validatePauseAction } from '@/lib/utils/membership'
+import { Edit, Pause, Play, Receipt, Cake } from 'lucide-react'
+import { checkMembershipValidity, shouldShowPauseButton, validatePauseAction } from '@/lib/utils/membership'
 import { PaymentListSheet } from './payment-list-sheet'
+import { MemberStatusHelpButton } from './member-status-help-dialog'
 import Link from 'next/link'
 
 interface Member {
@@ -35,7 +37,7 @@ interface Member {
   isActive: boolean
   isPaused: boolean
   pauseCount: number
-  remainingVisits: number | null
+  usedVisits: number | null
   createdAt: string
   updatedAt: string
   deletedAt: string | null
@@ -50,11 +52,25 @@ function getInitials(name: string): string {
     .join('')
 }
 
-function Avatar({ name }: { name: string }) {
+function Avatar({ name, index }: { name: string; index: number }) {
   const initials = getInitials(name)
 
+  // Create subtle gradient variations based on index
+  const gradients = [
+    'bg-gradient-to-br from-blue-400 to-blue-600 text-white',
+    'bg-gradient-to-br from-purple-400 to-purple-600 text-white',
+    'bg-gradient-to-br from-green-400 to-green-600 text-white',
+    'bg-gradient-to-br from-orange-400 to-orange-600 text-white',
+    'bg-gradient-to-br from-pink-400 to-pink-600 text-white',
+    'bg-gradient-to-br from-indigo-400 to-indigo-600 text-white',
+    'bg-gradient-to-br from-teal-400 to-teal-600 text-white',
+    'bg-gradient-to-br from-red-400 to-red-600 text-white',
+  ]
+
+  const gradientClass = gradients[index % gradients.length]
+
   return (
-    <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-medium">
+    <div className={`w-10 h-10 rounded-full ${gradientClass} flex items-center justify-center text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-300 hover:scale-110`}>
       {initials}
     </div>
   )
@@ -200,7 +216,10 @@ export const MembersTable = forwardRef<MembersTableRef, MembersTableProps>(
   return (
     <Card>
       <CardHeader>
-        <CardTitle>All Members ({filteredMembers.length})</CardTitle>
+        <div className="flex items-center">
+          <CardTitle>All Members ({filteredMembers.length})</CardTitle>
+          <MemberStatusHelpButton />
+        </div>
       </CardHeader>
       <CardContent>
         <Table>
@@ -214,21 +233,21 @@ export const MembersTable = forwardRef<MembersTableRef, MembersTableProps>(
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredMembers.map((member) => {
+            {filteredMembers.map((member, index) => {
               const membershipStatus = checkMembershipValidity({
                 planType: member.planType,
                 planDuration: member.planDuration,
                 currentEndDate: member.currentEndDate,
                 isActive: member.isActive,
                 isPaused: member.isPaused,
-                remainingVisits: member.remainingVisits,
+                usedVisits: member.usedVisits,
               })
 
               return (
                 <TableRow key={member.id}>
                   <TableCell>
                     <div className="flex items-center gap-3">
-                      <Avatar name={member.name} />
+                      <Avatar name={member.name} index={index} />
                       <div className="flex items-center gap-2">
                         {isBirthdayToday(member.birthday) && (
                           <div title="Birthday today!">
@@ -261,36 +280,78 @@ export const MembersTable = forwardRef<MembersTableRef, MembersTableProps>(
                           <Badge className="bg-gray-100 text-gray-800 hover:bg-gray-200">
                             {member.planName}
                           </Badge>
-                          {member.planType && member.planType.includes('5pass') && member.remainingVisits !== null && (
-                            <span className="text-xs text-gray-500">({member.remainingVisits} visits)</span>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Badge
-                            variant={getMembershipStatusBadge(membershipStatus).variant}
-                            className={`${getMembershipStatusBadge(membershipStatus).className} transition-all duration-500 ease-in-out transform hover:scale-105 text-xs`}
-                            title={membershipStatus.reason}
-                          >
-                            {getMembershipStatusBadge(membershipStatus).text}
-                          </Badge>
-                          {membershipStatus.isValid ? (
-                            <Badge variant="default" className="bg-green-100 text-green-800 text-xs" title="Membership is valid">
-                              ✓
-                            </Badge>
-                          ) : (
-                            <Badge variant="destructive" className="text-xs" title={`Invalid: ${membershipStatus.reason}`}>
-                              ✗
-                            </Badge>
-                          )}
-                          {membershipStatus.daysRemaining <= 30 && membershipStatus.daysRemaining > 0 && (
-                            <span className="text-xs text-gray-500" title={`${membershipStatus.daysRemaining} days remaining`}>
-                              {membershipStatus.daysRemaining}d
+                          {member.planType && (member.planType.includes('5pass') || member.planType.includes('10pass')) && member.usedVisits !== null && (
+                            <span
+                              className="text-xs text-gray-500 cursor-help"
+                              title={
+                                (() => {
+                                  const totalVisits = member.planType.includes('10pass') ? 10 : 5
+                                  const usedVisits = member.usedVisits || 0
+                                  const remainingVisits = totalVisits - usedVisits
+                                  return remainingVisits > 0
+                                    ? `${usedVisits} visits used, ${remainingVisits} remaining out of ${totalVisits} total visits`
+                                    : `All ${totalVisits} visits have been used. Pass will expire soon.`
+                                })()
+                              }
+                            >
+                              ({member.usedVisits || 0}/{member.planType.includes('10pass') ? '10' : '5'} visits)
                             </span>
                           )}
-                          {membershipStatus.reason && membershipStatus.daysRemaining <= 7 && membershipStatus.daysRemaining > 0 && (
-                            <div title={membershipStatus.reason} className="animate-bounce">
-                              <AlertTriangle className="h-3 w-3 text-orange-500" />
-                            </div>
+                          {(() => {
+                            const pauseValidation = validatePauseAction({
+                              planType: member.planType,
+                              planDuration: member.planDuration,
+                              isPaused: member.isPaused,
+                              pauseCount: member.pauseCount,
+                            })
+                            const usedPauses = pauseValidation.currentPauses
+                            const totalPauses = pauseValidation.maxPauses
+                            const remainingPauses = totalPauses - usedPauses
+
+                            if (totalPauses > 0 && !member.isPaused) {
+                              return (
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Badge
+                                        variant="outline"
+                                        className="bg-blue-50 text-blue-600 border-blue-200 text-xs cursor-help hover:bg-blue-100 transition-all duration-300"
+                                      >
+                                        ({usedPauses}/{totalPauses} pauses)
+                                      </Badge>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      <p>{usedPauses} pauses used, {remainingPauses} remaining out of {totalPauses} total pauses allowed for this plan</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+                              )
+                            }
+                            return null
+                          })()}
+                        </div>
+                        <div className="flex items-center gap-1">
+                          {membershipStatus.daysRemaining <= 7 && membershipStatus.daysRemaining > 0 && membershipStatus.isValid && (
+                            <Badge
+                              variant="outline"
+                              className="bg-orange-100 text-orange-800 text-xs transition-all duration-500 ease-in-out transform hover:scale-105"
+                              title={`Expires in ${membershipStatus.daysRemaining} days`}
+                            >
+                              Expiring ({membershipStatus.daysRemaining}d)
+                            </Badge>
+                          )}
+                          {!membershipStatus.isValid && (
+                            <Badge
+                              variant="outline"
+                              className={`text-xs transition-all duration-500 ease-in-out transform hover:scale-105 ${
+                                membershipStatus.isPaused
+                                  ? 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100'
+                                  : 'bg-red-50 text-red-600 border-red-200 hover:bg-red-100'
+                              }`}
+                              title={membershipStatus.reason}
+                            >
+                              {membershipStatus.isPaused ? 'Paused' : 'Expired'}
+                            </Badge>
                           )}
                         </div>
                       </div>
