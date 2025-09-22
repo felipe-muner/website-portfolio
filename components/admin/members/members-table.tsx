@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { PhoneDisplay } from '@/components/ui/phone-display'
-import { Edit, Pause, Play, Receipt, Cake } from 'lucide-react'
+import { Edit, Pause, Play, Receipt, Cake, User } from 'lucide-react'
 import { checkMembershipValidity, shouldShowPauseButton, validatePauseAction } from '@/lib/utils/membership'
 import { PaymentListSheet } from './payment-list-sheet'
 import { MemberStatusHelpButton } from './member-status-help-dialog'
@@ -71,12 +71,12 @@ function Avatar({ name, index, hasBirthday }: { name: string; index: number; has
 
   return (
     <div className="relative">
-      <div className={`w-12 h-12 rounded-full ${gradientClass} flex items-center justify-center text-base font-semibold shadow-md hover:shadow-lg transition-all duration-300 hover:scale-110`}>
-        {initials}
+      <div className={`w-20 h-20 text-2xl rounded-full ${gradientClass} flex items-center justify-center text-base font-semibold shadow-md hover:shadow-lg transition-all duration-300`}>
+        <span className='text-4xl'>{initials}</span>
       </div>
       {hasBirthday && (
-        <div className="absolute -top-1 -right-1 bg-orange-100 rounded-full p-1">
-          <Cake className="h-3 w-3 text-orange-600" />
+        <div className="absolute -top-3 -right-1 bg-orange-100 rounded-full p-1">
+          <Cake className="h-6 w-6 text-orange-600" />
         </div>
       )}
     </div>
@@ -307,7 +307,7 @@ export const MembersTable = forwardRef<MembersTableRef, MembersTableProps>(
                             const totalPauses = pauseValidation.maxPauses
                             const remainingPauses = totalPauses - usedPauses
 
-                            if (totalPauses > 0 && membershipStatus.isValid) {
+                            if (totalPauses > 0 && (membershipStatus.isValid || member.isPaused)) {
                               return (
                                 <TooltipProvider>
                                   <Tooltip>
@@ -320,12 +320,12 @@ export const MembersTable = forwardRef<MembersTableRef, MembersTableProps>(
                                             : 'bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100'
                                         }`}
                                       >
-                                        {member.isPaused ? 'Paused' : `(${usedPauses}/${totalPauses} pauses)`}
+                                        {member.isPaused ? `Paused (${usedPauses}/${totalPauses})` : `(${usedPauses}/${totalPauses} pauses)`}
                                       </Badge>
                                     </TooltipTrigger>
                                     <TooltipContent>
                                       {member.isPaused
-                                        ? <p>Membership is currently paused</p>
+                                        ? <p>Membership is currently paused. {usedPauses} out of {totalPauses} pauses used.</p>
                                         : <p>{usedPauses} pauses used, {remainingPauses} remaining out of {totalPauses} total pauses allowed for this plan</p>
                                       }
                                     </TooltipContent>
@@ -382,15 +382,34 @@ export const MembersTable = forwardRef<MembersTableRef, MembersTableProps>(
                         planDuration: member.planDuration,
                         isPaused: member.isPaused,
                         pauseCount: member.pauseCount,
-                      }) && membershipStatus.isValid && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handlePauseToggle(member)}
-                          title={member.isPaused ? 'Resume membership' : 'Pause membership'}
-                          disabled={pausingMemberId === member.id}
-                          className="transition-all duration-300 hover:scale-110 active:scale-95 disabled:opacity-50"
-                        >
+                      }) && (membershipStatus.isValid || member.isPaused) && (() => {
+                        const validation = validatePauseAction({
+                          planType: member.planType,
+                          planDuration: member.planDuration,
+                          isPaused: member.isPaused,
+                          pauseCount: member.pauseCount,
+                        })
+
+                        let title = ''
+                        let isDisabled = pausingMemberId === member.id
+
+                        if (member.isPaused) {
+                          title = validation.canUnpause ? 'Resume membership' : (validation.reason || 'Cannot resume membership')
+                          isDisabled = isDisabled || !validation.canUnpause
+                        } else {
+                          title = validation.canPause ? 'Pause membership' : (validation.reason || 'Cannot pause membership')
+                          isDisabled = isDisabled || !validation.canPause
+                        }
+
+                        return (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handlePauseToggle(member)}
+                            title={title}
+                            disabled={isDisabled}
+                            className="transition-all duration-300 hover:scale-110 active:scale-95 disabled:opacity-50"
+                          >
                           <div className="transition-all duration-500 ease-in-out transform">
                             {pausingMemberId === member.id ? (
                               <div className="animate-spin">
@@ -401,9 +420,10 @@ export const MembersTable = forwardRef<MembersTableRef, MembersTableProps>(
                             ) : (
                               <Pause className="h-4 w-4 text-orange-600 transition-transform duration-300 hover:rotate-12" />
                             )}
-                          </div>
-                        </Button>
-                      )}
+                            </div>
+                          </Button>
+                        )
+                      })()}
                     </div>
                   </TableCell>
                 </TableRow>

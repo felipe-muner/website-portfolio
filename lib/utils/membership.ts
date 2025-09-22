@@ -228,6 +228,16 @@ export function shouldShowPauseButton(member: {
   isPaused: boolean
   pauseCount: number
 }): boolean {
-  const validation = validatePauseAction(member)
-  return validation.canPause || validation.canUnpause
+  // Always show pause button for pausable plans, regardless of pause limit
+  if (!member.planType || !member.planDuration) {
+    return false
+  }
+
+  // 5-pass and 10-pass plans cannot be paused
+  if (member.planType.includes('5pass') || member.planType.includes('10pass')) {
+    return false
+  }
+
+  // All other duration-based plans can show pause button
+  return true
 }

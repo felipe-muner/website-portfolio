@@ -10,6 +10,7 @@ import {
   Cake,
   Calendar,
   CreditCard,
+  FileText,
   Home,
   LogOut,
   Settings,
@@ -28,6 +29,11 @@ const sidebarItems = [
     title: 'Members',
     href: '/admin/members',
     icon: Users,
+  },
+  {
+    title: 'Plans',
+    href: '/admin/plans',
+    icon: FileText,
   },
   {
     title: 'Birthdays',
