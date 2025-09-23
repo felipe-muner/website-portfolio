@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
-import { payments, members } from '@/lib/db/schema'
+import { payments, members, plans } from '@/lib/db/schema'
 import { eq, and, gte, lte, desc } from 'drizzle-orm'
 import { startOfDay, endOfDay, subDays } from 'date-fns'
 
@@ -18,24 +18,29 @@ export async function POST(request: NextRequest) {
     const start = startOfDay(new Date(startDate))
     const end = endOfDay(new Date(endDate))
 
-    // Get all payments in the date range with member information
+    // Get all payments in the date range with member and plan information
     const paymentsQuery = db
       .select({
         id: payments.id,
         amount: payments.amount,
+        gymShareAmount: payments.gymShareAmount,
+        crossfitShareAmount: payments.crossfitShareAmount,
         paymentDate: payments.paymentDate,
         memberName: members.name,
         planType: members.planType,
+        planName: plans.name,
+        planCategory: plans.planCategory,
       })
       .from(payments)
       .leftJoin(members, eq(payments.memberId, members.id))
+      .leftJoin(plans, eq(payments.planId, plans.id))
       .where(
         and(
           gte(payments.paymentDate, start),
           lte(payments.paymentDate, end)
         )
       )
-      .orderBy(desc(payments.paymentDate))
+      .orderBy(payments.paymentDate) // ASC order as requested
 
     const allPayments = await paymentsQuery
 
@@ -43,31 +48,33 @@ export async function POST(request: NextRequest) {
     let filteredPayments = allPayments
     if (facilityFilter !== 'all') {
       filteredPayments = allPayments.filter(payment => {
-        if (!payment.planType) return false
+        if (!payment.planCategory) return false
 
         if (facilityFilter === 'gym') {
-          return payment.planType.includes('gym') && !payment.planType.includes('crossfit')
+          return payment.planCategory === 'gym' || payment.planCategory === 'fitness' || payment.planCategory === 'combo'
         } else if (facilityFilter === 'crossfit') {
-          return payment.planType.includes('crossfit')
+          return payment.planCategory === 'crossfit'
         }
         return true
       })
     }
 
-    // Calculate facility-specific revenue
-    const gymRevenue = filteredPayments
-      .filter(p => p.planType && (p.planType.includes('gym')))
-      .reduce((sum, p) => sum + parseFloat(p.amount), 0)
+    // Calculate facility-specific revenue using actual share amounts
+    const gymRevenue = filteredPayments.reduce((sum, p) => {
+      const gymShare = p.gymShareAmount ? parseFloat(p.gymShareAmount) : 0
+      return sum + gymShare
+    }, 0)
 
-    const crossfitRevenue = filteredPayments
-      .filter(p => p.planType && p.planType.includes('crossfit'))
-      .reduce((sum, p) => sum + parseFloat(p.amount), 0)
+    const crossfitRevenue = filteredPayments.reduce((sum, p) => {
+      const crossfitShare = p.crossfitShareAmount ? parseFloat(p.crossfitShareAmount) : 0
+      return sum + crossfitShare
+    }, 0)
 
     const totalRevenue = filteredPayments.reduce((sum, p) => sum + parseFloat(p.amount), 0)
 
     // Calculate transaction counts
-    const gymTransactions = filteredPayments.filter(p => p.planType && p.planType.includes('gym')).length
-    const crossfitTransactions = filteredPayments.filter(p => p.planType && p.planType.includes('crossfit')).length
+    const gymTransactions = filteredPayments.filter(p => p.gymShareAmount && parseFloat(p.gymShareAmount) > 0).length
+    const crossfitTransactions = filteredPayments.filter(p => p.crossfitShareAmount && parseFloat(p.crossfitShareAmount) > 0).length
     const totalTransactions = filteredPayments.length
 
     const averageTransactionValue = totalTransactions > 0 ? totalRevenue / totalTransactions : 0
@@ -95,14 +102,16 @@ export async function POST(request: NextRequest) {
       ? ((totalRevenue - previousPeriodRevenue) / previousPeriodRevenue) * 100
       : totalRevenue > 0 ? 100 : 0
 
-    // Format transactions for display
+    // Format transactions for display with share amounts
     const transactions = filteredPayments.map(payment => ({
       id: payment.id,
       memberName: payment.memberName || 'Unknown',
-      planType: payment.planType || 'Unknown',
+      planName: payment.planName || 'Unknown Plan', // Use plan name (text label) instead of planType
       amount: parseFloat(payment.amount),
-      paymentDate: payment.paymentDate.toISOString(),
-      facilityType: getFacilityType(payment.planType || '')
+      gymShareAmount: payment.gymShareAmount ? parseFloat(payment.gymShareAmount) : 0,
+      crossfitShareAmount: payment.crossfitShareAmount ? parseFloat(payment.crossfitShareAmount) : 0,
+      paymentDate: payment.paymentDate.toISOString()
+      // Removed facilityType as requested
     }))
 
     // Generate daily revenue data for charts (optional for future enhancement)
@@ -143,12 +152,3 @@ export async function POST(request: NextRequest) {
   }
 }
 
-function getFacilityType(planType: string): 'gym' | 'crossfit' | 'combo' {
-  if (planType.includes('gym') && planType.includes('crossfit')) {
-    return 'combo'
-  } else if (planType.includes('crossfit')) {
-    return 'crossfit'
-  } else {
-    return 'gym'
-  }
-}

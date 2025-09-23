@@ -246,6 +246,8 @@ export const plans = pgTable('plan', {
   duration: integer('duration'), // Duration in months (null for day passes)
   visitLimit: integer('visit_limit'), // Number of visits allowed (null for unlimited time-based plans)
   planCategory: text('plan_category').$type<'gym' | 'crossfit' | 'fitness' | 'combo'>().notNull(), // Plan category
+  gymSharePercentage: decimal('gym_share_percentage', { precision: 5, scale: 2 }).default('100.00').notNull(), // Gym revenue share percentage
+  crossfitSharePercentage: decimal('crossfit_share_percentage', { precision: 5, scale: 2 }).default('0.00').notNull(), // CrossFit revenue share percentage
   isActive: boolean('is_active').default(true).notNull(), // Enable/disable plan
   isDropIn: boolean('is_drop_in').default(false).notNull(), // Easy identification of day passes
   description: text('description'), // Optional description
@@ -264,15 +266,13 @@ export const payments = pgTable('payment', {
     .$defaultFn(() => crypto.randomUUID()),
   memberId: text('member_id')
     .references(() => members.id, { onDelete: 'set null' }),
-  dayPassId: text('day_pass_id')
-    .references(() => dayPasses.id, { onDelete: 'set null' }),
   planId: text('plan_id')
     .references(() => plans.id, { onDelete: 'set null' }), // Reference to plans table
   amount: decimal('amount', { precision: 10, scale: 2 }).notNull(),
-  gymShare: decimal('gym_share', { precision: 5, scale: 2 }), // percentage for combo plans
-  crossfitShare: decimal('crossfit_share', { precision: 5, scale: 2 }), // percentage for combo plans
+  gymShareAmount: decimal('gym_share_amount', { precision: 10, scale: 2 }), // calculated amount for gym
+  crossfitShareAmount: decimal('crossfit_share_amount', { precision: 10, scale: 2 }), // calculated amount for crossfit
   paymentDate: timestamp('payment_date').defaultNow().notNull(),
-  paymentMethod: text('payment_method').$type<'cash' | 'card'>().notNull(),
+  paymentMethod: text('payment_method').$type<'cash' | 'card'>().default('cash').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').$defaultFn(() => new Date()),
   deletedAt: timestamp('deleted_at'),

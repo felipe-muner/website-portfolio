@@ -63,16 +63,27 @@ async function seedPlans() {
       const thaiPrice = getPlanPrice(planType.value, true)
       const hasThaiDiscount = regularPrice !== thaiPrice
 
-      // Determine plan category
+      // Determine plan category and share percentages
       let planCategory: 'gym' | 'crossfit' | 'fitness' | 'combo'
+      let gymSharePercentage = '100.00'
+      let crossfitSharePercentage = '0.00'
+
       if (planType.value.includes('crossfit')) {
         planCategory = 'crossfit'
+        gymSharePercentage = '20.00'  // Gym gets 20% for crossfit plans
+        crossfitSharePercentage = '80.00'  // CrossFit gets 80%
       } else if (planType.value.includes('fitness')) {
         planCategory = 'fitness'
+        gymSharePercentage = '100.00'  // Gym gets 100% for fitness classes
+        crossfitSharePercentage = '0.00'
       } else if (planType.value.includes('group_classes') || planType.value.includes('combo')) {
         planCategory = 'combo'
+        gymSharePercentage = '100.00'  // Gym gets 100% for combo plans (gym + group classes)
+        crossfitSharePercentage = '0.00'
       } else {
         planCategory = 'gym'
+        gymSharePercentage = '100.00'  // Gym gets 100% for gym-only plans
+        crossfitSharePercentage = '0.00'
       }
 
       // Determine visit limit for pass-based plans
@@ -95,6 +106,8 @@ async function seedPlans() {
         duration: planType.duration,
         visitLimit,
         planCategory,
+        gymSharePercentage,
+        crossfitSharePercentage,
         isActive: true,
         isDropIn: planType.value.includes('dropin'),
         description: null,
@@ -321,7 +334,7 @@ async function seedMembersWithNewPricing() {
         planId: selectedPlan.id, // Store the database plan ID
         amount: paymentAmount.toString(),
         paymentDate: startDate,
-        paymentMethod: Math.random() > 0.5 ? 'card' : 'cash'
+        paymentMethod: 'cash' // Default to cash as requested
       }
 
       paymentInserts.push(paymentInsert)

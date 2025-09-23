@@ -143,6 +143,8 @@ export const PlansTable = forwardRef<PlansTableRef, PlansTableProps>(
                 <TableHead>Category</TableHead>
                 <TableHead>Type</TableHead>
                 <TableHead>Price</TableHead>
+                <TableHead>Gym Share</TableHead>
+                <TableHead>CrossFit Share</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
@@ -150,7 +152,7 @@ export const PlansTable = forwardRef<PlansTableRef, PlansTableProps>(
             <TableBody>
               {filteredPlans.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8 text-gray-500">
+                  <TableCell colSpan={8} className="text-center py-8 text-gray-500">
                     {searchQuery ? 'No plans found matching your search' : 'No plans available'}
                   </TableCell>
                 </TableRow>
@@ -175,6 +177,16 @@ export const PlansTable = forwardRef<PlansTableRef, PlansTableProps>(
                     </TableCell>
                     <TableCell>
                       {formatPrice(plan.price, plan.priceThaiDiscount)}
+                    </TableCell>
+                    <TableCell>
+                      <span className="font-medium text-green-600">
+                        {parseFloat(plan.gymSharePercentage || '0').toFixed(0)}%
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <span className="font-medium text-blue-600">
+                        {parseFloat(plan.crossfitSharePercentage || '0').toFixed(0)}%
+                      </span>
                     </TableCell>
                     <TableCell>
                       <Badge variant={plan.isActive ? 'default' : 'secondary'}>

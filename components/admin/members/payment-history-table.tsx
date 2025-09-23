@@ -18,10 +18,10 @@ interface Payment {
   amount: string
   paymentDate: string
   paymentMethod: 'cash' | 'card'
-  paymentType: 'membership' | 'day_pass' | 'shop_item'
+  paymentType?: 'membership' | 'day_pass' | 'shop_item'
   serviceType?: 'gym' | 'crossfit' | 'fitness_class'
-  gymShare?: string
-  crossfitShare?: string
+  gymShareAmount?: string
+  crossfitShareAmount?: string
   planName?: string
 }
 
@@ -121,7 +121,9 @@ export function PaymentHistoryTable({
             <TableRow>
               <TableHead>Payment Date</TableHead>
               <TableHead>Plan</TableHead>
-              <TableHead>Price</TableHead>
+              <TableHead>Total Paid</TableHead>
+              <TableHead>Gym Share</TableHead>
+              <TableHead>CrossFit Share</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -133,6 +135,12 @@ export function PaymentHistoryTable({
                 </TableCell>
                 <TableCell className="font-medium">
                   {formatCurrency(payment.amount)}
+                </TableCell>
+                <TableCell className="font-medium text-green-600">
+                  {payment.gymShareAmount ? formatCurrency(payment.gymShareAmount) : '-'}
+                </TableCell>
+                <TableCell className="font-medium text-blue-600">
+                  {payment.crossfitShareAmount ? formatCurrency(payment.crossfitShareAmount) : '-'}
                 </TableCell>
               </TableRow>
             ))}

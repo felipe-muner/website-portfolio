@@ -85,8 +85,6 @@ export function AddPaymentSheet({ open, onOpenChange, memberId, memberName, onPa
         planId: formData.planId,
         amount: selectedPlanPrice.toString(),
         paymentMethod: 'cash',
-        gymShare: null,
-        crossfitShare: null,
         paymentDate: new Date().toISOString(),
       }
 

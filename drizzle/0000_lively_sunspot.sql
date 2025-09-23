@@ -117,13 +117,12 @@ CREATE TABLE "nationality" (
 CREATE TABLE "payment" (
 	"id" text PRIMARY KEY NOT NULL,
 	"member_id" text,
-	"day_pass_id" text,
 	"plan_id" text,
 	"amount" numeric(10, 2) NOT NULL,
-	"gym_share" numeric(5, 2),
-	"crossfit_share" numeric(5, 2),
+	"gym_share_amount" numeric(10, 2),
+	"crossfit_share_amount" numeric(10, 2),
 	"payment_date" timestamp DEFAULT now() NOT NULL,
-	"payment_method" text NOT NULL,
+	"payment_method" text DEFAULT 'cash' NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp,
 	"deleted_at" timestamp
@@ -138,6 +137,8 @@ CREATE TABLE "plan" (
 	"duration" integer,
 	"visit_limit" integer,
 	"plan_category" text NOT NULL,
+	"gym_share_percentage" numeric(5, 2) DEFAULT '100.00' NOT NULL,
+	"crossfit_share_percentage" numeric(5, 2) DEFAULT '0.00' NOT NULL,
 	"is_active" boolean DEFAULT true NOT NULL,
 	"is_drop_in" boolean DEFAULT false NOT NULL,
 	"description" text,
@@ -203,7 +204,6 @@ ALTER TABLE "member" ADD CONSTRAINT "member_nationality_id_nationality_id_fk" FO
 ALTER TABLE "membership_pause" ADD CONSTRAINT "membership_pause_member_id_member_id_fk" FOREIGN KEY ("member_id") REFERENCES "public"."member"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "membership_pause" ADD CONSTRAINT "membership_pause_paused_by_admin_id_admin_user_id_fk" FOREIGN KEY ("paused_by_admin_id") REFERENCES "public"."admin_user"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "payment" ADD CONSTRAINT "payment_member_id_member_id_fk" FOREIGN KEY ("member_id") REFERENCES "public"."member"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "payment" ADD CONSTRAINT "payment_day_pass_id_day_pass_id_fk" FOREIGN KEY ("day_pass_id") REFERENCES "public"."day_pass"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "payment" ADD CONSTRAINT "payment_plan_id_plan_id_fk" FOREIGN KEY ("plan_id") REFERENCES "public"."plan"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "session" ADD CONSTRAINT "session_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "shop_sale" ADD CONSTRAINT "shop_sale_item_id_shop_item_id_fk" FOREIGN KEY ("item_id") REFERENCES "public"."shop_item"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint

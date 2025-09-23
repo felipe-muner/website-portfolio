@@ -1,5 +1,5 @@
 {
-  "id": "2a0877b6-6c1a-45a7-aa6c-fd5a17448bc3",
+  "id": "35a711d2-26eb-4da1-923b-489bf44983f2",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -971,12 +971,6 @@
           "primaryKey": false,
           "notNull": false
         },
-        "day_pass_id": {
-          "name": "day_pass_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
         "plan_id": {
           "name": "plan_id",
           "type": "text",
@@ -989,15 +983,15 @@
           "primaryKey": false,
           "notNull": true
         },
-        "gym_share": {
-          "name": "gym_share",
-          "type": "numeric(5, 2)",
+        "gym_share_amount": {
+          "name": "gym_share_amount",
+          "type": "numeric(10, 2)",
           "primaryKey": false,
           "notNull": false
         },
-        "crossfit_share": {
-          "name": "crossfit_share",
-          "type": "numeric(5, 2)",
+        "crossfit_share_amount": {
+          "name": "crossfit_share_amount",
+          "type": "numeric(10, 2)",
           "primaryKey": false,
           "notNull": false
         },
@@ -1012,7 +1006,8 @@
           "name": "payment_method",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "'cash'"
         },
         "created_at": {
           "name": "created_at",
@@ -1095,19 +1090,6 @@
           "onDelete": "set null",
           "onUpdate": "no action"
         },
-        "payment_day_pass_id_day_pass_id_fk": {
-          "name": "payment_day_pass_id_day_pass_id_fk",
-          "tableFrom": "payment",
-          "tableTo": "day_pass",
-          "columnsFrom": [
-            "day_pass_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        },
         "payment_plan_id_plan_id_fk": {
           "name": "payment_plan_id_plan_id_fk",
           "tableFrom": "payment",
@@ -1179,6 +1161,20 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "gym_share_percentage": {
+          "name": "gym_share_percentage",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'100.00'"
+        },
+        "crossfit_share_percentage": {
+          "name": "crossfit_share_percentage",
+          "type": "numeric(5, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'0.00'"
         },
         "is_active": {
           "name": "is_active",

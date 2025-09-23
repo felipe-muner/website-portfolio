@@ -25,10 +25,11 @@ type ReportData = {
   transactions: {
     id: string
     memberName: string
-    planType: string
+    planName: string
     amount: number
+    gymShareAmount: number
+    crossfitShareAmount: number
     paymentDate: string
-    facilityType: 'gym' | 'crossfit' | 'combo'
   }[]
   dailyRevenue: {
     date: string
@@ -131,24 +132,6 @@ export default function ReportsPage() {
     return format(new Date(dateString), 'MMM dd, yyyy')
   }
 
-  const getFacilityType = (planType: string): 'gym' | 'crossfit' | 'combo' => {
-    if (planType.includes('gym') && planType.includes('crossfit')) return 'combo'
-    if (planType.includes('crossfit')) return 'crossfit'
-    return 'gym'
-  }
-
-  const getFacilityBadgeColor = (facilityType: string) => {
-    switch (facilityType) {
-      case 'gym':
-        return 'bg-blue-100 text-blue-800'
-      case 'crossfit':
-        return 'bg-orange-100 text-orange-800'
-      case 'combo':
-        return 'bg-purple-100 text-purple-800'
-      default:
-        return 'bg-gray-100 text-gray-800'
-    }
-  }
 
   return (
     <div className="p-6">
@@ -304,7 +287,12 @@ export default function ReportsPage() {
           {/* Transactions Table */}
           <Card>
             <CardHeader>
-              <CardTitle>Transaction Details</CardTitle>
+              <CardTitle className="flex items-center justify-between">
+                <span>Transaction Details</span>
+                <span className="text-sm font-normal text-gray-600">
+                  {reportData.transactions.length} payments
+                </span>
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
@@ -313,9 +301,10 @@ export default function ReportsPage() {
                     <tr className="border-b">
                       <th className="text-left p-3">Date</th>
                       <th className="text-left p-3">Member</th>
-                      <th className="text-left p-3">Plan Type</th>
-                      <th className="text-left p-3">Facility</th>
-                      <th className="text-right p-3">Amount</th>
+                      <th className="text-left p-3">Plan</th>
+                      <th className="text-right p-3">Total Paid</th>
+                      <th className="text-right p-3">Gym Share</th>
+                      <th className="text-right p-3">CrossFit Share</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -323,16 +312,10 @@ export default function ReportsPage() {
                       <tr key={transaction.id} className="border-b hover:bg-gray-50">
                         <td className="p-3">{formatDate(transaction.paymentDate)}</td>
                         <td className="p-3 font-medium">{transaction.memberName}</td>
-                        <td className="p-3">{transaction.planType.replace('_', ' ').toUpperCase()}</td>
-                        <td className="p-3">
-                          <Badge
-                            variant="secondary"
-                            className={getFacilityBadgeColor(getFacilityType(transaction.planType))}
-                          >
-                            {getFacilityType(transaction.planType)}
-                          </Badge>
-                        </td>
+                        <td className="p-3">{transaction.planName}</td>
                         <td className="p-3 text-right font-medium">{formatCurrency(transaction.amount)}</td>
+                        <td className="p-3 text-right font-medium text-green-600">{formatCurrency(transaction.gymShareAmount)}</td>
+                        <td className="p-3 text-right font-medium text-blue-600">{formatCurrency(transaction.crossfitShareAmount)}</td>
                       </tr>
                     ))}
                   </tbody>

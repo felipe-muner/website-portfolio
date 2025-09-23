@@ -32,8 +32,8 @@ export async function GET(
         paymentDate: payments.paymentDate,
         paymentMethod: payments.paymentMethod,
         planId: payments.planId,
-        gymShare: payments.gymShare,
-        crossfitShare: payments.crossfitShare,
+        gymShareAmount: payments.gymShareAmount,
+        crossfitShareAmount: payments.crossfitShareAmount,
         // Plan information
         planName: plans.name,
         planType: plans.planType,
@@ -79,6 +79,30 @@ export async function POST(
       )
     }
 
+    // Get plan details to calculate share amounts
+    let gymShareAmount = null
+    let crossfitShareAmount = null
+
+    if (data.planId) {
+      const plan = await db
+        .select({
+          gymSharePercentage: plans.gymSharePercentage,
+          crossfitSharePercentage: plans.crossfitSharePercentage,
+        })
+        .from(plans)
+        .where(eq(plans.id, data.planId))
+        .limit(1)
+
+      if (plan.length > 0) {
+        const amount = parseFloat(data.amount)
+        const gymPercentage = parseFloat(plan[0].gymSharePercentage || '0')
+        const crossfitPercentage = parseFloat(plan[0].crossfitSharePercentage || '0')
+
+        gymShareAmount = ((amount * gymPercentage) / 100).toFixed(2)
+        crossfitShareAmount = ((amount * crossfitPercentage) / 100).toFixed(2)
+      }
+    }
+
     // Create new payment record
     const newPayment = await db
       .insert(payments)
@@ -87,9 +111,9 @@ export async function POST(
         planId: data.planId || null,
         amount: data.amount,
         paymentDate: data.paymentDate ? new Date(data.paymentDate) : new Date(),
-        paymentMethod: data.paymentMethod,
-        gymShare: data.gymShare || null,
-        crossfitShare: data.crossfitShare || null,
+        paymentMethod: data.paymentMethod || 'cash',
+        gymShareAmount,
+        crossfitShareAmount,
       })
       .returning()
 
