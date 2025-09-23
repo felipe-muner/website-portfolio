@@ -123,7 +123,7 @@ export const adminUsers = pgTable('admin_user', {
     .$defaultFn(() => crypto.randomUUID()),
   email: text('email').notNull().unique(),
   name: text('name').notNull(),
-  role: text('role').$type<'owner' | 'manager' | 'staff'>().notNull(),
+  role: text('role').$type<'admin' | 'staff'>().notNull(),
   isActive: boolean('is_active').default(true).notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').$defaultFn(() => new Date()),

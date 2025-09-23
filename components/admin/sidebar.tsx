@@ -9,12 +9,10 @@ import {
   BarChart3,
   Cake,
   Calendar,
-  CreditCard,
   FileText,
   Home,
   LogOut,
   Settings,
-  ShoppingBag,
   User,
   Users,
 } from 'lucide-react'
@@ -46,16 +44,6 @@ const sidebarItems = [
     icon: Calendar,
   },
   {
-    title: 'Day Passes',
-    href: '/admin/day-passes',
-    icon: CreditCard,
-  },
-  {
-    title: 'Shop',
-    href: '/admin/shop',
-    icon: ShoppingBag,
-  },
-  {
     title: 'Reports',
     href: '/admin/reports',
     icon: BarChart3,
@@ -77,12 +65,12 @@ export function AdminSidebar() {
   const { data: session } = useSession()
 
   const filteredItems = sidebarItems.filter(item => {
-    // Show users and settings only to owners
-    if ((item.href === '/admin/users' || item.href === '/admin/settings') && session?.user?.role !== 'owner') {
+    // Show users and settings only to admins
+    if ((item.href === '/admin/users' || item.href === '/admin/settings') && session?.user?.role !== 'admin') {
       return false
     }
-    // Hide shop and reports from staff
-    if ((item.href === '/admin/shop' || item.href === '/admin/reports') && session?.user?.role === 'staff') {
+    // Show plans and reports only to admins (hide from staff)
+    if ((item.href === '/admin/plans' || item.href === '/admin/reports') && session?.user?.role === 'staff') {
       return false
     }
     return true

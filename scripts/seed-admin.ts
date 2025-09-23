@@ -27,7 +27,7 @@ async function createInitialAdmin() {
       .values({
         email: email,
         name: 'Initial Admin',
-        role: 'owner',
+        role: 'admin',
         isActive: true,
       })
       .returning()
