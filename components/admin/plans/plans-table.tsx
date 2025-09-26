@@ -17,6 +17,7 @@ import { Plan } from '@/lib/types/database'
 
 interface PlansTableProps {
   searchQuery?: string
+  onPlansCountChange?: (count: number) => void
 }
 
 export interface PlansTableRef {
@@ -24,7 +25,7 @@ export interface PlansTableRef {
 }
 
 export const PlansTable = forwardRef<PlansTableRef, PlansTableProps>(
-  ({ searchQuery = '' }, ref) => {
+  ({ searchQuery = '', onPlansCountChange }, ref) => {
     const [plans, setPlans] = useState<Plan[]>([])
     const [loading, setLoading] = useState(true)
 
@@ -35,6 +36,7 @@ export const PlansTable = forwardRef<PlansTableRef, PlansTableProps>(
         if (!response.ok) throw new Error('Failed to fetch plans')
         const data = await response.json()
         setPlans(data)
+        onPlansCountChange?.(data.length)
       } catch (error) {
         console.error('Error fetching plans:', error)
         alert('Failed to load plans')

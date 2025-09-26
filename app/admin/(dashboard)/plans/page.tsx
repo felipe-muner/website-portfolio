@@ -10,13 +10,16 @@ import { Plus, Search } from 'lucide-react'
 export default function PlansPage() {
   const [isAddSheetOpen, setIsAddSheetOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const [plansCount, setPlansCount] = useState(0)
   const plansTableRef = useRef<PlansTableRef>(null)
 
   return (
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Plans</h1>
+          <h1 className="text-3xl font-bold text-gray-900">
+            Plans <span className="text-gray-500 font-normal">({plansCount})</span>
+          </h1>
           <p className="text-gray-600">Manage gym and CrossFit membership plans</p>
         </div>
         <Button onClick={() => setIsAddSheetOpen(true)}>
@@ -40,6 +43,7 @@ export default function PlansPage() {
       <PlansTable
         ref={plansTableRef}
         searchQuery={searchQuery}
+        onPlansCountChange={setPlansCount}
       />
 
       <AddPlanSheet

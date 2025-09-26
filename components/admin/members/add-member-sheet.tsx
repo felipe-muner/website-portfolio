@@ -64,7 +64,13 @@ export function AddMemberSheet({ open, onOpenChange, onMemberAdded }: AddMemberS
       if (planDuration) {
         endDate.setMonth(endDate.getMonth() + planDuration)
       } else if (selectedPlan?.visits) {
-        endDate.setMonth(endDate.getMonth() + 1) // Pass expires in 1 month
+        // For drop-in plans (1 visit), expires end of day
+        // For multi-visit passes, expires in 1 month
+        if (selectedPlan.visits === 1) {
+          endDate.setHours(23, 59, 59, 999) // End of the same day
+        } else {
+          endDate.setMonth(endDate.getMonth() + 1) // Multi-visit pass expires in 1 month
+        }
       }
 
       const memberData = {

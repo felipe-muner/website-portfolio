@@ -59,22 +59,52 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // Calculate facility-specific revenue using actual share amounts
+    // Calculate facility-specific revenue using plan percentages when share amounts are not available
     const gymRevenue = filteredPayments.reduce((sum, p) => {
-      const gymShare = p.gymShareAmount ? parseFloat(p.gymShareAmount) : 0
-      return sum + gymShare
+      const totalAmount = parseFloat(p.amount)
+
+      if (p.gymShareAmount && parseFloat(p.gymShareAmount) > 0) {
+        // Use actual share amount if available
+        return sum + parseFloat(p.gymShareAmount)
+      } else if (p.planCategory) {
+        // Calculate from plan percentages
+        const planCategory = p.planCategory
+        if (planCategory === 'crossfit') {
+          // CrossFit plans: 20% to gym
+          return sum + (totalAmount * 0.20)
+        } else {
+          // All other plans: 100% to gym
+          return sum + totalAmount
+        }
+      }
+      return sum
     }, 0)
 
     const crossfitRevenue = filteredPayments.reduce((sum, p) => {
-      const crossfitShare = p.crossfitShareAmount ? parseFloat(p.crossfitShareAmount) : 0
-      return sum + crossfitShare
+      const totalAmount = parseFloat(p.amount)
+
+      if (p.crossfitShareAmount && parseFloat(p.crossfitShareAmount) > 0) {
+        // Use actual share amount if available
+        return sum + parseFloat(p.crossfitShareAmount)
+      } else if (p.planCategory === 'crossfit') {
+        // CrossFit plans: 80% to crossfit
+        return sum + (totalAmount * 0.80)
+      }
+      return sum
     }, 0)
 
     const totalRevenue = filteredPayments.reduce((sum, p) => sum + parseFloat(p.amount), 0)
 
     // Calculate transaction counts
-    const gymTransactions = filteredPayments.filter(p => p.gymShareAmount && parseFloat(p.gymShareAmount) > 0).length
-    const crossfitTransactions = filteredPayments.filter(p => p.crossfitShareAmount && parseFloat(p.crossfitShareAmount) > 0).length
+    const gymTransactions = filteredPayments.filter(p => {
+      if (p.gymShareAmount && parseFloat(p.gymShareAmount) > 0) return true
+      return p.planCategory !== 'crossfit' || p.planCategory === 'crossfit' // All transactions contribute to gym (100% for non-crossfit, 20% for crossfit)
+    }).length
+
+    const crossfitTransactions = filteredPayments.filter(p => {
+      if (p.crossfitShareAmount && parseFloat(p.crossfitShareAmount) > 0) return true
+      return p.planCategory === 'crossfit'
+    }).length
     const totalTransactions = filteredPayments.length
 
     const averageTransactionValue = totalTransactions > 0 ? totalRevenue / totalTransactions : 0
@@ -102,17 +132,39 @@ export async function POST(request: NextRequest) {
       ? ((totalRevenue - previousPeriodRevenue) / previousPeriodRevenue) * 100
       : totalRevenue > 0 ? 100 : 0
 
-    // Format transactions for display with share amounts
-    const transactions = filteredPayments.map(payment => ({
-      id: payment.id,
-      memberName: payment.memberName || 'Unknown',
-      planName: payment.planName || 'Unknown Plan', // Use plan name (text label) instead of planType
-      amount: parseFloat(payment.amount),
-      gymShareAmount: payment.gymShareAmount ? parseFloat(payment.gymShareAmount) : 0,
-      crossfitShareAmount: payment.crossfitShareAmount ? parseFloat(payment.crossfitShareAmount) : 0,
-      paymentDate: payment.paymentDate.toISOString()
-      // Removed facilityType as requested
-    }))
+    // Format transactions for display with calculated share amounts
+    const transactions = filteredPayments.map(payment => {
+      const totalAmount = parseFloat(payment.amount)
+      let gymShareAmount = 0
+      let crossfitShareAmount = 0
+
+      if (payment.gymShareAmount && parseFloat(payment.gymShareAmount) > 0) {
+        // Use actual share amounts if available
+        gymShareAmount = parseFloat(payment.gymShareAmount)
+        crossfitShareAmount = payment.crossfitShareAmount ? parseFloat(payment.crossfitShareAmount) : 0
+      } else if (payment.planCategory) {
+        // Calculate from plan category
+        if (payment.planCategory === 'crossfit') {
+          // CrossFit plans: 20% to gym, 80% to crossfit
+          gymShareAmount = totalAmount * 0.20
+          crossfitShareAmount = totalAmount * 0.80
+        } else {
+          // All other plans: 100% to gym, 0% to crossfit
+          gymShareAmount = totalAmount
+          crossfitShareAmount = 0
+        }
+      }
+
+      return {
+        id: payment.id,
+        memberName: payment.memberName || 'Unknown',
+        planName: payment.planName || 'Unknown Plan',
+        amount: totalAmount,
+        gymShareAmount,
+        crossfitShareAmount,
+        paymentDate: payment.paymentDate.toISOString()
+      }
+    })
 
     // Generate daily revenue data for charts (optional for future enhancement)
     const dailyRevenue: Array<{

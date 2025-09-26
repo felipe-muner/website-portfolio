@@ -33,7 +33,7 @@
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
     "docker:down:clean": "docker compose down -v && docker volume prune -f",
-    "docker:up:db:clean:optimized": "docker compose down -v && docker volume prune -f && docker compose up -d && sleep 5 && npm run db:drop && npm run db:setup"
+    "docker:up:db:clean:optimized": "docker compose down -v && docker volume prune -f && docker compose up -d && sleep 5 && npm run db:drop && npm run db:push:force && DATABASE_URL=\"postgres://postgres:postgres@127.0.0.1:5432/summit_gym\" bun scripts/seed-with-new-pricing.ts && DATABASE_URL=\"postgres://postgres:postgres@127.0.0.1:5432/summit_gym\" bun scripts/seed-100-members-presentation.ts"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.10.0",
