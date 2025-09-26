@@ -229,7 +229,8 @@ export function AddMemberSheet({ open, onOpenChange, onMemberAdded }: AddMemberS
                 options={nationalities.map(nationality => ({
                   value: nationality.id,
                   label: nationality.name,
-                  flag: nationality.flag
+                  flag: nationality.flag,
+                  searchValue: nationality.name.toLowerCase()
                 }))}
                 value={formData.nationalityId}
                 onValueChange={(value) => handleInputChange('nationalityId', value)}

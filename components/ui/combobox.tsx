@@ -78,13 +78,13 @@ export function Combobox({
       <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
         <Command>
           <CommandInput placeholder={searchPlaceholder} />
-          <CommandList>
+          <CommandList className="max-h-60 overflow-y-auto">
             <CommandEmpty>{emptyText}</CommandEmpty>
             <CommandGroup>
               {options.map((option) => (
                 <CommandItem
                   key={option.value}
-                  value={option.searchValue || option.value}
+                  value={option.searchValue || option.label.toLowerCase()}
                   onSelect={() => {
                     onValueChange?.(option.value === value ? "" : option.value)
                     setOpen(false)
