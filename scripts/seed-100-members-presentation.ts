@@ -148,12 +148,12 @@ async function seed100MembersForPresentation() {
   try {
     console.log('👥 Seeding 100 diverse members for customer presentation...')
 
-    // Check if members already exist
-    const existingMembers = await db.select().from(members).limit(1)
-    if (existingMembers.length > 0) {
-      console.log('📝 Members already seeded, skipping...')
-      return
-    }
+    // Clear existing members and related data for fresh seeding
+    console.log('🧹 Clearing existing members and related data...')
+    await db.delete(membershipPauses)
+    await db.delete(payments)
+    await db.delete(members)
+    console.log('✅ Existing data cleared')
 
     // Get all plans from database
     const allPlans = await db.select().from(plans).where(eq(plans.isActive, true))
