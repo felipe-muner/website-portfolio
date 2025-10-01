@@ -144,9 +144,96 @@ function generateBirthdayToday(): Date {
   return new Date(baseYear, now.getMonth(), now.getDate())
 }
 
-async function seed100MembersForPresentation() {
+const firstNames = ['Emma', 'Liam', 'Olivia', 'Noah', 'Ava', 'Ethan', 'Sophia', 'Mason', 'Isabella', 'William', 'Mia', 'James', 'Charlotte', 'Benjamin', 'Amelia', 'Lucas', 'Harper', 'Henry', 'Evelyn', 'Alexander', 'Abigail', 'Michael', 'Emily', 'Daniel', 'Elizabeth', 'Jacob', 'Sofia', 'Logan', 'Avery', 'Jackson', 'Ella', 'Sebastian', 'Scarlett', 'Jack', 'Grace', 'Owen', 'Chloe', 'Samuel', 'Victoria', 'Matthew', 'Riley', 'Joseph', 'Aria', 'Luke', 'Lily', 'David', 'Aubrey', 'Carter', 'Zoey', 'Wyatt']
+const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas', 'Taylor', 'Moore', 'Jackson', 'Martin', 'Lee', 'Perez', 'Thompson', 'White', 'Harris', 'Sanchez', 'Clark', 'Ramirez', 'Lewis', 'Robinson', 'Walker', 'Young', 'Allen', 'King', 'Wright', 'Scott', 'Torres', 'Nguyen', 'Hill', 'Flores', 'Green', 'Adams', 'Nelson', 'Baker', 'Hall', 'Rivera', 'Campbell', 'Mitchell', 'Carter', 'Roberts']
+const thaiFirstNames = ['Somchai', 'Apinya', 'Niran', 'Siriporn', 'Chaiyaporn', 'Kamon', 'Ratana', 'Pong', 'Wanpen', 'Sukjai', 'Somboon', 'Wongso', 'Pothong', 'Khumtong', 'Jaidee']
+const thaiLastNames = ['Sukjai', 'Wanpen', 'Jaidee', 'Khumtong', 'Pothong', 'Somboon', 'Wongso']
+
+const planTypesArray: NonNullable<Member['planType']>[] = ['gym_only_1month', 'gym_only_3month', 'gym_only_6month', 'gym_only_12month', 'gym_5pass', 'crossfit_1month', 'crossfit_3month', 'crossfit_10pass', 'crossfit_1week', 'fitness_1month', 'fitness_5pass', 'group_classes_1month', 'group_classes_3month', 'fitness_gym_1month', 'open_gym_combo_1month', 'open_gym_1month', 'open_gym_5pass']
+
+function generateMember(
+  index: number,
+  scenario: string,
+  isThaiNational: boolean,
+  hasBirthdayToday?: boolean,
+  isPaused?: boolean,
+  isExpired?: boolean,
+  planTypeOverride?: NonNullable<Member['planType']>,
+  nameOverride?: string
+): {
+  name: string
+  email?: string
+  passportId?: string
+  phone: string
+  planType: NonNullable<Member['planType']>
+  duration: number | null
+  isThaiNational: boolean
+  usedVisits?: number
+  isExpired?: boolean
+  isPaused?: boolean
+  pauseCount?: number
+  isActive?: boolean
+  hasBirthdayToday?: boolean
+  scenario: string
+} {
+  const planType = planTypeOverride || planTypesArray[Math.floor(Math.random() * planTypesArray.length)]
+  const duration = planType.includes('1month') ? 1 :
+                   planType.includes('3month') ? 3 :
+                   planType.includes('6month') ? 6 :
+                   planType.includes('12month') ? 12 : null
+
+  let usedVisits: number | undefined
+  if (planType.includes('pass')) {
+    const maxVisits = planType.includes('5pass') ? 5 : planType.includes('10pass') ? 10 : planType.includes('1week') ? 7 : 1
+    if (isExpired) {
+      usedVisits = maxVisits // All visits used for expired passes
+    } else {
+      usedVisits = Math.floor(Math.random() * maxVisits)
+    }
+  }
+  const pauseCount = isPaused ? Math.floor(Math.random() * 2) + 1 : undefined
+
+  let name: string
+  let email: string | undefined
+  let passportId: string | undefined
+  const phone = isThaiNational ? `+668${String(10000000 + index).slice(0, 8)}` : `+${1 + Math.floor(Math.random() * 90)}${String(10000000 + index).slice(0, 10)}`
+
+  if (nameOverride) {
+    name = nameOverride
+    email = `${nameOverride.toLowerCase().replace(/\s+/g, '.')}@test.com`
+  } else if (isThaiNational) {
+    name = `${thaiFirstNames[index % thaiFirstNames.length]} ${thaiLastNames[index % thaiLastNames.length]}`
+    email = `member${String(index).padStart(4, '0')}@test.com`
+  } else {
+    name = `${firstNames[index % firstNames.length]} ${lastNames[index % lastNames.length]}`
+    if (Math.random() > 0.4) {
+      email = `member${String(index).padStart(4, '0')}@test.com`
+    } else {
+      passportId = `PP${String(100000000 + index).slice(0, 9)}`
+    }
+  }
+
+  return {
+    name,
+    email,
+    passportId,
+    phone,
+    planType,
+    duration,
+    isThaiNational,
+    usedVisits,
+    isExpired,
+    isPaused,
+    pauseCount,
+    isActive: isExpired ? false : undefined,
+    hasBirthdayToday,
+    scenario
+  }
+}
+
+async function seed1000MembersForPresentation() {
   try {
-    console.log('👥 Seeding 100 diverse members for customer presentation...')
+    console.log('👥 Seeding 1000 diverse members for customer presentation...')
 
     // Clear existing members and related data for fresh seeding
     console.log('🧹 Clearing existing members and related data...')
@@ -193,7 +280,84 @@ async function seed100MembersForPresentation() {
     }
 
     const memberData: MemberSeedData[] = [
-      // === BIRTHDAY MEMBERS (5 members) ===
+      // === DENIAL TEST CASES (15 members) - Easy to search with "DENIED-" prefix ===
+      {
+        name: 'DENIED-Expired1Month', email: 'denied.expired1month@test.com', phone: '+66899990001',
+        planType: 'gym_only_1month', duration: 1, isThaiNational: false, isExpired: true, isActive: false,
+        scenario: 'DENIED - Expired 1 Month Gym (needs renewal)'
+      },
+      {
+        name: 'DENIED-Expired3Month', email: 'denied.expired3month@test.com', phone: '+66899990002',
+        planType: 'gym_only_3month', duration: 3, isThaiNational: false, isExpired: true, isActive: false,
+        scenario: 'DENIED - Expired 3 Month Gym (needs renewal)'
+      },
+      {
+        name: 'DENIED-AllVisitsUsed5Pass', email: 'denied.allvisits5pass@test.com', phone: '+66899990003',
+        planType: 'gym_5pass', duration: null, isThaiNational: false, usedVisits: 5, isExpired: true, isActive: false,
+        scenario: 'DENIED - All 5 Visits Used (needs new pass)'
+      },
+      {
+        name: 'DENIED-AllVisitsUsed10Pass', email: 'denied.allvisits10pass@test.com', phone: '+66899990004',
+        planType: 'crossfit_10pass', duration: null, isThaiNational: false, usedVisits: 10, isExpired: true, isActive: false,
+        scenario: 'DENIED - All 10 Visits Used CrossFit (needs new pass)'
+      },
+      {
+        name: 'DENIED-ExpiredCrossFit1Month', email: 'denied.expiredcrossfit1m@test.com', phone: '+66899990005',
+        planType: 'crossfit_1month', duration: 1, isThaiNational: false, isExpired: true, isActive: false,
+        scenario: 'DENIED - Expired CrossFit 1 Month (needs renewal)'
+      },
+      {
+        name: 'DENIED-ExpiredFitness5Pass', email: 'denied.expiredfitness5@test.com', phone: '+66899990006',
+        planType: 'fitness_5pass', duration: null, isThaiNational: false, usedVisits: 5, isExpired: true, isActive: false,
+        scenario: 'DENIED - All Fitness 5 Pass Used (needs renewal)'
+      },
+      {
+        name: 'DENIED-Expired6MonthGym', email: 'denied.expired6month@test.com', phone: '+66899990007',
+        planType: 'gym_only_6month', duration: 6, isThaiNational: false, isExpired: true, isActive: false,
+        scenario: 'DENIED - Expired 6 Month Gym (needs renewal)'
+      },
+      {
+        name: 'DENIED-Expired12MonthGym', email: 'denied.expired12month@test.com', phone: '+66899990008',
+        planType: 'gym_only_12month', duration: 12, isThaiNational: false, isExpired: true, isActive: false,
+        scenario: 'DENIED - Expired 12 Month Gym (needs renewal)'
+      },
+      {
+        name: 'DENIED-CurrentlyPaused', email: 'denied.paused@test.com', phone: '+66899990009',
+        planType: 'gym_only_3month', duration: 3, isThaiNational: false, isPaused: true, pauseCount: 1,
+        scenario: 'DENIED - Currently Paused (needs to be unpaused)'
+      },
+      {
+        name: 'DENIED-ExpiredGroupClasses', email: 'denied.expiredgroup@test.com', phone: '+66899990010',
+        planType: 'group_classes_1month', duration: 1, isThaiNational: false, isExpired: true, isActive: false,
+        scenario: 'DENIED - Expired Group Classes (needs renewal)'
+      },
+      {
+        name: 'DENIED-ExpiredCombo', email: 'denied.expiredcombo@test.com', phone: '+66899990011',
+        planType: 'fitness_gym_1month', duration: 1, isThaiNational: false, isExpired: true, isActive: false,
+        scenario: 'DENIED - Expired Combo Plan (needs renewal)'
+      },
+      {
+        name: 'DENIED-ExpiredOpenGym', email: 'denied.expiredopengym@test.com', phone: '+66899990012',
+        planType: 'open_gym_1month', duration: 1, isThaiNational: false, isExpired: true, isActive: false,
+        scenario: 'DENIED - Expired Open Gym (needs renewal)'
+      },
+      {
+        name: 'DENIED-ExpiredOpenGym5Pass', email: 'denied.expiredopengym5@test.com', phone: '+66899990013',
+        planType: 'open_gym_5pass', duration: null, isThaiNational: false, usedVisits: 5, isExpired: true, isActive: false,
+        scenario: 'DENIED - All Open Gym 5 Pass Used (needs renewal)'
+      },
+      {
+        name: 'DENIED-ExpiredCrossFit1Week', email: 'denied.expiredcf1week@test.com', phone: '+66899990014',
+        planType: 'crossfit_1week', duration: null, isThaiNational: false, usedVisits: 7, isExpired: true, isActive: false,
+        scenario: 'DENIED - Expired CrossFit 1 Week Trial (needs new plan)'
+      },
+      {
+        name: 'DENIED-PausedCrossFit', email: 'denied.pausedcrossfit@test.com', phone: '+66899990015',
+        planType: 'crossfit_3month', duration: 3, isThaiNational: false, isPaused: true, pauseCount: 1,
+        scenario: 'DENIED - Paused CrossFit Member (needs to be unpaused)'
+      },
+
+      // === BIRTHDAY MEMBERS (35 members) ===
       {
         name: 'Emma Birthday', passportId: 'US123456789', phone: '+14155551001',
         planType: 'gym_only_1month', duration: 1, isThaiNational: false,
@@ -712,6 +876,60 @@ async function seed100MembersForPresentation() {
       }
     ]
 
+    // Generate additional members to reach 1000 total
+    let generatedIndex = memberData.length
+
+    // Additional Birthday Members (30 more to reach 35 total birthday members)
+    for (let i = 0; i < 30; i++) {
+      memberData.push(generateMember(generatedIndex++, 'Birthday Member', i % 4 === 0, true))
+    }
+
+    // Active Gym Members (135 more to reach 150 total)
+    for (let i = 0; i < 135; i++) {
+      const planTypes: NonNullable<Member['planType']>[] = ['gym_only_1month', 'gym_only_3month', 'gym_only_6month', 'gym_only_12month', 'gym_5pass']
+      memberData.push(generateMember(generatedIndex++, 'Active - Gym Member', i % 5 === 0, false, false, false, planTypes[i % planTypes.length]))
+    }
+
+    // Active CrossFit Members (90 more to reach 100 total)
+    for (let i = 0; i < 90; i++) {
+      const planTypes: NonNullable<Member['planType']>[] = ['crossfit_1month', 'crossfit_3month', 'crossfit_10pass', 'crossfit_1week']
+      memberData.push(generateMember(generatedIndex++, 'Active - CrossFit Member', i % 4 === 0, false, false, false, planTypes[i % planTypes.length]))
+    }
+
+    // Fitness & Combo Members (90 more to reach 100 total)
+    for (let i = 0; i < 90; i++) {
+      const planTypes: NonNullable<Member['planType']>[] = ['fitness_1month', 'fitness_5pass', 'group_classes_1month', 'group_classes_3month', 'fitness_gym_1month', 'open_gym_combo_1month', 'open_gym_1month', 'open_gym_5pass']
+      memberData.push(generateMember(generatedIndex++, 'Active - Fitness/Combo Member', i % 6 === 0, false, false, false, planTypes[i % planTypes.length]))
+    }
+
+    // Paused Members (72 more to reach 80 total)
+    for (let i = 0; i < 72; i++) {
+      memberData.push(generateMember(generatedIndex++, 'Paused Member', i % 5 === 0, false, true))
+    }
+
+    // Expired Members (108 more to reach 120 total)
+    for (let i = 0; i < 108; i++) {
+      memberData.push(generateMember(generatedIndex++, 'Expired Member', i % 6 === 0, false, false, true))
+    }
+
+    // Expiring Soon (90 more to reach 100 total)
+    for (let i = 0; i < 90; i++) {
+      const daysLeft = (i % 7) + 1
+      memberData.push(generateMember(generatedIndex++, `Expiring Soon - ${daysLeft} days left`, i % 5 === 0))
+    }
+
+    // Unpaid Members (135 more to reach 150 total)
+    for (let i = 0; i < 135; i++) {
+      memberData.push(generateMember(generatedIndex++, 'Unpaid Member', i % 7 === 0))
+    }
+
+    // Special Scenarios (135 more to reach 150 total)
+    for (let i = 0; i < 135; i++) {
+      memberData.push(generateMember(generatedIndex++, 'Special Scenario', i % 8 === 0))
+    }
+
+    console.log(`📊 Generated ${memberData.length} total members`)
+
     // Prepare member inserts
     const memberInserts: NewMember[] = []
     const paymentInserts: NewPayment[] = []
@@ -834,10 +1052,20 @@ async function seed100MembersForPresentation() {
       }
     }
 
-    // Insert members
-    const newMembers = await db.insert(members).values(memberInserts).returning()
+    // Insert members in batches
+    console.log('💾 Inserting members in batches...')
+    const batchSize = 100
+    const allNewMembers: typeof members.$inferSelect[] = []
+
+    for (let i = 0; i < memberInserts.length; i += batchSize) {
+      const batch = memberInserts.slice(i, i + batchSize)
+      const newMembers = await db.insert(members).values(batch).returning()
+      allNewMembers.push(...newMembers)
+      console.log(`   Inserted member batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(memberInserts.length / batchSize)}`)
+    }
 
     // Update payment records with member IDs (only for paid members)
+    console.log('💾 Inserting payments in batches...')
     if (paymentInserts.length > 0) {
       const updatedPaymentInserts = paymentInserts.map((payment, index) => {
         // Find the corresponding member for this payment
@@ -847,7 +1075,7 @@ async function seed100MembersForPresentation() {
             if (memberIndex === index) {
               return {
                 ...payment,
-                memberId: newMembers[i].id
+                memberId: allNewMembers[i].id
               }
             }
             memberIndex++
@@ -856,10 +1084,15 @@ async function seed100MembersForPresentation() {
         return payment
       })
 
-      await db.insert(payments).values(updatedPaymentInserts)
+      for (let i = 0; i < updatedPaymentInserts.length; i += batchSize) {
+        const batch = updatedPaymentInserts.slice(i, i + batchSize)
+        await db.insert(payments).values(batch)
+        console.log(`   Inserted payment batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(updatedPaymentInserts.length / batchSize)}`)
+      }
     }
 
     // Update pause records with member IDs
+    console.log('💾 Inserting membership pauses...')
     if (pauseInserts.length > 0) {
       let pauseIndex = 0
       const updatedPauseInserts = []
@@ -870,7 +1103,7 @@ async function seed100MembersForPresentation() {
           for (let pauseNum = 1; pauseNum <= member.pauseCount; pauseNum++) {
             updatedPauseInserts.push({
               ...pauseInserts[pauseIndex],
-              memberId: newMembers[i].id
+              memberId: allNewMembers[i].id
             })
             pauseIndex++
           }
@@ -950,35 +1183,33 @@ async function seed100MembersForPresentation() {
 
     await db.insert(dayPasses).values(dayPassInserts)
 
-    console.log('✅ Successfully seeded 100 comprehensive members for presentation:')
-    console.log(`   🎂 Birthday Members: 5 (showcasing birthday celebrations)`)
-    console.log(`   💪 Active Gym Members: 15 (various durations and passes)`)
-    console.log(`   🏋️ Active CrossFit Members: 10 (with Thai discounts)`)
-    console.log(`   🧘 Fitness & Combo Members: 10 (all class types)`)
-    console.log(`   ⏸️ Paused Members: 8 (various pause scenarios)`)
-    console.log(`   ❌ Expired Members: 12 (various expiry scenarios)`)
-    console.log(`   ⚠️ Expiring Soon: 10 (1-7 days remaining)`)
-    console.log(`   💳 Unpaid Members: 15 (payment follow-up needed)`)
-    console.log(`   🔥 Special Scenarios: 15 (edge cases and complex situations)`)
+    console.log('✅ Successfully seeded 1000 comprehensive members for presentation:')
+    console.log(`   🚫 DENIAL TEST CASES: 15 (search with "DENIED-" prefix)`)
+    console.log(`      - DENIED-Expired1Month, DENIED-AllVisitsUsed5Pass, etc.`)
+    console.log(`      - Perfect for demonstrating check-in rejections & renewals`)
+    console.log(`   🎂 Birthday Members: 35 (showcasing birthday celebrations)`)
+    console.log(`   💪 Active Gym Members: 150 (various durations and passes)`)
+    console.log(`   🏋️ Active CrossFit Members: 100 (with Thai discounts)`)
+    console.log(`   🧘 Fitness & Combo Members: 100 (all class types)`)
+    console.log(`   ⏸️ Paused Members: 80 (various pause scenarios)`)
+    console.log(`   ❌ Expired Members: 120 (various expiry scenarios)`)
+    console.log(`   ⚠️ Expiring Soon: 100 (1-7 days remaining)`)
+    console.log(`   💳 Unpaid Members: 150 (payment follow-up needed)`)
+    console.log(`   🔥 Special Scenarios: 150 (edge cases and complex situations)`)
     console.log(`   💰 Total revenue from paid memberships: ${formatCurrency(
       paymentInserts.reduce((sum, p) => sum + parseFloat(p.amount), 0)
     )}`)
-    console.log(`   🇹🇭 Thai nationals: 25 members (25% with discounts applied)`)
-    console.log(`   🌍 International members: 75 members (15+ countries represented)`)
-    console.log(`   📧 Email contacts: ~65 members`)
-    console.log(`   🛂 Passport IDs: ~35 members (tourists & long-term visitors)`)
-    console.log(`   📱 International phone numbers: USA, UK, Australia, Canada, Germany, Japan, etc.`)
-    console.log(`   🎫 Day passes: 8 records showcasing all pass types`)
+    console.log(`   🎫 Day passes: ${dayPassInserts.length} records showcasing all pass types`)
     console.log(`   📊 All plan types represented with realistic usage patterns`)
     console.log(`   ⏰ Perfect for demonstrating membership lifecycle management`)
 
   } catch (error) {
-    console.error('❌ Error seeding 100 members:', error)
+    console.error('❌ Error seeding 1000 members:', error)
     throw error
   }
 }
 
-async function seed100MembersPresentation() {
+async function seed1000MembersPresentation() {
   try {
     console.log('🚀 Starting comprehensive database seeding for customer presentation...')
 
@@ -991,11 +1222,11 @@ async function seed100MembersPresentation() {
     // Seed plans first (required for members)
     await seedPlans()
 
-    // Then seed 100 comprehensive members
-    await seed100MembersForPresentation()
+    // Then seed 1000 comprehensive members
+    await seed1000MembersForPresentation()
 
     console.log('✅ All seeding operations completed successfully!')
-    console.log('🎯 Database ready for customer presentation with comprehensive scenarios!')
+    console.log('🎯 Database ready for customer presentation with 1000 members!')
     process.exit(0)
   } catch (error) {
     console.error('❌ Error during seeding:', error)
@@ -1004,7 +1235,7 @@ async function seed100MembersPresentation() {
 }
 
 if (require.main === module) {
-  seed100MembersPresentation()
+  seed1000MembersPresentation()
 }
 
-export { seed100MembersPresentation }
+export { seed1000MembersPresentation }
