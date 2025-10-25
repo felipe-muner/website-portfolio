@@ -41,30 +41,6 @@ const NAV_ITEMS = [
       { label: "Book Online", href: "/reformer-pilates#book" },
     ],
   },
-  { href: "/schedule", label: "Schedule" },
-  { href: "/our-team", label: "Our Team" },
-  { href: "/prices", label: "Prices" },
-  {
-    href: "/contact",
-    label: "Contact",
-    children: [
-      { label: "Gym | Reformer Pilates | Fitness Classes | Pravilo", href: "/contact" },
-      { label: "CrossFit", href: "/contact-crossfit" },
-      { label: "Brazilian Jiu-Jitsu", href: "/brazilian-jiu-jitsu" },
-    ],
-  },
-  {
-    href: "/personal-training",
-    label: "Personal Trainers",
-    children: [
-      { label: "Alex 🇷🇺", href: "/personal-training/alex" },
-      { label: "Charlene 🇬🇧", href: "/personal-training/charlene" },
-      { label: "Daniel 🇬🇧 🇮🇱", href: "/personal-training/daniel" },
-      { label: "Diana 🇬🇧 🇩🇪", href: "/personal-training/diana" },
-      { label: "Kate 🇬🇧 🇹🇭", href: "/personal-training/kate" },
-      { label: "Namwan 🇬🇧 🇹🇭", href: "/personal-training/namwan" },
-    ],
-  },
   {
     href: "/classes",
     label: "Fitness Classes",
@@ -90,6 +66,30 @@ const NAV_ITEMS = [
     label: "Pravilo",
     children: [
       { label: "Schedule", href: "/pravilo/schedule" },
+    ],
+  },
+  {
+    href: "/personal-training",
+    label: "Personal Trainers",
+    children: [
+      { label: "Alex 🇷🇺", href: "/personal-training/alex" },
+      { label: "Charlene 🇬🇧", href: "/personal-training/charlene" },
+      { label: "Daniel 🇬🇧 🇮🇱", href: "/personal-training/daniel" },
+      { label: "Diana 🇬🇧 🇩🇪", href: "/personal-training/diana" },
+      { label: "Kate 🇬🇧 🇹🇭", href: "/personal-training/kate" },
+      { label: "Namwan 🇬🇧 🇹🇭", href: "/personal-training/namwan" },
+    ],
+  },
+  { href: "/schedule", label: "Schedule" },
+  { href: "/our-team", label: "Our Team" },
+  { href: "/prices", label: "Prices" },
+  {
+    href: "/contact",
+    label: "Contact",
+    children: [
+      { label: "Gym | Reformer Pilates | Fitness Classes | Pravilo", href: "/contact" },
+      { label: "CrossFit", href: "/contact-crossfit" },
+      { label: "Brazilian Jiu-Jitsu", href: "/brazilian-jiu-jitsu" },
     ],
   },
 ];
