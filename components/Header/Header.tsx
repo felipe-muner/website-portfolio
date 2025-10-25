@@ -10,31 +10,19 @@ import { NavItems } from "./NavItems";
 
 const NAV_ITEMS = [
   {
-    href: "/", label: "The Club",
+    href: "/the-club",
+    label: "The Gym",
     children: [
       { label: "Overview", href: "/the-club/overview" },
       { label: "Equipment", href: "/the-club/equipment" },
-      { label: "Ice bath & Steam Room", href: "/the-club/ice-bath-and-steam-room" },
-      { label: "Protein bar & Shop", href: "/the-club/protein-bar-and-shop" },
-
-    ],
-  },
-  {
-    href: "/classes",
-    label: "Fitness Classes",
-    children: [
-      { label: "Classes Schedule", href: "/classes" },
-      { label: "Primal Power Yoga", href: "/classes/primal-power-yoga" },
-      { label: "HIIT", href: "/classes/hiit" },
-      { label: "Pilates Mobility", href: "/classes/pilates-mobility" },
-      { label: "Tabata", href: "/classes/tabata" },
-      { label: "Body Balance", href: "/classes/body-balance" },
-      // { label: "Breathwork & Ice Bath", href: "/classes/breathwork-ice-bath" },
+      { label: "Calisthenics", href: "/the-club/calisthenics" },
+      { label: "Ice Bath & Steam Room", href: "/the-club/ice-bath-and-steam-room" },
+      { label: "Protein Bar & Shop", href: "/the-club/protein-bar-and-shop" },
     ],
   },
   {
     href: "/crossfit-and-hyrox",
-    label: "CrossFit and Hyrox",
+    label: "CrossFit & Hyrox",
     children: [
       { label: "Schedule", href: "/crossfit-and-hyrox/schedule" },
       { label: "WOD", href: "/crossfit-and-hyrox/wod" },
@@ -43,34 +31,67 @@ const NAV_ITEMS = [
       { label: "Weightlifting", href: "/crossfit-and-hyrox/weightlifting" },
       { label: "Mobility", href: "/crossfit-and-hyrox/mobility" },
       { label: "Hyrox", href: "/crossfit-and-hyrox/hyrox" },
-      { label: "Kids", href: "/crossfit-and-hyrox/kids" },
-      { label: "Open Gym", href: "/crossfit-and-hyrox/open-gym" },
-      // { label: "Breathwork & Ice Bath", href: "/classes/breathwork-ice-bath" },
     ],
   },
   {
-    href: "/schedule",
-    label: "Schedule",
+    href: "/reformer-pilates",
+    label: "Reformer Pilates",
     children: [
-      { label: "CrossFit", href: "/crossfit-and-hyrox/schedule" },
-      { label: "Group Fitness Classes", href: "/crossfit-and-hyrox/wod" },
-      // { label: "Breathwork & Ice Bath", href: "/classes/breathwork-ice-bath" },
+      { label: "Schedule", href: "/reformer-pilates" },
+      { label: "Book Online", href: "/reformer-pilates#book" },
+    ],
+  },
+  { href: "/schedule", label: "Schedule" },
+  { href: "/our-team", label: "Our Team" },
+  { href: "/prices", label: "Prices" },
+  {
+    href: "/contact",
+    label: "Contact",
+    children: [
+      { label: "Gym | Reformer Pilates | Fitness Classes | Pravilo", href: "/contact" },
+      { label: "CrossFit", href: "/contact-crossfit" },
+      { label: "Brazilian Jiu-Jitsu", href: "/brazilian-jiu-jitsu" },
     ],
   },
   {
     href: "/personal-training",
-    label: "Personal Trainer",
+    label: "Personal Trainers",
     children: [
-      { label: "Namwan", href: "/personal-training/namwan" },
-      { label: "Other PT", href: "/personal-training/other-pt" },
-      // { label: "Breathwork & Ice Bath", href: "/classes/breathwork-ice-bath" },
+      { label: "Alex 🇷🇺", href: "/personal-training/alex" },
+      { label: "Charlene 🇬🇧", href: "/personal-training/charlene" },
+      { label: "Daniel 🇬🇧 🇮🇱", href: "/personal-training/daniel" },
+      { label: "Diana 🇬🇧 🇩🇪", href: "/personal-training/diana" },
+      { label: "Kate 🇬🇧 🇹🇭", href: "/personal-training/kate" },
+      { label: "Namwan 🇬🇧 🇹🇭", href: "/personal-training/namwan" },
     ],
   },
-  // { href: "/about-us", label: "About us" },
-  { href: "/prices", label: "Prices" },
-  { href: "/checkin", label: "Check-In" },
-  { href: "/contact-gym", label: "Contact Gym" },
-  { href: "/contact-crossfit", label: "Contact CrossFit" },
+  {
+    href: "/classes",
+    label: "Fitness Classes",
+    children: [
+      { label: "Schedule", href: "/classes" },
+      { label: "Pilates Mobility", href: "/classes/pilates-mobility" },
+      { label: "HIIT", href: "/classes/hiit" },
+      { label: "Boot Camp", href: "/classes/boot-camp" },
+      { label: "Tabata", href: "/classes/tabata" },
+      { label: "Primal Power Yoga", href: "/classes/primal-power-yoga" },
+      { label: "Maximum Mobility", href: "/classes/max-power-mobility" },
+    ],
+  },
+  {
+    href: "/brazilian-jiu-jitsu",
+    label: "Brazilian Jiu-Jitsu",
+    children: [
+      { label: "Schedule", href: "/brazilian-jiu-jitsu/schedule" },
+    ],
+  },
+  {
+    href: "/pravilo",
+    label: "Pravilo",
+    children: [
+      { label: "Schedule", href: "/pravilo/schedule" },
+    ],
+  },
 ];
 
 export default function Header() {
