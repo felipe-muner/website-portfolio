@@ -9,40 +9,45 @@ import { cn } from "@/lib/utils";
 interface INavItem {
   href: string;
   label: string;
-  children?: { label: string; href: string }[];
+  children?: INavItem[];
 }
 
 interface NavItemsProps {
   navItems: INavItem[];
-  onLinkClick?: () => void; // Added prop
+  onLinkClick?: () => void;
+  depth?: number;
 }
 
-export function NavItems({ navItems, onLinkClick }: NavItemsProps) {
+export function NavItems({ navItems, onLinkClick, depth = 0 }: NavItemsProps) {
   const pathname = usePathname();
   const [expandedParents, setExpandedParents] = React.useState<Record<string, boolean>>({});
 
-  const handleToggle = (parentHref: string) => {
+  const handleToggle = (itemKey: string) => {
     setExpandedParents((prev) => ({
       ...prev,
-      [parentHref]: !prev[parentHref],
+      [itemKey]: !prev[itemKey],
     }));
   };
 
   return (
     <>
-      {navItems.map((item) => {
+      {navItems.map((item, index) => {
+        const itemKey = `${item.href}-${depth}-${index}`;
         const isActive = pathname === item.href;
         const hasChildren = item.children && item.children.length > 0;
-        const isExpanded = expandedParents[item.href];
+        const isExpanded = expandedParents[itemKey];
 
         return (
-          <div key={item.href} className="flex flex-col">
+          <div key={itemKey} className="flex flex-col">
             {hasChildren ? (
               <button
                 type="button"
-                onClick={() => handleToggle(item.href)}
+                onClick={() => handleToggle(itemKey)}
                 className={cn(
-                  "flex w-full items-center p-3 text-left text-base font-medium transition-colors",
+                  "flex w-full items-center text-left transition-colors",
+                  depth === 0 && "p-3 text-base font-medium",
+                  depth === 1 && "p-2 text-sm",
+                  depth >= 2 && "p-2 text-sm",
                   isActive ? "bg-gray-200 text-brand-orange" : "text-gray-700 hover:bg-gray-50"
                 )}
               >
@@ -51,41 +56,31 @@ export function NavItems({ navItems, onLinkClick }: NavItemsProps) {
                     "rotate-90": isExpanded,
                   })}
                 />
-                <span>{item.label}</span>
+                <span>{depth > 0 ? `— ${item.label}` : item.label}</span>
               </button>
             ) : (
               <Link
                 href={item.href}
-                onClick={onLinkClick} // Call the handler on link click
+                onClick={onLinkClick}
                 className={cn(
-                  "block w-full p-3 text-base font-medium transition-colors",
+                  "block w-full transition-colors",
+                  depth === 0 && "p-3 text-base font-medium",
+                  depth === 1 && "p-2 text-sm",
+                  depth >= 2 && "p-2 text-sm",
                   isActive ? "bg-gray-200 text-brand-orange" : "text-gray-700 hover:bg-gray-50"
                 )}
               >
-                {item.label}
+                {depth > 0 ? `— ${item.label}` : item.label}
               </Link>
             )}
 
             {hasChildren && isExpanded && (
               <div className="pl-4">
-                {item.children?.map((child) => {
-                  const childActive = pathname === child.href;
-                  return (
-                    <Link
-                      key={child.href}
-                      href={child.href}
-                      onClick={onLinkClick} // Call the handler on child link click
-                      className={cn(
-                        "mt-1 block rounded p-2 text-sm transition-colors",
-                        childActive
-                          ? "bg-gray-200 text-brand-orange"
-                          : "text-gray-600 hover:bg-gray-50"
-                      )}
-                    >
-                      — {child.label}
-                    </Link>
-                  );
-                })}
+                <NavItems
+                  navItems={item.children || []}
+                  onLinkClick={onLinkClick}
+                  depth={depth + 1}
+                />
               </div>
             )}
           </div>

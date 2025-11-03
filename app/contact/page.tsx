@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 export default function ContactPage() {
   return (
     <div className="min-h-screen bg-gray-50">
@@ -16,97 +14,105 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* Contact Options */}
-      <section className="mx-auto max-w-7xl px-4 py-16">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {/* Gym Contact */}
-          <div className="rounded-lg bg-white p-8 shadow-lg">
-            <h2 className="mb-4 text-2xl font-bold text-gray-900">The Gym</h2>
-            <p className="mb-6 text-gray-600">
-              For general gym inquiries, memberships, and facilities
-            </p>
-            <Link
-              href="/contact-gym"
-              className="inline-block rounded-lg bg-brand-orange px-6 py-3 text-white transition-colors hover:bg-orange-600"
-            >
-              Contact Gym
-            </Link>
-          </div>
-
-          {/* Reformer Pilates Contact */}
+      {/* Contact Information */}
+      <section className="mx-auto max-w-4xl px-4 py-16">
+        <div className="space-y-12">
+          {/* CrossFit Classes & Content */}
           <div className="rounded-lg bg-white p-8 shadow-lg">
             <h2 className="mb-4 text-2xl font-bold text-gray-900">
-              Reformer Pilates
+              💪 CrossFit Classes & Content
             </h2>
             <p className="mb-6 text-gray-600">
-              Questions about Reformer Pilates classes and bookings
+              For all questions about CrossFit programming, class content, and coaching:
             </p>
-            <Link
-              href="/reformer-pilates"
-              className="inline-block rounded-lg bg-brand-orange px-6 py-3 text-white transition-colors hover:bg-orange-600"
-            >
-              Pilates Info
-            </Link>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3">
+                <span className="text-lg">📱</span>
+                <span className="text-gray-700">WhatsApp</span>
+                <a
+                  href="https://wa.me/15550100002"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-brand-orange hover:underline"
+                >
+                  +972 54-648-1186
+                </a>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-lg">📷</span>
+                <span className="text-gray-700">Instagram</span>
+                <a
+                  href="https://instagram.com/SummitCrossFit"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-brand-orange hover:underline"
+                >
+                  @SummitCrossFit
+                </a>
+              </div>
+            </div>
           </div>
 
-          {/* Fitness Classes Contact */}
+          {/* Divider */}
+          <div className="flex items-center justify-center">
+            <div className="h-px w-full bg-gray-300"></div>
+            <span className="px-4 text-gray-400">⸻</span>
+            <div className="h-px w-full bg-gray-300"></div>
+          </div>
+
+          {/* Brazilian Jiu-Jitsu (BJJ) */}
           <div className="rounded-lg bg-white p-8 shadow-lg">
             <h2 className="mb-4 text-2xl font-bold text-gray-900">
-              Fitness Classes
+              🥋 Brazilian Jiu-Jitsu (BJJ)
             </h2>
             <p className="mb-6 text-gray-600">
-              Inquiries about HIIT, Tabata, Boot Camp, and other fitness classes
+              For everything BJJ (classes, schedule, memberships):
             </p>
-            <Link
-              href="/classes"
-              className="inline-block rounded-lg bg-brand-orange px-6 py-3 text-white transition-colors hover:bg-orange-600"
-            >
-              Class Info
-            </Link>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3">
+                <span className="text-lg">📱</span>
+                <span className="text-gray-700">WhatsApp</span>
+                <span className="text-gray-500">+XX (insert number)</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="text-lg">📷</span>
+                <span className="text-gray-700">Instagram</span>
+                <a
+                  href="https://instagram.com/summit.bjj"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-brand-orange hover:underline"
+                >
+                  @summit.bjj
+                </a>
+              </div>
+            </div>
           </div>
 
-          {/* CrossFit Contact */}
-          <div className="rounded-lg bg-white p-8 shadow-lg">
-            <h2 className="mb-4 text-2xl font-bold text-gray-900">CrossFit</h2>
-            <p className="mb-6 text-gray-600">
-              Questions about CrossFit and Hyrox programs
-            </p>
-            <Link
-              href="/contact-crossfit"
-              className="inline-block rounded-lg bg-brand-orange px-6 py-3 text-white transition-colors hover:bg-orange-600"
-            >
-              Contact CrossFit
-            </Link>
+          {/* Divider */}
+          <div className="flex items-center justify-center">
+            <div className="h-px w-full bg-gray-300"></div>
+            <span className="px-4 text-gray-400">⸻</span>
+            <div className="h-px w-full bg-gray-300"></div>
           </div>
 
-          {/* Brazilian Jiu-Jitsu Contact */}
+          {/* All Other Enquiries */}
           <div className="rounded-lg bg-white p-8 shadow-lg">
             <h2 className="mb-4 text-2xl font-bold text-gray-900">
-              Brazilian Jiu-Jitsu
+              💬 All Other Enquiries
             </h2>
             <p className="mb-6 text-gray-600">
-              Starting October 1st - Get in touch for more information
+              For all other enquiries — including job applications, complaints, and general requests:
             </p>
-            <Link
-              href="/brazilian-jiu-jitsu"
-              className="inline-block rounded-lg bg-brand-orange px-6 py-3 text-white transition-colors hover:bg-orange-600"
-            >
-              BJJ Info
-            </Link>
-          </div>
-
-          {/* Pravilo Contact */}
-          <div className="rounded-lg bg-white p-8 shadow-lg">
-            <h2 className="mb-4 text-2xl font-bold text-gray-900">Pravilo</h2>
-            <p className="mb-6 text-gray-600">
-              Starting December 1st - Contact us for early registration
-            </p>
-            <Link
-              href="/pravilo"
-              className="inline-block rounded-lg bg-brand-orange px-6 py-3 text-white transition-colors hover:bg-orange-600"
-            >
-              Pravilo Info
-            </Link>
+            <div className="flex items-center gap-3">
+              <span className="text-lg">📧</span>
+              <a
+                href="mailto:gm@summitgym.example.com"
+                className="text-brand-orange hover:underline"
+              >
+                gm@summitgym.example.com
+              </a>
+            </div>
           </div>
         </div>
       </section>
