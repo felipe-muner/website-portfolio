@@ -1,4 +1,5 @@
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { GymmoAppDownload } from "@/components/GymmoAppDownload";
 import { getMetadata } from "@/lib/utils";
 
 export const metadata = getMetadata({ routeName: "Reformer Pilates" });
@@ -16,6 +17,8 @@ export default function ReformerPilates() {
         <p>Whether you&apos;re new to Pilates or experienced, our instructors will guide you through precise movements that improve coordination, mobility, and body awareness. The Reformer adds a unique level of support and challenge, helping you move with greater ease both inside and outside the studio.</p>
 
         <p>Perfect for anyone looking to sculpt lean muscles, relieve tension, and restore balance in a calm yet energizing environment.</p>
+
+        <GymmoAppDownload />
       </div>
     </>
   );

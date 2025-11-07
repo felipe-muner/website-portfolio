@@ -7,9 +7,12 @@ export default function Schedule() {
     <>
       <Breadcrumb route={'Schedule'} isClass />
       <div className="flex flex-col gap-4 items-center justify-center p-4 my-20 text-brand-gray-medium container mx-auto max-w-[700px] font-mulish">
-        <h1 className="text-2xl font-bold text-center">Schedule</h1>
+        <h1 className="text-2xl font-bold text-center">Class Schedule</h1>
         <p className="text-center">
-          Our schedule is updated weekly and includes a variety of classes to fit your fitness goals and lifestyle. Whether you&apos;re looking for high-intensity workouts, strength training, or yoga, we have something for everyone. Check out our schedule below and sign up for a class today!
+          Plan your week with our comprehensive schedule of classes, training sessions, and programs
+        </p>
+        <p className="text-center font-semibold text-white mt-4">
+          No booking needed. Please check in at reception 15 minutes before class starts.
         </p>
       </div>
     </>

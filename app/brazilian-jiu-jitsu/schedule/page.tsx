@@ -4,12 +4,15 @@ export default function BJJSchedulePage() {
       {/* Hero Section */}
       <section className="relative h-[400px] bg-black">
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 to-black/50" />
-        <div className="relative z-10 flex h-full flex-col items-center justify-center px-4 text-center">
+        <div className="relative z-10 flex h-full flex-col items-center justify-center px-4 text-center gap-4">
           <h1 className="mb-4 text-5xl font-bold text-white md:text-6xl">
-            BJJ Schedule
+            Class Schedule
           </h1>
           <p className="max-w-2xl text-xl text-gray-200">
-            Brazilian Jiu-Jitsu Class Schedule
+            Plan your week with our comprehensive schedule of classes, training sessions, and programs
+          </p>
+          <p className="font-semibold text-white">
+            No booking needed. Please check in at reception 15 minutes before class starts.
           </p>
         </div>
       </section>
