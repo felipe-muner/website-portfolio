@@ -21,20 +21,31 @@ export function GymmoAppDownload() {
       </p>
 
       {/* QR Codes and App Store Buttons */}
-      <Link
-        href="https://www.gymmo.app/"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="block hover:opacity-90 transition-opacity"
-      >
+      <div className="relative w-full">
         <Image
-          src="/gymmo-app-download.png"
+          src="/gymmo-app.png"
           alt="Download Gymmo App - Scan QR code for Google Play or App Store"
           width={1280}
           height={720}
           className="w-full h-auto rounded-lg"
         />
-      </Link>
+        {/* Clickable overlay - Left half for Google Play */}
+        <Link
+          href="https://play.google.com/store/apps/details?id=app"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="absolute top-0 left-0 w-1/2 h-full hover:opacity-0 hover:bg-white/10 transition-all"
+          aria-label="Download on Google Play"
+        />
+        {/* Clickable overlay - Right half for App Store */}
+        <Link
+          href="https://apps.apple.com/app/id1446445105"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="absolute top-0 right-0 w-1/2 h-full hover:opacity-0 hover:bg-white/10 transition-all"
+          aria-label="Download on App Store"
+        />
+      </div>
     </div>
   );
 }
