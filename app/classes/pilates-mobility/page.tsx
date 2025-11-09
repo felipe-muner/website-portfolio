@@ -10,7 +10,7 @@ export default function PilatesMobility() {
     <>
       <Breadcrumb route={'Pilates Mobility'} isClass />
       <div className="flex flex-col gap-4 items-start justify-center p-4 my-20 text-brand-gray-medium container mx-auto max-w-[700px] font-mulish">
-        <h1 className="text-3xl font-semibold text-white text-left">Pilates Mobility with <Link href="/our-team" className="text-brand-orange hover:underline">Vanessa</Link></h1>
+        <h1 className="text-3xl font-semibold text-white text-left">Pilates Mobility with <Link href="/coaches-trainers/vanessa" className="text-brand-orange hover:underline">Vanessa</Link></h1>
         <p>Pilates Mobility is a class designed to improve flexibility, strength, and body awareness through controlled movements that emphasize core engagement and proper alignment.</p>
         <p>Using props like resistance bands, yoga balls, and magic circles, this class enhances joint mobility and stability, making it suitable for all fitness levels.</p>
         

@@ -10,7 +10,7 @@ export default function PrimalPowerYoga() {
     <>
       <Breadcrumb route={'Primal Power Yoga'} isClass />
       <div className="flex flex-col gap-4 items-start justify-center p-4 my-20 text-brand-gray-medium container mx-auto max-w-[700px] font-mulish">
-        <h1 className="text-3xl font-semibold text-white text-left">Power Primal Yoga with <Link href="/our-team" className="text-brand-orange hover:underline">Jace</Link></h1>
+        <h1 className="text-3xl font-semibold text-white text-left">Power Primal Yoga with <Link href="/coaches-trainers/jace" className="text-brand-orange hover:underline">Jace</Link></h1>
         <p>Experience Power Primal Yoga, a fusion of Vinyasa Yoga, animal locomotion, and calisthenics, where every movement is performed with full intention and maximum engagement.</p>
         <p>Rooted in primal movement patterns, this practice is designed to build functional strength, improve mobility, flexibility, and stability, and refine neuromuscular control, enabling you to move with greater ease, agility, and power.</p>
         

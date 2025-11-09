@@ -10,7 +10,7 @@ export default function Hiit() {
     <>
       <Breadcrumb route={'HIIT'} isClass />
       <div className="flex flex-col gap-4 items-start justify-center p-4 my-20 text-brand-gray-medium container mx-auto max-w-[700px] font-mulish">
-        <h1 className="text-3xl font-semibold text-white text-left">HIIT with <Link href="/our-team" className="text-brand-orange hover:underline">Steve</Link></h1>
+        <h1 className="text-3xl font-semibold text-white text-left">HIIT with <Link href="/coaches-trainers/steve" className="text-brand-orange hover:underline">Steve</Link></h1>
         <p>HIIT is a fast and effective workout that alternates between short bursts of intense exercise and brief recovery periods. Designed to burn fat, build muscle, and boost endurance, it maximises calorie burn and improves cardiovascular health in minimal time.</p>
         
         <p>Our HIIT class combines bodyweight exercises, strength training, and cardio intervals for a full-body workout that’s scalable for all fitness levels. Get ready to push your limits, increase your metabolism, and leave feeling stronger, faster, and more energised!</p>
