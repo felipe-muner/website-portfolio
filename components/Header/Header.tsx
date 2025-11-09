@@ -57,12 +57,12 @@ const NAV_ITEMS = [
     label: "🏃‍♀️ Fitness Classes",
     children: [
       { label: "Schedule", href: "/schedule#fitness-schedule" },
-      { label: "Pilates Mobility — Vanessa", href: "/coaches-trainers/vanessa" },
-      { label: "HIIT — Steve", href: "/coaches-trainers/steve" },
-      { label: "Boot Camp — Diana", href: "/coaches-trainers/diana" },
-      { label: "Tabata — Steve", href: "/coaches-trainers/steve" },
-      { label: "Primal Moves — Jace", href: "/coaches-trainers/jace" },
-      { label: "Maximum Mobility — Charlene", href: "/coaches-trainers/charlene" },
+      { label: "Pilates Mobility", href: "/coaches-trainers/vanessa" },
+      { label: "HIIT", href: "/coaches-trainers/steve" },
+      { label: "Boot Camp", href: "/coaches-trainers/diana" },
+      { label: "Tabata", href: "/coaches-trainers/steve" },
+      { label: "Primal Moves", href: "/coaches-trainers/jace" },
+      { label: "Maximum Mobility", href: "/coaches-trainers/charlene" },
     ],
   },
   {

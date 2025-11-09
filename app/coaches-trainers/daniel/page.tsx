@@ -22,17 +22,29 @@ export default function DanielPage() {
           </h2>
           <div className="mb-8">
             <h3 className="mb-3 text-xl font-bold text-gray-900">
-              Languages
+              Bio
             </h3>
-            <p className="text-gray-600">Hebrew, English</p>
+            <p className="mb-4 text-gray-600">
+              Management, is a graduate of a sports institute, and is a certified Level 2 CrossFit Trainer.
+            </p>
+            <p className="mb-4 text-gray-600">
+              With over 8 years of hands-on coaching experience, Daniel has dedicated his career to guiding athletes of all levels, from complete beginners to seasoned competitors. His passion lies in creating a positive training environment where people feel challenged, supported, and motivated to push past their limits.
+            </p>
+            <p className="mb-4 text-gray-600">
+              &quot;Teaching CrossFit is my favorite thing to do. Every day I have the opportunity to introduce this sport to new people, helping them build healthy habits, stay consistent, and hopefully carry that strength with them for life.&quot;
+            </p>
+            <p className="mb-4 text-gray-600">
+              Daniel believes CrossFit is more than just fitness, it&apos;s a lifestyle that builds resilience, community, and long-lasting well-being.
+            </p>
           </div>
           <div className="mb-8">
             <h3 className="mb-3 text-xl font-bold text-gray-900">
-              Specialization
+              Education &amp; Certifications
             </h3>
-            <p className="text-gray-600">
-              CrossFit programming, Olympic lifting, and high-intensity functional training.
-            </p>
+            <ul className="list-inside list-disc space-y-2 text-gray-600">
+              <li>Graduate of a sports institute</li>
+              <li>Certified Level 2 CrossFit Trainer</li>
+            </ul>
           </div>
           <div>
             <h3 className="mb-3 text-xl font-bold text-gray-900">

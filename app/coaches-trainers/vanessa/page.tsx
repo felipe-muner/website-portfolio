@@ -22,17 +22,23 @@ export default function VanessaPage() {
           </h2>
           <div className="mb-8">
             <h3 className="mb-3 text-xl font-bold text-gray-900">
-              Languages
+              Bio
             </h3>
-            <p className="text-gray-600">English, Afrikaans</p>
+            <p className="mb-4 text-gray-600">
+              With a vast background in holistic bodywork, therapeutic massage, yoga, pilates and conscious living, Vanessa offers an in-depth understanding and intuitive sensitivity to the interconnected mechanisms of body and mind.
+            </p>
+            <p className="mb-4 text-gray-600">
+              With a great emphasis on alignment and functional movement, she guides to overall improved wellbeing and lifestyle awareness, specific to the needs of her clients. Her passion for movement and care for detail is a strong element of her classes, providing a sense of fullfilment on all levels.
+            </p>
           </div>
           <div className="mb-8">
             <h3 className="mb-3 text-xl font-bold text-gray-900">
-              Specialization
+              Certificates
             </h3>
-            <p className="text-gray-600">
-              Reformer Pilates, Pilates Mobility, core strength, and functional movement.
-            </p>
+            <ul className="list-inside list-disc space-y-2 text-gray-600">
+              <li>Foundation &amp; Basic Mat Pilates by Conscious Movement Education - a training school</li>
+              <li>Pilates Equipment / Reformer by Conscious Movement Education - a training school</li>
+            </ul>
           </div>
           <div>
             <h3 className="mb-3 text-xl font-bold text-gray-900">
