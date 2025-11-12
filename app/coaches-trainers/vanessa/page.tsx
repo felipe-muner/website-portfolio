@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function VanessaPage() {
   return (
     <div className="min-h-screen bg-gray-50">
@@ -9,7 +11,7 @@ export default function VanessaPage() {
             Vanessa
           </h1>
           <p className="max-w-2xl text-xl text-gray-200">
-            Reformer Pilates Instructor & Personal Trainer
+            Reformer Pilates / Mat Pilates / Reformer 1-on-1
           </p>
         </div>
       </section>
@@ -20,6 +22,20 @@ export default function VanessaPage() {
           <h2 className="mb-6 text-3xl font-bold text-gray-900">
             About Vanessa
           </h2>
+
+          {/* Profile Image */}
+          <div className="mb-8 flex justify-center">
+            <div className="relative overflow-hidden rounded-lg">
+              <Image
+                src="/img/team/vanessa.png"
+                alt="Vanessa - Reformer Pilates Instructor"
+                width={400}
+                height={400}
+                className="object-contain"
+                priority
+              />
+            </div>
+          </div>
           <div className="mb-8">
             <h3 className="mb-3 text-xl font-bold text-gray-900">
               Bio
@@ -33,11 +49,38 @@ export default function VanessaPage() {
           </div>
           <div className="mb-8">
             <h3 className="mb-3 text-xl font-bold text-gray-900">
-              Certificates
+              Summary
+            </h3>
+            <p className="mb-4 text-gray-600">
+              Whether you&apos;re an elite athlete, post-natal or rehabilitating from injury, pilates is your foundation and catalyst to all kinds of movement practices and daily life regimes. With spinal health as a key element, we train the core-&quot;being&quot;, activating body and mind from the-inside-out; strengthening the deeper stabilizing muscles to promote maximum stability, enhanced joint mobility and freedom of movement, whilst toning abdominals, waistline, thighs and buttocks. Further, pilates engages a detoxifying organ massage, especially to the digestive tract, along targeted breath activation and improved muscle function.
+            </p>
+          </div>
+          <div className="mb-8">
+            <h3 className="mb-3 text-xl font-bold text-gray-900">
+              Services
+            </h3>
+            <p className="mb-4 text-gray-600">
+              Your class will include effective conditioning or rehabilitation exercises, empowering postural alignment, assisted stretches and a great deal of fun and fascination mastering the deeper muscles of your body. Immerse into an all-round embodied experience!
+            </p>
+            <p className="mb-3 text-gray-600 font-semibold">
+              Experience our Mat &amp; Reformer classes for:
+            </p>
+            <ul className="list-inside list-disc space-y-2 text-gray-600 mb-4">
+              <li>Improved mobility, flexibility &amp; spinal alignment</li>
+              <li>Overall enhanced strength &amp; stability</li>
+              <li>Full body toning &amp; postural balance</li>
+              <li>Interactive breathing</li>
+              <li>A regulated nervous system</li>
+              <li>Deepened body-mind connection &amp; a balanced self</li>
+            </ul>
+          </div>
+          <div className="mb-8">
+            <h3 className="mb-3 text-xl font-bold text-gray-900">
+              Certificate
             </h3>
             <ul className="list-inside list-disc space-y-2 text-gray-600">
-              <li>Foundation &amp; Basic Mat Pilates by Conscious Movement Education - a training school</li>
-              <li>Pilates Equipment / Reformer by Conscious Movement Education - a training school</li>
+              <li>Foundation &amp; Basic Mat Pilates by Conscious Movement Education- a training school</li>
+              <li>Pilates Equipment / Reformer by Conscious Movement Education- a training school</li>
             </ul>
           </div>
           <div>
