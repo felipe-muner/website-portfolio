@@ -24,14 +24,14 @@ export default function VanessaPage() {
           </h2>
 
           {/* Profile Image */}
-          <div className="mb-8 flex justify-center">
-            <div className="relative overflow-hidden rounded-lg">
+          <div className="mb-8 w-full">
+            <div className="relative w-full overflow-hidden rounded-lg">
               <Image
                 src="/img/team/vanessa.png"
                 alt="Vanessa - Reformer Pilates Instructor"
-                width={400}
-                height={400}
-                className="object-contain"
+                width={1200}
+                height={800}
+                className="w-full h-auto object-contain"
                 priority
               />
             </div>
