@@ -2,12 +2,10 @@ import { Facebook, Instagram, Mail } from "lucide-react";
 import Link from "next/link";
 import { APP_NAME } from "@/constants";
 import Image from "next/image";
-import { ContactData } from "@/components/ContactData";
 
 const Footer: React.FC = () => {
   return (
     <>
-      <ContactData />
       <footer className="bg-brand-black pt-12">
         <div className="container mx-auto px-4">
           {/* ROW */}

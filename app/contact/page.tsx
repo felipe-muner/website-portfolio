@@ -53,8 +53,6 @@ export default function ContactPage() {
           {/* Divider */}
           <div className="flex items-center justify-center">
             <div className="h-px w-full bg-gray-300"></div>
-            <span className="px-4 text-gray-400">⸻</span>
-            <div className="h-px w-full bg-gray-300"></div>
           </div>
 
           {/* CrossFit Classes & Content */}
@@ -96,8 +94,6 @@ export default function ContactPage() {
           {/* Divider */}
           <div className="flex items-center justify-center">
             <div className="h-px w-full bg-gray-300"></div>
-            <span className="px-4 text-gray-400">⸻</span>
-            <div className="h-px w-full bg-gray-300"></div>
           </div>
 
           {/* Brazilian Jiu-Jitsu (BJJ) */}
@@ -138,8 +134,6 @@ export default function ContactPage() {
 
           {/* Divider */}
           <div className="flex items-center justify-center">
-            <div className="h-px w-full bg-gray-300"></div>
-            <span className="px-4 text-gray-400">⸻</span>
             <div className="h-px w-full bg-gray-300"></div>
           </div>
 
