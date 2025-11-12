@@ -10,29 +10,14 @@ export default function Hiit() {
     <>
       <Breadcrumb route={'HIIT'} isClass />
       <div className="flex flex-col gap-4 items-start justify-center p-4 my-20 text-brand-gray-medium container mx-auto max-w-[700px] font-mulish">
-        <h1 className="text-3xl font-semibold text-white text-left">HIIT with <Link href="/coaches-trainers/steve" className="text-brand-orange hover:underline">Steve</Link></h1>
-        <p>HIIT is a fast and effective workout that alternates between short bursts of intense exercise and brief recovery periods. Designed to burn fat, build muscle, and boost endurance, it maximises calorie burn and improves cardiovascular health in minimal time.</p>
-        
-        <p>Our HIIT class combines bodyweight exercises, strength training, and cardio intervals for a full-body workout that’s scalable for all fitness levels. Get ready to push your limits, increase your metabolism, and leave feeling stronger, faster, and more energised!</p>
-        
-        <h2 className="text-3xl font-semibold mt-4 text-white">Key Benefits</h2>
-        <ul className="space-y-3">
-          <li className="flex items-start gap-2">
-            <Check size={20} className="text-brand-orange flex-shrink-0 mt-1" /> <span>Efficient fat burning & muscle building</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <Check size={20} className="text-brand-orange flex-shrink-0 mt-1" /> <span>Increased cardiovascular endurance</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <Check size={20} className="text-brand-orange flex-shrink-0 mt-1" /> <span>Boosted metabolism for continuous calorie burn</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <Check size={20} className="text-brand-orange flex-shrink-0 mt-1" /> <span>Improved strength, agility & power</span>
-          </li>
-          <li className="flex items-start gap-2">
-            <Check size={20} className="text-brand-orange flex-shrink-0 mt-1" /> <span>Time-saving workout with maximum results</span>
-          </li>
-        </ul>
+        <h1 className="text-3xl font-semibold text-white text-left">High-Intensity Interval Training with <Link href="/coaches-trainers/steve" className="text-brand-orange hover:underline">Steve</Link></h1>
+        <p>This class designed to boost your fitness level, burn calories, and increase strength in a short amount of time.</p>
+
+        <p>This fast-paced workout combines bursts of intense exercises with short recovery periods, ensuring a full-body workout that will leave you feeling energized.</p>
+
+        <p>Whether you&apos;re a beginner or an experienced athlete, our HIIT class is scalable to meet your fitness needs, making it perfect for anyone looking to challenge themselves.</p>
+
+        <p className="font-semibold text-white">Get ready to sweat, push your limits, and have fun!</p>
       </div>
     </>
   );
