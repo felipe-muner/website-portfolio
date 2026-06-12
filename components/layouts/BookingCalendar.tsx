@@ -3,6 +3,14 @@
 import { useState } from "react";
 import { differenceInCalendarDays, format, getDate, isBefore, isSameDay } from "date-fns";
 import { VILLAS } from "@/lib/layouts/villas";
+
+export interface BookableVilla {
+  slug: string;
+  name: string;
+  bedrooms: number;
+  guests: number;
+  pricePerNight: number;
+}
 import { WEEKDAYS_SHORT } from "@/lib/layouts/schedule";
 import { mondayIndex, useMonthGrid } from "./schedule/use-schedule-search";
 
@@ -28,16 +36,18 @@ function isBooked(villaIndex: number, date: Date): boolean {
 interface BookingCalendarProps {
   theme: BookingTheme;
   displayClass: string;
+  /** Override the default villa list (e.g. the Laguna templates). */
+  villas?: readonly BookableVilla[];
 }
 
 /** Pick-a-villa, pick-your-nights demo booking widget shared by the villa templates. */
-export function BookingCalendar({ theme, displayClass }: BookingCalendarProps) {
+export function BookingCalendar({ theme, displayClass, villas = VILLAS }: BookingCalendarProps) {
   const grid = useMonthGrid();
   const [villaIndex, setVillaIndex] = useState(1);
   const [checkIn, setCheckIn] = useState<Date | null>(null);
   const [checkOut, setCheckOut] = useState<Date | null>(null);
 
-  const villa = VILLAS[villaIndex];
+  const villa = villas[villaIndex];
   const nights =
     checkIn && checkOut ? Math.max(differenceInCalendarDays(checkOut, checkIn), 0) : 0;
 
@@ -63,7 +73,7 @@ export function BookingCalendar({ theme, displayClass }: BookingCalendarProps) {
       <div>
         {/* Villa picker */}
         <div className="flex flex-wrap gap-2">
-          {VILLAS.map((v, i) => (
+          {villas.map((v, i) => (
             <button
               key={v.slug}
               type="button"
