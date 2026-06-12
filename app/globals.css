@@ -113,3 +113,93 @@
   }
 }
 
+
+/* ---------------------------------------------------------------------------
+ * Landing-page layout previews (/gym/v* and /yoga/v*)
+ * ------------------------------------------------------------------------- */
+
+@keyframes landing-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes landing-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scale(1.18);
+    opacity: 1;
+  }
+}
+
+@keyframes landing-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@utility animate-landing-marquee {
+  animation: landing-marquee 28s linear infinite;
+}
+
+@utility animate-landing-breathe {
+  animation: landing-breathe 7s ease-in-out infinite;
+}
+
+@utility animate-landing-float {
+  animation: landing-float 6s ease-in-out infinite;
+}
+
+@keyframes landing-kenburns {
+  from {
+    transform: scale(1) translateY(0);
+  }
+  to {
+    transform: scale(1.1) translateY(-2%);
+  }
+}
+
+@keyframes landing-twinkle {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes landing-pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.06);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@utility animate-landing-kenburns {
+  animation: landing-kenburns 16s ease-in-out infinite alternate;
+}
+
+@utility animate-landing-twinkle {
+  animation: landing-twinkle 3.5s ease-in-out infinite;
+}
+
+@utility animate-landing-pop {
+  animation: landing-pop 0.5s ease-out;
+}

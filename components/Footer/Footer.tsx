@@ -1,4 +1,5 @@
-import { Facebook, Instagram, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
+import { FacebookIcon, InstagramIcon } from "@/components/ui/brand-icons";
 import Link from "next/link";
 import { APP_NAME } from "@/constants";
 import Image from "next/image";
@@ -31,7 +32,7 @@ const Footer: React.FC = () => {
                   rel="noreferrer"
                   className="text-brand-gray-light text-sm"
                 >
-                  <Facebook size={16} />
+                  <FacebookIcon size={16} />
                 </Link>
                 {/* <Link
                   href="#"
@@ -47,7 +48,7 @@ const Footer: React.FC = () => {
                   rel="noreferrer"
                   className="text-brand-gray-light text-sm"
                 >
-                  <Instagram size={16} />
+                  <InstagramIcon size={16} />
                 </Link>
                 <Link
                   href="mailto:info@podiumgym.com"

@@ -4,6 +4,7 @@ import { Analytics } from '@vercel/analytics/next';
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { ChromeGate } from "@/components/layouts/ChromeGate";
 import { AuthProvider } from "@/components/providers/auth-provider";
 import { APP_NAME } from "@/constants";
 
@@ -36,9 +37,13 @@ export default function RootLayout({
         className={`${oswald.variable} ${mulish.variable} antialiased bg-brand-background-2`}
       >
         <AuthProvider>
-          <Header />
+          <ChromeGate>
+            <Header />
+          </ChromeGate>
           <main className="flex flex-col">{children}</main>
-          <Footer />
+          <ChromeGate>
+            <Footer />
+          </ChromeGate>
           <Analytics />
         </AuthProvider>
       </body>
