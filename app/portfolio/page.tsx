@@ -89,10 +89,27 @@ export default function PortfolioIndex() {
         ))}
       </main>
 
-      <footer className="border-t-2 py-10 text-center" style={{ borderColor: INK }}>
+      <footer className="border-t-2 py-12 text-center" style={{ borderColor: INK }}>
         <p className="text-sm font-bold uppercase tracking-[0.3em]" style={{ color: `${INK}80` }}>
-          All brands fictional · built with Next.js — ask for yours
+          All brands fictional — want one of these as yours?
         </p>
+        <div className="mt-5 flex flex-wrap items-center justify-center gap-4">
+          <a
+            href="https://wa.me/5521984852802"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-full px-7 py-3 text-sm font-bold text-white transition-transform hover:-translate-y-0.5"
+            style={{ backgroundColor: "#25D366" }}
+          >
+            WhatsApp me
+          </a>
+          <a
+            href="mailto:felipe.muner@gmail.com"
+            className="rounded-full border-2 border-[#15130f] px-7 py-3 text-sm font-bold text-[#15130f] transition-colors hover:bg-[#15130f] hover:text-[#f4f1ea]"
+          >
+            felipe.muner@gmail.com
+          </a>
+        </div>
       </footer>
     </div>
   );
