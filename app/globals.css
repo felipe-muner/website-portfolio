@@ -203,3 +203,130 @@
 @utility animate-landing-pop {
   animation: landing-pop 0.5s ease-out;
 }
+
+@keyframes landing-fade-down {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@utility animate-landing-fade-down {
+  animation: landing-fade-down 0.35s ease-out;
+}
+
+/* ---------------------------------------------------------------------------
+ * Laguna villa templates (/villa/v6 – /villa/v10) — scoped warm palette
+ * ------------------------------------------------------------------------- */
+
+.laguna-theme {
+  --background: #faf6ed;
+  --foreground: #25312b;
+  --card: #fffdf7;
+  --card-foreground: #25312b;
+  --popover: #fffdf7;
+  --popover-foreground: #25312b;
+  --primary: #20453a;
+  --primary-foreground: #f7f3e8;
+  --secondary: #e9efe5;
+  --secondary-foreground: #20453a;
+  --muted: #f1ebdd;
+  --muted-foreground: #5f6a5e;
+  --accent: #f3ecdd;
+  --accent-foreground: #20453a;
+  --border: #e3dac6;
+  --input: #d9d0ba;
+  --ring: #e8902b;
+  --palm: #20453a;
+  --palm-deep: #142a23;
+  --sun: #e8902b;
+  --terracotta: #c2602f;
+  --shell: #fffdf7;
+  --sand: #f1ebdd;
+  --radius: 0.375rem;
+  font-family: var(--font-karla), ui-sans-serif, system-ui, sans-serif;
+}
+
+@theme inline {
+  --color-palm: var(--palm);
+  --color-palm-deep: var(--palm-deep);
+  --color-sun: var(--sun);
+  --color-terracotta: var(--terracotta);
+  --color-shell: var(--shell);
+  --color-sand: var(--sand);
+  --font-heading: var(--font-fraunces, ui-serif, Georgia, serif);
+}
+
+/* Film-grain overlay for hero imagery */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+}
+
+/* Slow drift for the hero image */
+@keyframes hero-drift {
+  from {
+    transform: scale(1.08) translateY(0);
+  }
+  to {
+    transform: scale(1) translateY(0);
+  }
+}
+.hero-drift {
+  animation: hero-drift 2.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Fullscreen hero slideshow */
+@keyframes slideshow-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes slide-kenburns {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.09);
+  }
+}
+.slide-kenburns {
+  animation: slide-kenburns 8s linear both;
+}
+
+/* Scrolling marquee strips (reviews / ticker) */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee var(--marquee-duration, 36s) linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-drift,
+  .slide-kenburns,
+  .marquee-track {
+    animation: none;
+  }
+  .marquee-viewport {
+    overflow-x: auto;
+  }
+}

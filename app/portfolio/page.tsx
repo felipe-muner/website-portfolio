@@ -7,8 +7,8 @@ import { Reveal } from "@/components/layouts/Reveal";
 import { PORTFOLIO } from "@/lib/layouts/registry";
 
 export const metadata: Metadata = {
-  title: "Website Portfolio — 20 Templates",
-  description: "Twenty production-grade website templates: gyms, yoga studios, villas and local businesses.",
+  title: "Website Portfolio — 25 Templates",
+  description: "Twenty-five production-grade website templates: gyms, yoga studios, villas and local businesses.",
   robots: { index: false },
 };
 
@@ -28,7 +28,7 @@ export default function PortfolioIndex() {
             Website portfolio
           </p>
           <h1 className={`${display.className} mt-4 max-w-3xl text-5xl leading-[1.05] md:text-7xl`}>
-            Twenty websites,
+            Twenty-five websites,
             <em style={{ color: ACCENT }}> ready to make yours.</em>
           </h1>
           <p className="mt-6 max-w-xl text-lg" style={{ color: `${INK}b3` }}>

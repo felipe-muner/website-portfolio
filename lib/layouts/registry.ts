@@ -43,6 +43,11 @@ export const PORTFOLIO: readonly PortfolioGroup[] = [
       { href: "/villa/v3", name: "Frame", brand: "Frame Villas", detail: "Minimal architectural, cobalt accents", cover: "/img/layouts/villa-exterior-white.jpg" },
       { href: "/villa/v4", name: "Selva", brand: "Selva Villas", detail: "Dark jungle luxe, brass lanterns", cover: "/img/layouts/villa-pool-night.jpg" },
       { href: "/villa/v5", name: "Postcard", brand: "Casa Coco", detail: "Playful retro travel postcards", cover: "/img/layouts/beach-turquoise.jpg" },
+      { href: "/villa/v6", name: "Horizon", brand: "Laguna Bay Villas", detail: "Split hero, warm classic resort", cover: "/img/layouts/villa-home-pool.jpg" },
+      { href: "/villa/v7", name: "Cinema", brand: "Laguna Bay Villas", detail: "Fullscreen slideshow, dark palm", cover: "/img/layouts/villa-pool-sunset.jpg" },
+      { href: "/villa/v8", name: "Mosaic", brand: "Laguna Bay Villas", detail: "Editorial photo-grid hero", cover: "/img/layouts/villa-living-bright.jpg" },
+      { href: "/villa/v9", name: "Arc", brand: "Laguna Bay Villas", detail: "Arched frames & scrolling ticker", cover: "/img/layouts/villa-bedroom-canopy.jpg" },
+      { href: "/villa/v10", name: "Chapters", brand: "Laguna Bay Villas", detail: "Split-screen story chapters", cover: "/img/layouts/villa-luxury-house.jpg" },
     ],
   },
   {
