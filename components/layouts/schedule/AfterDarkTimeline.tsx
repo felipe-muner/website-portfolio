@@ -4,6 +4,7 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { Search } from "lucide-react";
 import { GYM_WEEK } from "@/lib/layouts/schedule";
+import { DayWeather } from "./DayWeather";
 import { MoonCalendar } from "./MoonCalendar";
 import { useScheduleSearch } from "./use-schedule-search";
 
@@ -79,9 +80,21 @@ export function AfterDarkTimeline({ displayClass }: { displayClass: string }) {
                 className="absolute bottom-2 left-[0.95rem] top-2 w-px"
                 style={{ background: `linear-gradient(${LIME}00, ${LIME}aa, ${LIME}00)` }}
               />
-              <p className="mb-6 text-sm font-bold uppercase tracking-[0.3em] text-white/70">
-                {selected ? format(selected, "EEEE d MMMM") : "Pick a night above"}
-              </p>
+              <div className="mb-6 flex flex-wrap items-center gap-x-4 gap-y-1">
+                <p className="text-sm font-bold uppercase tracking-[0.3em] text-white/70">
+                  {selected ? format(selected, "EEEE d MMMM") : "Pick a night above"}
+                </p>
+                {selected && (
+                  <DayWeather
+                    date={selected}
+                    displayClass={displayClass}
+                    size="sm"
+                    side="bottom"
+                    className="-ml-2"
+                    theme={{ accent: LIME, panel: "#0d1424", text: "#ffffff", muted: "rgba(255,255,255,0.65)", border: `${LIME}55` }}
+                  />
+                )}
+              </div>
               <div className="space-y-4">
                 {sessions.map((s, idx) => {
                   const lit = matches(s);

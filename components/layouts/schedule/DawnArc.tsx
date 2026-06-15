@@ -5,6 +5,7 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { Sun } from "lucide-react";
 import { YOGA_WEEK, WEEKDAYS, WEEKDAYS_SHORT, sessionsOn } from "@/lib/layouts/schedule";
+import { DayWeather } from "./DayWeather";
 import { useScheduleSearch, useWeekDates } from "./use-schedule-search";
 
 const INK = "#4a2c3a";
@@ -141,6 +142,15 @@ export function DawnArc({ displayClass }: { displayClass: string }) {
           {WEEKDAYS[day]}
           {dates && <span style={{ color: ROSE }}> · {format(dates[day], "d MMMM")}</span>}
         </p>
+        {dates && (
+          <div className="mt-3 flex justify-center">
+            <DayWeather
+              date={dates[day]}
+              displayClass={displayClass}
+              theme={{ accent: ROSE, panel: "#fff6ea", text: INK, muted: `${INK}99`, border: `${GOLD}66` }}
+            />
+          </div>
+        )}
         <div className="mt-8 space-y-4">
           {daySessions.map((s, idx) => {
             const lit = matches(s);

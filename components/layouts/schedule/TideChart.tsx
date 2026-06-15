@@ -5,6 +5,7 @@ import { format, isSameDay } from "date-fns";
 import { Waves } from "lucide-react";
 import { moonPhase, moonPhaseName } from "@/lib/layouts/moon";
 import { YOGA_WEEK, WEEKDAYS, sessionsOn } from "@/lib/layouts/schedule";
+import { DayWeather } from "./DayWeather";
 import { MoonPhaseIcon } from "./MoonPhaseIcon";
 import { useMonthGrid, useScheduleSearch, useWeekDates } from "./use-schedule-search";
 
@@ -133,13 +134,23 @@ export function TideChart({ displayClass }: { displayClass: string }) {
           const daySessions = sessionsOn(YOGA_WEEK, i);
           return (
             <div key={dayName} className="flex flex-col gap-3 md:h-24 md:flex-row md:items-stretch">
-              <div className="flex w-full items-baseline gap-3 md:w-44 md:shrink-0 md:flex-col md:justify-center md:gap-0 md:pr-4">
+              <div className="flex w-full items-baseline gap-3 md:w-44 md:shrink-0 md:flex-col md:items-start md:justify-center md:gap-1 md:pr-4">
                 <p className={`${displayClass} text-xl lg:text-2xl`} style={{ color: FOREST }}>
                   {dayName}
                 </p>
                 <p className="text-xs font-semibold uppercase tracking-[0.2em]" style={{ color: CLAY }}>
                   {dates ? format(dates[i], "d MMMM") : ""}
                 </p>
+                {dates && (
+                  <DayWeather
+                    date={dates[i]}
+                    displayClass={displayClass}
+                    size="sm"
+                    side="bottom"
+                    className="-ml-2.5"
+                    theme={{ accent: CLAY, panel: "#f5efe2", text: FOREST, muted: `${FOREST}b3`, border: `${FOREST}30` }}
+                  />
+                )}
               </div>
               {/* Desktop water band */}
               <div
