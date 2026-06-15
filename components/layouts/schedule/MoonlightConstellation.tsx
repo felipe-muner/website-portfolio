@@ -6,6 +6,7 @@ import { format, isSameDay } from "date-fns";
 import { Moon, Search, Star } from "lucide-react";
 import { moonPhase, moonPhaseName } from "@/lib/layouts/moon";
 import { YOGA_WEEK, WEEKDAYS_SHORT, sessionsOn } from "@/lib/layouts/schedule";
+import { DayWeather } from "./DayWeather";
 import { MoonPhaseIcon } from "./MoonPhaseIcon";
 import { mondayIndex, useMonthGrid, useScheduleSearch } from "./use-schedule-search";
 
@@ -141,6 +142,13 @@ export function MoonlightConstellation({ displayClass }: { displayClass: string 
                     {moonPhaseName(moonPhase(selected))}
                   </p>
                 </div>
+                <DayWeather
+                  date={selected}
+                  displayClass={displayClass}
+                  side="bottom"
+                  className="ml-auto"
+                  theme={{ accent: GOLD, panel: "#232742", text: "#ece8dd", muted: MIST, border: `${GOLD}55` }}
+                />
               </div>
               <div className="mt-7 space-y-5">
                 {selectedSessions.map((s) => {
