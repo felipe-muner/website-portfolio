@@ -1,0 +1,163 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { ChevronDown, Menu, X } from "lucide-react";
+import { COACH_NAV } from "@/lib/layouts/coaching";
+import { cn } from "@/lib/utils";
+
+/**
+ * Shared header for the Jörg Panek site. `overlay` sits transparently over the
+ * home hero (light text); `solid` is a sticky light bar for inner pages.
+ */
+export function CoachSiteNav({ variant = "solid" }: { variant?: "overlay" | "solid" }) {
+  const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const overlay = variant === "overlay";
+
+  // Scroll-aware chrome: over the hero the bar is see-through; once you leave the
+  // top it fades into a tinted, blurred, semi-transparent bar so the image/content
+  // behind stays visible.
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 16);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // On the home hero, light text throughout. On inner pages text stays dark.
+  const lightText = overlay;
+
+  const isActive = (href: string) =>
+    href === "/coaching" ? pathname === href : pathname.startsWith(href);
+
+  return (
+    <header
+      className={cn(
+        "inset-x-0 top-0 z-50 w-full font-[family-name:var(--font-sans-mulish)] transition-colors duration-300",
+        // Home: float fixed over the hero. Inner pages: sticky so content reserves space.
+        overlay ? "fixed" : "sticky",
+        lightText ? "text-[#f4efe4]" : "text-[#33302a]",
+        // Over the hero (overlay, at the very top): fully transparent.
+        overlay && !scrolled && "bg-transparent",
+        // Overlay, scrolled away from the top: tinted forest glass — see-through.
+        overlay && scrolled && "border-b border-white/10 bg-[#243029]/75 backdrop-blur-md",
+        // Inner pages: translucent light bar so the page tints through.
+        !overlay && "border-b border-black/10 bg-[#f4efe4]/80 backdrop-blur-md",
+      )}
+    >
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5 sm:px-10">
+        {/* Wordmark */}
+        <Link href="/coaching" className="leading-tight">
+          <span className="block font-[family-name:var(--font-serif)] text-xl font-medium tracking-tight">
+            Jörg Panek
+          </span>
+          <span className={cn("block max-w-[14rem] text-[0.7rem] leading-snug", overlay ? "text-[#f4efe4]/70" : "text-black/55")}>
+            Traumasensible und Nervensystemorientierte Begleitung
+          </span>
+        </Link>
+
+        {/* Desktop nav */}
+        <nav className="hidden items-center gap-7 text-sm lg:flex">
+          {COACH_NAV.map((item) =>
+            item.children ? (
+              <div key={item.href} className="group relative">
+                <Link
+                  href={item.href}
+                  className={cn(
+                    "flex items-center gap-1 py-2 transition",
+                    isActive(item.href) ? "font-semibold" : "opacity-80 hover:opacity-100",
+                  )}
+                >
+                  {item.label}
+                  <ChevronDown className="size-3.5 transition group-hover:rotate-180" />
+                </Link>
+                <div className="invisible absolute left-0 top-full w-60 translate-y-1 rounded-2xl border border-black/10 bg-white p-2 text-[#33302a] opacity-0 shadow-xl transition-all group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+                  {item.children.map((c) => (
+                    <Link
+                      key={c.href}
+                      href={c.href}
+                      className={cn(
+                        "block rounded-xl px-4 py-2.5 text-sm transition hover:bg-[#f0e9da]",
+                        pathname === c.href && "bg-[#f0e9da] font-semibold",
+                      )}
+                    >
+                      {c.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ) : item.href === "/coaching/termin" ? (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "rounded-full px-5 py-2 font-semibold transition",
+                  overlay
+                    ? "border border-[#f4efe4]/30 hover:bg-[#f4efe4]/10"
+                    : "bg-[#2c3a30] text-[#f4efe4] hover:brightness-110",
+                )}
+              >
+                {item.label}
+              </Link>
+            ) : (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "py-2 transition",
+                  isActive(item.href) ? "font-semibold" : "opacity-80 hover:opacity-100",
+                )}
+              >
+                {item.label}
+              </Link>
+            ),
+          )}
+        </nav>
+
+        {/* Mobile toggle */}
+        <button
+          type="button"
+          aria-label="Menü öffnen"
+          onClick={() => setOpen((v) => !v)}
+          className="lg:hidden"
+        >
+          {open ? <X className="size-6" /> : <Menu className="size-6" />}
+        </button>
+      </div>
+
+      {/* Mobile sheet */}
+      {open && (
+        <div className="border-t border-black/10 bg-[#f4efe4] px-6 py-4 text-[#33302a] lg:hidden">
+          {COACH_NAV.map((item) => (
+            <div key={item.href} className="border-b border-black/5 py-1">
+              <Link
+                href={item.href}
+                onClick={() => setOpen(false)}
+                className="block py-2 font-medium"
+              >
+                {item.label}
+              </Link>
+              {item.children && (
+                <div className="pb-2 pl-4">
+                  {item.children.map((c) => (
+                    <Link
+                      key={c.href}
+                      href={c.href}
+                      onClick={() => setOpen(false)}
+                      className="block py-1.5 text-sm text-black/65"
+                    >
+                      {c.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </header>
+  );
+}
