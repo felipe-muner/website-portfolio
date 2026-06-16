@@ -36,16 +36,17 @@ export function CoachSiteNav({ variant = "solid" }: { variant?: "overlay" | "sol
   return (
     <header
       className={cn(
-        "inset-x-0 top-0 z-50 w-full font-[family-name:var(--font-sans-mulish)] transition-colors duration-300",
+        "inset-x-0 top-0 z-50 w-full font-[family-name:var(--font-sans-mulish)] transition-colors duration-500 ease-out",
         // Home: float fixed over the hero. Inner pages: sticky so content reserves space.
         overlay ? "fixed" : "sticky",
         lightText ? "text-[#f4efe4]" : "text-[#33302a]",
         // Over the hero (overlay, at the very top): fully transparent.
         overlay && !scrolled && "bg-transparent",
-        // Overlay, scrolled away from the top: tinted forest glass — see-through.
-        overlay && scrolled && "border-b border-white/10 bg-[#243029]/75 backdrop-blur-md",
+        // Overlay, scrolled: settle straight onto a deep, near-solid forest green
+        // with a soft shadow — no white border, no milky blur.
+        overlay && scrolled && "bg-[#1e2922] shadow-[0_12px_30px_-14px_rgba(0,0,0,0.65)]",
         // Inner pages: translucent light bar so the page tints through.
-        !overlay && "border-b border-black/10 bg-[#f4efe4]/80 backdrop-blur-md",
+        !overlay && "border-b border-black/10 bg-[#f4efe4]/85 backdrop-blur-md",
       )}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5 sm:px-10">
