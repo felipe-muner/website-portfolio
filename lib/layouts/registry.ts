@@ -59,6 +59,8 @@ export const PORTFOLIO: readonly PortfolioGroup[] = [
       { href: "/dive", name: "Deep Blue", brand: "Deep Blue Dive Co.", detail: "Ocean dive school, course finder", cover: "/img/layouts/dive-fish-school.jpg" },
       { href: "/spa", name: "Lotus House", brand: "Lotus House Spa", detail: "Blush & sage spa, treatment menu", cover: "/img/layouts/spa-hot-stones.jpg" },
       { href: "/courier", name: "Wyvern", brand: "Wyvern Courier", detail: "Cinematic scroll-zoom hero, logistics", cover: "/img/layouts/courier-aerial-port.jpg" },
+      { href: "/studio", name: "Nocturne", brand: "Nocturne Studio", detail: "Architecture studio, horizontal-scroll gallery", cover: "/img/layouts/studio-hero.jpg" },
+      { href: "/coaching", name: "Jörg Panek", brand: "Jörg Panek", detail: "German trauma-coach, calm forest, breathing hero", cover: "/img/layouts/coach-forest-path.jpg" },
     ],
   },
 ] as const;
