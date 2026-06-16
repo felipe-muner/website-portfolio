@@ -333,10 +333,41 @@
 .courier-drift {
   animation: courier-drift 28s ease-in-out infinite alternate;
 }
+
+/* Slow zoom for the studio hero plate */
+@keyframes studio-kenburns {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.1);
+  }
+}
+.studio-kenburns {
+  animation: studio-kenburns 24s ease-in-out infinite alternate;
+}
+
+/* Slow breathing pulse for the coaching hero — nervous-system pacing */
+@keyframes coach-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.15;
+  }
+}
+.coach-breathe {
+  animation: coach-breathe 7s ease-in-out infinite;
+}
 @media (prefers-reduced-motion: reduce) {
   .hero-drift,
   .slide-kenburns,
   .courier-drift,
+  .studio-kenburns,
+  .coach-breathe,
   .marquee-track {
     animation: none;
   }
