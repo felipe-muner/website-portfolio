@@ -49,27 +49,6 @@ export function CoachingHero({ image, lines }: HeroProps) {
       <div className="absolute inset-0 bg-[#283528]/55" />
       <div className="absolute inset-0 bg-gradient-to-t from-[#222e25] via-transparent to-[#222e25]/60" />
 
-      {/* Top bar */}
-      <motion.header
-        variants={item}
-        initial="hidden"
-        animate="show"
-        className="absolute inset-x-0 top-0 z-20 mx-auto flex max-w-6xl items-center justify-between px-6 py-7 sm:px-10"
-      >
-        <span className="font-serif text-2xl tracking-tight">Jörg&nbsp;Panek</span>
-        <nav className="hidden items-center gap-8 text-sm text-[#f4efe4]/75 md:flex">
-          <a href="#arbeit" className="transition hover:text-[#f4efe4]">Wie ich arbeite</a>
-          <a href="#angebote" className="transition hover:text-[#f4efe4]">Angebote</a>
-          <a href="#ueber" className="transition hover:text-[#f4efe4]">Über mich</a>
-          <a
-            href="#kontakt"
-            className="rounded-full border border-[#f4efe4]/30 px-5 py-2 transition hover:bg-[#f4efe4]/10"
-          >
-            Termin buchen
-          </a>
-        </nav>
-      </motion.header>
-
       <motion.div
         style={{ opacity: fade }}
         variants={group}
