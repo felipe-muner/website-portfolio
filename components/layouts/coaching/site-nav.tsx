@@ -3,9 +3,17 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronDown, Menu, X } from "lucide-react";
+import { ChevronDown, Menu } from "lucide-react";
 import { COACH_NAV } from "@/lib/layouts/coaching";
 import { cn } from "@/lib/utils";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 /**
  * Shared header for the Jörg Panek site. `overlay` sits transparently over the
@@ -42,9 +50,9 @@ export function CoachSiteNav({ variant = "solid" }: { variant?: "overlay" | "sol
         lightText ? "text-[#f4efe4]" : "text-[#33302a]",
         // Over the hero (overlay, at the very top): fully transparent.
         overlay && !scrolled && "bg-transparent",
-        // Overlay, scrolled: settle straight onto a deep, near-solid forest green
-        // with a soft shadow — no white border, no milky blur.
-        overlay && scrolled && "bg-[#1e2922] shadow-[0_12px_30px_-14px_rgba(0,0,0,0.65)]",
+        // Overlay, scrolled: frosted-glass "bottle" effect — translucent forest
+        // tint over a strong backdrop blur, so the image reads soft behind it.
+        overlay && scrolled && "bg-[#1e2922]/80 backdrop-blur-lg shadow-[0_12px_30px_-14px_rgba(0,0,0,0.55)]",
         // Inner pages: translucent light bar so the page tints through.
         !overlay && "border-b border-black/10 bg-[#f4efe4]/85 backdrop-blur-md",
       )}
@@ -118,47 +126,53 @@ export function CoachSiteNav({ variant = "solid" }: { variant?: "overlay" | "sol
           )}
         </nav>
 
-        {/* Mobile toggle */}
-        <button
-          type="button"
-          aria-label="Menü öffnen"
-          onClick={() => setOpen((v) => !v)}
-          className="lg:hidden"
-        >
-          {open ? <X className="size-6" /> : <Menu className="size-6" />}
-        </button>
-      </div>
-
-      {/* Mobile sheet */}
-      {open && (
-        <div className="border-t border-black/10 bg-[#f4efe4] px-6 py-4 text-[#33302a] lg:hidden">
-          {COACH_NAV.map((item) => (
-            <div key={item.href} className="border-b border-black/5 py-1">
-              <Link
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className="block py-2 font-medium"
-              >
-                {item.label}
-              </Link>
-              {item.children && (
-                <div className="pb-2 pl-4">
-                  {item.children.map((c) => (
-                    <Link
-                      key={c.href}
-                      href={c.href}
-                      onClick={() => setOpen(false)}
-                      className="block py-1.5 text-sm text-black/65"
-                    >
-                      {c.label}
+        {/* Mobile menu — shadcn Sheet */}
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetTrigger aria-label="Menü öffnen" className="lg:hidden">
+            <Menu className="size-6" />
+          </SheetTrigger>
+          <SheetContent
+            side="right"
+            className="w-[88vw] max-w-sm border-l-0 bg-[#f4efe4] font-[family-name:var(--font-sans-mulish)] text-[#33302a]"
+          >
+            <SheetHeader className="border-b border-black/10">
+              <SheetTitle className="text-left font-[family-name:var(--font-serif)] text-2xl font-medium text-[#2c3a30]">
+                Jörg Panek
+              </SheetTitle>
+            </SheetHeader>
+            <nav className="flex flex-col overflow-y-auto px-4 pb-8">
+              {COACH_NAV.map((item) => (
+                <div key={item.href} className="border-b border-black/5 py-1">
+                  <SheetClose asChild>
+                    <Link href={item.href} className="block py-2.5 text-lg font-medium">
+                      {item.label}
                     </Link>
-                  ))}
+                  </SheetClose>
+                  {item.children && (
+                    <div className="pb-2 pl-3">
+                      {item.children.map((c) => (
+                        <SheetClose asChild key={c.href}>
+                          <Link href={c.href} className="block py-1.5 text-sm text-black/65">
+                            {c.label}
+                          </Link>
+                        </SheetClose>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
+              ))}
+              <SheetClose asChild>
+                <Link
+                  href="/coaching/termin"
+                  className="mt-6 flex items-center justify-center rounded-full bg-[#2c3a30] px-6 py-3.5 text-sm font-semibold text-[#f4efe4]"
+                >
+                  Termin vereinbaren
+                </Link>
+              </SheetClose>
+            </nav>
+          </SheetContent>
+        </Sheet>
+      </div>
     </header>
   );
 }
