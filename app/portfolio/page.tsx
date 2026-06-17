@@ -4,11 +4,13 @@ import Link from "next/link";
 import { Archivo, Fraunces } from "next/font/google";
 import { ArrowUpRight } from "lucide-react";
 import { Reveal } from "@/components/layouts/Reveal";
-import { PORTFOLIO } from "@/lib/layouts/registry";
+import { ALL_SITES, PORTFOLIO } from "@/lib/layouts/registry";
+
+const SITE_COUNT = ALL_SITES.length;
 
 export const metadata: Metadata = {
-  title: "Website Portfolio — 25 Templates",
-  description: "Twenty-five production-grade website templates: gyms, yoga studios, villas and local businesses.",
+  title: `Website Portfolio — ${SITE_COUNT} Templates`,
+  description: `${SITE_COUNT} production-grade website templates: gyms, yoga studios, villas and local businesses.`,
   robots: { index: false },
 };
 
@@ -28,7 +30,7 @@ export default function PortfolioIndex() {
             Website portfolio
           </p>
           <h1 className={`${display.className} mt-4 max-w-3xl text-5xl leading-[1.05] md:text-7xl`}>
-            Twenty-five websites,
+            {SITE_COUNT} websites,
             <em style={{ color: ACCENT }}> ready to make yours.</em>
           </h1>
           <p className="mt-6 max-w-xl text-lg" style={{ color: `${INK}b3` }}>
