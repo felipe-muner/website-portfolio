@@ -106,7 +106,7 @@ export default function SacolariaHome() {
         </div>
       </section>
 
-      {/* NÚMEROS (topo) */}
+      {/* NÚMEROS */}
       <StatsBar />
 
       {/* CATEGORIAS */}
@@ -214,9 +214,6 @@ export default function SacolariaHome() {
           </Reveal>
         </div>
       </section>
-
-      {/* NÚMEROS (rodapé) */}
-      <StatsBar />
 
       {/* CONTATO */}
       <ContactCTA />
