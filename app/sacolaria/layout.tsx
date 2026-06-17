@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { CartProvider } from "@/lib/layouts/sacolaria/cart";
 import { SacolariaNav } from "@/components/layouts/sacolaria/site-nav";
 import { SacolariaFooter } from "@/components/layouts/sacolaria/site-footer";
+import { HomeStatsTop } from "@/components/layouts/sacolaria/home-stats-top";
 import { WhatsappFab } from "@/components/layouts/sacolaria/whatsapp-fab";
 import { LayoutSwitcher } from "@/components/layouts/LayoutSwitcher";
 
@@ -42,6 +43,7 @@ export default function SacolariaLayout({ children }: { children: React.ReactNod
       className={`${inter.variable} min-h-dvh bg-[#faf8f3] font-[family-name:var(--font-sans-inter)] text-[#23261f] antialiased`}
     >
       <CartProvider>
+        <HomeStatsTop />
         <SacolariaNav />
         {children}
         <SacolariaFooter />
