@@ -1,10 +1,25 @@
 import Link from "next/link";
-import { ArrowRight, BadgePercent, PackageCheck } from "lucide-react";
+import {
+  ArrowRight,
+  BadgePercent,
+  CreditCard,
+  PackageCheck,
+  ShieldCheck,
+  Truck,
+} from "lucide-react";
 import { CATEGORIES, PRODUCTS } from "@/lib/layouts/sacolaria/catalog";
 import { Reveal } from "@/components/layouts/Reveal";
 import { BagArt } from "@/components/layouts/sacolaria/bag-art";
 import { ProductCard } from "@/components/layouts/sacolaria/product-card";
+import { QuoteForm } from "@/components/layouts/sacolaria/quote-form";
 import { ContactCTA } from "@/components/layouts/sacolaria/contact-cta";
+
+const TRUST = [
+  { icon: Truck, title: "Envio para todo o Brasil", text: "Despacho em 1 dia útil pelos Correios e transportadoras." },
+  { icon: BadgePercent, title: "5% de desconto no Pix", text: "Pague com Pix e economize em todo o pedido, na hora." },
+  { icon: CreditCard, title: "Parcele em até 12x", text: "No cartão de crédito, sem juros, direto no checkout." },
+  { icon: ShieldCheck, title: "Nota fiscal + garantia", text: "Emitimos NF-e e trocamos qualquer lote com defeito." },
+];
 
 const CATEGORY_COLOR = {
   "boca-palhaco": "Laranja",
@@ -73,6 +88,9 @@ export default function SacolariaHome() {
         </div>
       </section>
 
+      {/* FORMULÁRIO — grandes pedidos */}
+      <QuoteForm />
+
       {/* MAIS VENDIDOS */}
       <section className="bg-[#f3f1e9]">
         <div className="mx-auto max-w-6xl px-5 py-16 sm:px-6">
@@ -100,47 +118,18 @@ export default function SacolariaHome() {
         </div>
       </section>
 
-      {/* SOBRE / PIX CALLOUT */}
-      <section id="sobre" className="mx-auto max-w-6xl px-5 py-16 sm:px-6">
-        <div className="grid items-center gap-10 rounded-3xl bg-[#0b3d2e] p-8 text-white md:grid-cols-2 md:p-12">
-          <Reveal>
-            <h2 className="text-3xl font-extrabold tracking-tight">
-              Fábrica própria, preço de quem produz.
-            </h2>
-            <p className="mt-4 max-w-md text-[#bfdccf]">
-              Há mais de 20 anos produzindo embalagens plásticas em Minas Gerais. Controlamos
-              cada etapa — da extrusão à entrega — para garantir resistência, pontualidade e o
-              melhor custo no atacado.
-            </p>
-            <div className="mt-6 grid grid-cols-3 gap-4 text-center">
-              {[
-                ["+20", "anos de fábrica"],
-                ["+5 mil", "clientes ativos"],
-                ["27", "estados atendidos"],
-              ].map(([n, l]) => (
-                <div key={l} className="rounded-2xl bg-white/5 p-4">
-                  <p className="text-2xl font-black text-[#f5c518]">{n}</p>
-                  <p className="mt-1 text-[0.7rem] uppercase tracking-wide text-[#9cc2b2]">{l}</p>
-                </div>
-              ))}
+      {/* DIFERENCIAIS */}
+      <section className="border-y border-[#ece8dd] bg-white">
+        <div className="mx-auto grid max-w-6xl gap-6 px-5 py-12 sm:px-6 sm:grid-cols-2 lg:grid-cols-4">
+          {TRUST.map((t) => (
+            <div key={t.title} className="flex gap-3">
+              <t.icon className="size-6 shrink-0 text-[#0b3d2e]" />
+              <div>
+                <h3 className="text-sm font-bold text-[#23261f]">{t.title}</h3>
+                <p className="mt-0.5 text-xs leading-relaxed text-[#7c8076]">{t.text}</p>
+              </div>
             </div>
-          </Reveal>
-          <Reveal from="right" delay={120}>
-            <div className="rounded-2xl bg-white/5 p-6">
-              <BadgePercent className="size-9 text-[#f5c518]" />
-              <h3 className="mt-4 text-xl font-bold">Pague no Pix e economize 5%</h3>
-              <p className="mt-2 text-sm text-[#bfdccf]">
-                O desconto é aplicado automaticamente no checkout. Prefere parcelar? São até 12x
-                sem juros no cartão, ou boleto faturado para empresas.
-              </p>
-              <Link
-                href="/sacolaria/produtos"
-                className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#f5c518] px-5 py-3 text-sm font-bold text-[#0b3d2e] transition hover:brightness-105"
-              >
-                Montar meu pedido <ArrowRight className="size-4" />
-              </Link>
-            </div>
-          </Reveal>
+          ))}
         </div>
       </section>
 

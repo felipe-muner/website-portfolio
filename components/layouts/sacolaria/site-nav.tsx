@@ -19,7 +19,6 @@ import {
 const NAV = [
   { href: "/sacolaria", label: "Início" },
   { href: "/sacolaria/produtos", label: "Produtos" },
-  { href: "/sacolaria#sobre", label: "Sobre" },
   { href: "/sacolaria#contato", label: "Contato" },
 ];
 
@@ -34,7 +33,7 @@ export function SacolariaNav() {
   return (
     <header className="sticky top-0 z-50 border-b border-[#e7e3d8] bg-white/90 font-[family-name:var(--font-sans-inter)] backdrop-blur-md">
       {/* faixa superior */}
-      <div className="bg-[#0e7a4a] text-center text-[0.72rem] font-medium text-[#eafaf1]">
+      <div className="bg-[#0b3d2e] text-center text-[0.72rem] font-medium text-[#d8efe4]">
         <div className="mx-auto max-w-6xl px-4 py-1.5">
           Frete para todo o Brasil · Pedido mínimo de R$ 250 · Pix com 5% de desconto
         </div>
