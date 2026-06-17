@@ -55,12 +55,12 @@ export function StatsBar() {
   const vals = useCountUp(TARGETS, inView);
 
   return (
-    <section ref={ref} className="bg-[#0b3d2e]" aria-label="Números da Sacolaria Brasil">
+    <section ref={ref} className="bg-[#0e7a4a]" aria-label="Números da Sacolaria Brasil">
       <div className="mx-auto grid max-w-6xl grid-cols-2 gap-y-8 px-5 py-12 text-center sm:px-6 md:grid-cols-4 md:py-14">
         {STATS.map((s, i) => (
           <div
             key={s.label}
-            className="flex flex-col items-center px-2 md:border-l md:border-[#1d5340] md:first:border-l-0"
+            className="flex flex-col items-center px-2 md:border-l md:border-white/20 md:first:border-l-0"
           >
             <p
               className="whitespace-nowrap font-black leading-none tabular-nums text-[#f5c518]"
@@ -70,7 +70,7 @@ export function StatsBar() {
               {formatInt(vals[i])}
               {s.suffix && <span style={{ fontSize: "0.6em" }}>{s.suffix}</span>}
             </p>
-            <p className="mx-auto mt-2 max-w-[11rem] text-xs font-semibold uppercase tracking-wide text-[#a9cabd] sm:text-sm">
+            <p className="mx-auto mt-2 max-w-[11rem] text-xs font-semibold uppercase tracking-wide text-[#d8efe4] sm:text-sm">
               {s.label}
             </p>
           </div>
