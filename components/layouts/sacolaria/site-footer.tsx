@@ -1,15 +1,13 @@
 import Link from "next/link";
 import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { CATEGORIES } from "@/lib/layouts/sacolaria/catalog";
+import { CONTACT, WHATSAPP_LINK } from "@/lib/layouts/sacolaria/contact";
 
 const PAYMENTS = ["Pix", "Visa", "Master", "Elo", "Boleto"];
 
 export function SacolariaFooter() {
   return (
-    <footer
-      id="contato"
-      className="border-t border-[#173f31] bg-[#0b3d2e] font-[family-name:var(--font-sans-inter)] text-[#cfe6db]"
-    >
+    <footer className="border-t border-[#173f31] bg-[#0b3d2e] font-[family-name:var(--font-sans-inter)] text-[#cfe6db]">
       <div className="mx-auto grid max-w-6xl gap-10 px-5 py-14 sm:px-6 md:grid-cols-4">
         <div>
           <div className="flex items-center gap-2">
@@ -70,23 +68,25 @@ export function SacolariaFooter() {
           <ul className="mt-4 space-y-3 text-sm">
             <li className="flex items-center gap-2.5">
               <MessageCircle className="size-4 text-[#f5c518]" />
-              <a href="https://wa.me/5531900000000" className="hover:text-white">
-                WhatsApp (31) 90000-0000
+              <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" className="hover:text-white">
+                WhatsApp {CONTACT.whatsappDisplay}
               </a>
             </li>
             <li className="flex items-center gap-2.5">
               <Phone className="size-4 text-[#f5c518]" />
-              (31) 3000-0000
+              <a href={`tel:${CONTACT.phone}`} className="hover:text-white">
+                {CONTACT.phoneDisplay}
+              </a>
             </li>
             <li className="flex items-center gap-2.5">
               <Mail className="size-4 text-[#f5c518]" />
-              <a href="mailto:vendas@sacolariabrasil.com.br" className="hover:text-white">
-                vendas@sacolariabrasil.com.br
+              <a href={`mailto:${CONTACT.email}`} className="hover:text-white">
+                {CONTACT.email}
               </a>
             </li>
             <li className="flex items-start gap-2.5">
               <MapPin className="mt-0.5 size-4 text-[#f5c518]" />
-              <span>Contagem · MG · Brasil</span>
+              <span>{CONTACT.city}</span>
             </li>
           </ul>
         </div>
