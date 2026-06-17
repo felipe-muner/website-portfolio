@@ -30,11 +30,10 @@ export function WhatsappFab() {
         show ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-6 opacity-0",
       )}
     >
-      <span className="relative flex items-center justify-center">
-        <span className="absolute inline-flex size-9 animate-ping rounded-full bg-white/30" />
-        <WhatsAppIcon size={26} className="relative" />
-      </span>
-      <span className="hidden text-sm font-bold sm:inline">Fale conosco</span>
+      {/* Halo verde que se expande para além do botão — visível em qualquer fundo */}
+      <span className="absolute inset-0 -z-10 rounded-full bg-[#25D366] opacity-75 animate-ping" />
+      <WhatsAppIcon size={26} className="relative" />
+      <span className="relative hidden text-sm font-bold sm:inline">Fale conosco</span>
     </a>
   );
 }
