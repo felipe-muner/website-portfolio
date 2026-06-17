@@ -94,7 +94,24 @@ export default function CheckoutPage() {
   const router = useRouter();
   const { lines, totals, clear, hydrated } = useCart();
   const [step, setStep] = useState(0);
-  const [fields, setFields] = useState<Fields>({});
+  // Todos os campos começam como string para o zod retornar as mensagens em pt-BR.
+  const [fields, setFields] = useState<Fields>({
+    nome: "",
+    email: "",
+    telefone: "",
+    documento: "",
+    cep: "",
+    endereco: "",
+    numero: "",
+    bairro: "",
+    complemento: "",
+    cidade: "",
+    uf: "",
+    cardNome: "",
+    cardNumero: "",
+    cardExp: "",
+    cardCvv: "",
+  });
   const [errors, setErrors] = useState<Errors>({});
   const [method, setMethod] = useState<PaymentMethod>("pix");
   const [cepLoading, setCepLoading] = useState(false);
