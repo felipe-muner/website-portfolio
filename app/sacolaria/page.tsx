@@ -12,6 +12,8 @@ import { CATEGORIES, PRODUCTS } from "@/lib/layouts/sacolaria/catalog";
 import { Reveal } from "@/components/layouts/Reveal";
 import { BagArt } from "@/components/layouts/sacolaria/bag-art";
 import { ProductCard } from "@/components/layouts/sacolaria/product-card";
+import { StatsBar } from "@/components/layouts/sacolaria/stats-bar";
+import { ContactCTA } from "@/components/layouts/sacolaria/contact-cta";
 
 const TRUST = [
   { icon: Truck, title: "Envio para todo o Brasil", text: "Despacho em 1 dia útil pelos Correios e transportadoras." },
@@ -103,6 +105,9 @@ export default function SacolariaHome() {
           ))}
         </div>
       </section>
+
+      {/* NÚMEROS (topo) */}
+      <StatsBar />
 
       {/* CATEGORIAS */}
       <section className="mx-auto max-w-6xl px-5 py-16 sm:px-6">
@@ -209,6 +214,12 @@ export default function SacolariaHome() {
           </Reveal>
         </div>
       </section>
+
+      {/* NÚMEROS (rodapé) */}
+      <StatsBar />
+
+      {/* CONTATO */}
+      <ContactCTA />
     </main>
   );
 }
