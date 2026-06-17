@@ -43,8 +43,8 @@ export default function SacolariaLayout({ children }: { children: React.ReactNod
       className={`${inter.variable} min-h-dvh bg-[#faf8f3] font-[family-name:var(--font-sans-inter)] text-[#23261f] antialiased`}
     >
       <CartProvider>
-        <HomeStatsTop />
         <SacolariaNav />
+        <HomeStatsTop />
         {children}
         <SacolariaFooter />
         <WhatsappFab />
