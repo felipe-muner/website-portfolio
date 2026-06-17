@@ -1,7 +1,7 @@
-import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import { Mail, MapPin, MessageCircle } from "lucide-react";
 import { CONTACT, WHATSAPP_LINK } from "@/lib/layouts/sacolaria/contact";
 
-/** Seção de contato com acesso direto a WhatsApp, telefone e e-mail. */
+/** Seção de contato com acesso direto a WhatsApp, e-mail e endereço. */
 export function ContactCTA() {
   return (
     <section id="contato" className="mx-auto max-w-6xl px-5 py-16 sm:px-6">
@@ -14,7 +14,7 @@ export function ContactCTA() {
         </h2>
         <p className="mx-auto mt-3 max-w-xl text-[#5b5f57]">
           Tire dúvidas, peça um orçamento para grandes volumes ou personalize sua sacola.
-          Respondemos rápido pelo WhatsApp, telefone ou e-mail.
+          Respondemos rápido pelo WhatsApp ou e-mail.
         </p>
 
         <div className="mt-8 grid gap-4 sm:grid-cols-3">
@@ -33,19 +33,6 @@ export function ContactCTA() {
             </span>
           </a>
 
-          {/* Telefone */}
-          <a
-            href={`tel:${CONTACT.phone}`}
-            className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e2ddd0] bg-[#f6f4ee] p-6 transition hover:border-[#0b3d2e]/40"
-          >
-            <Phone className="size-7 text-[#0b3d2e]" />
-            <span className="text-base font-bold text-[#23261f]">Telefone</span>
-            <span className="text-sm text-[#5b5f57]">{CONTACT.phoneDisplay}</span>
-            <span className="mt-1 text-xs font-semibold uppercase tracking-wide text-[#8a8f84]">
-              Seg a sex, 8h–18h
-            </span>
-          </a>
-
           {/* E-mail */}
           <a
             href={`mailto:${CONTACT.email}`}
@@ -58,11 +45,23 @@ export function ContactCTA() {
               Orçamentos e NF-e
             </span>
           </a>
-        </div>
 
-        <p className="mt-6 inline-flex items-center gap-2 text-sm text-[#7c8076]">
-          <MapPin className="size-4 text-[#0b3d2e]" /> {CONTACT.city}
-        </p>
+          {/* Endereço */}
+          <a
+            href={CONTACT.mapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex flex-col items-center gap-2 rounded-2xl border border-[#e2ddd0] bg-[#f6f4ee] p-6 transition hover:border-[#0b3d2e]/40"
+          >
+            <MapPin className="size-7 text-[#0b3d2e]" />
+            <span className="text-base font-bold text-[#23261f]">Endereço</span>
+            <span className="text-sm text-[#5b5f57]">{CONTACT.address}</span>
+            <span className="text-sm text-[#5b5f57]">{CONTACT.addressLine2}</span>
+            <span className="mt-1 text-xs font-semibold uppercase tracking-wide text-[#8a8f84]">
+              Ver no mapa
+            </span>
+          </a>
+        </div>
       </div>
     </section>
   );

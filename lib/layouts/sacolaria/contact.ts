@@ -10,6 +10,9 @@ export const CONTACT = {
   phoneDisplay: "(31) 3000-0000",
   email: "vendas@sacolariabrasil.com.br",
   city: "Contagem · MG · Brasil",
+  address: "Rua das Indústrias, 1500 — Cidade Industrial",
+  addressLine2: "Contagem · MG · CEP 32000-000",
+  mapsUrl: "https://maps.google.com/?q=Cidade+Industrial+Contagem+MG",
 } as const;
 
 /** Mensagem pré-preenchida ao abrir o WhatsApp. */
