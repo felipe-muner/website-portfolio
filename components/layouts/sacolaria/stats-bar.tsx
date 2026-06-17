@@ -60,14 +60,17 @@ export function StatsBar() {
         {STATS.map((s, i) => (
           <div
             key={s.label}
-            className="px-2 md:border-l md:border-[#1d5340] md:first:border-l-0"
+            className="flex flex-col items-center px-2 md:border-l md:border-[#1d5340] md:first:border-l-0"
           >
-            <p className="text-3xl font-black tabular-nums text-[#f5c518] sm:text-4xl">
+            <p
+              className="whitespace-nowrap font-black leading-none tabular-nums text-[#f5c518]"
+              style={{ fontSize: "clamp(1.3rem, 4.4vw, 2.2rem)" }}
+            >
               {s.prefix}
               {formatInt(vals[i])}
-              {s.suffix}
+              {s.suffix && <span style={{ fontSize: "0.6em" }}>{s.suffix}</span>}
             </p>
-            <p className="mx-auto mt-2 max-w-[10rem] text-xs font-semibold uppercase tracking-wide text-[#a9cabd] sm:text-sm">
+            <p className="mx-auto mt-2 max-w-[11rem] text-xs font-semibold uppercase tracking-wide text-[#a9cabd] sm:text-sm">
               {s.label}
             </p>
           </div>
