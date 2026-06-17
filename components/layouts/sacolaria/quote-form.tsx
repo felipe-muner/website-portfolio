@@ -27,8 +27,20 @@ const schema = z.object({
 type Errors = Record<string, string>;
 type Fields = Record<string, string>;
 
+// Campos sempre como string (evita o erro "expected string, received undefined" do zod).
+const EMPTY_FIELDS: Fields = {
+  nome: "",
+  email: "",
+  telefone: "",
+  contato: "WhatsApp",
+  cep: "",
+  cnpj: "",
+  uf: "",
+  quantidade: "",
+};
+
 export function QuoteForm() {
-  const [fields, setFields] = useState<Fields>({ contato: "WhatsApp" });
+  const [fields, setFields] = useState<Fields>({ ...EMPTY_FIELDS });
   const [errors, setErrors] = useState<Errors>({});
   const [sent, setSent] = useState(false);
 
@@ -112,7 +124,7 @@ export function QuoteForm() {
                 type="button"
                 onClick={() => {
                   setSent(false);
-                  setFields({ contato: "WhatsApp" });
+                  setFields({ ...EMPTY_FIELDS });
                 }}
                 className="mt-6 text-sm font-semibold text-[#0b3d2e] hover:underline"
               >
