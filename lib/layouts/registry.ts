@@ -61,6 +61,7 @@ export const PORTFOLIO: readonly PortfolioGroup[] = [
       { href: "/courier", name: "Wyvern", brand: "Wyvern Courier", detail: "Cinematic scroll-zoom hero, logistics", cover: "/img/layouts/courier-aerial-port.jpg" },
       { href: "/studio", name: "Nocturne", brand: "Nocturne Studio", detail: "Architecture studio, horizontal-scroll gallery", cover: "/img/layouts/studio-hero.jpg" },
       { href: "/coaching", name: "Jörg Panek", brand: "Jörg Panek", detail: "German trauma-coach, calm forest, breathing hero", cover: "/img/layouts/coach-forest-path.jpg" },
+      { href: "/sacolaria", name: "Sacolaria Brasil", brand: "Sacolaria Brasil", detail: "Loja B2B de sacolas plásticas (pt-BR), carrinho + checkout", cover: "/img/layouts/sacolaria.svg" },
     ],
   },
 ] as const;
