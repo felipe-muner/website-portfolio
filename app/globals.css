@@ -107,6 +107,9 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    scroll-behavior: smooth;
+  }
   body {
     font-family: var(--font-oswald), Arial, Helvetica, sans-serif;
     @apply bg-background text-foreground;
@@ -304,6 +307,46 @@
 }
 .slide-kenburns {
   animation: slide-kenburns 8s linear both;
+}
+
+/* Dive hero carousel — slow zoom in / out per full-screen slide */
+@keyframes dive-kb-in {
+  from {
+    transform: scale(1.02);
+  }
+  to {
+    transform: scale(1.16);
+  }
+}
+@keyframes dive-kb-out {
+  from {
+    transform: scale(1.16);
+  }
+  to {
+    transform: scale(1.02);
+  }
+}
+@utility animate-dive-kb-in {
+  animation: dive-kb-in 11s ease-in-out infinite alternate;
+}
+@utility animate-dive-kb-out {
+  animation: dive-kb-out 11s ease-in-out infinite alternate;
+}
+
+/* Chill WhatsApp halo — a slow, soft sonar ring instead of a busy ping */
+@keyframes dive-chill-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  70%,
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+@utility animate-dive-chill-pulse {
+  animation: dive-chill-pulse 2.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
 }
 
 /* Scrolling marquee strips (reviews / ticker) */
