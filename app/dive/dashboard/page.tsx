@@ -39,11 +39,10 @@ import { cn } from "@/lib/utils";
 const CYAN = "#2ed3e8";
 const today = () => format(new Date(), "yyyy-MM-dd");
 
-type Section = "overview" | "entry" | "stock" | "report" | "settings";
+type Section = "overview" | "stock" | "report" | "settings";
 
 const MENU: { id: Section; label: string; icon: React.ReactNode }[] = [
   { id: "overview", label: "Overview", icon: <LayoutDashboard className="size-4" /> },
-  { id: "entry", label: "Add & sell", icon: <PackagePlus className="size-4" /> },
   { id: "stock", label: "Stock", icon: <Boxes className="size-4" /> },
   { id: "report", label: "Report", icon: <ClipboardList className="size-4" /> },
   { id: "settings", label: "Settings", icon: <Settings className="size-4" /> },
@@ -290,17 +289,17 @@ function DashboardBody({ section, onGo }: { section: Section; onGo: (s: Section)
           <div className="mt-6 flex flex-wrap gap-3">
             <button
               type="button"
-              onClick={() => onGo("entry")}
+              onClick={() => onGo("stock")}
               className="inline-flex items-center gap-2 rounded-xl bg-[#2ed3e8] px-4 py-2.5 text-sm font-bold text-[#04263b]"
             >
               <PackagePlus className="size-4" /> Add stock or sale
             </button>
             <button
               type="button"
-              onClick={() => onGo("stock")}
+              onClick={() => onGo("report")}
               className="inline-flex items-center gap-2 rounded-xl border border-white/20 px-4 py-2.5 text-sm font-semibold transition hover:border-white"
             >
-              <Boxes className="size-4" /> View stock
+              <ClipboardList className="size-4" /> View report
             </button>
           </div>
 
@@ -343,10 +342,13 @@ function DashboardBody({ section, onGo }: { section: Section; onGo: (s: Section)
         </>
       )}
 
-      {/* ---------------- Add & sell ---------------- */}
-      {section === "entry" && (
+      {/* ---------------- Stock (forms + table) ---------------- */}
+      {section === "stock" && (
         <>
-          <SectionHead title="Add stock &amp; record sales" desc="Buy from suppliers (money out) and sell to customers (money in)." />
+          <SectionHead
+            title="Stock"
+            desc="Buy from suppliers, record sales, and watch stock move — one shared stock for online and walk-in."
+          />
           <div className="mt-6 grid gap-4 lg:grid-cols-2">
             {/* Purchase */}
             <section className="rounded-2xl border border-white/10 bg-white/5 p-5">
@@ -441,11 +443,14 @@ function DashboardBody({ section, onGo }: { section: Section; onGo: (s: Section)
         </>
       )}
 
-      {/* ---------------- Stock ---------------- */}
+      {/* ---------------- Live stock table ---------------- */}
       {section === "stock" && (
         <>
-          <SectionHead title="Live stock" desc="Every purchase adds units; every sale removes one. Buy 100, sell one by one." />
-          <div className="mt-6 overflow-x-auto rounded-2xl border border-white/10">
+          <h2 className="mt-10 text-lg font-bold tracking-tight">Live stock</h2>
+          <p className="mt-1 text-sm font-light text-white/55">
+            Every purchase adds units; every sale removes one. Click a Sold count to see the sales.
+          </p>
+          <div className="mt-4 overflow-x-auto rounded-2xl border border-white/10">
             <table className="w-full min-w-[560px] text-sm">
               <thead>
                 <tr className="border-b border-white/10 bg-white/5 text-left text-xs uppercase tracking-wider text-white/50">
