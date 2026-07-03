@@ -3,8 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, ChevronLeft } from "lucide-react";
+import { format } from "date-fns";
 import { formatTHB } from "@/lib/layouts/dive/catalog";
 import { useCart } from "@/lib/layouts/dive/cart";
+import { recordOnlineSale } from "@/lib/layouts/dive/ledger";
 
 const CYAN = "#2ed3e8";
 
@@ -51,6 +53,11 @@ export default function CheckoutPage() {
   function placeOrder(e: React.FormEvent) {
     e.preventDefault();
     if (!validate()) return;
+    // Log the sale to the shared stock ledger so the owner dashboard updates.
+    recordOnlineSale(
+      lines.map((l) => ({ slug: l.product.slug, qty: l.qty, unit: l.product.price })),
+      format(new Date(), "yyyy-MM-dd"),
+    );
     const ref = `DB-${Date.now().toString(36).toUpperCase().slice(-6)}`;
     setOrderRef(ref);
     clear();
