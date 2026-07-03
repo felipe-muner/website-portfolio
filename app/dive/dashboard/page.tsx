@@ -1,12 +1,15 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { format, parseISO } from "date-fns";
 import {
   ArrowDownRight,
+  ArrowRight,
   ArrowUpRight,
   Boxes,
+  ClipboardList,
   LayoutDashboard,
   LogOut,
   PackagePlus,
@@ -16,6 +19,7 @@ import {
   ShoppingCart,
   Trash2,
   TrendingUp,
+  Waves,
 } from "lucide-react";
 import {
   BRANDS,
@@ -34,6 +38,29 @@ import { cn } from "@/lib/utils";
 const CYAN = "#2ed3e8";
 const today = () => format(new Date(), "yyyy-MM-dd");
 
+type Section = "overview" | "entry" | "stock" | "report" | "settings";
+
+const MENU: { id: Section; label: string; icon: React.ReactNode }[] = [
+  { id: "overview", label: "Overview", icon: <LayoutDashboard className="size-4" /> },
+  { id: "entry", label: "Add & sell", icon: <PackagePlus className="size-4" /> },
+  { id: "stock", label: "Stock", icon: <Boxes className="size-4" /> },
+  { id: "report", label: "Report", icon: <ClipboardList className="size-4" /> },
+  { id: "settings", label: "Settings", icon: <Settings className="size-4" /> },
+];
+
+type TypeOption = { id: TxType; label: string };
+const TYPE_OPTIONS: TypeOption[] = [
+  { id: "sale", label: "Sales" },
+  { id: "purchase", label: "Purchases" },
+];
+
+/** Read the active section from the URL (?section=…) so links are shareable. */
+function readSection(): Section {
+  if (typeof window === "undefined") return "overview";
+  const s = new URLSearchParams(window.location.search).get("section");
+  return MENU.some((m) => m.id === s) ? (s as Section) : "overview";
+}
+
 export default function DashboardPage() {
   return (
     <AuthProvider>
@@ -46,73 +73,111 @@ export default function DashboardPage() {
 
 function DashboardShell() {
   const { session, signOut } = useAuth();
-  const [tab, setTab] = useState<"overview" | "settings">("overview");
+  const [section, setSectionState] = useState<Section>(readSection);
+
+  // Keep the URL in sync so every section has a shareable link.
+  const setSection = useCallback((s: Section) => {
+    setSectionState(s);
+    window.history.replaceState(null, "", `${window.location.pathname}?section=${s}`);
+  }, []);
+
+  useEffect(() => {
+    const onPop = () => setSectionState(readSection());
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
+
   return (
-    <main className="pt-16">
-      <div className="mx-auto max-w-6xl px-5 py-8 md:px-10">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-4">
-          <div className="inline-flex rounded-full border border-white/15 p-0.5">
-            <TabBtn active={tab === "overview"} onClick={() => setTab("overview")} icon={<LayoutDashboard className="size-4" />}>
-              Overview
-            </TabBtn>
-            <TabBtn active={tab === "settings"} onClick={() => setTab("settings")} icon={<Settings className="size-4" />}>
-              Settings
-            </TabBtn>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="hidden text-right sm:block">
-              <p className="text-[0.6rem] uppercase tracking-wider text-white/40">Signed in</p>
-              <p className="text-sm font-semibold text-white">{session?.email}</p>
+    <div className="flex min-h-dvh flex-col md:flex-row">
+      {/* Sidebar */}
+      <aside className="shrink-0 border-b border-white/10 bg-[#04263b]/50 md:sticky md:top-0 md:h-dvh md:w-64 md:border-b-0 md:border-r">
+        <div className="flex h-full flex-col">
+          {/* Brand */}
+          <div className="flex items-center justify-between gap-2 px-4 py-4">
+            <div className="flex items-center gap-2.5">
+              <span className="grid size-9 place-items-center rounded-xl" style={{ backgroundColor: CYAN }}>
+                <Waves className="size-5 text-[#04263b]" />
+              </span>
+              <div className="leading-tight">
+                <p className="text-sm font-bold">Aqua Sport Supply</p>
+                <p className="text-[0.6rem] uppercase tracking-wider text-white/45">Owner area</p>
+              </div>
             </div>
-            <span
-              className="grid size-9 place-items-center rounded-full text-sm font-bold text-[#04263b]"
-              style={{ backgroundColor: CYAN }}
-            >
-              {session?.name.charAt(0)}
-            </span>
             <button
               type="button"
               aria-label="Sign out"
               onClick={signOut}
-              className="grid size-9 place-items-center rounded-full border border-white/15 text-white/60 transition hover:border-[#ff5d73] hover:text-[#ff8a99]"
+              className="grid size-9 place-items-center rounded-full border border-white/15 text-white/60 transition hover:border-[#ff5d73] hover:text-[#ff8a99] md:hidden"
             >
               <LogOut className="size-4" />
             </button>
           </div>
+
+          {/* Menu */}
+          <nav className="flex gap-1 overflow-x-auto px-3 pb-3 md:flex-1 md:flex-col md:overflow-visible md:pb-0">
+            {MENU.map((m) => (
+              <button
+                key={m.id}
+                type="button"
+                onClick={() => setSection(m.id)}
+                className={cn(
+                  "inline-flex shrink-0 items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-sm font-semibold transition md:w-full",
+                  section === m.id
+                    ? "bg-[#2ed3e8] text-[#04263b]"
+                    : "text-white/70 hover:bg-white/5 hover:text-white",
+                )}
+              >
+                {m.icon}
+                {m.label}
+              </button>
+            ))}
+          </nav>
+
+          {/* Account (desktop) */}
+          <div className="hidden border-t border-white/10 p-3 md:block">
+            <div className="flex items-center gap-2.5 px-1">
+              <span
+                className="grid size-9 shrink-0 place-items-center rounded-full text-sm font-bold text-[#04263b]"
+                style={{ backgroundColor: CYAN }}
+              >
+                {session?.name.charAt(0)}
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-xs font-semibold text-white">{session?.email}</p>
+                <p className="text-[0.6rem] uppercase tracking-wider text-white/40">Signed in</p>
+              </div>
+              <button
+                type="button"
+                aria-label="Sign out"
+                onClick={signOut}
+                className="grid size-8 shrink-0 place-items-center rounded-full border border-white/15 text-white/60 transition hover:border-[#ff5d73] hover:text-[#ff8a99]"
+              >
+                <LogOut className="size-4" />
+              </button>
+            </div>
+            <Link
+              href="/dive"
+              className="mt-2 block rounded-xl px-3.5 py-2 text-sm font-medium text-white/60 transition hover:bg-white/5 hover:text-white"
+            >
+              ← Back to shop
+            </Link>
+          </div>
         </div>
-        {tab === "overview" ? <Overview /> : <DashboardSettings />}
+      </aside>
+
+      {/* Content */}
+      <div className="min-w-0 flex-1 px-5 py-8 md:px-10 md:py-10">
+        {section === "settings" ? (
+          <DashboardSettings />
+        ) : (
+          <DashboardBody section={section} onGo={setSection} />
+        )}
       </div>
-    </main>
+    </div>
   );
 }
 
-function TabBtn({
-  active,
-  onClick,
-  icon,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  icon: React.ReactNode;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        "inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition",
-        active ? "bg-[#2ed3e8] text-[#04263b]" : "text-white/70 hover:text-white",
-      )}
-    >
-      {icon}
-      {children}
-    </button>
-  );
-}
-
-function Overview() {
+function DashboardBody({ section, onGo }: { section: Section; onGo: (s: Section) => void }) {
   const { txs, addTx, removeTx, reset, stock, totals, hydrated } = useLedger();
 
   // Purchase (stock in) form
@@ -148,14 +213,7 @@ function Overview() {
 
   function addSale() {
     if (!sProduct || Number(sQty) <= 0 || Number(sPrice) < 0 || sOversell) return;
-    addTx({
-      type: "sale",
-      slug: sProduct.slug,
-      qty: Number(sQty),
-      unit: Number(sPrice),
-      channel: sChannel,
-      date: sDate,
-    });
+    addTx({ type: "sale", slug: sProduct.slug, qty: Number(sQty), unit: Number(sPrice), channel: sChannel, date: sDate });
     setSProduct(null);
     setSQty("");
     setSPrice("");
@@ -188,136 +246,190 @@ function Overview() {
   if (!hydrated) return null;
 
   return (
-    <div className="pt-6">
-      {/* Header */}
-      <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#2ed3e8]">
-              Owner dashboard · demo
-            </p>
-            <h1 className="mt-2 text-3xl font-bold tracking-tight md:text-4xl">
-              Cash flow, stock &amp; sales
-            </h1>
-            <p className="mt-1 text-sm font-light text-white/60">
-              Buy stock from suppliers, record sales (walk-in or online), and watch the numbers — a
-              preview of the Phase 2 owner area.
-            </p>
+    <div>
+      {/* ---------------- Overview ---------------- */}
+      {section === "overview" && (
+        <>
+          <SectionHead
+            title="Overview"
+            desc="Cash flow at a glance — a preview of the Phase 2 owner area."
+            action={
+              <button
+                type="button"
+                onClick={reset}
+                className="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white/70 transition hover:border-white hover:text-white"
+              >
+                <RotateCcw className="size-4" /> Reset demo data
+              </button>
+            }
+          />
+          <div className="mt-6 grid grid-cols-2 gap-4 xl:grid-cols-4">
+            <StatTile icon={<Boxes className="size-5" />} label="Units in stock" value={String(totals.unitsInStock)} tone="cyan" />
+            <StatTile icon={<ArrowDownRight className="size-5" />} label="Money in (sales)" value={formatTHB(totals.moneyIn)} tone="green" />
+            <StatTile icon={<ArrowUpRight className="size-5" />} label="Money out (stock)" value={formatTHB(totals.moneyOut)} tone="reef" />
+            <StatTile icon={<TrendingUp className="size-5" />} label="Profit (in − out)" value={formatTHB(totals.profit)} tone="cyan" />
           </div>
-          <button
-            type="button"
-            onClick={reset}
-            className="inline-flex items-center gap-2 rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white/70 transition hover:border-white hover:text-white"
-          >
-            <RotateCcw className="size-4" /> Reset demo data
-          </button>
-        </div>
 
-        {/* Stat tiles */}
-        <div className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
-          <StatTile icon={<Boxes className="size-5" />} label="Units in stock" value={String(totals.unitsInStock)} tone="cyan" />
-          <StatTile icon={<ArrowDownRight className="size-5" />} label="Money in (sales)" value={formatTHB(totals.moneyIn)} tone="green" />
-          <StatTile icon={<ArrowUpRight className="size-5" />} label="Money out (stock)" value={formatTHB(totals.moneyOut)} tone="reef" />
-          <StatTile icon={<TrendingUp className="size-5" />} label="Profit (in − out)" value={formatTHB(totals.profit)} tone="cyan" />
-        </div>
+          {/* Quick actions */}
+          <div className="mt-6 flex flex-wrap gap-3">
+            <button
+              type="button"
+              onClick={() => onGo("entry")}
+              className="inline-flex items-center gap-2 rounded-xl bg-[#2ed3e8] px-4 py-2.5 text-sm font-bold text-[#04263b]"
+            >
+              <PackagePlus className="size-4" /> Add stock or sale
+            </button>
+            <button
+              type="button"
+              onClick={() => onGo("stock")}
+              className="inline-flex items-center gap-2 rounded-xl border border-white/20 px-4 py-2.5 text-sm font-semibold transition hover:border-white"
+            >
+              <Boxes className="size-4" /> View stock
+            </button>
+          </div>
 
-        {/* Entry forms */}
-        <div className="mt-8 grid gap-4 lg:grid-cols-2">
-          {/* Purchase */}
-          <section className="rounded-2xl border border-white/10 bg-white/5 p-5">
-            <h2 className="flex items-center gap-2 text-base font-bold">
-              <PackagePlus className="size-5" style={{ color: CYAN }} /> Add stock (buy from supplier)
-            </h2>
-            <div className="mt-4 space-y-3">
-              <EntitySearch
-                items={PRODUCTS as Product[]}
-                value={pProduct}
-                onChange={setPProduct}
-                getKey={(p) => p.slug}
-                getLabel={(p) => p.name}
-                getSublabel={(p) => `${p.brand} · sells at ${formatTHB(p.price)}`}
-                placeholder="Search a product to restock…"
-              />
-              <div className="grid grid-cols-2 gap-3">
-                <NumField label="Quantity" value={pQty} onChange={setPQty} placeholder="e.g. 50" />
-                <NumField label="Unit cost (฿)" value={pCost} onChange={setPCost} placeholder="e.g. 9000" />
-              </div>
-              <DateField label="Date" value={pDate} onChange={setPDate} />
+          {/* Recent activity */}
+          <section className="mt-8">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-bold tracking-tight">Recent activity</h2>
               <button
                 type="button"
-                onClick={addPurchase}
-                disabled={!pProduct || Number(pQty) <= 0}
-                className="w-full rounded-xl bg-[#2ed3e8] px-4 py-2.5 text-sm font-bold text-[#04263b] transition disabled:cursor-not-allowed disabled:opacity-40"
+                onClick={() => onGo("report")}
+                className="inline-flex items-center gap-1 text-sm font-semibold text-[#2ed3e8] hover:underline"
               >
-                Add to stock
+                Full report <ArrowRight className="size-4" />
               </button>
             </div>
+            <ul className="mt-3 divide-y divide-white/5 overflow-hidden rounded-2xl border border-white/10">
+              {txs.slice(0, 6).map((t) => {
+                const p = productBySlug(t.slug)!;
+                const isSale = t.type === "sale";
+                return (
+                  <li key={t.id} className="flex items-center gap-3 px-4 py-3">
+                    <ProductCell product={p} />
+                    <span
+                      className={cn(
+                        "ml-auto shrink-0 rounded-full px-2.5 py-1 text-[0.6rem] font-bold uppercase tracking-wider",
+                        isSale ? "bg-[#35d191]/15 text-[#35d191]" : "bg-white/10 text-white/70",
+                      )}
+                    >
+                      {isSale ? "Sale" : "Stock in"}
+                    </span>
+                    <span className={cn("w-24 shrink-0 text-right text-sm font-semibold tabular-nums", isSale ? "text-[#35d191]" : "text-white/70")}>
+                      {isSale ? "+" : "−"}
+                      {formatTHB(t.qty * t.unit)}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
           </section>
+        </>
+      )}
 
-          {/* Sale */}
-          <section className="rounded-2xl border border-white/10 bg-white/5 p-5">
-            <h2 className="flex items-center gap-2 text-base font-bold">
-              <ShoppingCart className="size-5" style={{ color: CYAN }} /> Record a sale
-            </h2>
-            <div className="mt-4 space-y-3">
-              <EntitySearch
-                items={PRODUCTS as Product[]}
-                value={sProduct}
-                onChange={(p) => {
-                  setSProduct(p);
-                  if (p) setSPrice(String(p.price));
-                }}
-                getKey={(p) => p.slug}
-                getLabel={(p) => p.name}
-                getSublabel={(p) => `${p.brand} · ${availableFor(txs, p.slug)} in stock`}
-                placeholder="Search a product to sell…"
-              />
-              <div className="grid grid-cols-2 gap-3">
-                <NumField label="Quantity" value={sQty} onChange={setSQty} placeholder="e.g. 1" error={sOversell ? `Only ${sAvailable} in stock` : undefined} />
-                <NumField label="Unit price (฿)" value={sPrice} onChange={setSPrice} placeholder="e.g. 9695" />
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <span className="mb-1.5 block text-xs font-medium text-white/60">Channel</span>
-                  <div className="inline-flex rounded-xl border border-white/15 p-0.5">
-                    {(["walk-in", "online"] as Channel[]).map((c) => (
-                      <button
-                        key={c}
-                        type="button"
-                        onClick={() => setSChannel(c)}
-                        className={cn(
-                          "rounded-lg px-3 py-1.5 text-xs font-semibold capitalize transition",
-                          sChannel === c ? "bg-[#2ed3e8] text-[#04263b]" : "text-white/70",
-                        )}
-                      >
-                        {c}
-                      </button>
-                    ))}
-                  </div>
+      {/* ---------------- Add & sell ---------------- */}
+      {section === "entry" && (
+        <>
+          <SectionHead title="Add stock &amp; record sales" desc="Buy from suppliers (money out) and sell to customers (money in)." />
+          <div className="mt-6 grid gap-4 lg:grid-cols-2">
+            {/* Purchase */}
+            <section className="rounded-2xl border border-white/10 bg-white/5 p-5">
+              <h2 className="flex items-center gap-2 text-base font-bold">
+                <PackagePlus className="size-5" style={{ color: CYAN }} /> Add stock (buy from supplier)
+              </h2>
+              <div className="mt-4 space-y-3">
+                <EntitySearch
+                  items={PRODUCTS as Product[]}
+                  value={pProduct}
+                  onChange={setPProduct}
+                  getKey={(p) => p.slug}
+                  getLabel={(p) => p.name}
+                  getSublabel={(p) => `${p.brand} · sells at ${formatTHB(p.price)}`}
+                  getImage={(p) => p.image}
+                  placeholder="Search a product to restock…"
+                />
+                <div className="grid grid-cols-2 gap-3">
+                  <NumField label="Quantity" value={pQty} onChange={setPQty} placeholder="e.g. 50" />
+                  <NumField label="Unit cost (฿)" value={pCost} onChange={setPCost} placeholder="e.g. 9000" />
                 </div>
-                <DateField label="Date" value={sDate} onChange={setSDate} />
+                <DateField label="Date" value={pDate} onChange={setPDate} />
+                <button
+                  type="button"
+                  onClick={addPurchase}
+                  disabled={!pProduct || Number(pQty) <= 0}
+                  className="w-full rounded-xl bg-[#2ed3e8] px-4 py-2.5 text-sm font-bold text-[#04263b] transition disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  Add to stock
+                </button>
               </div>
-              <button
-                type="button"
-                onClick={addSale}
-                disabled={!sProduct || Number(sQty) <= 0 || sOversell}
-                className="w-full rounded-xl bg-[#2ed3e8] px-4 py-2.5 text-sm font-bold text-[#04263b] transition disabled:cursor-not-allowed disabled:opacity-40"
-              >
-                Record sale
-              </button>
-              <p className="text-xs font-light text-white/45">
-                Online-shop orders would land here automatically; walk-in sales you add by hand.
-              </p>
-            </div>
-          </section>
-        </div>
+            </section>
 
-        {/* Stock */}
-        <section className="mt-10">
-          <h2 className="text-xl font-bold tracking-tight">Live stock</h2>
-          <p className="mt-1 text-sm font-light text-white/55">
-            Every purchase adds units; every sale removes one. Buy 100, sell one by one.
-          </p>
-          <div className="mt-4 overflow-x-auto rounded-2xl border border-white/10">
+            {/* Sale */}
+            <section className="rounded-2xl border border-white/10 bg-white/5 p-5">
+              <h2 className="flex items-center gap-2 text-base font-bold">
+                <ShoppingCart className="size-5" style={{ color: CYAN }} /> Record a sale
+              </h2>
+              <div className="mt-4 space-y-3">
+                <EntitySearch
+                  items={PRODUCTS as Product[]}
+                  value={sProduct}
+                  onChange={(p) => {
+                    setSProduct(p);
+                    if (p) setSPrice(String(p.price));
+                  }}
+                  getKey={(p) => p.slug}
+                  getLabel={(p) => p.name}
+                  getSublabel={(p) => `${p.brand} · ${availableFor(txs, p.slug)} in stock`}
+                  getImage={(p) => p.image}
+                  placeholder="Search a product to sell…"
+                />
+                <div className="grid grid-cols-2 gap-3">
+                  <NumField label="Quantity" value={sQty} onChange={setSQty} placeholder="e.g. 1" error={sOversell ? `Only ${sAvailable} in stock` : undefined} />
+                  <NumField label="Unit price (฿)" value={sPrice} onChange={setSPrice} placeholder="e.g. 9695" />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <span className="mb-1.5 block text-xs font-medium text-white/60">Channel</span>
+                    <div className="inline-flex rounded-xl border border-white/15 p-0.5">
+                      {(["walk-in", "online"] as Channel[]).map((c) => (
+                        <button
+                          key={c}
+                          type="button"
+                          onClick={() => setSChannel(c)}
+                          className={cn(
+                            "rounded-lg px-3 py-1.5 text-xs font-semibold capitalize transition",
+                            sChannel === c ? "bg-[#2ed3e8] text-[#04263b]" : "text-white/70",
+                          )}
+                        >
+                          {c}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <DateField label="Date" value={sDate} onChange={setSDate} />
+                </div>
+                <button
+                  type="button"
+                  onClick={addSale}
+                  disabled={!sProduct || Number(sQty) <= 0 || sOversell}
+                  className="w-full rounded-xl bg-[#2ed3e8] px-4 py-2.5 text-sm font-bold text-[#04263b] transition disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  Record sale
+                </button>
+                <p className="text-xs font-light text-white/45">
+                  Online-shop orders would land here automatically; walk-in sales you add by hand.
+                </p>
+              </div>
+            </section>
+          </div>
+        </>
+      )}
+
+      {/* ---------------- Stock ---------------- */}
+      {section === "stock" && (
+        <>
+          <SectionHead title="Live stock" desc="Every purchase adds units; every sale removes one. Buy 100, sell one by one." />
+          <div className="mt-6 overflow-x-auto rounded-2xl border border-white/10">
             <table className="w-full min-w-[560px] text-sm">
               <thead>
                 <tr className="border-b border-white/10 bg-white/5 text-left text-xs uppercase tracking-wider text-white/50">
@@ -343,17 +455,14 @@ function Overview() {
               </tbody>
             </table>
           </div>
-        </section>
+        </>
+      )}
 
-        {/* Report */}
-        <section className="mt-10">
+      {/* ---------------- Report ---------------- */}
+      {section === "report" && (
+        <>
           <div className="flex flex-wrap items-end justify-between gap-3">
-            <div>
-              <h2 className="text-xl font-bold tracking-tight">Sales &amp; purchases report</h2>
-              <p className="mt-1 text-sm font-light text-white/55">
-                Filter by product, brand, type and date — this is the accountant export.
-              </p>
-            </div>
+            <SectionHead title="Sales &amp; purchases report" desc="Filter by product, brand, type and date — this is the accountant export." />
             <div className="text-right text-sm">
               <span className="text-[#35d191]">In {formatTHB(filteredTotals.inn)}</span>
               <span className="mx-2 text-white/30">·</span>
@@ -361,8 +470,7 @@ function Overview() {
             </div>
           </div>
 
-          {/* Filters */}
-          <div className="mt-4 flex flex-wrap gap-2">
+          <div className="mt-5 flex flex-wrap gap-2">
             <div className="flex min-w-[200px] flex-1 items-center gap-2 rounded-xl border border-white/15 bg-white/5 px-3 py-2">
               <Search className="size-4 text-white/40" />
               <input
@@ -372,11 +480,23 @@ function Overview() {
                 className="w-full bg-transparent text-sm text-white outline-none placeholder:text-white/35"
               />
             </div>
-            <Select value={brand} onChange={setBrand} options={[["all", "All brands"], ...BRANDS.map((b) => [b, b] as [string, string])]} />
-            <Select
-              value={type}
-              onChange={(v) => setType(v as TxType | "all")}
-              options={[["all", "All types"], ["sale", "Sales"], ["purchase", "Purchases"]]}
+            <EntitySearch<string>
+              items={[...BRANDS]}
+              value={brand === "all" ? null : brand}
+              onChange={(b) => setBrand(b ?? "all")}
+              getKey={(b) => b}
+              getLabel={(b) => b}
+              placeholder="All brands"
+              className="w-44"
+            />
+            <EntitySearch<TypeOption>
+              items={TYPE_OPTIONS}
+              value={type === "all" ? null : (TYPE_OPTIONS.find((o) => o.id === type) ?? null)}
+              onChange={(o) => setType(o?.id ?? "all")}
+              getKey={(o) => o.id}
+              getLabel={(o) => o.label}
+              placeholder="All types"
+              className="w-40"
             />
             <DateField label="" value={from} onChange={setFrom} compact />
             <DateField label="" value={to} onChange={setTo} compact />
@@ -451,12 +571,33 @@ function Overview() {
             Demo only — data is saved in your browser. In the real dashboard this exports to PDF /
             spreadsheet for your accountant, with a VAT summary.
           </p>
-        </section>
+        </>
+      )}
     </div>
   );
 }
 
 // ---- small pieces ----
+
+function SectionHead({
+  title,
+  desc,
+  action,
+}: {
+  title: string;
+  desc?: string;
+  action?: React.ReactNode;
+}) {
+  return (
+    <div className="flex flex-wrap items-end justify-between gap-3">
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight md:text-3xl">{title}</h1>
+        {desc && <p className="mt-1 text-sm font-light text-white/55">{desc}</p>}
+      </div>
+      {action}
+    </div>
+  );
+}
 
 function StatTile({
   icon,
@@ -472,7 +613,7 @@ function StatTile({
   const color = tone === "green" ? "#35d191" : tone === "reef" ? "#7fb2c9" : CYAN;
   return (
     <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-      <div className="flex items-center gap-2 text-white/55" style={{ color }}>
+      <div className="flex items-center gap-2" style={{ color }}>
         {icon}
       </div>
       <p className="mt-3 text-xl font-bold tracking-tight tabular-nums" style={{ color }}>
@@ -485,7 +626,7 @@ function StatTile({
 
 function ProductCell({ product }: { product: Product }) {
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex min-w-0 items-center gap-3">
       <div className="relative size-9 shrink-0 overflow-hidden rounded-lg bg-white">
         <Image src={product.image} alt="" fill sizes="36px" className="object-contain p-1" />
       </div>
@@ -566,26 +707,3 @@ function DateField({
   );
 }
 
-function Select({
-  value,
-  onChange,
-  options,
-}: {
-  value: string;
-  onChange: (v: string) => void;
-  options: [string, string][];
-}) {
-  return (
-    <select
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      className="rounded-xl border border-white/15 bg-[#04263b] px-3 py-2.5 text-sm text-white/85 outline-none focus:border-[#2ed3e8]"
-    >
-      {options.map(([v, l]) => (
-        <option key={v} value={v}>
-          {l}
-        </option>
-      ))}
-    </select>
-  );
-}

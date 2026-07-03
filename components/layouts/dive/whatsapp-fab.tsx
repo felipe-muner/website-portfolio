@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { WhatsAppIcon } from "@/components/ui/brand-icons";
 import { cn } from "@/lib/utils";
 
@@ -14,6 +15,7 @@ const WHATSAPP_LINK = `https://wa.me/66650076958?text=${encodeURIComponent(
  * user starts scrolling. Same style/animation as the Sacolaria FAB.
  */
 export function WhatsappFab() {
+  const pathname = usePathname();
   const [show, setShow] = useState(false);
 
   useEffect(() => {
@@ -22,6 +24,9 @@ export function WhatsappFab() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Hidden on the full-screen owner dashboard.
+  if (pathname.startsWith("/dive/dashboard")) return null;
 
   return (
     <a

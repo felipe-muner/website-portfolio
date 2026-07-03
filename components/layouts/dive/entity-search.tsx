@@ -1,8 +1,17 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import Image from "next/image";
 import { Check, Search, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+
+function Thumb({ src }: { src: string }) {
+  return (
+    <span className="relative size-9 shrink-0 overflow-hidden rounded-lg bg-white">
+      <Image src={src} alt="" fill sizes="36px" className="object-contain p-1" />
+    </span>
+  );
+}
 
 /**
  * Reusable searchable entity picker (combobox). Generic over the item type —
@@ -16,6 +25,7 @@ export interface EntitySearchProps<T> {
   getKey: (item: T) => string;
   getLabel: (item: T) => string;
   getSublabel?: (item: T) => string;
+  getImage?: (item: T) => string;
   placeholder?: string;
   limit?: number;
   className?: string;
@@ -28,6 +38,7 @@ export function EntitySearch<T>({
   getKey,
   getLabel,
   getSublabel,
+  getImage,
   placeholder = "Search…",
   limit = 8,
   className,
@@ -85,11 +96,14 @@ export function EntitySearch<T>({
     <div ref={boxRef} className={cn("relative", className)}>
       {value ? (
         <div className="flex items-center justify-between gap-2 rounded-xl border border-[#2ed3e8]/50 bg-[#2ed3e8]/10 px-3 py-2.5">
-          <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-white">{getLabel(value)}</p>
-            {getSublabel && (
-              <p className="truncate text-xs text-white/55">{getSublabel(value)}</p>
-            )}
+          <div className="flex min-w-0 items-center gap-3">
+            {getImage && <Thumb src={getImage(value)} />}
+            <div className="min-w-0">
+              <p className="truncate text-sm font-semibold text-white">{getLabel(value)}</p>
+              {getSublabel && (
+                <p className="truncate text-xs text-white/55">{getSublabel(value)}</p>
+              )}
+            </div>
           </div>
           <button
             type="button"
@@ -134,15 +148,18 @@ export function EntitySearch<T>({
                   i === active ? "bg-[#2ed3e8]/15" : "hover:bg-white/5",
                 )}
               >
-                <span className="min-w-0">
-                  <span className="block truncate text-sm font-medium text-white">
-                    {getLabel(item)}
-                  </span>
-                  {getSublabel && (
-                    <span className="block truncate text-xs text-white/50">
-                      {getSublabel(item)}
+                <span className="flex min-w-0 items-center gap-3">
+                  {getImage && <Thumb src={getImage(item)} />}
+                  <span className="min-w-0">
+                    <span className="block truncate text-sm font-medium text-white">
+                      {getLabel(item)}
                     </span>
-                  )}
+                    {getSublabel && (
+                      <span className="block truncate text-xs text-white/50">
+                        {getSublabel(item)}
+                      </span>
+                    )}
+                  </span>
                 </span>
                 {i === active && <Check className="size-4 shrink-0 text-[#2ed3e8]" />}
               </button>
