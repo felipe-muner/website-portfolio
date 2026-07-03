@@ -1,19 +1,13 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { Sora } from "next/font/google";
-import { Anchor, Compass, Fish, LifeBuoy, MapPin, Waves } from "lucide-react";
-import { LayoutSwitcher } from "@/components/layouts/LayoutSwitcher";
+import { ArrowRight, Compass, LifeBuoy, MapPin, Navigation, ShoppingBag } from "lucide-react";
 import { Reveal } from "@/components/layouts/Reveal";
 import { MenuFinder, type MenuItem } from "@/components/layouts/MenuFinder";
-import { CONTACT } from "@/lib/layouts/content";
-
-export const metadata: Metadata = {
-  title: "Business Layout — Deep Blue Dive Co.",
-  robots: { index: false },
-};
-
-const sora = Sora({ subsets: ["latin"], weight: ["300", "400", "700"] });
+import { HeroCarousel } from "@/components/layouts/dive/hero-carousel";
+import { ProductCard } from "@/components/layouts/dive/product-card";
+import { GearArt } from "@/components/layouts/dive/gear-art";
+import { CATEGORIES, PRODUCTS } from "@/lib/layouts/dive/catalog";
+import { DIVE_LOCATION } from "@/lib/layouts/dive/location";
 
 const ABYSS = "#04263b";
 const REEF = "#0a4d6e";
@@ -32,103 +26,20 @@ const COURSES: readonly MenuItem[] = [
 
 export default function DeepBlueDive() {
   return (
-    <div
-      className={`${sora.className} text-white`}
-      style={{ background: `linear-gradient(180deg, ${REEF} 0%, ${ABYSS} 38%, #021423 100%)` }}
-    >
-      <Nav />
-      <Hero />
+    <>
+      <HeroCarousel />
       <Courses />
       <Sites />
+      <Shop />
       <Boat />
-      <Footer />
-      <LayoutSwitcher />
-    </div>
-  );
-}
-
-function Nav() {
-  return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 backdrop-blur" style={{ backgroundColor: `${ABYSS}cc` }}>
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 md:px-10">
-        <Link href="/" className="flex items-center gap-2 text-lg font-bold tracking-tight">
-          <Waves className="size-5" style={{ color: CYAN }} />
-          Deep Blue Dive Co.
-        </Link>
-        <nav className="hidden gap-8 text-sm font-semibold md:flex" style={{ color: "#ffffffb3" }}>
-          <a href="#courses" className="hover:text-[#2ed3e8]">Courses</a>
-          <a href="#sites" className="hover:text-[#2ed3e8]">Dive sites</a>
-          <a href="#boat" className="hover:text-[#2ed3e8]">The boat</a>
-        </nav>
-        <a
-          href="#courses"
-          className="rounded-full px-6 py-2.5 text-sm font-bold text-[#04263b] transition-shadow hover:shadow-[0_0_24px_rgba(46,211,232,0.5)]"
-          style={{ backgroundColor: CYAN }}
-        >
-          Book a dive
-        </a>
-      </div>
-    </header>
-  );
-}
-
-function Hero() {
-  return (
-    <section className="relative flex min-h-dvh items-center overflow-hidden pt-16">
-      <Image
-        src="/img/layouts/dive-fish-school.jpg"
-        alt="A diver below a school of fish"
-        fill
-        priority
-        sizes="100vw"
-        className="animate-landing-kenburns object-cover opacity-50"
-      />
-      <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, ${REEF}33, ${ABYSS}e6)` }} />
-      <div className="relative mx-auto w-full max-w-5xl px-5 text-center md:px-10">
-        <Reveal>
-          <p className="flex items-center justify-center gap-2 text-sm font-bold uppercase tracking-[0.35em]" style={{ color: CYAN }}>
-            <Fish className="size-4" />
-            5-star dive centre · est. 2012
-          </p>
-        </Reveal>
-        <Reveal delay={140}>
-          <h1 className="mt-6 text-6xl font-bold leading-[1.02] tracking-tight md:text-8xl">
-            Your first breath
-            <br />
-            <span className="font-light italic" style={{ color: CYAN }}>
-              underwater
-            </span>
-          </h1>
-        </Reveal>
-        <Reveal delay={280}>
-          <p className="mx-auto mt-7 max-w-xl text-lg font-light leading-relaxed text-white/85">
-            Small groups, patient pros and thirty years of reef on our
-            doorstep — from your very first bubbles to instructor level.
-          </p>
-          <div className="mt-10 flex flex-wrap justify-center gap-4">
-            <a
-              href="#courses"
-              className="rounded-full px-9 py-4 text-base font-bold text-[#04263b] transition-shadow hover:shadow-[0_0_32px_rgba(46,211,232,0.55)]"
-              style={{ backgroundColor: CYAN }}
-            >
-              Find your course
-            </a>
-            <a
-              href="#sites"
-              className="rounded-full border border-white/35 px-9 py-4 text-base font-semibold text-white transition-colors hover:border-white"
-            >
-              See the sites
-            </a>
-          </div>
-        </Reveal>
-      </div>
-    </section>
+      <FindUs />
+    </>
   );
 }
 
 function Courses() {
   return (
-    <section id="courses" className="mx-auto max-w-5xl px-5 py-24 md:px-10 md:py-32">
+    <section id="courses" className="scroll-mt-20 mx-auto max-w-5xl px-5 py-24 md:px-10 md:py-32">
       <Reveal>
         <h2 className="text-center text-4xl font-bold tracking-tight md:text-6xl">
           Courses &amp; dives
@@ -168,7 +79,7 @@ function Sites() {
     { name: "Anemone Reef", depth: "8–22 m", img: "/img/layouts/dive-reef.jpg", note: "A carpet of colour, clownfish in every cushion." },
   ];
   return (
-    <section id="sites" className="border-y border-white/10 py-24 md:py-32" style={{ backgroundColor: `${ABYSS}99` }}>
+    <section id="sites" className="scroll-mt-20 border-y border-white/10 py-24 md:py-32" style={{ backgroundColor: `${ABYSS}99` }}>
       <div className="mx-auto max-w-6xl px-5 md:px-10">
         <Reveal>
           <div className="flex flex-wrap items-end justify-between gap-4">
@@ -210,6 +121,150 @@ function Sites() {
   );
 }
 
+function Shop() {
+  const bestsellers = PRODUCTS.filter((p) => p.bestseller).slice(0, 4);
+  return (
+    <section id="shop" className="scroll-mt-20 mx-auto max-w-6xl px-5 py-24 md:px-10 md:py-32">
+      <Reveal>
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.25em]" style={{ color: CYAN }}>
+              <ShoppingBag className="size-4" />
+              Gear shop · powered by Aquamaster
+            </p>
+            <h2 className="mt-4 text-4xl font-bold tracking-tight md:text-5xl">
+              Kit up before you splash in
+            </h2>
+            <p className="mt-3 max-w-lg font-light text-white/70">
+              Masks, fins, regs and computers from the brands our instructors
+              actually dive — delivered island-wide.
+            </p>
+          </div>
+          <Link
+            href="/dive/shop"
+            className="inline-flex items-center gap-2 rounded-full border border-white/30 px-6 py-3 text-sm font-semibold transition-colors hover:border-white"
+          >
+            Browse all gear <ArrowRight className="size-4" />
+          </Link>
+        </div>
+      </Reveal>
+
+      {/* Category quick links */}
+      <Reveal delay={100}>
+        <div className="mt-10 flex flex-wrap gap-3">
+          {CATEGORIES.map((c) => (
+            <Link
+              key={c.slug}
+              href={`/dive/shop?category=${c.slug}`}
+              className="group inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/5 py-2 pl-2 pr-4 text-sm font-semibold text-white/80 transition hover:border-[#2ed3e8]/50 hover:text-white"
+            >
+              <span className="grid size-8 place-items-center rounded-full bg-[#04263b]">
+                <GearArt art={c.art} className="size-5" />
+              </span>
+              {c.label}
+            </Link>
+          ))}
+        </div>
+      </Reveal>
+
+      <div className="mt-10 grid grid-cols-2 gap-4 lg:grid-cols-4">
+        {bestsellers.map((p, i) => (
+          <Reveal key={p.slug} delay={i * 80} className="h-full">
+            <ProductCard product={p} />
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function FindUs() {
+  return (
+    <section id="find-us" className="scroll-mt-20 border-t border-white/10 py-24 md:py-32" style={{ backgroundColor: `${ABYSS}99` }}>
+      <div className="mx-auto max-w-6xl px-5 md:px-10">
+        <Reveal>
+          <p className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.25em]" style={{ color: CYAN }}>
+            <MapPin className="size-4" />
+            Find us
+          </p>
+          <h2 className="mt-4 text-4xl font-bold tracking-tight md:text-5xl">
+            Drop by {DIVE_LOCATION.name}
+          </h2>
+          <p className="mt-3 max-w-lg font-light text-white/70">
+            Our shop and dive base on Ko Pha Ngan — come try masks and fins on for
+            size, or pick up your order.
+          </p>
+        </Reveal>
+
+        <div className="mt-12 grid gap-6 lg:grid-cols-[1fr_1.3fr]">
+          {/* Details */}
+          <Reveal className="h-full">
+            <div className="flex h-full flex-col gap-6 rounded-3xl border border-white/10 bg-white/5 p-7">
+              <div>
+                <h3 className="text-lg font-bold tracking-tight">{DIVE_LOCATION.name}</h3>
+                <p className="mt-1.5 flex items-start gap-2 font-light text-white/75">
+                  <MapPin className="mt-0.5 size-4 shrink-0" style={{ color: CYAN }} />
+                  <span>{DIVE_LOCATION.addressLines.join(", ")}</span>
+                </p>
+                <p className="mt-1.5">
+                  <a
+                    href={DIVE_LOCATION.phoneHref}
+                    className="font-semibold text-white transition hover:text-[#2ed3e8]"
+                  >
+                    {DIVE_LOCATION.phone}
+                  </a>
+                </p>
+              </div>
+
+              {/* Opening hours */}
+              <div className="border-t border-white/10 pt-5">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-white/50">
+                  Opening hours
+                </h4>
+                <dl className="mt-3 space-y-1.5 text-sm">
+                  {DIVE_LOCATION.hours.map((h) => (
+                    <div key={h.day} className="flex items-center justify-between gap-4">
+                      <dt className="font-light text-white/70">{h.day}</dt>
+                      <dd className={h.closed ? "font-medium text-white/40" : "font-semibold text-white"}>
+                        {h.hours}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+
+              <a
+                href={DIVE_LOCATION.mapLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-auto inline-flex items-center justify-center gap-2 rounded-full px-6 py-3.5 text-sm font-bold text-[#04263b] transition-shadow hover:shadow-[0_0_24px_rgba(46,211,232,0.5)]"
+                style={{ backgroundColor: CYAN }}
+              >
+                <Navigation className="size-4" /> Get directions
+              </a>
+            </div>
+          </Reveal>
+
+          {/* Map */}
+          <Reveal delay={120} className="h-full">
+            <div className="h-full min-h-80 overflow-hidden rounded-3xl border border-white/10">
+              <iframe
+                title={`Map to ${DIVE_LOCATION.name}`}
+                src={DIVE_LOCATION.mapEmbed}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="h-full min-h-80 w-full"
+                style={{ border: 0 }}
+                allowFullScreen
+              />
+            </div>
+          </Reveal>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Boat() {
   const rows = [
     { t: "07:30", what: "Morning two-tank boat", who: "Fun divers & courses" },
@@ -217,7 +272,7 @@ function Boat() {
     { t: "17:45", what: "Night dive (Tue & Fri)", who: "Certified divers" },
   ];
   return (
-    <section id="boat" className="mx-auto max-w-5xl px-5 py-24 md:px-10 md:py-32">
+    <section id="boat" className="scroll-mt-20 mx-auto max-w-5xl px-5 py-24 md:px-10 md:py-32">
       <Reveal>
         <h2 className="text-center text-4xl font-bold tracking-tight md:text-5xl">
           MV <span style={{ color: CYAN }}>Salty Dog</span> departures
@@ -243,27 +298,5 @@ function Boat() {
         </p>
       </Reveal>
     </section>
-  );
-}
-
-function Footer() {
-  return (
-    <footer className="border-t border-white/10 py-14">
-      <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 px-5 text-center md:px-10">
-        <Anchor className="size-7" style={{ color: CYAN }} />
-        <p className="text-2xl font-bold tracking-tight">Deep Blue Dive Co.</p>
-        <p className="flex items-center gap-2 font-light text-white/75">
-          <MapPin className="size-4" style={{ color: CYAN }} />
-          {CONTACT.address}
-        </p>
-        <p className="font-light text-white/75">
-          <a href={CONTACT.phoneHref} className="hover:text-white">{CONTACT.phone}</a> ·{" "}
-          <a href={CONTACT.emailHref} className="hover:text-white">{CONTACT.email}</a>
-        </p>
-        <p className="text-sm font-semibold uppercase tracking-[0.25em] text-white/45">
-          © {new Date().getFullYear()} Deep Blue Dive Co. — fictional demo · Dive layout
-        </p>
-      </div>
-    </footer>
   );
 }

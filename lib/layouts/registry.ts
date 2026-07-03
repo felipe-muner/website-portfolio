@@ -56,7 +56,7 @@ export const PORTFOLIO: readonly PortfolioGroup[] = [
       { href: "/restaurant", name: "Ember", brand: "Ember", detail: "Open-fire restaurant, searchable menu", cover: "/img/layouts/food-dark-plate.jpg" },
       { href: "/cafe", name: "Crumb & Co.", brand: "Crumb & Co.", detail: "Bakery café, warm & rounded", cover: "/img/layouts/cafe-bread.jpg" },
       { href: "/barber", name: "Fade District", brand: "Fade District", detail: "Vintage barbershop, price list", cover: "/img/layouts/barber-chairs.jpg" },
-      { href: "/dive", name: "Deep Blue", brand: "Deep Blue Dive Co.", detail: "Ocean dive school, course finder", cover: "/img/layouts/dive-fish-school.jpg" },
+      { href: "/dive", name: "Aqua Sport Supply", brand: "Aqua Sport Supply", detail: "Dive shop & centre — real gear catalogue, cart & checkout", cover: "/img/layouts/dive-fish-school.jpg" },
       { href: "/spa", name: "Lotus House", brand: "Lotus House Spa", detail: "Blush & sage spa, treatment menu", cover: "/img/layouts/spa-hot-stones.jpg" },
       { href: "/courier", name: "Wyvern", brand: "Wyvern Courier", detail: "Cinematic scroll-zoom hero, logistics", cover: "/img/layouts/courier-aerial-port.jpg" },
       { href: "/studio", name: "Nocturne", brand: "Nocturne Studio", detail: "Architecture studio, horizontal-scroll gallery", cover: "/img/layouts/studio-hero.jpg" },
