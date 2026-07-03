@@ -11,9 +11,27 @@ const sora = Sora({ subsets: ["latin"], weight: ["300", "400", "700"] });
 const REEF = "#0a4d6e";
 const ABYSS = "#04263b";
 
+const SITE_TITLE = "Aqua Sport Supply — Dive shop & centre, Ko Pha Ngan";
+const SITE_DESC =
+  "The island dive shop, online. Masks, fins, regulators, BCDs and dive computers from Oceanic, Aqua Lung, Atomic, Garmin and more — with courses, dives and island-wide delivery.";
+
 export const metadata: Metadata = {
-  title: "Aqua Sport Supply — Dive shop & centre, Ko Pha Ngan",
+  metadataBase: new URL("https://website-portfolio-felipe-muner.vercel.app"),
+  title: SITE_TITLE,
+  description: SITE_DESC,
   robots: { index: false },
+  openGraph: {
+    type: "website",
+    url: "/dive",
+    siteName: "Aqua Sport Supply",
+    title: SITE_TITLE,
+    description: SITE_DESC,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_TITLE,
+    description: SITE_DESC,
+  },
 };
 
 export default function DiveLayout({ children }: { children: React.ReactNode }) {
