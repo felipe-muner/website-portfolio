@@ -114,6 +114,14 @@
     font-family: var(--font-oswald), Arial, Helvetica, sans-serif;
     @apply bg-background text-foreground;
   }
+  /* Tailwind v4 drops the default pointer cursor on buttons — restore it for
+     all clickable controls (buttons, triggers, role="button", labels). */
+  button:not(:disabled),
+  [role="button"]:not(:disabled),
+  summary,
+  label[for] {
+    cursor: pointer;
+  }
 }
 
 

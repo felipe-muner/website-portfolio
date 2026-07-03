@@ -52,6 +52,42 @@ export function seedLedger(): Tx[] {
   return txs;
 }
 
+/**
+ * Append online sales to the ledger from a completed shop checkout, so they
+ * decrement stock and show up on the dashboard automatically. Seeds the demo
+ * baseline first if the ledger doesn't exist yet.
+ */
+export function recordOnlineSale(
+  items: { slug: string; qty: number; unit: number }[],
+  date: string,
+): void {
+  if (typeof window === "undefined" || items.length === 0) return;
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    let txs: Tx[] = [];
+    if (raw) {
+      const parsed = JSON.parse(raw) as Tx[];
+      txs = Array.isArray(parsed) ? parsed : seedLedger();
+    } else {
+      txs = seedLedger();
+    }
+    const additions: Tx[] = items
+      .filter((it) => productBySlug(it.slug) && it.qty > 0)
+      .map((it, i) => ({
+        id: `online-${Date.now()}-${i}`,
+        type: "sale",
+        slug: it.slug,
+        qty: it.qty,
+        unit: it.unit,
+        channel: "online",
+        date,
+      }));
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify([...additions, ...txs]));
+  } catch {
+    // ignore storage errors
+  }
+}
+
 export interface StockRow {
   product: Product;
   bought: number;
