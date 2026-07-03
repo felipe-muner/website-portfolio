@@ -32,6 +32,9 @@ export function DiveNav() {
   const [open, setOpen] = useState(false);
   const inShop = pathname.startsWith("/dive/shop");
 
+  // The owner dashboard is a full-screen admin view with its own chrome.
+  if (pathname.startsWith("/dive/dashboard")) return null;
+
   return (
     <header
       className="fixed inset-x-0 top-0 z-50 border-b border-white/10 backdrop-blur"

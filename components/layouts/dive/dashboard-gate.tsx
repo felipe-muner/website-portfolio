@@ -19,7 +19,7 @@ function GoogleG({ className }: { className?: string }) {
 
 function Shell({ children }: { children: React.ReactNode }) {
   return (
-    <main className="grid min-h-dvh place-items-center px-5 pt-16">
+    <main className="grid min-h-dvh place-items-center px-5">
       <div className="w-full max-w-sm rounded-3xl border border-white/10 bg-white/5 p-8 text-center">
         {children}
       </div>

@@ -1,10 +1,17 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Anchor, MapPin } from "lucide-react";
 import { CONTACT } from "@/lib/layouts/content";
 
 const CYAN = "#2ed3e8";
 
 export function DiveFooter() {
+  const pathname = usePathname();
+  // Hidden on the full-screen owner dashboard.
+  if (pathname.startsWith("/dive/dashboard")) return null;
+
   return (
     <footer className="border-t border-white/10 py-14">
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 px-5 text-center md:px-10">
