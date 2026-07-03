@@ -33,6 +33,7 @@ import { AuthProvider, useAuth } from "@/lib/layouts/dive/auth";
 import { EntitySearch } from "@/components/layouts/dive/entity-search";
 import { DashboardGate } from "@/components/layouts/dive/dashboard-gate";
 import { DashboardSettings } from "@/components/layouts/dive/dashboard-settings";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 
 const CYAN = "#2ed3e8";
@@ -199,6 +200,21 @@ function DashboardBody({ section, onGo }: { section: Section; onGo: (s: Section)
   const [type, setType] = useState<TxType | "all">("all");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
+
+  // Stock → sold-history sheet
+  const [soldSheet, setSoldSheet] = useState<string | null>(null);
+  const soldProduct = soldSheet ? productBySlug(soldSheet) : null;
+  const soldTxs = useMemo(
+    () =>
+      soldSheet
+        ? txs
+            .filter((t) => t.type === "sale" && t.slug === soldSheet)
+            .sort((a, b) => b.date.localeCompare(a.date))
+        : [],
+    [txs, soldSheet],
+  );
+  const soldUnits = soldTxs.reduce((n, t) => n + t.qty, 0);
+  const soldValue = soldTxs.reduce((n, t) => n + t.qty * t.unit, 0);
 
   const sAvailable = sProduct ? availableFor(txs, sProduct.slug) : 0;
   const sOversell = !!sProduct && Number(sQty) > sAvailable;
@@ -446,7 +462,20 @@ function DashboardBody({ section, onGo }: { section: Section; onGo: (s: Section)
                       <ProductCell product={r.product} />
                     </td>
                     <td className="px-4 py-3 text-center tabular-nums text-white/80">{r.bought}</td>
-                    <td className="px-4 py-3 text-center tabular-nums text-white/80">{r.sold}</td>
+                    <td className="px-4 py-3 text-center">
+                      {r.sold > 0 ? (
+                        <button
+                          type="button"
+                          onClick={() => setSoldSheet(r.product.slug)}
+                          className="tabular-nums font-semibold text-[#2ed3e8] underline-offset-2 transition hover:underline"
+                          title="View sales"
+                        >
+                          {r.sold}
+                        </button>
+                      ) : (
+                        <span className="tabular-nums text-white/40">0</span>
+                      )}
+                    </td>
                     <td className="px-4 py-3 text-center">
                       <StockBadge n={r.available} />
                     </td>
@@ -455,6 +484,51 @@ function DashboardBody({ section, onGo }: { section: Section; onGo: (s: Section)
               </tbody>
             </table>
           </div>
+
+          {/* Sold-history sheet */}
+          <Sheet open={!!soldSheet} onOpenChange={(o) => !o && setSoldSheet(null)}>
+            <SheetContent
+              side="right"
+              className="flex w-[92vw] max-w-md flex-col border-white/10 text-white"
+              style={{ backgroundColor: "#04263b" }}
+            >
+              <SheetHeader>
+                <SheetTitle className="text-left text-white">Sales history</SheetTitle>
+              </SheetHeader>
+              {soldProduct && (
+                <div className="flex min-h-0 flex-1 flex-col px-4 pb-6">
+                  <div className="border-b border-white/10 pb-4">
+                    <ProductCell product={soldProduct} />
+                    <p className="mt-3 text-sm text-white/60">
+                      {soldTxs.length} {soldTxs.length === 1 ? "sale" : "sales"} · {soldUnits} units
+                      · <span className="font-semibold text-[#35d191]">{formatTHB(soldValue)}</span>
+                    </p>
+                  </div>
+                  <ul className="mt-4 flex-1 space-y-2 overflow-y-auto">
+                    {soldTxs.map((t) => (
+                      <li
+                        key={t.id}
+                        className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5"
+                      >
+                        <div className="min-w-0">
+                          <p className="text-sm font-semibold text-white">
+                            {format(parseISO(t.date), "d MMM yyyy")}
+                          </p>
+                          <p className="text-xs text-white/50">
+                            {t.qty} × {formatTHB(t.unit)} ·{" "}
+                            {t.channel === "online" ? "Online" : "Walk-in"}
+                          </p>
+                        </div>
+                        <span className="shrink-0 text-sm font-semibold tabular-nums text-[#35d191]">
+                          +{formatTHB(t.qty * t.unit)}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </SheetContent>
+          </Sheet>
         </>
       )}
 
