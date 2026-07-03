@@ -15,6 +15,7 @@ export function DiveFooter() {
           <Link href="/dive#sites" className="hover:text-white">Dive sites</Link>
           <Link href="/dive/shop" className="hover:text-white">Gear shop</Link>
           <Link href="/dive/cart" className="hover:text-white">Cart</Link>
+          <Link href="/dive/dashboard" className="hover:text-white">Owner dashboard</Link>
         </nav>
         <p className="flex items-center gap-2 font-light text-white/75">
           <MapPin className="size-4" style={{ color: CYAN }} />
