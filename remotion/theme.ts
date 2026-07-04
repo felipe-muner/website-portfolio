@@ -30,3 +30,41 @@ export const PACKAGES = [
   { name: "Grow", price: "690", featured: true },
   { name: "Signature", price: "1,290" },
 ] as const;
+
+// ── v2 (feature-selling) content ─────────────────────────────────────
+export const VERTICALS = ["a yoga studio", "a gym", "a villa", "a café", "a dive shop"] as const;
+
+// customer-facing feature scenes: a real captured screenshot + selling copy
+export const CUSTOMER_FEATURES = [
+  {
+    img: "feat-gym",
+    eyebrow: "Searchable schedule",
+    headline: "Find your class or teacher — in one tap.",
+    sub: "Guests search the whole week and it lights up.",
+  },
+  {
+    img: "feat-menu",
+    eyebrow: "Searchable menu",
+    headline: "“Vegan?” answered instantly.",
+    sub: "They type a craving; the menu responds.",
+  },
+  {
+    img: "feat-villa",
+    eyebrow: "Live booking",
+    headline: "Pick dates. See the price. Book.",
+    sub: "Sync it with Airbnb · Booking · Stripe.",
+  },
+] as const;
+
+export const INTEGRATIONS = ["Cloudbeds", "Airbnb", "Booking.com", "Stripe"] as const;
+
+// owner-facing: automatic instructor payouts (a capability we'd build)
+export const PAYOUTS = [
+  { name: "Noah", classes: 18, pct: 70, total: 25200 },
+  { name: "Amara", classes: 22, pct: 65, total: 28600 },
+  { name: "Mali", classes: 14, pct: 60, total: 16800 },
+] as const;
+export const PAYOUT_TOTAL = 70600;
+
+// 8 moon-phase glyphs for the built lunar-calendar scene
+export const MOON_GLYPHS = ["🌑", "🌒", "🌓", "🌔", "🌕", "🌖", "🌗", "🌘"] as const;
