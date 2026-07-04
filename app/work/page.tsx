@@ -4,6 +4,7 @@ import { Archivo, Fraunces } from "next/font/google";
 import {
   ArrowUpRight,
   Check,
+  Download,
   MessageCircle,
   Palette,
   Rocket,
@@ -160,8 +161,57 @@ export default function WorkWithMe() {
         </Reveal>
       </header>
 
+      {/* Video tour */}
+      <section className="mx-auto mt-6 max-w-6xl px-5 md:px-10">
+        <Reveal>
+          <div className="flex flex-col items-center gap-10 rounded-3xl bg-white p-8 shadow-sm md:flex-row md:p-14">
+            {/* phone frame */}
+            <div className="shrink-0" style={{ width: 292 }}>
+              <div
+                className="overflow-hidden rounded-[2.4rem] border-[11px] shadow-2xl"
+                style={{ borderColor: INK, background: INK }}
+              >
+                <video
+                  src="/video/showreel-vertical.mp4"
+                  poster="/video/showreel-poster.jpg"
+                  className="block aspect-[9/16] w-full rounded-[1.6rem] object-cover"
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  controls
+                  aria-label="30-second tour of websites I've built"
+                />
+              </div>
+            </div>
+            <div className="text-center md:text-left">
+              <p className="text-sm font-bold uppercase tracking-[0.3em]" style={{ color: ACCENT }}>
+                30-second tour
+              </p>
+              <h2 className={`${display.className} mt-3 text-4xl md:text-5xl`}>
+                See what your site
+                <em style={{ color: ACCENT }}> could be.</em>
+              </h2>
+              <p className="mt-4 max-w-md text-[15px] leading-relaxed" style={{ color: `${INK}99` }}>
+                A fast look at real sites I&apos;ve built. Made for your phone —
+                save it, send it to a friend, or post it to your story.
+              </p>
+              <a
+                href="/video/showreel-vertical.mp4"
+                download
+                className="mt-7 inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-bold text-white transition-transform hover:-translate-y-0.5"
+                style={{ backgroundColor: INK }}
+              >
+                <Download className="size-4" />
+                Download the video
+              </a>
+            </div>
+          </div>
+        </Reveal>
+      </section>
+
       {/* What you get */}
-      <section className="mx-auto max-w-6xl px-5 md:px-10">
+      <section className="mx-auto mt-24 max-w-6xl px-5 md:px-10">
         <div className="grid gap-6 sm:grid-cols-2">
           {INCLUDED.map((item, i) => (
             <Reveal key={item.title} delay={i * 70}>
@@ -268,7 +318,7 @@ export default function WorkWithMe() {
               </h3>
               <p className="mt-1 text-[15px]" style={{ color: `${INK}99` }}>
                 The part that keeps it worth it: your site stays hosted, updated
-                and online, and I'm one message away whenever it needs a change.
+                and online, and I&apos;m one message away whenever it needs a change.
               </p>
             </div>
             <ul className="grid gap-2 sm:grid-cols-2">
