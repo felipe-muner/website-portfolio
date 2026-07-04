@@ -36,6 +36,7 @@
     "docker:up:db:clean:optimized": "docker compose down -v && docker volume prune -f && docker compose up -d && sleep 5 && npm run db:drop && npm run db:push:force && DATABASE_URL=\"postgres://postgres:postgres@127.0.0.1:5432/podium_gym\" bun scripts/seed-with-new-pricing.ts && DATABASE_URL=\"postgres://postgres:postgres@127.0.0.1:5432/podium_gym\" bun scripts/seed-1000-members-presentation.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.110.0",
     "@auth/drizzle-adapter": "^1.10.0",
     "@neondatabase/serverless": "^1.0.2",
     "@next/third-parties": "^16.2.9",

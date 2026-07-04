@@ -32,6 +32,7 @@ import {
 import { availableFor, useLedger, type Channel, type TxType } from "@/lib/layouts/dive/ledger";
 import { AuthProvider, useAuth } from "@/lib/layouts/dive/auth";
 import { EntitySearch } from "@/components/layouts/dive/entity-search";
+import { ReceiptScanImport, type ImportRow } from "@/components/layouts/dive/receipt-scan";
 import { DashboardGate } from "@/components/layouts/dive/dashboard-gate";
 import { DashboardSettings } from "@/components/layouts/dive/dashboard-settings";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -244,6 +245,13 @@ function DashboardBody({ section, onGo }: { section: Section; onGo: (s: Section)
     setPCost("");
   }
 
+  function importScanned(rows: ImportRow[]) {
+    for (const r of rows) {
+      if (!productBySlug(r.slug) || r.qty <= 0 || r.unit < 0) continue;
+      addTx({ type: "purchase", slug: r.slug, qty: r.qty, unit: r.unit, date: r.date });
+    }
+  }
+
   function addSale() {
     if (!sProduct || Number(sQty) <= 0 || Number(sPrice) < 0 || sOversell) return;
     addTx({ type: "sale", slug: sProduct.slug, qty: Number(sQty), unit: Number(sPrice), channel: sChannel, date: sDate });
@@ -393,6 +401,12 @@ function DashboardBody({ section, onGo }: { section: Section; onGo: (s: Section)
               <h2 className="flex items-center gap-2 text-base font-bold">
                 <PackagePlus className="size-5" style={{ color: CYAN }} /> Add stock (buy from supplier)
               </h2>
+              <p className="mt-2 text-xs font-light text-white/45">
+                Snap a supplier receipt to import several lines at once, or add one by hand below.
+              </p>
+              <div className="mt-3">
+                <ReceiptScanImport onImport={importScanned} />
+              </div>
               <div className="mt-4 space-y-3">
                 <EntitySearch
                   items={PRODUCTS as Product[]}
