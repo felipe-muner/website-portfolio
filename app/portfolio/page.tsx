@@ -96,6 +96,13 @@ export default function PortfolioIndex() {
           All brands fictional — want one of these as yours?
         </p>
         <div className="mt-5 flex flex-wrap items-center justify-center gap-4">
+          <Link
+            href="/work"
+            className="rounded-full px-7 py-3 text-sm font-bold text-white transition-transform hover:-translate-y-0.5"
+            style={{ backgroundColor: ACCENT }}
+          >
+            Work with me →
+          </Link>
           <a
             href="https://wa.me/5521984852802"
             target="_blank"
