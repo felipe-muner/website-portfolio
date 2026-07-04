@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, ChevronLeft } from "lucide-react";
+import { ArrowRight, CheckCircle2, ChevronLeft, Mail } from "lucide-react";
 import { format } from "date-fns";
 import { formatTHB } from "@/lib/layouts/dive/catalog";
 import { useCart } from "@/lib/layouts/dive/cart";
@@ -72,9 +72,29 @@ export default function CheckoutPage() {
           <h1 className="mt-6 text-3xl font-bold tracking-tight">Order confirmed</h1>
           <p className="mt-3 max-w-md font-light text-white/70">
             Thanks{form.name ? `, ${form.name.split(" ")[0]}` : ""}! Your gear order{" "}
-            <span className="font-semibold text-white">{orderRef}</span> is in. We&rsquo;ll email a
-            confirmation and let you know the moment it&rsquo;s ready.
+            <span className="font-semibold text-white">{orderRef}</span> is confirmed.
           </p>
+
+          {/* Confirmation email notice */}
+          <div className="mt-6 w-full max-w-md rounded-2xl border border-white/10 bg-white/5 p-5 text-left">
+            <div className="flex items-start gap-3">
+              <div className="grid size-10 shrink-0 place-items-center rounded-full bg-[#2ed3e8]/15">
+                <Mail className="size-5" style={{ color: CYAN }} />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-white">Confirmation email sent</p>
+                <p className="mt-1 text-sm font-light text-white/65">
+                  We&rsquo;ve emailed your receipt to{" "}
+                  <span className="font-semibold text-white">{form.email}</span>.
+                  {form.fulfilment === "delivery"
+                    ? " We're packing your order and sending it by delivery — you'll get tracking by email."
+                    : " We'll email you the moment it's ready to collect at Aqua Sport Supply."}
+                </p>
+                <p className="mt-2 text-xs text-white/40">Demo — no real email is sent.</p>
+              </div>
+            </div>
+          </div>
+
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link
               href="/dive/shop"

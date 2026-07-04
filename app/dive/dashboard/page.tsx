@@ -10,6 +10,7 @@ import {
   ArrowUpRight,
   Boxes,
   ClipboardList,
+  Download,
   LayoutDashboard,
   LogOut,
   PackagePlus,
@@ -59,6 +60,23 @@ function readSection(): Section {
   if (typeof window === "undefined") return "overview";
   const s = new URLSearchParams(window.location.search).get("section");
   return MENU.some((m) => m.id === s) ? (s as Section) : "overview";
+}
+
+function csvCell(v: string): string {
+  return /[",\n\r]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v;
+}
+
+function downloadCsv(filename: string, rows: string[][]): void {
+  const csv = rows.map((r) => r.map(csvCell).join(",")).join("\r\n");
+  const blob = new Blob([`﻿${csv}`], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
 }
 
 export default function DashboardPage() {
@@ -257,6 +275,26 @@ function DashboardBody({ section, onGo }: { section: Section; onGo: (s: Section)
     }
     return { inn, out };
   }, [filtered]);
+
+  function exportCsv() {
+    const rows: string[][] = [
+      ["Date", "Type", "Channel", "Product", "Brand", "Qty", "Unit (THB)", "Amount (THB)"],
+      ...filtered.map((t) => {
+        const p = productBySlug(t.slug)!;
+        return [
+          t.date,
+          t.type,
+          t.type === "sale" ? (t.channel ?? "") : "",
+          p.name,
+          p.brand,
+          String(t.qty),
+          String(t.unit),
+          String(t.qty * t.unit),
+        ];
+      }),
+    ];
+    downloadCsv(`aqua-sport-supply-report-${format(new Date(), "yyyy-MM-dd")}.csv`, rows);
+  }
 
   if (!hydrated) return null;
 
@@ -542,10 +580,20 @@ function DashboardBody({ section, onGo }: { section: Section; onGo: (s: Section)
         <>
           <div className="flex flex-wrap items-end justify-between gap-3">
             <SectionHead title="Sales &amp; purchases report" desc="Filter by product, brand, type and date — this is the accountant export." />
-            <div className="text-right text-sm">
-              <span className="text-[#35d191]">In {formatTHB(filteredTotals.inn)}</span>
-              <span className="mx-2 text-white/30">·</span>
-              <span className="text-white/70">Out {formatTHB(filteredTotals.out)}</span>
+            <div className="flex flex-col items-start gap-2 sm:items-end">
+              <div className="text-sm">
+                <span className="text-[#35d191]">In {formatTHB(filteredTotals.inn)}</span>
+                <span className="mx-2 text-white/30">·</span>
+                <span className="text-white/70">Out {formatTHB(filteredTotals.out)}</span>
+              </div>
+              <button
+                type="button"
+                onClick={exportCsv}
+                disabled={filtered.length === 0}
+                className="inline-flex items-center gap-2 rounded-full bg-[#2ed3e8] px-4 py-2 text-sm font-bold text-[#04263b] transition disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <Download className="size-4" /> Export CSV
+              </button>
             </div>
           </div>
 
@@ -647,8 +695,9 @@ function DashboardBody({ section, onGo }: { section: Section; onGo: (s: Section)
             </table>
           </div>
           <p className="mt-3 text-xs font-light text-white/40">
-            Demo only — data is saved in your browser. In the real dashboard this exports to PDF /
-            spreadsheet for your accountant, with a VAT summary.
+            Export CSV downloads the filtered rows for your accountant (opens in Excel / Google
+            Sheets). Demo data is saved in your browser; the production dashboard adds a PDF export
+            with a VAT summary.
           </p>
         </>
       )}
