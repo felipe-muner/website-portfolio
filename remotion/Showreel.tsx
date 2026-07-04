@@ -7,418 +7,535 @@ import {
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
-import { COLORS, fraunces, archivo, FEATURED, PACKAGES } from "./theme";
+import {
+  COLORS,
+  fraunces,
+  archivo,
+  VERTICALS,
+  CUSTOMER_FEATURES,
+  INTEGRATIONS,
+  PAYOUTS,
+  PAYOUT_TOTAL,
+  MOON_GLYPHS,
+} from "./theme";
 import { BrowserFrame } from "./BrowserFrame";
 
-// ── scene timing (30fps) ─────────────────────────────────────────────
-const MONT_EACH = 46; // frames each template holds in the montage
+// ── timing (30fps) ───────────────────────────────────────────────────
 const T = {
-  open: 60,
-  title: 110,
-  montage: FEATURED.length * MONT_EACH,
-  values: 120,
-  packages: 130,
-  cta: 88,
-};
+  roast: 100,
+  imagine: 120,
+  fGym: 88,
+  moon: 104,
+  fMenu: 84,
+  fVilla: 112,
+  payout: 132,
+  dive: 100,
+  reel: 150,
+  cta: 96,
+} as const;
 
 const clampOpts = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
-
-/** Fade a scene's content in at the start and out before it ends. */
 const useSceneFade = (len: number, pad = 12) => {
   const f = useCurrentFrame();
   return interpolate(f, [0, pad, len - pad, len], [0, 1, 1, 0], clampOpts);
+};
+const easeOut = (p: number) => 1 - (1 - p) * (1 - p);
+const comma = (n: number) => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+const usePortrait = () => {
+  const { width, height } = useVideoConfig();
+  return height > width;
 };
 
 const Vignette: React.FC = () => (
   <AbsoluteFill
     style={{
-      background:
-        "radial-gradient(120% 120% at 50% 40%, transparent 55%, rgba(0,0,0,0.28) 100%)",
+      background: "radial-gradient(120% 120% at 50% 40%, transparent 55%, rgba(0,0,0,0.28) 100%)",
       pointerEvents: "none",
     }}
   />
 );
 
-// ── 1. cold open ─────────────────────────────────────────────────────
-const ColdOpen: React.FC = () => {
+// tiny reusable animated word/line
+const Rise: React.FC<{ children: React.ReactNode; delay?: number; style?: React.CSSProperties }> = ({
+  children,
+  delay = 0,
+  style,
+}) => {
   const frame = useCurrentFrame();
-  const { fps, width, height } = useVideoConfig();
-  const portrait = height > width;
-  const fs = portrait ? 34 : 46;
-  const ls = portrait ? 10 : 14;
-  const s = spring({ frame, fps, config: { damping: 200 } });
-  const opacity = useSceneFade(T.open);
-  const blink = Math.floor(frame / 15) % 2 === 0 ? 1 : 0;
+  const { fps } = useVideoConfig();
+  const s = spring({ frame: frame - delay, fps, config: { damping: 18, stiffness: 90 } });
+  return (
+    <div style={{ transform: `translateY(${interpolate(s, [0, 1], [40, 0])}px)`, opacity: s, ...style }}>
+      {children}
+    </div>
+  );
+};
 
+// ── 1. ROAST hook ────────────────────────────────────────────────────
+const Roast: React.FC = () => {
+  const frame = useCurrentFrame();
+  const portrait = usePortrait();
+  const opacity = useSceneFade(T.roast);
+  const tilt = interpolate(frame, [8, 40], [-8, -3.5], clampOpts);
+  const drop = interpolate(frame, [8, 34], [-40, 0], clampOpts);
+  const punch = interpolate(frame, [58, 70], [0, 1], clampOpts);
+  const days = ["MON", "TUE", "WED", "THU", "FRI"];
   return (
     <AbsoluteFill
       style={{
         background: COLORS.ink,
         justifyContent: "center",
         alignItems: "center",
+        padding: 60,
         opacity,
       }}
     >
+      <div style={{ textAlign: "center", opacity: interpolate(frame, [4, 18], [0, 1], clampOpts) }}>
+        <span style={{ fontFamily: archivo, fontSize: portrait ? 30 : 38, color: COLORS.paper, fontWeight: 700 }}>
+          How most island businesses
+        </span>
+        <br />
+        <span style={{ fontFamily: archivo, fontSize: portrait ? 30 : 38, color: `${COLORS.paper}88`, fontWeight: 700 }}>
+          share their schedule 👇
+        </span>
+      </div>
+      {/* the ugly "photo of a whiteboard" mock */}
       <div
         style={{
-          display: "flex",
-          alignItems: "center",
-          transform: `translateY(${interpolate(s, [0, 1], [22, 0])}px)`,
+          marginTop: 40,
+          transform: `rotate(${tilt}deg) translateY(${drop}px)`,
+          background: "#dcd7c4",
+          padding: 24,
+          borderRadius: 4,
+          boxShadow: "0 30px 60px rgba(0,0,0,0.5)",
+          filter: "saturate(0.7) contrast(0.9)",
+          width: portrait ? 640 : 760,
         }}
       >
-        <span
+        <div
           style={{
-            fontFamily: archivo,
-            color: COLORS.paper,
-            fontSize: fs,
+            fontFamily: "Comic Sans MS, cursive",
+            color: "#3a3a3a",
+            fontSize: 22,
             fontWeight: 700,
-            letterSpacing: ls,
-            paddingLeft: ls,
+            textAlign: "center",
+            marginBottom: 12,
           }}
         >
-          FELIPE MUNER
-        </span>
-        <span
-          style={{
-            width: fs * 0.42,
-            height: fs,
-            marginLeft: 10,
-            background: COLORS.accent,
-            opacity: blink,
-          }}
-        />
+          ~ WEEKLY TIMETABLE ~
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: `repeat(${days.length}, 1fr)`, gap: 2, background: "#9a9482" }}>
+          {days.map((d) => (
+            <div key={d} style={{ background: "#c7c1ac", padding: "6px 4px", textAlign: "center", fontFamily: "Comic Sans MS, cursive", fontSize: 15, color: "#333" }}>
+              {d}
+            </div>
+          ))}
+          {Array.from({ length: 15 }).map((_, i) => (
+            <div
+              key={i}
+              style={{
+                background: "#d7d1bd",
+                padding: "10px 4px",
+                textAlign: "center",
+                fontFamily: "Comic Sans MS, cursive",
+                fontSize: 13,
+                color: "#555",
+              }}
+            >
+              {i % 3 === 0 ? "9am Yoga" : i % 3 === 1 ? "5pm HIIT" : "—"}
+            </div>
+          ))}
+        </div>
+        <div style={{ marginTop: 10, textAlign: "right", fontFamily: "monospace", fontSize: 12, color: "#7a7460" }}>
+          IMG_4823_final_FINAL(2).jpg
+        </div>
       </div>
-      <span
+      <div
         style={{
-          fontFamily: archivo,
-          color: `${COLORS.paper}80`,
-          fontSize: fs * 0.43,
-          letterSpacing: portrait ? 5 : 8,
-          marginTop: 22,
-          textTransform: "uppercase",
-          opacity: interpolate(frame, [18, 34], [0, 1], clampOpts),
+          marginTop: 34,
+          fontFamily: fraunces,
+          fontSize: portrait ? 52 : 64,
+          fontWeight: 600,
+          color: COLORS.accent,
+          transform: `scale(${interpolate(punch, [0, 1], [0.8, 1])})`,
+          opacity: punch,
         }}
       >
-        Web design · done for you
-      </span>
+        …in 2026. 😬
+      </div>
     </AbsoluteFill>
   );
 };
 
-// ── 2. title ─────────────────────────────────────────────────────────
-const Word: React.FC<{ children: React.ReactNode; delay: number; color?: string; italic?: boolean }> = ({
-  children,
-  delay,
-  color = COLORS.ink,
-  italic,
-}) => {
+// ── 2. IMAGINE ───────────────────────────────────────────────────────
+const Imagine: React.FC = () => {
+  const frame = useCurrentFrame();
+  const portrait = usePortrait();
+  const opacity = useSceneFade(T.imagine);
+  const idx = Math.min(VERTICALS.length - 1, Math.floor(frame / 13));
+  const wants = frame > 74;
+  return (
+    <AbsoluteFill style={{ background: COLORS.paper, justifyContent: "center", alignItems: "center", padding: 60, textAlign: "center", opacity }}>
+      <div style={{ fontFamily: fraunces, fontSize: portrait ? 60 : 88, fontWeight: 600, color: COLORS.ink, lineHeight: 1.1 }}>
+        <Rise>Imagine you run</Rise>
+        <Rise delay={6}>
+          <span style={{ color: COLORS.accent, fontStyle: "italic" }}>{VERTICALS[idx]}.</span>
+        </Rise>
+      </div>
+      <div
+        style={{
+          marginTop: 44,
+          fontFamily: archivo,
+          fontSize: portrait ? 30 : 40,
+          fontWeight: 700,
+          color: `${COLORS.ink}cc`,
+          opacity: interpolate(frame, [76, 92], [0, 1], clampOpts),
+          transform: `translateY(${interpolate(frame, [76, 96], [24, 0], clampOpts)}px)`,
+          maxWidth: 900,
+        }}
+      >
+        {wants ? "You want more customers, more bookings — and less admin." : ""}
+      </div>
+    </AbsoluteFill>
+  );
+};
+
+// ── reusable FEATURE scene (real screenshot + selling copy) ──────────
+const Feature: React.FC<{
+  len: number;
+  img: string;
+  eyebrow: string;
+  headline: string;
+  sub: string;
+  badges?: readonly string[];
+  index: number;
+}> = ({ len, img, eyebrow, headline, sub, badges, index }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const s = spring({ frame: frame - delay, fps, config: { damping: 18, stiffness: 90 } });
-  return (
-    <span
-      style={{
-        display: "inline-block",
-        color,
-        fontStyle: italic ? "italic" : "normal",
-        transform: `translateY(${interpolate(s, [0, 1], [90, 0])}px)`,
-        opacity: s,
-      }}
-    >
-      {children}
-    </span>
-  );
-};
-
-const TitleScene: React.FC = () => {
-  const { width, height } = useVideoConfig();
-  const portrait = height > width;
-  const opacity = useSceneFade(T.title);
-  return (
-    <AbsoluteFill
-      style={{
-        background: COLORS.paper,
-        justifyContent: "center",
-        paddingLeft: portrait ? 70 : 130,
-        paddingRight: portrait ? 60 : 0,
-        opacity,
-      }}
-    >
-      <div
-        style={{
-          fontFamily: fraunces,
-          fontSize: portrait ? 96 : 150,
-          lineHeight: 1.02,
-          fontWeight: 600,
-        }}
-      >
-        <div style={{ overflow: "hidden" }}>
-          <Word delay={0}>29 websites,</Word>
-        </div>
-        <div style={{ overflow: "hidden", marginTop: 4 }}>
-          <Word delay={8}>ready to&nbsp;</Word>
-          <Word delay={16} color={COLORS.accent} italic>
-            make yours.
-          </Word>
-        </div>
-      </div>
-    </AbsoluteFill>
-  );
-};
-
-// ── 3. montage — one large, centered site at a time ──────────────────
-const Shot: React.FC<{ src: string; label: string; name: string; index: number }> = ({
-  src,
-  label,
-  name,
-  index,
-}) => {
-  const frame = useCurrentFrame();
-  const { fps, width, height } = useVideoConfig();
-  const portrait = height > width;
-  const opacity = useSceneFade(MONT_EACH, 7);
+  const portrait = usePortrait();
+  const opacity = useSceneFade(len);
   const s = spring({ frame, fps, config: { damping: 22, stiffness: 65 } });
-  const kb = interpolate(frame, [0, MONT_EACH], [1.0, 1.07]); // ken-burns
+  const kb = interpolate(frame, [0, len], [1.0, 1.06]);
   const fromLeft = index % 2 === 0;
-  const x = interpolate(s, [0, 1], [fromLeft ? -90 : 90, 0]);
-  const frameW = portrait ? Math.round(width * 0.94) : 1380;
 
-  const frameEl = (
+  const shot = (
     <div
       style={{
-        width: frameW,
-        transform: `translateX(${x}px) translateY(${interpolate(s, [0, 1], [50, 0])}px) scale(${kb})`,
+        width: portrait ? "94%" : "60%",
+        transform: `translateX(${interpolate(s, [0, 1], [fromLeft ? -70 : 70, 0])}px) scale(${kb})`,
         opacity: s,
       }}
     >
-      <BrowserFrame src={src} />
+      <BrowserFrame src={img} />
     </div>
   );
-  const nameEl = (
-    <span style={{ fontFamily: fraunces, fontStyle: "italic", fontSize: portrait ? 68 : 52, color: COLORS.accent }}>
-      {name}
-    </span>
-  );
-  const labelEl = (
-    <span
-      style={{
-        fontFamily: archivo,
-        fontSize: portrait ? 26 : 22,
-        fontWeight: 700,
-        letterSpacing: 4,
-        color: `${COLORS.ink}99`,
-        textTransform: "uppercase",
-      }}
-    >
-      {label}
-    </span>
-  );
 
-  // Portrait: eyebrow + frame + caption stacked and centred as one group.
-  if (portrait) {
-    return (
-      <AbsoluteFill
-        style={{
-          background: COLORS.paper,
-          opacity,
-          overflow: "hidden",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: 56,
-        }}
-      >
-        <span
-          style={{
-            fontFamily: archivo,
-            fontSize: 24,
-            fontWeight: 700,
-            letterSpacing: 9,
-            textTransform: "uppercase",
-            color: `${COLORS.ink}66`,
-          }}
-        >
-          Selected work
+  const copy = (
+    <div style={{ width: portrait ? "90%" : "34%", textAlign: portrait ? "center" : "left" }}>
+      <Rise>
+        <span style={{ fontFamily: archivo, fontSize: portrait ? 22 : 24, fontWeight: 700, letterSpacing: 3, textTransform: "uppercase", color: COLORS.accent }}>
+          {eyebrow}
         </span>
-        {frameEl}
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-          {nameEl}
-          {labelEl}
+      </Rise>
+      <Rise delay={5}>
+        <div style={{ fontFamily: fraunces, fontSize: portrait ? 52 : 62, fontWeight: 600, color: COLORS.ink, lineHeight: 1.05, marginTop: 14 }}>
+          {headline}
         </div>
-      </AbsoluteFill>
-    );
-  }
+      </Rise>
+      <Rise delay={10}>
+        <div style={{ fontFamily: archivo, fontSize: portrait ? 24 : 26, color: `${COLORS.ink}99`, marginTop: 16 }}>{sub}</div>
+      </Rise>
+      {badges ? (
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 22, justifyContent: portrait ? "center" : "flex-start" }}>
+          {badges.map((b, i) => {
+            const bs = spring({ frame: frame - 18 - i * 5, fps, config: { damping: 16 } });
+            return (
+              <span
+                key={b}
+                style={{
+                  fontFamily: archivo,
+                  fontSize: portrait ? 20 : 22,
+                  fontWeight: 700,
+                  color: COLORS.paper,
+                  background: COLORS.ink,
+                  padding: "8px 18px",
+                  borderRadius: 999,
+                  opacity: bs,
+                  transform: `scale(${interpolate(bs, [0, 1], [0.7, 1])})`,
+                }}
+              >
+                {b}
+              </span>
+            );
+          })}
+        </div>
+      ) : null}
+    </div>
+  );
 
-  // Landscape: big centred frame with a bottom-left caption.
   return (
     <AbsoluteFill
       style={{
         background: COLORS.paper,
         opacity,
         overflow: "hidden",
+        flexDirection: portrait ? "column" : "row",
         justifyContent: "center",
         alignItems: "center",
+        gap: portrait ? 40 : 60,
+        padding: portrait ? 40 : 80,
       }}
     >
-      {frameEl}
-      <div style={{ position: "absolute", bottom: 64, left: 90, display: "flex", flexDirection: "column" }}>
-        {nameEl}
-        {labelEl}
+      {portrait ? (
+        <>
+          {copy}
+          {shot}
+        </>
+      ) : fromLeft ? (
+        <>
+          {copy}
+          {shot}
+        </>
+      ) : (
+        <>
+          {shot}
+          {copy}
+        </>
+      )}
+    </AbsoluteFill>
+  );
+};
+
+// ── built: MOON CALENDAR + weather ───────────────────────────────────
+const MoonCalendar: React.FC = () => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const portrait = usePortrait();
+  const opacity = useSceneFade(T.moon);
+  const cols = 7;
+  const rows = 5;
+  const cells = cols * rows;
+  const fullMoonIdx = 18; // the highlighted night
+  const cell = portrait ? 116 : 96;
+  return (
+    <AbsoluteFill style={{ background: "#0e1030", justifyContent: "center", alignItems: "center", gap: 34, padding: 50, opacity }}>
+      <div style={{ textAlign: "center" }}>
+        <Rise>
+          <span style={{ fontFamily: archivo, fontSize: portrait ? 22 : 24, fontWeight: 700, letterSpacing: 4, textTransform: "uppercase", color: "#e9c46a" }}>
+            Built for island life
+          </span>
+        </Rise>
+        <Rise delay={5}>
+          <div style={{ fontFamily: fraunces, fontSize: portrait ? 52 : 66, fontWeight: 600, color: "#f4f1ea", marginTop: 10 }}>
+            A calendar with the <span style={{ color: "#e9c46a", fontStyle: "italic" }}>moon.</span>
+          </div>
+        </Rise>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: `repeat(${cols}, ${cell}px)`, gap: portrait ? 12 : 10 }}>
+        {Array.from({ length: cells }).map((_, i) => {
+          const glyph = MOON_GLYPHS[i % MOON_GLYPHS.length];
+          const cs = spring({ frame: frame - 12 - i * 1.4, fps, config: { damping: 16, stiffness: 90 } });
+          const isFull = i === fullMoonIdx;
+          return (
+            <div
+              key={i}
+              style={{
+                width: cell,
+                height: cell,
+                display: "grid",
+                placeItems: "center",
+                borderRadius: 16,
+                background: isFull ? "rgba(233,196,106,0.14)" : "rgba(255,255,255,0.03)",
+                boxShadow: isFull ? "0 0 26px rgba(233,196,106,0.5)" : "none",
+                fontSize: portrait ? 56 : 46,
+                opacity: cs,
+                transform: `scale(${interpolate(cs, [0, 1], [0.4, isFull ? 1.08 : 1])})`,
+              }}
+            >
+              {glyph}
+            </div>
+          );
+        })}
+      </div>
+      {/* weather chip */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 12,
+          background: "rgba(255,255,255,0.06)",
+          border: "1px solid rgba(255,255,255,0.12)",
+          borderRadius: 999,
+          padding: "12px 22px",
+          opacity: interpolate(frame, [40, 56], [0, 1], clampOpts),
+        }}
+      >
+        <span style={{ fontSize: 26 }}>☀️</span>
+        <span style={{ fontFamily: archivo, fontSize: portrait ? 24 : 26, fontWeight: 700, color: "#f4f1ea" }}>30°C</span>
+        <span style={{ fontFamily: archivo, fontSize: portrait ? 20 : 22, color: "rgba(244,241,234,0.6)" }}>· moon phases · tides · daily weather</span>
       </div>
     </AbsoluteFill>
   );
 };
 
-const Montage: React.FC = () => (
-  <AbsoluteFill>
-    {FEATURED.map((f, i) => (
-      <Sequence key={f.src} from={i * MONT_EACH} durationInFrames={MONT_EACH}>
-        <Shot src={f.src} label={f.label} name={f.name} index={i} />
-      </Sequence>
-    ))}
-  </AbsoluteFill>
-);
-
-// ── 4. value props ───────────────────────────────────────────────────
-const VALUES = ["Your brand.", "Live in a week.", "Built to win customers."];
-const ValuesScene: React.FC = () => {
+// ── built: AUTOMATIC PAYOUTS ─────────────────────────────────────────
+const Payouts: React.FC = () => {
   const frame = useCurrentFrame();
-  const { fps, width, height } = useVideoConfig();
-  const portrait = height > width;
-  const opacity = useSceneFade(T.values);
+  const { fps } = useVideoConfig();
+  const portrait = usePortrait();
+  const opacity = useSceneFade(T.payout);
+  const total = Math.round(PAYOUT_TOTAL * easeOut(interpolate(frame, [40, 96], [0, 1], clampOpts)));
+  const cardW = portrait ? 900 : 1040;
   return (
-    <AbsoluteFill
-      style={{
-        background: COLORS.ink,
-        justifyContent: "center",
-        alignItems: "center",
-        gap: portrait ? 18 : 10,
-        padding: 40,
-        textAlign: "center",
-        opacity,
-      }}
-    >
-      {VALUES.map((v, i) => {
-        const s = spring({ frame: frame - 10 - i * 16, fps, config: { damping: 16, stiffness: 120 } });
-        return (
-          <div
-            key={v}
-            style={{
-              fontFamily: fraunces,
-              fontSize: portrait ? 74 : 96,
-              fontWeight: 600,
-              color: COLORS.paper,
-              transform: `scale(${interpolate(s, [0, 1], [0.8, 1])})`,
-              opacity: s,
-            }}
-          >
-            {v.slice(0, -1)}
-            <span style={{ color: COLORS.accent }}>.</span>
+    <AbsoluteFill style={{ background: COLORS.ink, justifyContent: "center", alignItems: "center", gap: 30, padding: 50, opacity }}>
+      <div style={{ textAlign: "center" }}>
+        <Rise>
+          <span style={{ fontFamily: archivo, fontSize: portrait ? 22 : 24, fontWeight: 700, letterSpacing: 3, textTransform: "uppercase", color: COLORS.accent }}>
+            And behind the scenes
+          </span>
+        </Rise>
+        <Rise delay={5}>
+          <div style={{ fontFamily: fraunces, fontSize: portrait ? 48 : 60, fontWeight: 600, color: COLORS.paper, marginTop: 8 }}>
+            Teacher payouts, <span style={{ color: COLORS.accent, fontStyle: "italic" }}>automatic.</span>
           </div>
-        );
-      })}
-    </AbsoluteFill>
-  );
-};
-
-// ── 5. packages ──────────────────────────────────────────────────────
-const PackagesScene: React.FC = () => {
-  const frame = useCurrentFrame();
-  const { fps, width, height } = useVideoConfig();
-  const portrait = height > width;
-  const opacity = useSceneFade(T.packages);
-  const cardW = portrait ? Math.round(width * 0.78) : 380;
-  return (
-    <AbsoluteFill
-      style={{
-        background: COLORS.paper,
-        justifyContent: "center",
-        alignItems: "center",
-        gap: portrait ? 26 : 34,
-        flexDirection: portrait ? "column" : "row",
-        opacity,
-      }}
-    >
-      {PACKAGES.map((p, i) => {
-        const s = spring({ frame: frame - i * 10, fps, config: { damping: 18, stiffness: 90 } });
-        const featured = "featured" in p && p.featured;
-        const cardH = portrait ? (featured ? 300 : 268) : featured ? 460 : 410;
-        return (
-          <div
-            key={p.name}
-            style={{
-              width: cardW,
-              height: cardH,
-              borderRadius: 26,
-              background: featured ? COLORS.ink : COLORS.white,
-              color: featured ? COLORS.paper : COLORS.ink,
-              boxShadow: "0 40px 80px rgba(0,0,0,0.18)",
-              padding: portrait ? 40 : 44,
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-end",
-              transform: `translateY(${interpolate(s, [0, 1], [80, 0])}px)`,
-              opacity: s,
-            }}
-          >
-            {featured ? (
-              <span
-                style={{
-                  alignSelf: "flex-start",
-                  background: COLORS.accent,
-                  color: COLORS.white,
-                  fontFamily: archivo,
-                  fontSize: 18,
-                  fontWeight: 700,
-                  letterSpacing: 2,
-                  padding: "8px 16px",
-                  borderRadius: 999,
-                  marginBottom: "auto",
-                }}
-              >
-                MOST POPULAR
+        </Rise>
+      </div>
+      <div style={{ width: cardW, maxWidth: "94%", background: "rgba(255,255,255,0.04)", borderRadius: 24, padding: portrait ? 30 : 40 }}>
+        {PAYOUTS.map((p, i) => {
+          const rs = spring({ frame: frame - 18 - i * 10, fps, config: { damping: 20, stiffness: 80 } });
+          const val = Math.round(p.total * easeOut(interpolate(frame, [26 + i * 10, 90], [0, 1], clampOpts)));
+          return (
+            <div
+              key={p.name}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: portrait ? "16px 4px" : "18px 6px",
+                borderBottom: "1px solid rgba(255,255,255,0.08)",
+                opacity: rs,
+                transform: `translateX(${interpolate(rs, [0, 1], [40, 0])}px)`,
+              }}
+            >
+              <span style={{ fontFamily: fraunces, fontSize: portrait ? 34 : 38, color: COLORS.paper, width: "30%" }}>{p.name}</span>
+              <span style={{ fontFamily: archivo, fontSize: portrait ? 20 : 24, color: `${COLORS.paper}88` }}>{p.classes} classes</span>
+              <span style={{ fontFamily: archivo, fontSize: portrait ? 20 : 24, color: COLORS.accent, fontWeight: 700 }}>{p.pct}%</span>
+              <span style={{ fontFamily: archivo, fontSize: portrait ? 28 : 34, color: COLORS.paper, fontWeight: 700, width: "26%", textAlign: "right" }}>
+                ฿{comma(val)}
               </span>
-            ) : null}
-            <span style={{ fontFamily: fraunces, fontSize: portrait ? 60 : 58, fontWeight: 600 }}>{p.name}</span>
-            <span style={{ fontFamily: archivo, fontSize: 30, opacity: 0.8, marginTop: 8 }}>
-              from ${p.price}
-            </span>
-          </div>
-        );
-      })}
+            </div>
+          );
+        })}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", paddingTop: 22 }}>
+          <span style={{ fontFamily: archivo, fontSize: portrait ? 22 : 26, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", color: `${COLORS.paper}99` }}>
+            This month
+          </span>
+          <span style={{ fontFamily: fraunces, fontSize: portrait ? 44 : 56, fontWeight: 600, color: COLORS.accent }}>฿{comma(total)}</span>
+        </div>
+      </div>
+      <div style={{ fontFamily: archivo, fontSize: portrait ? 22 : 24, color: `${COLORS.paper}88`, opacity: interpolate(frame, [70, 86], [0, 1], clampOpts) }}>
+        Set each teacher&apos;s % once. Every class adds up.
+      </div>
     </AbsoluteFill>
   );
 };
 
-// ── 6. CTA ───────────────────────────────────────────────────────────
-const CTAScene: React.FC = () => {
+// ── DIVE (real dashboard shot) ───────────────────────────────────────
+const Dive: React.FC = () => {
   const frame = useCurrentFrame();
-  const { fps, width, height } = useVideoConfig();
-  const portrait = height > width;
+  const { fps } = useVideoConfig();
+  const portrait = usePortrait();
+  const opacity = useSceneFade(T.dive);
+  const s = spring({ frame, fps, config: { damping: 22, stiffness: 65 } });
+  return (
+    <AbsoluteFill
+      style={{
+        background: "#04263b",
+        opacity,
+        overflow: "hidden",
+        flexDirection: portrait ? "column" : "row",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: portrait ? 34 : 60,
+        padding: portrait ? 40 : 80,
+      }}
+    >
+      <div style={{ width: portrait ? "90%" : "36%", textAlign: portrait ? "center" : "left" }}>
+        <Rise>
+          <span style={{ fontFamily: archivo, fontSize: portrait ? 22 : 24, fontWeight: 700, letterSpacing: 3, textTransform: "uppercase", color: "#2ed3e8" }}>
+            Run a shop? /dive
+          </span>
+        </Rise>
+        <Rise delay={5}>
+          <div style={{ fontFamily: fraunces, fontSize: portrait ? 48 : 60, fontWeight: 600, color: "#f4f1ea", lineHeight: 1.05, marginTop: 12 }}>
+            Sell online. Stock updates <span style={{ color: "#2ed3e8", fontStyle: "italic" }}>itself.</span>
+          </div>
+        </Rise>
+        <Rise delay={10}>
+          <div style={{ fontFamily: archivo, fontSize: portrait ? 24 : 26, color: "rgba(244,241,234,0.7)", marginTop: 16 }}>
+            Live inventory, sold-count drill-downs, and a one-tap accountant CSV.
+          </div>
+        </Rise>
+      </div>
+      <div style={{ width: portrait ? "96%" : "56%", transform: `translateY(${interpolate(s, [0, 1], [50, 0])}px) scale(${interpolate(frame, [0, T.dive], [1.0, 1.05])})`, opacity: s }}>
+        <BrowserFrame src="dive-stock" />
+      </div>
+    </AbsoluteFill>
+  );
+};
+
+// ── REEL (payoff montage) ────────────────────────────────────────────
+const REEL = ["forge", "sanctuary", "horizon", "ember", "cinema", "barber"] as const;
+const Reel: React.FC = () => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const portrait = usePortrait();
+  const opacity = useSceneFade(T.reel);
+  const each = T.reel / REEL.length;
+  const active = Math.min(REEL.length - 1, Math.floor(frame / each));
+  const local = frame - active * each;
+  const s = spring({ frame: local, fps, config: { damping: 20, stiffness: 70 } });
+  return (
+    <AbsoluteFill style={{ background: COLORS.paper, justifyContent: "center", alignItems: "center", overflow: "hidden", opacity }}>
+      <div
+        style={{
+          width: portrait ? "94%" : 1180,
+          transform: `translateX(${interpolate(s, [0, 1], [50, 0])}px) scale(${interpolate(local, [0, each], [1.0, 1.05])})`,
+          opacity: s,
+        }}
+      >
+        <BrowserFrame src={REEL[active]} />
+      </div>
+      <div
+        style={{
+          position: "absolute",
+          bottom: portrait ? 180 : 70,
+          left: 0,
+          right: 0,
+          textAlign: "center",
+          fontFamily: fraunces,
+          fontSize: portrait ? 44 : 54,
+          fontWeight: 600,
+          color: COLORS.ink,
+        }}
+      >
+        29 designs. <span style={{ color: COLORS.accent, fontStyle: "italic" }}>Yours in a week.</span>
+      </div>
+    </AbsoluteFill>
+  );
+};
+
+// ── CTA ──────────────────────────────────────────────────────────────
+const CTA: React.FC = () => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const portrait = usePortrait();
   const opacity = useSceneFade(T.cta);
   const s = spring({ frame, fps, config: { damping: 16 } });
   return (
-    <AbsoluteFill
-      style={{
-        background: COLORS.ink,
-        justifyContent: "center",
-        alignItems: "center",
-        textAlign: "center",
-        padding: 40,
-        opacity,
-      }}
-    >
-      <div
-        style={{
-          fontFamily: fraunces,
-          fontSize: portrait ? 82 : 132,
-          fontWeight: 600,
-          color: COLORS.paper,
-          transform: `scale(${interpolate(s, [0, 1], [0.86, 1])})`,
-        }}
-      >
-        Let&apos;s build{" "}
-        <span style={{ color: COLORS.accent, fontStyle: "italic" }}>yours.</span>
+    <AbsoluteFill style={{ background: COLORS.ink, justifyContent: "center", alignItems: "center", textAlign: "center", padding: 40, opacity }}>
+      <div style={{ fontFamily: fraunces, fontSize: portrait ? 84 : 132, fontWeight: 600, color: COLORS.paper, transform: `scale(${interpolate(s, [0, 1], [0.86, 1])})` }}>
+        Get found. <span style={{ color: COLORS.accent, fontStyle: "italic" }}>Get booked.</span>
       </div>
       <span
         style={{
@@ -437,40 +554,36 @@ const CTAScene: React.FC = () => {
 };
 
 // ── composition ──────────────────────────────────────────────────────
-// Cumulative start frame for each scene (no render-time mutation).
-const OFF = {
-  open: 0,
-  title: T.open,
-  montage: T.open + T.title,
-  values: T.open + T.title + T.montage,
-  packages: T.open + T.title + T.montage + T.values,
-  cta: T.open + T.title + T.montage + T.values + T.packages,
-};
+const ORDER: Array<[keyof typeof T, React.ReactNode]> = [
+  ["roast", <Roast key="roast" />],
+  ["imagine", <Imagine key="imagine" />],
+  ["fGym", <Feature key="g" len={T.fGym} index={0} {...CUSTOMER_FEATURES[0]} />],
+  ["moon", <MoonCalendar key="moon" />],
+  ["fMenu", <Feature key="m" len={T.fMenu} index={1} {...CUSTOMER_FEATURES[1]} />],
+  ["fVilla", <Feature key="v" len={T.fVilla} index={2} {...CUSTOMER_FEATURES[2]} badges={INTEGRATIONS} />],
+  ["payout", <Payouts key="p" />],
+  ["dive", <Dive key="d" />],
+  ["reel", <Reel key="reel" />],
+  ["cta", <CTA key="cta" />],
+];
 
-export const Showreel: React.FC = () => {
-  return (
-    <AbsoluteFill style={{ background: COLORS.ink }}>
-      <Sequence from={OFF.open} durationInFrames={T.open}>
-        <ColdOpen />
-      </Sequence>
-      <Sequence from={OFF.title} durationInFrames={T.title}>
-        <TitleScene />
-      </Sequence>
-      <Sequence from={OFF.montage} durationInFrames={T.montage}>
-        <Montage />
-      </Sequence>
-      <Sequence from={OFF.values} durationInFrames={T.values}>
-        <ValuesScene />
-      </Sequence>
-      <Sequence from={OFF.packages} durationInFrames={T.packages}>
-        <PackagesScene />
-      </Sequence>
-      <Sequence from={OFF.cta} durationInFrames={T.cta}>
-        <CTAScene />
-      </Sequence>
-      <Vignette />
-    </AbsoluteFill>
-  );
-};
+// cumulative scene start frames, computed once at module load (not in render)
+let _acc = 0;
+const STARTS = ORDER.map(([k]) => {
+  const s = _acc;
+  _acc += T[k];
+  return s;
+});
 
-export const SHOWREEL_DURATION = T.open + T.title + T.montage + T.values + T.packages + T.cta;
+export const Showreel: React.FC = () => (
+  <AbsoluteFill style={{ background: COLORS.ink }}>
+    {ORDER.map(([k, node], i) => (
+      <Sequence key={k} from={STARTS[i]} durationInFrames={T[k]}>
+        {node}
+      </Sequence>
+    ))}
+    <Vignette />
+  </AbsoluteFill>
+);
+
+export const SHOWREEL_DURATION = Object.values(T).reduce((a, b) => a + b, 0);
