@@ -32,8 +32,6 @@ export const PACKAGES = [
 ] as const;
 
 // ── v2 (feature-selling) content ─────────────────────────────────────
-export const VERTICALS = ["a yoga studio", "a gym", "a villa", "a café", "a dive shop"] as const;
-
 // customer-facing feature scenes: a real captured screenshot + selling copy
 export const CUSTOMER_FEATURES = [
   {
