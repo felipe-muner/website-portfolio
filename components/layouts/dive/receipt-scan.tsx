@@ -11,7 +11,13 @@ import { format } from "date-fns";
 import { Loader2, Plus, ScanLine, Trash2, Upload, X } from "lucide-react";
 import { formatTHB, PRODUCTS, productBySlug, type Product } from "@/lib/layouts/dive/catalog";
 import { EntitySearch } from "@/components/layouts/dive/entity-search";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 
 const today = () => format(new Date(), "yyyy-MM-dd");
@@ -251,6 +257,9 @@ export function ReceiptScanImport({ onImport }: { onImport: (rows: ImportRow[]) 
         >
           <SheetHeader>
             <SheetTitle className="text-left text-white">Review scanned receipt</SheetTitle>
+            <SheetDescription className="sr-only">
+              Review, edit, or delete each line read from the receipt before importing it as stock.
+            </SheetDescription>
           </SheetHeader>
 
           <div className="flex min-h-0 flex-1 flex-col px-4 pb-4">

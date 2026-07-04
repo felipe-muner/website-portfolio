@@ -35,7 +35,13 @@ import { EntitySearch } from "@/components/layouts/dive/entity-search";
 import { ReceiptScanImport, type ImportRow } from "@/components/layouts/dive/receipt-scan";
 import { DashboardGate } from "@/components/layouts/dive/dashboard-gate";
 import { DashboardSettings } from "@/components/layouts/dive/dashboard-settings";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 
 const CYAN = "#2ed3e8";
@@ -551,6 +557,9 @@ function DashboardBody({ section, onGo }: { section: Section; onGo: (s: Section)
             >
               <SheetHeader>
                 <SheetTitle className="text-left text-white">Sales history</SheetTitle>
+                <SheetDescription className="sr-only">
+                  Every recorded sale for this product, newest first.
+                </SheetDescription>
               </SheetHeader>
               {soldProduct && (
                 <div className="flex min-h-0 flex-1 flex-col px-4 pb-6">
