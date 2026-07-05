@@ -1,0 +1,60 @@
+// Shared palette for the Azure Villas (villa/v1) template + its owner dashboard.
+export const AZURE = {
+  ivory: "#faf7f0",
+  sand: "#f2ecdf",
+  teal: "#0e4a5a",
+  gold: "#c2a05c",
+} as const;
+
+/** Curated stock photography the owner can pick from in the dashboard. */
+export const STOCK_PHOTOS: readonly string[] = [
+  "/img/layouts/villa-pool-palms.jpg",
+  "/img/layouts/villa-modern-pool.jpg",
+  "/img/layouts/villa-resort-aerial.jpg",
+  "/img/layouts/villa-pool-night.jpg",
+  "/img/layouts/villa-pool-sunset.jpg",
+  "/img/layouts/villa-pool-bali.jpg",
+  "/img/layouts/villa-home-pool.jpg",
+  "/img/layouts/villa-overwater.jpg",
+  "/img/layouts/villa-water-bungalow.jpg",
+  "/img/layouts/villa-exterior-white.jpg",
+  "/img/layouts/villa-luxury-house.jpg",
+  "/img/layouts/villa-terrace-view.jpg",
+  "/img/layouts/villa-bedroom-luxe.jpg",
+  "/img/layouts/villa-bedroom-canopy.jpg",
+  "/img/layouts/villa-bedroom-wood.jpg",
+  "/img/layouts/villa-resort-bedroom.jpg",
+  "/img/layouts/villa-room-luxe.jpg",
+  "/img/layouts/villa-hotel-room.jpg",
+  "/img/layouts/villa-living-bright.jpg",
+  "/img/layouts/villa-living-sofa.jpg",
+  "/img/layouts/villa-living-warm.jpg",
+  "/img/layouts/villa-kitchen.jpg",
+  "/img/layouts/villa-bathroom.jpg",
+  "/img/layouts/beach-turquoise.jpg",
+  "/img/layouts/beach-umbrella.jpg",
+];
+
+/** The amenities an owner can tag on a villa (also drives the feature chips). */
+export const AMENITY_OPTIONS: readonly string[] = [
+  "Private pool",
+  "Plunge pool",
+  "Infinity pool",
+  "Beachfront",
+  "Beach 5 min",
+  "Outdoor shower",
+  "Sunset deck",
+  "Ocean view",
+  "Private chef",
+  "Daily housekeeping",
+  "Full kitchen",
+  "BBQ pavilion",
+  "Media room",
+  "Cinema room",
+  "Air conditioning",
+  "Fast wifi",
+  "King bed",
+  "Courtyard garden",
+  "Airport transfer",
+  "In-villa spa",
+];

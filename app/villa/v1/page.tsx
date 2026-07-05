@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { Jost, Prata } from "next/font/google";
-import { Anchor, BedDouble, MapPin, Phone, Star, Users } from "lucide-react";
+import { Anchor, MapPin, Phone, Star } from "lucide-react";
 import { LayoutSwitcher } from "@/components/layouts/LayoutSwitcher";
 import { Reveal } from "@/components/layouts/Reveal";
 import { BookingCalendar } from "@/components/layouts/BookingCalendar";
+import { VillaCollection } from "@/components/layouts/villa/villa-collection";
 import { CONTACT } from "@/lib/layouts/content";
-import { VILLAS, VILLA_AMENITIES, VILLA_GALLERY, VILLA_REVIEWS } from "@/lib/layouts/villas";
+import { VILLA_AMENITIES, VILLA_GALLERY, VILLA_REVIEWS } from "@/lib/layouts/villas";
 
 export const metadata: Metadata = {
   title: "Villa Layout 1 — Azure",
@@ -26,7 +27,7 @@ export default function AzureLayout() {
     <div className={`${body.className}`} style={{ backgroundColor: IVORY, color: TEAL }}>
       <Nav />
       <Hero />
-      <Villas />
+      <VillaCollection />
       <Amenities />
       <Booking />
       <Reviews />
@@ -110,83 +111,6 @@ function Hero() {
             </a>
           </div>
         </Reveal>
-      </div>
-    </section>
-  );
-}
-
-function Villas() {
-  return (
-    <section id="villas" className="mx-auto max-w-7xl px-5 py-24 md:px-10 md:py-32">
-      <Reveal>
-        <p className="text-center text-sm uppercase tracking-[0.35em]" style={{ color: GOLD }}>
-          The collection
-        </p>
-        <h2 className={`${display.className} mt-4 text-center text-4xl md:text-6xl`}>
-          Four villas, one quiet bay
-        </h2>
-      </Reveal>
-      <div className="mt-16 grid gap-8 md:grid-cols-2">
-        {VILLAS.map((villa, index) => (
-          <Reveal key={villa.slug} delay={index * 90}>
-            <article className="group overflow-hidden bg-white shadow-sm transition-shadow hover:shadow-2xl hover:shadow-[#0e4a5a]/15">
-              <div className="relative aspect-[16/10] overflow-hidden">
-                <Image
-                  src={villa.image}
-                  alt={villa.name}
-                  fill
-                  sizes="(min-width: 768px) 45vw, 100vw"
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                <span
-                  className="absolute left-5 top-5 px-4 py-1.5 text-sm font-semibold uppercase tracking-[0.2em] text-white"
-                  style={{ backgroundColor: TEAL }}
-                >
-                  ฿{villa.pricePerNight.toLocaleString()} / night
-                </span>
-              </div>
-              <div className="p-7 md:p-9">
-                <div className="flex flex-wrap items-baseline justify-between gap-2">
-                  <h3 className={`${display.className} text-3xl`}>{villa.name}</h3>
-                  <p className="flex items-center gap-4 text-sm" style={{ color: `${TEAL}b3` }}>
-                    <span className="flex items-center gap-1.5">
-                      <BedDouble className="size-4" style={{ color: GOLD }} />
-                      {villa.bedrooms}
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <Users className="size-4" style={{ color: GOLD }} />
-                      {villa.guests}
-                    </span>
-                  </p>
-                </div>
-                <p className="mt-1 text-sm uppercase tracking-[0.25em]" style={{ color: GOLD }}>
-                  {villa.tagline}
-                </p>
-                <p className="mt-4 leading-relaxed" style={{ color: `${TEAL}cc` }}>
-                  {villa.description}
-                </p>
-                <ul className="mt-5 flex flex-wrap gap-2">
-                  {villa.features.map((f) => (
-                    <li
-                      key={f}
-                      className="border px-3 py-1 text-sm"
-                      style={{ borderColor: `${TEAL}33`, color: `${TEAL}b3` }}
-                    >
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-                <a
-                  href="#book"
-                  className="mt-7 inline-block border-b-2 pb-1 text-sm font-semibold uppercase tracking-[0.25em] transition-colors hover:text-[#c2a05c]"
-                  style={{ borderColor: GOLD }}
-                >
-                  Reserve {villa.name.split(" ")[1]}
-                </a>
-              </div>
-            </article>
-          </Reveal>
-        ))}
       </div>
     </section>
   );
@@ -325,6 +249,12 @@ function Footer() {
         <p className="text-sm uppercase tracking-[0.3em] text-white/55">
           © {new Date().getFullYear()} Azure Villas — fictional demo · Villa layout 1
         </p>
+        <Link
+          href="/villa/v1/dashboard"
+          className="text-xs uppercase tracking-[0.3em] text-white/40 transition-colors hover:text-white/80"
+        >
+          Owner dashboard →
+        </Link>
       </div>
     </footer>
   );
