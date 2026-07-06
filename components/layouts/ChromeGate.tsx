@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 
 // The portfolio template previews ship their own nav and footer, so the
 // global site chrome must stay out of the way there.
-const LANDING_PREVIEW = /^\/(gym|yoga|villa)(\/v\d+)?$|^\/(gym|yoga|villa)\/v\d+|^\/(restaurant|cafe|barber|dive|spa|courier|studio|coaching|sacolaria|portfolio|work)(\/|$)/;
+const LANDING_PREVIEW = /^\/(gym|yoga|villa)(\/v\d+)?$|^\/(gym|yoga|villa)\/v\d+|^\/(restaurant|cafe|barber|dive|spa|courier|studio|coaching|sacolaria|rental|boat|beachclub|realestate|muaythai|tattoo|cooking|coworking|retreat|fullmoon|portfolio|work)(\/|$)/;
 
 export function ChromeGate({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();

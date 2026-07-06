@@ -102,6 +102,42 @@ export const YOGA_WEEK: readonly ScheduleSession[] = [
   session("y20", "Full Moon Flow", "Amara", 6, "18:30", "19:30", ["yoga", "flow", "moonlight"]),
 ] as const;
 
+export const MUAYTHAI_WEEK: readonly ScheduleSession[] = [
+  // morning
+  session("m01", "Technique", "Kru Somchai", 0, "07:30", "09:00", ["muay thai", "technique", "pads"]),
+  session("m02", "Technique", "Kru Somchai", 2, "07:30", "09:00", ["muay thai", "technique", "pads"]),
+  session("m03", "Technique", "Kru Somchai", 4, "07:30", "09:00", ["muay thai", "technique", "pads"]),
+  session("m04", "Strength & Conditioning", "Coach Tai", 1, "08:00", "09:00", ["conditioning", "strength"]),
+  session("m05", "Strength & Conditioning", "Coach Tai", 3, "08:00", "09:00", ["conditioning", "strength"]),
+  // midday beginners
+  session("m06", "Beginner Muay Thai", "Kru Nok", 0, "10:00", "11:00", ["muay thai", "beginner", "fundamentals"]),
+  session("m07", "Beginner Muay Thai", "Kru Nok", 2, "10:00", "11:00", ["muay thai", "beginner", "fundamentals"]),
+  session("m08", "Beginner Muay Thai", "Kru Nok", 4, "10:00", "11:00", ["muay thai", "beginner", "fundamentals"]),
+  session("m09", "Clinch & Sparring", "Kru Somchai", 5, "10:00", "11:30", ["muay thai", "clinch", "sparring"]),
+  // afternoon
+  session("m10", "Pad Work", "Kru Nok", 0, "16:00", "17:30", ["muay thai", "pads", "technique"]),
+  session("m11", "Pad Work", "Kru Nok", 1, "16:00", "17:30", ["muay thai", "pads", "technique"]),
+  session("m12", "Pad Work", "Kru Nok", 2, "16:00", "17:30", ["muay thai", "pads", "technique"]),
+  session("m13", "Pad Work", "Kru Nok", 3, "16:00", "17:30", ["muay thai", "pads", "technique"]),
+  session("m14", "Pad Work", "Kru Nok", 4, "16:00", "17:30", ["muay thai", "pads", "technique"]),
+  // evening
+  session("m15", "Fighter Training", "Kru Somchai", 1, "17:30", "19:00", ["muay thai", "fighter", "sparring"]),
+  session("m16", "Fighter Training", "Kru Somchai", 3, "17:30", "19:00", ["muay thai", "fighter", "sparring"]),
+  session("m17", "Boxing & Bag Work", "Coach Tai", 5, "16:00", "17:00", ["boxing", "bag work", "conditioning"]),
+  session("m18", "Open Mat & Recovery", "Kru Nok", 6, "09:00", "10:30", ["recovery", "open mat", "stretch"]),
+] as const;
+
+// Recurring event "sessions" for the moon-calendar lineup (full-moon template).
+export const MOON_EVENTS: readonly ScheduleSession[] = [
+  session("e01", "Sunset Sessions", "Resident DJs", 5, "17:00", "21:00", ["sunset", "house", "chill"]),
+  session("e02", "Jungle Bass Night", "Kaya & guests", 5, "22:00", "04:00", ["bass", "jungle", "late"]),
+  session("e03", "Beach Fire Show", "Fire Krew", 6, "20:00", "22:00", ["fire show", "acrobatics", "family"]),
+  session("e04", "Full Moon Rave", "Headline + support", 6, "22:00", "06:00", ["full moon", "trance", "techno", "headline"]),
+  session("e05", "Sunday Sundowner", "Acoustic set", 6, "16:30", "18:30", ["acoustic", "chill", "sunset"]),
+  session("e06", "Half-Moon Warmup", "Local selectors", 2, "21:00", "02:00", ["house", "warmup", "midweek"]),
+  session("e07", "Drum Circle", "Open jam", 3, "18:00", "20:00", ["drum circle", "community", "free"]),
+] as const;
+
 /** Unique teachers of a week, in first-appearance order. */
 export function teachersOf(week: readonly ScheduleSession[]): string[] {
   return [...new Set(week.map((s) => s.teacher))];
