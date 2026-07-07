@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { Anton, Barlow } from "next/font/google";
-import { Flame, MapPin, Phone, Swords, Trophy, Users } from "lucide-react";
-import { FacebookIcon, InstagramIcon } from "@/components/ui/brand-icons";
+import { Big_Shoulders, IBM_Plex_Mono } from "next/font/google";
+import { format, nextFriday } from "date-fns";
 import { LayoutSwitcher } from "@/components/layouts/LayoutSwitcher";
-import { Reveal } from "@/components/layouts/Reveal";
 import { TimetableBoard } from "@/components/layouts/TimetableBoard";
 import { MUAYTHAI_WEEK } from "@/lib/layouts/schedule";
 import { CONTACT } from "@/lib/layouts/content";
@@ -15,230 +13,383 @@ export const metadata: Metadata = {
   robots: { index: false },
 };
 
-const display = Anton({ subsets: ["latin"], weight: "400" });
-const body = Barlow({ subsets: ["latin"], weight: ["400", "500", "600"] });
+// Fight-bill pairing: a heavy condensed grotesque for the poster type,
+// a typewriter mono for bill copy, records and captions.
+const display = Big_Shoulders({ subsets: ["latin"], weight: ["700", "800"] });
+const mono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "600"] });
 
-const BLACK = "#0c0a09";
-const COAL = "#161311";
-const RED = "#d9243b";
-const GOLD = "#e6b325";
-const BONE = "#f3ede3";
+const INK = "#161211";
+const PAPER = "#ece1cc";
+const RED = "#c1272d";
 
-const LEVELS = [
-  { icon: Users, title: "First-timers", body: "Never thrown a kick? Our beginner classes start with the basics — stance, guard, footwork — no pressure, no sparring." },
-  { icon: Swords, title: "Fitness fighters", body: "Train like a nak muay for the conditioning: pads, bag work and clinch that will wreck you in the best way." },
-  { icon: Trophy, title: "Fight team", body: "Serious about competing? Twice-daily sessions, real sparring and corner support for local stadium fights." },
-];
+// ── Bill data ────────────────────────────────────────────────────────────────
+// Records are consistent: fights = W + L per kru, and the tale-of-the-tape
+// "combined pro fights" is the sum of all three (143 + 83 + 22 = 248).
 
-const PLANS = [
-  { name: "Drop-in", price: 400, unit: "class", note: "Gloves to borrow" },
-  { name: "10-Class Pass", price: 3200, unit: "10 classes", note: "Valid 1 month" },
-  { name: "1 Week Unlimited", price: 2500, unit: "week", featured: true },
-  { name: "1 Month Unlimited", price: 7500, unit: "month", note: "Best value" },
-];
+interface FightRecord {
+  wins: number;
+  losses: number;
+  ko: number;
+}
 
-const KRUS = [
-  { name: "Kru Somchai", role: "Head coach · ex-Lumpinee", image: "/img/layouts/muaythai-1.jpg" },
-  { name: "Kru Nok", role: "Technique & beginners", image: "/img/layouts/muaythai-2.jpg" },
-  { name: "Coach Tai", role: "Strength & conditioning", image: "/img/layouts/muaythai-3.jpg" },
-];
+interface FightCard {
+  name: string;
+  corner: "RED CORNER" | "BLUE CORNER";
+  role: string;
+  record: FightRecord;
+  note: string;
+  image: string;
+}
+
+const CARDS: readonly FightCard[] = [
+  {
+    name: "Kru Somchai",
+    corner: "RED CORNER",
+    role: "Head trainer · ex-Lumpinee",
+    record: { wins: 112, losses: 31, ko: 58 },
+    note: "Fought out of Bangkok for 14 years. Runs technique and fighter training. Corners every camp fighter at the local stadium.",
+    image: "/img/layouts/muaythai-1.jpg",
+  },
+  {
+    name: "Kru Nok",
+    corner: "RED CORNER",
+    role: "Pads & fundamentals",
+    record: { wins: 64, losses: 19, ko: 22 },
+    note: "The patient one. Takes every first-timer from zero — stance, guard, footwork — and holds pads five afternoons a week.",
+    image: "/img/layouts/muaythai-2.jpg",
+  },
+  {
+    name: "Coach Tai",
+    corner: "BLUE CORNER",
+    role: "Strength & conditioning",
+    record: { wins: 20, losses: 2, ko: 9 },
+    note: "Boxing background, conditioning obsession. Roadwork, bag rounds and the strength sessions that keep your kicks honest.",
+    image: "/img/layouts/muaythai-3.jpg",
+  },
+] as const;
+
+const TAPE: readonly { label: string; value: string; detail: string }[] = [
+  { label: "Established", value: "2014", detail: "Same tin roof since day one" },
+  { label: "Rings", value: "2", detail: "Full-size, stadium ropes" },
+  { label: "Krus", value: "3", detail: "All former pros" },
+  { label: "Combined pro fights", value: "248", detail: "Lumpinee, Rajadamnern, island stadiums" },
+  { label: "Heaviest bag", value: "60 KG", detail: "The banana bag in the far corner" },
+  { label: "Hottest hour", value: "16:00", detail: "Pad work. Bring two shirts" },
+] as const;
+
+const SHOTS: readonly { src: string; caption: string }[] = [
+  { src: "/img/layouts/muaythai-1.jpg", caption: "07:31 — first bell" },
+  { src: "/img/layouts/muaythai-2.jpg", caption: "10:12 — fundamentals" },
+  { src: "/img/layouts/muaythai-3.jpg", caption: "16:47 — pad rounds" },
+  { src: "/img/layouts/muaythai-4.jpg", caption: "18:55 — last clinch" },
+] as const;
+
+const PRICES: readonly { name: string; price: number; per: string; note: string }[] = [
+  { name: "Drop-in", price: 400, per: "one class", note: "Gloves and wraps to borrow" },
+  { name: "One week", price: 2500, per: "unlimited", note: "Both daily sessions" },
+  { name: "One month", price: 7500, per: "unlimited", note: "Fighter's rate — ask about stadium fights" },
+] as const;
+
+const TICKER =
+  "RAI SABAI MUAY THAI ★ SRITHANU, KOH PHANGAN ★ TWO SESSIONS DAILY ★ SIX DAYS A WEEK ★ ALL LEVELS ★ ";
+
+// ── Page ─────────────────────────────────────────────────────────────────────
 
 export default function MuayThaiLayout() {
   return (
-    <div className={body.className} style={{ backgroundColor: BLACK, color: BONE }}>
-      <Nav />
-      <Hero />
-      <Levels />
-      <Schedule />
-      <Pricing />
-      <Krus />
-      <Footer />
+    <div className={mono.className} style={{ backgroundColor: PAPER, color: INK }}>
+      <style>{`
+        @keyframes rsmt-ticker {
+          from { transform: translateX(0); }
+          to { transform: translateX(-50%); }
+        }
+        .rsmt-ticker-track { animation: rsmt-ticker 28s linear infinite; }
+        @media (prefers-reduced-motion: reduce) {
+          .rsmt-ticker-track { animation: none; }
+        }
+      `}</style>
+      <Ticker />
+      <Masthead />
+      <PosterBill />
+      <TaleOfTheTape />
+      <ContactSheet />
+      <FightCards />
+      <Timetable />
+      <PriceList />
+      <StampStrip />
       <LayoutSwitcher />
     </div>
   );
 }
 
-function Nav() {
+function Ticker() {
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10" style={{ backgroundColor: `${BLACK}e0`, backdropFilter: "blur(8px)" }}>
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 md:px-10">
-        <Link href="/" className={`${display.className} text-xl uppercase tracking-wide`}>
-          Rai Sabai<span style={{ color: RED }}>.</span>
-        </Link>
-        <nav className="hidden gap-8 text-xs font-semibold uppercase tracking-[0.18em] md:flex" style={{ color: "#f3ede3aa" }}>
-          <a href="#levels" className="hover:text-[#e6b325]">Train</a>
-          <a href="#schedule" className="hover:text-[#e6b325]">Timetable</a>
-          <a href="#pricing" className="hover:text-[#e6b325]">Prices</a>
-          <a href="#krus" className="hover:text-[#e6b325]">Krus</a>
-        </nav>
-        <a href="#pricing" className="px-5 py-2.5 text-xs font-bold uppercase tracking-[0.16em] text-white transition-colors" style={{ backgroundColor: RED }}>
-          Start training
-        </a>
+    <div
+      className="overflow-hidden border-b-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-white"
+      style={{ backgroundColor: RED, borderColor: INK }}
+    >
+      <div className="rsmt-ticker-track flex w-max whitespace-nowrap">
+        <span className="pr-2">{TICKER.repeat(2)}</span>
+        <span aria-hidden="true" className="pr-2">{TICKER.repeat(2)}</span>
       </div>
+    </div>
+  );
+}
+
+function Masthead() {
+  return (
+    <header className="mx-auto flex max-w-5xl flex-wrap items-baseline justify-between gap-x-6 gap-y-2 px-5 pb-2 pt-5">
+      <Link href="/" className={`${display.className} text-2xl font-extrabold uppercase tracking-wide hover:underline`}>
+        Rai Sabai
+      </Link>
+      <nav className="flex flex-wrap gap-x-5 gap-y-1 text-[11px] font-semibold uppercase tracking-[0.18em]">
+        <a href="#tape" className="hover:underline">The tape</a>
+        <a href="#krus" className="hover:underline">Fight cards</a>
+        <a href="#timetable" className="hover:underline">Timetable</a>
+        <a href="#prices" className="hover:underline">Prices</a>
+      </nav>
     </header>
   );
 }
 
-function Hero() {
+function PosterBill() {
+  const fightNight = format(nextFriday(new Date()), "EEEE d MMMM").toUpperCase();
   return (
-    <section className="relative flex min-h-dvh items-end overflow-hidden pt-16">
-      <Image src="/img/layouts/muaythai-1.jpg" alt="A fighter on the heavy bag" fill priority sizes="100vw" className="animate-landing-kenburns object-cover opacity-60" />
-      <div className="absolute inset-0" style={{ background: `linear-gradient(to top, ${BLACK}, ${BLACK}66 45%, transparent)` }} />
-      <div className="relative mx-auto w-full max-w-6xl px-5 pb-16 md:px-10">
-        <Reveal>
-          <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.3em]" style={{ color: GOLD }}>
-            <Flame className="size-4" /> Traditional Muay Thai · all levels
+    <section className="mx-auto max-w-5xl px-5 pb-16 pt-4 md:pb-24">
+      <div className="relative border-4 p-1" style={{ borderColor: INK }}>
+        <div className="border px-4 py-10 text-center md:px-10 md:py-14" style={{ borderColor: INK }}>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.3em]">
+            Srithanu ★ Koh Phangan ★ Thailand
           </p>
-        </Reveal>
-        <Reveal delay={120}>
-          <h1 className={`${display.className} mt-4 text-[16vw] uppercase leading-[0.82] md:text-[10rem]`}>
-            The art of
-            <span className="block" style={{ color: RED }}>eight limbs</span>
+          <div className="mx-auto my-4 h-px max-w-md" style={{ backgroundColor: INK }} />
+          <p className="text-xs font-semibold uppercase tracking-[0.2em]">
+            The management proudly presents
+          </p>
+          <h1 className={`${display.className} mt-3 font-extrabold uppercase leading-[0.85]`}>
+            <span className="block text-[clamp(4rem,17vw,11rem)]">Rai Sabai</span>
+            <span className="block text-[clamp(2rem,8vw,5rem)]" style={{ color: RED }}>
+              Muay Thai Camp
+            </span>
           </h1>
-        </Reveal>
-        <Reveal delay={240}>
-          <div className="mt-8 flex flex-wrap items-end justify-between gap-6 border-t border-white/15 pt-6">
-            <p className="max-w-md text-base leading-relaxed text-white/75">
-              An authentic island camp where tourists, fighters and total
-              beginners share the same ring. Twice-daily classes, real krus,
-              zero ego.
-            </p>
-            <div className="flex gap-3">
-              <a href="#schedule" className="px-6 py-3 text-xs font-bold uppercase tracking-[0.16em] text-white" style={{ backgroundColor: RED }}>
-                See the timetable
-              </a>
-              <a href={CONTACT.phoneHref} className="flex items-center gap-2 border border-white/30 px-6 py-3 text-xs font-bold uppercase tracking-[0.16em] transition-colors hover:border-[#e6b325]">
-                <Phone className="size-4" /> Call the camp
-              </a>
-            </div>
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-function Levels() {
-  return (
-    <section id="levels" className="mx-auto max-w-6xl px-5 py-24 md:px-10 md:py-32">
-      <Reveal>
-        <h2 className={`${display.className} mb-12 text-5xl uppercase md:text-7xl`}>
-          Every <span style={{ color: RED }}>level</span> welcome
-        </h2>
-      </Reveal>
-      <div className="grid gap-px overflow-hidden border border-white/10 bg-white/10 md:grid-cols-3">
-        {LEVELS.map((l, i) => (
-          <Reveal key={l.title} delay={i * 80} className="h-full">
-            <div className="flex h-full flex-col p-8" style={{ backgroundColor: COAL }}>
-              <l.icon className="size-9" style={{ color: GOLD }} />
-              <h3 className={`${display.className} mt-5 text-2xl uppercase`}>{l.title}</h3>
-              <p className="mt-3 text-base leading-relaxed text-white/70">{l.body}</p>
-            </div>
-          </Reveal>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function Schedule() {
-  return (
-    <section id="schedule" className="border-y border-white/10 py-24 md:py-28" style={{ backgroundColor: COAL }}>
-      <div className="mx-auto max-w-6xl px-5 md:px-10">
-        <Reveal>
-          <h2 className={`${display.className} mb-3 text-5xl uppercase md:text-7xl`}>Weekly grind</h2>
-          <p className="mb-10 max-w-md text-base text-white/60">
-            Search a class or a kru — the week lights up its matches. Morning
-            and afternoon sessions, six days a week.
+          <p className="mt-5 text-xs font-semibold uppercase tracking-[0.2em]">
+            Two sessions daily ★ six days a week ★ tourists, fighters &amp; total beginners in the same ring
           </p>
-        </Reveal>
-        <Reveal delay={120}>
-          <TimetableBoard
-            week={MUAYTHAI_WEEK}
-            displayClass={display.className}
-            placeholder="Beginner? Clinch? Kru Nok?…"
-            theme={{ accent: RED, accentText: "#ffffff", text: BONE, muted: "#f3ede399", surface: BLACK, card: BLACK, border: "#ffffff1f", radius: "10px" }}
-          />
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-function Pricing() {
-  return (
-    <section id="pricing" className="mx-auto max-w-6xl px-5 py-24 md:px-10 md:py-32">
-      <Reveal>
-        <h2 className={`${display.className} mb-3 text-5xl uppercase md:text-7xl`}>Train with us</h2>
-        <p className="mb-12 max-w-md text-base text-white/60">Pay as you go or go all-in. Locals and long-stays, ask about monthly rates.</p>
-      </Reveal>
-      <div className="grid gap-px border border-white/10 bg-white/10 sm:grid-cols-2 lg:grid-cols-4">
-        {PLANS.map((p, i) => (
-          <Reveal key={p.name} delay={i * 70} className="h-full">
-            <div className="flex h-full flex-col justify-between p-7" style={{ backgroundColor: p.featured ? RED : COAL, color: p.featured ? "#fff" : BONE }}>
-              <div>
-                <h3 className="text-xs font-bold uppercase tracking-[0.22em]">{p.name}</h3>
-                <p className={`${display.className} mt-5 text-5xl`}>฿{p.price.toLocaleString()}</p>
-                <p className="mt-1 text-xs uppercase tracking-[0.18em]" style={{ color: p.featured ? "#ffffffcc" : "#f3ede380" }}>per {p.unit}</p>
-              </div>
-              <p className="mt-8 text-xs font-bold uppercase tracking-[0.16em]" style={{ color: p.featured ? "#fff" : GOLD }}>{p.note ?? "No sign-up fee"}</p>
-            </div>
-          </Reveal>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function Krus() {
-  return (
-    <section id="krus" className="border-t border-white/10 py-24 md:py-28" style={{ backgroundColor: COAL }}>
-      <div className="mx-auto max-w-6xl px-5 md:px-10">
-        <Reveal>
-          <h2 className={`${display.className} mb-12 text-5xl uppercase md:text-7xl`}>Your <span style={{ color: RED }}>krus</span></h2>
-        </Reveal>
-        <div className="grid gap-5 sm:grid-cols-3">
-          {KRUS.map((k, i) => (
-            <Reveal key={k.name} delay={i * 80}>
-              <div className="group">
-                <div className="relative aspect-[4/5] overflow-hidden" style={{ backgroundColor: BLACK }}>
-                  <Image src={k.image} alt={k.name} fill sizes="(min-width: 640px) 30vw, 90vw" className="object-cover grayscale transition-all duration-500 group-hover:scale-105 group-hover:grayscale-0" />
-                </div>
-                <h3 className={`${display.className} mt-4 text-2xl uppercase group-hover:text-[#e6b325]`}>{k.name}</h3>
-                <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/50">{k.role}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Footer() {
-  return (
-    <footer className="relative overflow-hidden" style={{ backgroundColor: RED, color: "#fff" }}>
-      <div className="mx-auto max-w-6xl px-5 py-20 md:px-10">
-        <Reveal>
-          <h2 className={`${display.className} text-[13vw] uppercase leading-[0.9] md:text-8xl`}>See you in the ring</h2>
-        </Reveal>
-        <Reveal delay={120}>
-          <div className="mt-10 grid gap-8 border-t border-white/25 pt-8 md:grid-cols-3">
-            <p className="flex items-start gap-3 text-sm font-medium"><MapPin className="mt-0.5 size-5 shrink-0" />{CONTACT.address}</p>
-            <div className="space-y-1 text-sm font-medium">
-              <a href={CONTACT.phoneHref} className="block hover:underline">{CONTACT.phone}</a>
-              <a href={CONTACT.emailHref} className="block hover:underline">{CONTACT.email}</a>
-            </div>
-            <div className="flex items-start gap-4">
-              <a href={CONTACT.instagram} aria-label="Instagram"><InstagramIcon className="size-6 hover:scale-110" /></a>
-              <a href={CONTACT.facebook} aria-label="Facebook"><FacebookIcon className="size-6 hover:scale-110" /></a>
-            </div>
+          <div className="mx-auto mt-6 grid max-w-2xl border-2 text-[11px] font-semibold uppercase tracking-[0.16em] sm:grid-cols-3" style={{ borderColor: INK }}>
+            <p className="border-b-2 px-3 py-2 sm:border-b-0 sm:border-r-2" style={{ borderColor: INK }}>
+              Doors 07:00 — first bell 07:30
+            </p>
+            <p className="border-b-2 px-3 py-2 sm:border-b-0 sm:border-r-2" style={{ borderColor: INK }}>
+              Clinch &amp; sparring Saturday 10:00
+            </p>
+            <p className="px-3 py-2">Rest day Sunday — open mat</p>
           </div>
-        </Reveal>
-        <p className="mt-14 text-xs font-bold uppercase tracking-[0.25em] text-white/70">
-          © {new Date().getFullYear()} Rai Sabai Muay Thai — fictional demo · Muay-Thai layout
+          <p className="mt-6 text-[11px] font-semibold uppercase tracking-[0.25em]" style={{ color: RED }}>
+            Next fight night at the island stadium: {fightNight}
+          </p>
+        </div>
+        <p
+          className="absolute -right-3 top-6 rotate-6 border-4 px-3 py-1 text-sm font-semibold uppercase tracking-[0.14em] md:-right-5 md:top-10"
+          style={{ borderColor: RED, color: RED, backgroundColor: PAPER }}
+        >
+          All levels
         </p>
       </div>
+    </section>
+  );
+}
+
+function TaleOfTheTape() {
+  return (
+    <section id="tape" className="border-y-4 py-16 md:py-24" style={{ backgroundColor: INK, borderColor: INK, color: PAPER }}>
+      <div className="mx-auto max-w-5xl px-5">
+        <h2 className={`${display.className} text-5xl font-extrabold uppercase md:text-7xl`}>
+          Tale of <span style={{ color: RED }}>the tape</span>
+        </h2>
+        <p className="mt-3 max-w-md text-sm leading-relaxed" style={{ color: `${PAPER}b3` }}>
+          The camp, measured the way a fight is measured. No slogans — just the numbers on the card.
+        </p>
+        <dl className="mt-10 border-2" style={{ borderColor: PAPER }}>
+          {TAPE.map((row, i) => (
+            <div
+              key={row.label}
+              className="grid items-baseline gap-x-6 gap-y-1 px-4 py-4 sm:grid-cols-[1fr_auto_1fr] md:px-6"
+              style={{ borderTop: i === 0 ? "none" : `2px solid ${PAPER}` }}
+            >
+              <dt className="text-[11px] font-semibold uppercase tracking-[0.22em]">{row.label}</dt>
+              <dd className={`${display.className} text-4xl font-extrabold tabular-nums sm:text-center md:text-5xl`} style={{ color: RED }}>
+                {row.value}
+              </dd>
+              <dd className="text-xs sm:text-right" style={{ color: `${PAPER}99` }}>
+                {row.detail}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </section>
+  );
+}
+
+function ContactSheet() {
+  return (
+    <section className="border-b-4" style={{ borderColor: INK }}>
+      <div className="grid grid-cols-2 md:grid-cols-4">
+        {SHOTS.map((shot, i) => (
+          <figure key={shot.caption} className={i > 0 ? "border-l-0 md:border-l-4" : ""} style={{ borderColor: INK }}>
+            <div className="relative aspect-square" style={{ backgroundColor: INK }}>
+              <Image
+                src={shot.src}
+                alt={`Rai Sabai camp — ${shot.caption}`}
+                fill
+                sizes="(min-width: 768px) 25vw, 50vw"
+                className="object-cover grayscale contrast-125"
+              />
+            </div>
+            <figcaption className="border-t-4 px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.18em]" style={{ borderColor: INK }}>
+              {shot.caption}
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function FightCards() {
+  return (
+    <section id="krus" className="mx-auto max-w-5xl px-5 py-16 md:py-24">
+      <h2 className={`${display.className} text-5xl font-extrabold uppercase md:text-7xl`}>
+        On <span style={{ color: RED }}>the card</span>
+      </h2>
+      <p className="mt-3 max-w-md text-sm leading-relaxed" style={{ color: `${INK}b3` }}>
+        Three krus, two-hundred-and-forty-eight professional fights between them. Read the records, then come take pads.
+      </p>
+      <div className="mt-10 grid gap-6 md:grid-cols-3">
+        {CARDS.map((kru) => {
+          const fights = kru.record.wins + kru.record.losses;
+          return (
+            <article key={kru.name} className="border-4" style={{ borderColor: INK }}>
+              <p
+                className="flex items-center justify-between border-b-4 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.22em] text-white"
+                style={{ backgroundColor: kru.corner === "RED CORNER" ? RED : INK, borderColor: INK }}
+              >
+                <span>{kru.corner}</span>
+                <span>{fights} pro fights</span>
+              </p>
+              <div className="relative aspect-[4/3]" style={{ backgroundColor: INK }}>
+                <Image
+                  src={kru.image}
+                  alt={kru.name}
+                  fill
+                  sizes="(min-width: 768px) 30vw, 90vw"
+                  className="object-cover grayscale contrast-125"
+                />
+              </div>
+              <div className="border-t-4 p-4" style={{ borderColor: INK }}>
+                <h3 className={`${display.className} text-3xl font-extrabold uppercase`}>{kru.name}</h3>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.16em]" style={{ color: `${INK}99` }}>
+                  {kru.role}
+                </p>
+                <p className="mt-3 grid grid-cols-3 border-2 text-center" style={{ borderColor: INK }}>
+                  {(
+                    [
+                      { n: kru.record.wins, l: "W" },
+                      { n: kru.record.losses, l: "L" },
+                      { n: kru.record.ko, l: "KO" },
+                    ] as const
+                  ).map((cell, i) => (
+                    <span key={cell.l} className={`py-2 ${i > 0 ? "border-l-2" : ""}`} style={{ borderColor: INK }}>
+                      <span className={`${display.className} block text-2xl font-extrabold tabular-nums`} style={{ color: cell.l === "L" ? INK : RED }}>
+                        {cell.n}
+                      </span>
+                      <span className="text-[10px] font-semibold tracking-[0.2em]">{cell.l}</span>
+                    </span>
+                  ))}
+                </p>
+                <p className="mt-3 text-xs leading-relaxed" style={{ color: `${INK}b3` }}>
+                  {kru.note}
+                </p>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function Timetable() {
+  return (
+    <section id="timetable" className="border-y-4 py-16 md:py-24" style={{ borderColor: INK }}>
+      <div className="mx-auto max-w-6xl px-5">
+        <h2 className={`${display.className} text-5xl font-extrabold uppercase md:text-7xl`}>
+          The week&apos;s <span style={{ color: RED }}>bill</span>
+        </h2>
+        <p className="mb-10 mt-3 max-w-md text-sm leading-relaxed" style={{ color: `${INK}b3` }}>
+          Every round of the week. Search a class or a kru and the card lights up its matches.
+        </p>
+        <TimetableBoard
+          week={MUAYTHAI_WEEK}
+          displayClass={`${display.className} font-extrabold uppercase`}
+          placeholder="Beginner? Clinch? Kru Nok?…"
+          theme={{
+            accent: RED,
+            accentText: "#ffffff",
+            text: INK,
+            muted: `${INK}99`,
+            surface: PAPER,
+            card: PAPER,
+            border: INK,
+            radius: "0px",
+          }}
+        />
+      </div>
+    </section>
+  );
+}
+
+function PriceList() {
+  return (
+    <section id="prices" className="mx-auto max-w-3xl px-5 py-16 md:py-24">
+      <h2 className={`${display.className} text-center text-5xl font-extrabold uppercase md:text-7xl`}>
+        Price <span style={{ color: RED }}>list</span>
+      </h2>
+      <div className="mt-10 border-4" style={{ borderColor: INK }}>
+        {PRICES.map((p, i) => (
+          <div key={p.name} className="px-5 py-5 md:px-8" style={{ borderTop: i === 0 ? "none" : `4px solid ${INK}` }}>
+            <div className="flex items-baseline gap-3">
+              <h3 className={`${display.className} shrink-0 text-2xl font-extrabold uppercase md:text-3xl`}>{p.name}</h3>
+              <span aria-hidden="true" className="min-w-4 flex-1 border-b-2 border-dotted" style={{ borderColor: `${INK}66` }} />
+              <p className={`${display.className} shrink-0 text-3xl font-extrabold tabular-nums md:text-4xl`} style={{ color: RED }}>
+                ฿{p.price.toLocaleString("en-US")}
+              </p>
+            </div>
+            <p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.18em]" style={{ color: `${INK}99` }}>
+              {p.per} ★ {p.note}
+            </p>
+          </div>
+        ))}
+      </div>
+      <p className="mt-4 text-center text-[11px] font-semibold uppercase tracking-[0.2em]" style={{ color: `${INK}99` }}>
+        No sign-up fee ★ pay at the desk ★ ten-class pass available — ask{" "}
+        <a href={CONTACT.phoneHref} className="underline" style={{ color: INK }}>
+          {CONTACT.phone}
+        </a>
+      </p>
+    </section>
+  );
+}
+
+function StampStrip() {
+  const year = format(new Date(), "yyyy");
+  return (
+    <footer className="border-t-4 px-5 py-5 text-white" style={{ backgroundColor: INK, borderColor: INK }}>
+      <p className="mx-auto max-w-6xl text-center text-[10px] font-semibold uppercase leading-relaxed tracking-[0.2em]">
+        © {year} Rai Sabai Muay Thai ★ {CONTACT.address} ★{" "}
+        <a href={CONTACT.phoneHref} className="underline">{CONTACT.phone}</a> ★{" "}
+        <a href={CONTACT.instagram} className="underline">{CONTACT.instagramHandle}</a> ★{" "}
+        <span style={{ color: RED }}>fictional demo</span> — muay-thai layout
+      </p>
     </footer>
   );
 }
