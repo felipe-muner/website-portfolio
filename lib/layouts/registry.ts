@@ -23,7 +23,7 @@ export const PORTFOLIO: readonly PortfolioGroup[] = [
       { href: "/gym/v3", name: "Velocity", brand: "Velocity Performance", detail: "Carbon & red, race-lane schedule", cover: "/img/layouts/gym-sled-push.jpg" },
       { href: "/gym/v4", name: "Champ", brand: "Champ's Athletic Club", detail: "Retro fight poster, month calendar", cover: "/img/layouts/gym-bodybuilder.jpg" },
       { href: "/gym/v5", name: "After Dark", brand: "Afterdark Fitness", detail: "Neon night gym, moon-phase calendar", cover: "/img/layouts/gym-dark-floor.jpg" },
-      { href: "/muaythai", name: "Rai Sabai", brand: "Rai Sabai Muay Thai", detail: "Muay Thai camp, searchable timetable", cover: "/img/layouts/muaythai-1.jpg" },
+      { href: "/muaythai", name: "Rai Sabai", brand: "Rai Sabai Muay Thai", detail: "Fight-bill poster, tale of the tape, timetable", cover: "/img/layouts/muaythai-1.jpg" },
     ],
   },
   {
@@ -34,7 +34,7 @@ export const PORTFOLIO: readonly PortfolioGroup[] = [
       { href: "/yoga/v3", name: "Dawn", brand: "Dawn House", detail: "Sunrise gradient, sun-arc schedule", cover: "/img/layouts/yoga-sunset-pose.jpg" },
       { href: "/yoga/v4", name: "Journal", brand: "The Practice Journal", detail: "Editorial agenda, month in type", cover: "/img/layouts/yoga-fold-bw.jpg" },
       { href: "/yoga/v5", name: "Moonlight", brand: "Nocturne Yoga", detail: "Indigo & gold, lunar-month schedule", cover: "/img/layouts/yoga-palm-silhouette.jpg" },
-      { href: "/retreat", name: "Sati", brand: "Sati Retreat", detail: "Detox & yoga retreat, program booking", cover: "/img/layouts/retreat-4.jpg" },
+      { href: "/retreat", name: "Sati", brand: "Sati Retreat", detail: "One quiet column, the day as a vertical rhythm", cover: "/img/layouts/retreat-4.jpg" },
     ],
   },
   {
@@ -50,7 +50,7 @@ export const PORTFOLIO: readonly PortfolioGroup[] = [
       { href: "/villa/v8", name: "Mosaic", brand: "Laguna Bay Villas", detail: "Editorial photo-grid hero", cover: "/img/layouts/villa-living-bright.jpg" },
       { href: "/villa/v9", name: "Arc", brand: "Laguna Bay Villas", detail: "Arched frames & scrolling ticker", cover: "/img/layouts/villa-bedroom-canopy.jpg" },
       { href: "/villa/v10", name: "Chapters", brand: "Laguna Bay Villas", detail: "Split-screen story chapters", cover: "/img/layouts/villa-luxury-house.jpg" },
-      { href: "/realestate", name: "Baan & Bay", brand: "Baan & Bay Property", detail: "Real estate — searchable, filterable listings", cover: "/img/layouts/villa-resort-aerial.jpg" },
+      { href: "/realestate", name: "Baan & Bay", brand: "Baan & Bay Property", detail: "Search-first portal, featured spec spread, area guide", cover: "/img/layouts/villa-resort-aerial.jpg" },
     ],
   },
   {
@@ -65,18 +65,18 @@ export const PORTFOLIO: readonly PortfolioGroup[] = [
       { href: "/studio", name: "Nocturne", brand: "Nocturne Studio", detail: "Architecture studio, horizontal-scroll gallery", cover: "/img/layouts/studio-hero.jpg" },
       { href: "/coaching", name: "Jörg Panek", brand: "Jörg Panek", detail: "German trauma-coach, calm forest, breathing hero", cover: "/img/layouts/coach-forest-path.jpg" },
       { href: "/sacolaria", name: "Sacolaria Brasil", brand: "Sacolaria Brasil", detail: "Loja B2B de sacolas plásticas (pt-BR), carrinho + checkout", cover: "/img/layouts/sacolaria.svg" },
-      { href: "/tattoo", name: "Lucky Hand", brand: "Lucky Hand Tattoo", detail: "Tattoo studio — artists & consult booking", cover: "/img/layouts/tattoo-1.jpg" },
-      { href: "/cooking", name: "Som Tam Kitchen", brand: "Som Tam Kitchen", detail: "Thai cooking class, seat booking", cover: "/img/layouts/cooking-1.jpg" },
-      { href: "/coworking", name: "Beam", brand: "Beam Coworking", detail: "Coworking space, plans & desk booking", cover: "/img/layouts/coworking-1.jpg" },
+      { href: "/tattoo", name: "Lucky Hand", brand: "Lucky Hand Tattoo", detail: "Flash-sheet grid on aged paper, artist cards", cover: "/img/layouts/tattoo-1.jpg" },
+      { href: "/cooking", name: "Som Tam Kitchen", brand: "Som Tam Kitchen", detail: "Recipe-card menu, chili-heat dots, market ticker", cover: "/img/layouts/cooking-1.jpg" },
+      { href: "/coworking", name: "Beam", brand: "Beam Coworking", detail: "Grid-paper spec sheet, speed stats, price table", cover: "/img/layouts/coworking-1.jpg" },
     ],
   },
   {
     label: "Adventure & Nightlife",
     sites: [
-      { href: "/rental", name: "Loop", brand: "Loop Island Rides", detail: "Scooter & bike rental, fleet + date booking", cover: "/img/layouts/rental-3.jpg" },
-      { href: "/boat", name: "Blue Horizon", brand: "Blue Horizon Boat Co.", detail: "Boat trips & charters, trip booking", cover: "/img/layouts/boat-3.jpg" },
-      { href: "/beachclub", name: "Sundown", brand: "Sundown Beach Club", detail: "Beach club, table reservations & line-up", cover: "/img/layouts/beachclub-1.jpg" },
-      { href: "/fullmoon", name: "Lantern", brand: "Lantern Beach Sessions", detail: "Beach-party series, real moon-phase calendar", cover: "/img/layouts/fullmoon-1.jpg" },
+      { href: "/rental", name: "Loop", brand: "Loop Island Rides", detail: "Roadside price board, film-strip fleet", cover: "/img/layouts/rental-3.jpg" },
+      { href: "/boat", name: "Blue Horizon", brand: "Blue Horizon Boat Co.", detail: "Captain's chart, day plotted hour by hour", cover: "/img/layouts/boat-3.jpg" },
+      { href: "/beachclub", name: "Sundown", brand: "Sundown Beach Club", detail: "Festival poster, noon-to-night colour ramp", cover: "/img/layouts/beachclub-1.jpg" },
+      { href: "/fullmoon", name: "Lantern", brand: "Lantern Beach Sessions", detail: "Night almanac, real-phase CSS moon", cover: "/img/layouts/fullmoon-1.jpg" },
     ],
   },
 ] as const;
