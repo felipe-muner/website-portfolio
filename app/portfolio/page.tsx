@@ -138,7 +138,7 @@ export default function PortfolioIndex() {
       {/* Top strip */}
       <div className="bg-[#0c2340] px-4 py-1.5 text-center">
         <p className={`${mono.className} text-[0.65rem] text-[#9fb3c8]`}>
-          {SITE_COUNT} live templates · built with Next.js
+          {SITE_COUNT} live templates
           <span className="hidden sm:inline"> · answering on WhatsApp today</span>
         </p>
       </div>
