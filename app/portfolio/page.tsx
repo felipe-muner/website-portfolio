@@ -6,18 +6,14 @@ import {
   ArrowRight,
   ArrowUpRight,
   Code2,
-  Dumbbell,
-  Flower2,
   MessageCircle,
   Mail,
-  Moon,
   Palette,
-  Palmtree,
   Rocket,
-  Store,
   UserRound,
 } from "lucide-react";
 import { Reveal } from "@/components/layouts/Reveal";
+import { CategoryMarquee } from "@/components/layouts/portfolio/category-marquee";
 import { ALL_SITES, PORTFOLIO, type PortfolioSite } from "@/lib/layouts/registry";
 
 const SITE_COUNT = ALL_SITES.length;
@@ -34,7 +30,8 @@ const mono = JetBrains_Mono({ subsets: ["latin"], weight: ["500", "600"] });
 
 const WHATSAPP = "5521984852802";
 
-const GROUP_ICONS = [Dumbbell, Flower2, Palmtree, Store, Moon] as const;
+/** One representative photo per category shelf, distinct from the hero stack. */
+const CATEGORY_COVER_HREFS = ["/gym/v3", "/yoga/v3", "/villa/v7", "/cafe", "/beachclub"] as const;
 
 const FEATURED_HREFS = ["/dive", "/sacolaria", "/villa/v1", "/realestate"] as const;
 
@@ -260,39 +257,31 @@ export default function PortfolioIndex() {
       </section>
 
       {/* Categories */}
-      <section className="mx-auto max-w-7xl px-5 py-16 sm:px-6">
-        <Reveal>
-          <h2 className={`${display.className} text-3xl tracking-tight text-[#0c2340]`}>
-            Choose by business
-          </h2>
-          <p className="mt-2 max-w-xl text-[#5c6b77]">
-            Five shelves, one for each kind of business. Jump to yours.
-          </p>
-        </Reveal>
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-          {PORTFOLIO.map((group, i) => {
-            const Icon = GROUP_ICONS[i] ?? Store;
-            return (
-              <Reveal key={group.label} delay={i * 80} className="h-full">
-                <a
-                  href={`#${groupSlug(group.label)}`}
-                  className="group flex h-full flex-col rounded-2xl border border-[#e3e8ea] bg-white p-5 transition hover:-translate-y-1 hover:shadow-[0_24px_48px_-28px_rgba(12,35,64,0.45)]"
-                >
-                  <span className="grid size-11 place-items-center rounded-xl bg-[#eef2f3] text-[#0c2340] transition group-hover:bg-[#0c2340] group-hover:text-[#ffd166]">
-                    <Icon className="size-5" />
-                  </span>
-                  <h3 className={`${display.className} mt-4 text-lg text-[#16232f]`}>{group.label}</h3>
-                  <p className={`${mono.className} mt-1 flex-1 text-xs text-[#8194a3]`}>
-                    {group.sites.length} templates
-                  </p>
-                  <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-[#ff5a3c]">
-                    See them <ArrowRight className="size-4 transition group-hover:translate-x-1" />
-                  </span>
-                </a>
-              </Reveal>
-            );
-          })}
+      <section className="py-16">
+        <div className="mx-auto max-w-7xl px-5 sm:px-6">
+          <Reveal>
+            <h2 className={`${display.className} text-3xl tracking-tight text-[#0c2340]`}>
+              Choose by business
+            </h2>
+            <p className="mt-2 max-w-xl text-[#5c6b77]">
+              Five shelves, one for each kind of business. Hover to pause, click to jump to yours.
+            </p>
+          </Reveal>
         </div>
+        <Reveal className="mt-8">
+          <CategoryMarquee
+            items={PORTFOLIO.map((group, i) => ({
+              label: group.label,
+              count: group.sites.length,
+              anchor: `#${groupSlug(group.label)}`,
+              cover:
+                ALL_SITES.find((s) => s.href === CATEGORY_COVER_HREFS[i])?.cover ??
+                group.sites[0].cover,
+            }))}
+            displayClass={display.className}
+            monoClass={mono.className}
+          />
+        </Reveal>
       </section>
 
       {/* Featured full builds */}
