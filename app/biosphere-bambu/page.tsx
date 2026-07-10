@@ -8,7 +8,7 @@ import { SlotBooking, type SlotOption } from "@/components/layouts/SlotBooking";
 import { CONTACT } from "@/lib/layouts/content";
 
 export const metadata: Metadata = {
-  title: "Business Layout — Biosphere Grove",
+  title: "Business Layout — Biosphere Bambu",
   robots: { index: false },
 };
 
@@ -217,16 +217,18 @@ function AlbumLeaf({
   alt,
   sizes,
   aspect,
+  className = "",
   children,
 }: {
   src: string;
   alt: string;
   sizes: string;
   aspect: string;
+  className?: string;
   children?: ReactNode;
 }) {
   return (
-    <div className="border p-2.5 sm:p-3" style={{ borderColor: HAIRLINE, backgroundColor: MAT }}>
+    <div className={`border p-2.5 sm:p-3 ${className}`} style={{ borderColor: HAIRLINE, backgroundColor: MAT }}>
       <div className={`relative overflow-hidden ${aspect}`}>
         <Image src={src} alt={alt} fill sizes={sizes} className="object-cover" style={INK_WASH} />
         <div
@@ -349,7 +351,7 @@ const NAV = [
 /* Page                                                                */
 /* ------------------------------------------------------------------ */
 
-export default function BiosphereGrovePage() {
+export default function BiosphereBambuPage() {
   return (
     <div className={`${gothic.className} min-h-dvh antialiased`} style={{ backgroundColor: MOUNT, color: SUMI }}>
       <style>{`
@@ -420,9 +422,15 @@ export default function BiosphereGrovePage() {
             {/* -------- Hero: the grove, painted -------- */}
             <section className="relative overflow-hidden">
               <Grove />
+              {/* title slip — the pasted paper label on a mounted scroll */}
               <p
-                className="absolute right-5 top-10 hidden text-[11px] uppercase tracking-[0.5em] md:block"
-                style={{ color: MUTED, writingMode: "vertical-rl" }}
+                className="absolute right-4 top-8 hidden border px-1.5 py-4 text-[11px] uppercase tracking-[0.5em] md:block"
+                style={{
+                  color: MUTED,
+                  writingMode: "vertical-rl",
+                  backgroundColor: "rgba(247, 244, 235, 0.92)",
+                  borderColor: "rgba(36, 38, 33, 0.22)",
+                }}
               >
                 Land & ecosystem studio — Koh Phangan
               </p>
@@ -493,7 +501,8 @@ export default function BiosphereGrovePage() {
                       src={ch.image}
                       alt={ch.name}
                       sizes="(min-width: 768px) 42vw, 92vw"
-                      aspect={`aspect-[4/3] ${i % 2 === 1 ? "md:order-3" : ""}`}
+                      aspect="aspect-[4/3]"
+                      className={i % 2 === 1 ? "md:order-3" : ""}
                     />
 
                     <div className={i % 2 === 1 ? "md:order-2" : ""}>
@@ -532,18 +541,19 @@ export default function BiosphereGrovePage() {
                 months from the first walk to your first guests — drawn to scale below.
               </p>
 
-              <div className="mt-12 overflow-x-auto pb-2">
+              <div className="relative mt-12">
+                <div className="overflow-x-auto pb-2 pt-7">
                 <div
-                  className="grid min-w-[560px]"
+                  className="grid min-w-[560px] pr-4"
                   style={{ gridTemplateColumns: PHASES.map((p) => `${p.span}fr`).join(" ") }}
                 >
                   {PHASES.map((phase, i) => (
-                    <div key={phase.n} className="relative pr-1.5 last:pr-0">
-                      {/* node ring at each joint */}
+                    <div key={phase.n} className="relative">
+                      {/* node ring straddling each joint */}
                       {i > 0 && (
                         <span
                           aria-hidden
-                          className="absolute left-0 top-[8px] z-10 h-7 w-[7px] -translate-x-1/2 rounded-full border"
+                          className="absolute -top-[3px] left-0 z-10 h-7 w-[7px] -translate-x-1/2 rounded-full border"
                           style={{ borderColor: "rgba(36, 38, 33, 0.6)", backgroundColor: WASHI }}
                         />
                       )}
@@ -582,7 +592,16 @@ export default function BiosphereGrovePage() {
                     </div>
                   ))}
                 </div>
+                </div>
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute inset-y-0 right-0 w-10 sm:hidden"
+                  style={{ background: "linear-gradient(to left, #f7f4eb, rgba(247, 244, 235, 0))" }}
+                />
               </div>
+              <p className="mt-2 text-[10px] uppercase tracking-[0.2em] sm:hidden" style={{ color: MUTED }}>
+                Slide for month 12 →
+              </p>
 
               <div className="mt-8 flex flex-wrap items-center gap-x-7 gap-y-3">
                 {(
@@ -651,30 +670,31 @@ export default function BiosphereGrovePage() {
             {/* -------- Visits & booking -------- */}
             <section id="events" className="scroll-mt-24 px-6 py-16 sm:px-10 md:px-14 md:py-20">
               <span id="visit" className="block scroll-mt-24" />
-              <div className="grid items-start gap-10 md:grid-cols-2 md:gap-12">
+              <div className="grid items-center gap-10 md:grid-cols-2 md:gap-12">
                 <div>
                   <h2 className={`${mincho.className} text-3xl sm:text-4xl`}>Walk the land with us</h2>
                   <p className="mt-4 max-w-md text-sm leading-relaxed sm:text-base" style={{ color: MUTED }}>
                     Every scroll starts the same way: two hours on your plot, on foot, reading
                     water, wind and soil together. Pick a visit and a day — we bring the ink.
                   </p>
-                  <div className="mt-8 flex items-stretch gap-3">
-                    <div className="min-w-0 flex-1">
-                      <AlbumLeaf
-                        src="/img/layouts/biosphere-community.jpg"
-                        alt="The studio team gathered under a bamboo pavilion"
-                        sizes="(min-width: 768px) 40vw, 85vw"
-                        aspect="aspect-[4/3]"
-                      />
-                    </div>
-                    <p
-                      className="py-2 text-[10px] uppercase tracking-[0.3em]"
-                      style={{ color: MUTED, writingMode: "vertical-rl" }}
-                    >
-                      The studio, under one roof of bamboo
-                    </p>
-                  </div>
                 </div>
+                <div className="relative pr-8">
+                  <AlbumLeaf
+                    src="/img/layouts/biosphere-community.jpg"
+                    alt="The studio team gathered under a bamboo pavilion"
+                    sizes="(min-width: 768px) 42vw, 85vw"
+                    aspect="aspect-[4/3]"
+                  />
+                  {/* caption clipped to the leaf's height so it can never stretch the row */}
+                  <p
+                    className="absolute inset-y-0 right-0 overflow-hidden py-2 text-[10px] uppercase tracking-[0.3em]"
+                    style={{ color: MUTED, writingMode: "vertical-rl" }}
+                  >
+                    The studio, under one roof of bamboo
+                  </p>
+                </div>
+              </div>
+              <div className="mt-10">
                 <SlotBooking
                   options={VISITS}
                   displayClass={mincho.className}
