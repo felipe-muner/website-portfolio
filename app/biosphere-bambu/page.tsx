@@ -287,7 +287,7 @@ const CHAPTERS = [
 
 type PhaseState = "complete" | "active" | "ahead";
 
-/** Internode spans mirror real durations: months 1–2, 2–5, 5–11, 12. */
+/** Internode spans mirror the real stage durations across twelve months. */
 const PHASES: readonly {
   n: string;
   months: string;
@@ -296,10 +296,12 @@ const PHASES: readonly {
   span: number;
   state: PhaseState;
 }[] = [
-  { n: "01", months: "Months 1–2", title: "Discovery", text: "We walk the land with you — listening before drawing.", span: 2, state: "complete" },
-  { n: "02", months: "Months 2–5", title: "Masterplan", text: "Contours, water, law and budget resolved in one drawing.", span: 3, state: "complete" },
-  { n: "03", months: "Months 5–11", title: "Build", text: "Bamboo and stone raised by local hands, supervised weekly.", span: 6, state: "active" },
-  { n: "04", months: "Month 12", title: "Activation", text: "Team trained, gardens planted, first guests by the fire.", span: 1, state: "ahead" },
+  { n: "01", months: "Month 1", title: "Discovery & Strategy", text: "Understanding the land, the vision, the legal ground.", span: 1, state: "complete" },
+  { n: "02", months: "Months 2–3", title: "Master Planning", text: "Masterplan, environment and infrastructure in one drawing.", span: 2, state: "complete" },
+  { n: "03", months: "Months 4–8", title: "Building With Nature", text: "Architecture, landscape and engineering as one system.", span: 5, state: "active" },
+  { n: "04", months: "Months 9–11", title: "Crafting the Experience", text: "Interiors, gardens and shared spaces tuned to place.", span: 2, state: "ahead" },
+  { n: "05", months: "Month 11", title: "Activation", text: "Operations, hospitality and team ready for launch.", span: 1, state: "ahead" },
+  { n: "06", months: "Month 12", title: "A Place Comes to Life", text: "Nature, people and purpose in harmony — doors open.", span: 1, state: "ahead" },
 ];
 
 function internodeStyle(state: PhaseState): CSSProperties {
@@ -537,14 +539,15 @@ export default function BiosphereBambuPage() {
             <section id="year" className="scroll-mt-24 px-6 py-16 sm:px-10 md:px-14 md:py-20">
               <h2 className={`${mincho.className} text-3xl sm:text-4xl`}>One year, one culm</h2>
               <p className="mt-4 max-w-xl text-sm leading-relaxed sm:text-base" style={{ color: MUTED }}>
-                Bamboo grows the way we work: node by node, each internode a season. Twelve
-                months from the first walk to your first guests — drawn to scale below.
+                Bamboo grows the way we work: node by node, each internode a stage. Twelve
+                months from the first walk to your first guests — from land to lasting
+                value, drawn to scale below.
               </p>
 
               <div className="relative mt-12">
                 <div className="overflow-x-auto pb-2 pt-7">
                 <div
-                  className="grid min-w-[560px] pr-4"
+                  className="grid min-w-[780px] pr-4"
                   style={{ gridTemplateColumns: PHASES.map((p) => `${p.span}fr`).join(" ") }}
                 >
                   {PHASES.map((phase, i) => (
