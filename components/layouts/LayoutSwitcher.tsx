@@ -28,6 +28,10 @@ export function LayoutSwitcher() {
 
   function go(href: string) {
     setOpen(false);
+    if (href.startsWith("http")) {
+      window.open(href, "_blank", "noopener,noreferrer");
+      return;
+    }
     if (href !== pathname) router.push(href);
   }
 

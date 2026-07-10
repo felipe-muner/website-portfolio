@@ -7,6 +7,8 @@ export interface PortfolioSite {
   detail: string;
   /** Cover image for the /portfolio index. */
   cover: string;
+  /** href is an absolute URL to a real production site (opens in a new tab). */
+  external?: boolean;
 }
 
 export interface PortfolioGroup {
@@ -39,6 +41,7 @@ export const PORTFOLIO: readonly PortfolioGroup[] = [
       { href: "/yoga/v4", name: "Journal", brand: "The Practice Journal", detail: "Editorial agenda, month in type", cover: "/img/layouts/yoga-fold-bw.jpg" },
       { href: "/yoga/v5", name: "Moonlight", brand: "Nocturne Yoga", detail: "Indigo & gold, lunar-month schedule", cover: "/img/layouts/yoga-palm-silhouette.jpg" },
       { href: "/retreat", name: "Sati", brand: "Sati Retreat", detail: "One quiet column, the day as a vertical rhythm", cover: "/img/layouts/retreat-4.jpg" },
+      { href: "https://lipemoves.com", name: "Lipe Moves", brand: "Lipe Moves", detail: "Felipe's own movement platform — live in production", cover: "/img/layouts/lipemoves.jpg", external: true },
     ],
   },
   {
