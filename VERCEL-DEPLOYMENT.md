@@ -1,4 +1,4 @@
-# Vercel Deployment Guide - Podium Gym
+# Vercel Deployment Guide
 
 Complete guide to deploy your gym management system to Vercel with Neon database.
 

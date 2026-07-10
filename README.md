@@ -1,4 +1,4 @@
-# Podium Gym Management System
+# Website Portfolio
 
 A comprehensive gym and CrossFit management system built with Next.js 15, Drizzle ORM, and NextAuth.js featuring advanced revenue sharing, flexible membership plans, and intelligent check-in validation.
 
@@ -75,7 +75,7 @@ A comprehensive gym and CrossFit management system built with Next.js 15, Drizzl
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd podium-gym
+   cd website-portfolio
    ```
 
 2. **Install dependencies**

@@ -4,7 +4,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: podium_gym
+      POSTGRES_DB: website_portfolio
     ports:
       - "5432:5432"
     volumes:

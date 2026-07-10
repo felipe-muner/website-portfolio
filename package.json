@@ -31,12 +31,12 @@
     "db:seed:nationalities": "bun scripts/seed-nationalities.ts",
     "db:seed:test-members": "bun scripts/seed-1000-members-presentation.ts",
     "db:test-data": "psql $DATABASE_URL -f tests/data/test-scenarios.sql",
-    "db:drop": "psql postgres://postgres:postgres@127.0.0.1:5432/postgres -c \"SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'podium_gym';\" && psql postgres://postgres:postgres@127.0.0.1:5432/postgres -c \"DROP DATABASE IF EXISTS podium_gym;\" && psql postgres://postgres:postgres@127.0.0.1:5432/postgres -c \"CREATE DATABASE podium_gym;\"",
+    "db:drop": "psql postgres://postgres:postgres@127.0.0.1:5432/postgres -c \"SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'website_portfolio';\" && psql postgres://postgres:postgres@127.0.0.1:5432/postgres -c \"DROP DATABASE IF EXISTS website_portfolio;\" && psql postgres://postgres:postgres@127.0.0.1:5432/postgres -c \"CREATE DATABASE website_portfolio;\"",
     "db:setup": "npm run db:push:force && npm run db:seed:test-members",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
     "docker:down:clean": "docker compose down -v && docker volume prune -f",
-    "docker:up:db:clean:optimized": "docker compose down -v && docker volume prune -f && docker compose up -d && sleep 5 && npm run db:drop && npm run db:push:force && DATABASE_URL=\"postgres://postgres:postgres@127.0.0.1:5432/podium_gym\" bun scripts/seed-with-new-pricing.ts && DATABASE_URL=\"postgres://postgres:postgres@127.0.0.1:5432/podium_gym\" bun scripts/seed-1000-members-presentation.ts"
+    "docker:up:db:clean:optimized": "docker compose down -v && docker volume prune -f && docker compose up -d && sleep 5 && npm run db:drop && npm run db:push:force && DATABASE_URL=\"postgres://postgres:postgres@127.0.0.1:5432/website_portfolio\" bun scripts/seed-with-new-pricing.ts && DATABASE_URL=\"postgres://postgres:postgres@127.0.0.1:5432/website_portfolio\" bun scripts/seed-1000-members-presentation.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.110.0",
