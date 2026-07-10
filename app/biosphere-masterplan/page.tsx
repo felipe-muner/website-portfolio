@@ -217,10 +217,12 @@ const PHASES: readonly {
   end: number;
   state: PhaseState;
 }[] = [
-  { id: "01", name: "Discovery", start: 1, end: 2, state: "complete" },
-  { id: "02", name: "Masterplan", start: 2, end: 5, state: "complete" },
-  { id: "03", name: "Build", start: 5, end: 11, state: "active" },
-  { id: "04", name: "Activation", start: 12, end: 12, state: "ahead" },
+  { id: "01", name: "Discovery & Strategy", start: 1, end: 1, state: "complete" },
+  { id: "02", name: "Master Planning", start: 2, end: 3, state: "complete" },
+  { id: "03", name: "Building With Nature", start: 4, end: 8, state: "active" },
+  { id: "04", name: "Crafting the Experience", start: 9, end: 11, state: "ahead" },
+  { id: "05", name: "Activation", start: 11, end: 11, state: "ahead" },
+  { id: "06", name: "A Place Comes to Life", start: 12, end: 12, state: "ahead" },
 ];
 
 function barStyle(state: PhaseState): CSSProperties {
@@ -424,17 +426,17 @@ export default function BiosphereMasterplanPage() {
         <Sheet id="programme" num="03" title="PROGRAMME — 12 MONTHS" className="mt-10 sm:mt-14">
           <div className="px-4 py-10 sm:px-6 sm:py-14">
             <h2 className="text-3xl font-light tracking-tight sm:text-4xl" style={{ color: HEAD }}>
-              Twelve months. <span className="font-medium">Four phases.</span>
+              From land to <span className="font-medium">lasting value.</span>
             </h2>
             <p className="mt-4 max-w-xl text-base leading-relaxed" style={{ color: BODY }}>
-              A calendar you can hold us to: from the first walk on your land to your first guests,
-              inside one monsoon cycle.
+              Six stages, twelve months, one monsoon cycle. Every stage has a purpose —
+              nature cannot be rushed, and neither can meaningful development.
             </p>
 
             <div className="mt-10 overflow-x-auto">
               <div className="min-w-[540px]">
                 {/* month scale */}
-                <div className="md:grid md:grid-cols-[9.5rem_1fr]">
+                <div className="md:grid md:grid-cols-[12.5rem_1fr]">
                   <span aria-hidden className="hidden md:block" />
                   <div className="grid" style={{ gridTemplateColumns: "repeat(12, minmax(0, 1fr))" }}>
                     {Array.from({ length: 12 }, (_, i) => (
@@ -451,16 +453,16 @@ export default function BiosphereMasterplanPage() {
 
                 {/* phase rows */}
                 {PHASES.map((p) => (
-                  <div key={p.id} className="border-b md:grid md:grid-cols-[9.5rem_1fr] md:items-center" style={{ borderColor: HAIRLINE }}>
+                  <div key={p.id} className="border-b md:grid md:grid-cols-[12.5rem_1fr] md:items-center" style={{ borderColor: HAIRLINE }}>
                     <div className="flex items-baseline gap-2 px-1 pt-3 md:py-3">
-                      <span className={`${mono.className} text-[10px] tracking-[0.18em]`} style={{ color: PHOSPHOR }}>
+                      <span className={`${mono.className} whitespace-nowrap text-[10px] tracking-[0.18em]`} style={{ color: PHOSPHOR }}>
                         P-{p.id}
                       </span>
                       <span className="text-sm font-medium" style={{ color: HEAD }}>
                         {p.name}
                       </span>
                       <span className={`${mono.className} text-[9px] tracking-[0.1em]`} style={{ color: MUTED }}>
-                        {MM(p.start)}–{MM(p.end)}
+                        {p.start === p.end ? MM(p.start) : `${MM(p.start)}–${MM(p.end)}`}
                       </span>
                     </div>
                     <div className="relative grid h-10 md:h-12" style={{ gridTemplateColumns: "repeat(12, minmax(0, 1fr))" }}>
@@ -476,10 +478,10 @@ export default function BiosphereMasterplanPage() {
                         style={{ gridColumn: `${p.start} / ${p.end + 1}`, gridRow: 1, ...barStyle(p.state) }}
                       >
                         <span className={`${mono.className} hidden text-[9px] uppercase tracking-[0.14em] lg:inline`} style={{ color: HEAD }}>
-                          {p.state === "complete" ? "complete" : p.state === "active" ? "in build" : "handover"}
+                          {p.state === "complete" ? "complete" : p.state === "active" ? "in build" : "planned"}
                         </span>
                       </div>
-                      {p.id === "04" && (
+                      {p.id === "06" && (
                         <span
                           className={`${mono.className} pointer-events-none absolute -top-1 right-0 hidden -rotate-6 border-2 px-2 py-0.5 text-[9px] tracking-[0.2em] lg:inline-block`}
                           style={{ borderColor: AMBER, color: AMBER }}

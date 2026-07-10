@@ -138,10 +138,12 @@ const ELEMENTS: readonly {
 ];
 
 const PHASES = [
-  { n: "01", months: "Months 1–2", title: "Discovery", text: "We walk the land with you — listening before drawing." },
-  { n: "02", months: "Months 2–5", title: "Masterplan", text: "Contours, water, law and budget resolved in one integrated drawing." },
-  { n: "03", months: "Months 5–11", title: "Build", text: "Bamboo and stone raised by local hands, supervised on site weekly." },
-  { n: "04", months: "Month 12", title: "Activation", text: "Team trained, gardens planted, first guests by the fire." },
+  { n: "01", months: "Month 1", title: "Discovery & Strategy", text: "Understanding the land, defining the vision and establishing the legal foundation for the project." },
+  { n: "02", months: "Months 2–3", title: "Master Planning", text: "Creating the masterplan, environmental strategy and infrastructure that will guide every future decision." },
+  { n: "03", months: "Months 4–8", title: "Building With Nature", text: "Architecture, landscape and engineering come together as one integrated system." },
+  { n: "04", months: "Months 9–11", title: "Crafting the Experience", text: "Interiors, gardens and shared spaces are refined to create a meaningful connection between people and place." },
+  { n: "05", months: "Month 11", title: "Activation", text: "Operations, hospitality and management systems are prepared for a seamless launch." },
+  { n: "06", months: "Month 12", title: "A Place Comes to Life", text: "The vision becomes reality — a destination where nature, people and purpose exist in harmony." },
 ] as const;
 
 const PROJECTS = [
@@ -232,47 +234,62 @@ export default function BiospherePage() {
 
       <Contours />
 
-      {/* The four elements */}
+      {/* The four elements — one footpath, walked in order */}
       <section id="elements" className="mx-auto max-w-6xl scroll-mt-24 px-5 sm:px-8">
+        <div className="pb-12 pt-14 text-center md:pt-16">
+          <h2 className={`${serif.className} text-3xl sm:text-4xl`}>The path we walk</h2>
+          <p className="mx-auto mt-3 max-w-md text-sm sm:text-base" style={{ color: MUTED }}>
+            Every masterplan follows the same footpath through the four elements —
+            one step at a time, in this order.
+          </p>
+        </div>
+
         {ELEMENTS.map((el, i) => (
           <article
             key={el.id}
             id={el.id}
-            className={`grid scroll-mt-28 items-center gap-8 py-14 md:grid-cols-2 md:gap-14 md:py-20 ${
-              i > 0 ? "border-t" : ""
-            }`}
-            style={{ borderColor: HAIRLINE }}
+            className="grid scroll-mt-28 grid-cols-[3.5rem_1fr] gap-x-4 sm:gap-x-6 md:grid-cols-[1fr_5rem_1fr] md:gap-x-8"
           >
-            <div className={`relative overflow-hidden rounded-lg ${i % 2 === 1 ? "md:order-2" : ""}`}>
-              <div className="relative aspect-[4/3]">
+            {/* trail: glyph waypoint + dotted footpath down to the next stop */}
+            <div className="flex flex-col items-center md:col-start-2 md:row-start-1">
+              <span
+                className="grid size-12 shrink-0 place-items-center rounded-full border-2"
+                style={{ borderColor: el.color, backgroundColor: PAPER }}
+              >
+                <ElementGlyph kind={el.id} color={el.color} />
+              </span>
+              <span
+                aria-hidden
+                className="w-0 flex-1 border-l-2 border-dotted"
+                style={{ borderColor: "rgba(36, 49, 34, 0.35)" }}
+              />
+            </div>
+
+            <div
+              className={`pb-14 md:row-start-1 md:pb-16 ${
+                i % 2 === 0 ? "md:col-start-3" : "md:col-start-1 md:justify-self-end"
+              }`}
+            >
+              <div className="relative aspect-[16/10] max-w-lg overflow-hidden rounded-lg">
                 <Image
                   src={el.image}
                   alt={el.name}
                   fill
-                  sizes="(min-width: 768px) 45vw, 92vw"
+                  sizes="(min-width: 768px) 40vw, 85vw"
                   className="object-cover"
                 />
               </div>
-              <span
-                className="absolute left-4 top-4 grid size-10 place-items-center rounded-full backdrop-blur"
-                style={{ backgroundColor: "rgba(244,239,228,0.85)" }}
-              >
-                <ElementGlyph kind={el.id} color={el.color} />
-              </span>
-            </div>
-
-            <div>
-              <p className={`${serif.className} text-5xl italic`} style={{ color: el.color }}>
+              <p className={`${serif.className} mt-6 text-4xl italic`} style={{ color: el.color }}>
                 {el.numeral}
               </p>
-              <h2 className={`${serif.className} mt-3 text-3xl sm:text-4xl`}>{el.name}</h2>
-              <p className={`${serif.className} mt-4 text-xl italic`} style={{ color: el.color }}>
+              <h3 className={`${serif.className} mt-2 text-3xl sm:text-4xl`}>{el.name}</h3>
+              <p className={`${serif.className} mt-3 text-xl italic`} style={{ color: el.color }}>
                 {el.line}
               </p>
-              <p className="mt-4 max-w-md leading-relaxed" style={{ color: MUTED }}>
+              <p className="mt-3 max-w-md leading-relaxed" style={{ color: MUTED }}>
                 {el.text}
               </p>
-              <ul className="mt-6 flex flex-wrap gap-2">
+              <ul className="mt-5 flex max-w-md flex-wrap gap-2">
                 {el.chips.map((chip) => (
                   <li
                     key={chip}
@@ -286,6 +303,30 @@ export default function BiospherePage() {
             </div>
           </article>
         ))}
+
+        {/* trail terminus — the path ends where people gather */}
+        <div className="grid grid-cols-[3.5rem_1fr] gap-x-4 pb-16 sm:gap-x-6 md:grid-cols-[1fr_5rem_1fr] md:gap-x-8">
+          <div className="flex justify-center md:col-start-2 md:row-start-1">
+            <span
+              className="grid size-12 place-items-center rounded-full border-2"
+              style={{ borderColor: INK, backgroundColor: PAPER }}
+            >
+              <Image src="/img/layouts/biosphere-logo.png" alt="" width={28} height={28} className="size-7" />
+            </span>
+          </div>
+          <div className="self-center md:col-start-3 md:row-start-1">
+            <p className={`${serif.className} text-xl italic sm:text-2xl`}>
+              The path ends where people gather.
+            </p>
+            <a
+              href="#events"
+              className="mt-2 inline-block text-sm font-medium underline decoration-2 underline-offset-4"
+              style={{ color: CLAY }}
+            >
+              Walk the land with us →
+            </a>
+          </div>
+        </div>
       </section>
 
       {/* The year — process on dark ground */}
@@ -308,9 +349,13 @@ export default function BiospherePage() {
             “Speed comes from preparation, not from rushing.”
           </p>
           <p className="mt-3 text-xs uppercase tracking-[0.3em] text-[#e4dcc8]/70">
-            One year, four seasons of work
+            From land to lasting value
           </p>
-          <div className="mt-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+          <p className="mt-4 max-w-xl text-sm leading-relaxed text-[#e4dcc8]/85">
+            Every stage has a purpose. Nature cannot be rushed — neither can meaningful
+            development.
+          </p>
+          <div className="mt-12 grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
             {PHASES.map((phase) => (
               <div key={phase.n} className="border-t pt-5" style={{ borderColor: "rgba(244,239,228,0.25)" }}>
                 <p className={`${serif.className} text-3xl italic`} style={{ color: EMBER }}>
