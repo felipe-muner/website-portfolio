@@ -75,10 +75,17 @@ export function HeroCarousel({
       <div className="absolute inset-x-0 bottom-0 h-60 bg-gradient-to-t from-[#081a30]/95 via-[#0c2340]/55 to-transparent" />
       <div className="grain absolute inset-0" />
 
+      {/* The whole slide opens the active template (copy overlay is pointer-transparent) */}
+      <Link
+        href={active.href}
+        aria-label={`Open the ${active.name} live demo`}
+        className="absolute inset-0 z-[5]"
+      />
+
       {/* Bottom bar: browser chip + caption left, controls right */}
       <div className="absolute inset-x-0 bottom-0 z-10">
         <div className="mx-auto flex max-w-7xl flex-wrap items-end justify-between gap-x-8 gap-y-5 px-5 pb-7 sm:px-6">
-          <div className="min-w-0" aria-live="polite">
+          <Link href={active.href} className="group min-w-0" aria-live="polite">
             <span className="flex items-center gap-2.5">
               <span className="flex gap-1.5">
                 <span className="size-2.5 rounded-full bg-[#ff5a3c]" />
@@ -92,17 +99,15 @@ export function HeroCarousel({
                 {active.href}
               </span>
             </span>
-            <div className="mt-3 flex flex-wrap items-baseline gap-x-4 gap-y-1.5">
+            <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
               <h2 className={`${displayClass} text-2xl text-white`}>{active.name}</h2>
               <p className="text-sm text-[#c7d5e3]">{active.detail}</p>
-              <Link
-                href={active.href}
-                className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3.5 py-1.5 text-xs font-semibold text-white backdrop-blur transition hover:bg-[#ff5a3c]"
-              >
-                Live demo <ArrowUpRight className="size-3.5" />
-              </Link>
             </div>
-          </div>
+            <span className="mt-3.5 inline-flex items-center gap-2 rounded-full bg-[#ff5a3c] px-5 py-2.5 text-sm font-bold text-white shadow-[0_10px_28px_-10px_rgba(255,90,60,0.8)] transition group-hover:bg-[#e64a2e]">
+              Open this template
+              <ArrowUpRight className="size-4 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </span>
+          </Link>
 
           <div className="flex items-center gap-5">
             <div className="flex items-center gap-2.5">

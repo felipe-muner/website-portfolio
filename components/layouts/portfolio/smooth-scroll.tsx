@@ -25,6 +25,10 @@ export function SmoothScroll() {
       event.preventDefault();
       target.scrollIntoView({ behavior: "smooth" });
       window.history.pushState(null, "", href);
+      // Native fragment navigation also moves keyboard focus to the target;
+      // replicate that (preventScroll keeps the smooth scroll in flight).
+      if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
+      target.focus({ preventScroll: true });
     }
 
     document.addEventListener("click", onClick);
