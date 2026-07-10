@@ -14,6 +14,9 @@ import {
 } from "lucide-react";
 import { Reveal } from "@/components/layouts/Reveal";
 import { CategoryMarquee } from "@/components/layouts/portfolio/category-marquee";
+import { HeroCarousel } from "@/components/layouts/portfolio/hero-carousel";
+import { SmoothScroll } from "@/components/layouts/portfolio/smooth-scroll";
+import { WhatsappFab } from "@/components/layouts/portfolio/whatsapp-fab";
 import { ALL_SITES, PORTFOLIO, type PortfolioSite } from "@/lib/layouts/registry";
 
 const SITE_COUNT = ALL_SITES.length;
@@ -59,10 +62,6 @@ const TRUST = [
   { icon: Palette, title: "Made yours", text: "Your name, colors, photos and language — nobody will know it was a template." },
   { icon: UserRound, title: "Direct with the engineer", text: "No agency in between. You talk to the person who wrote the code." },
 ] as const;
-
-function groupSlug(label: string) {
-  return `cat-${label.toLowerCase().replace(/[^a-z]+/g, "-")}`;
-}
 
 function wantLink(site: PortfolioSite) {
   const text = `Hi Felipe! I want the "${site.name}" template (${site.href}) for my business.`;
@@ -128,10 +127,12 @@ export default function PortfolioIndex() {
   const featured = FEATURED_HREFS.map((href) => ALL_SITES.find((s) => s.href === href)).filter(
     (s): s is PortfolioSite => Boolean(s),
   );
-  const heroCovers = [PORTFOLIO[2].sites[0], PORTFOLIO[0].sites[0], PORTFOLIO[3].sites[0]];
+  // One representative template per category shelf for the hero slideshow.
+  const heroSlides = PORTFOLIO.map((group) => group.sites[0]);
 
   return (
     <div className={`${body.className} min-h-dvh bg-[#eef2f3] text-[#16232f] antialiased`}>
+      <SmoothScroll />
       {/* Top strip */}
       <div className="bg-[#0c2340] px-4 py-1.5 text-center">
         <p className={`${mono.className} text-[0.65rem] text-[#9fb3c8]`}>
@@ -159,20 +160,11 @@ export default function PortfolioIndex() {
             </span>
           </Link>
 
-          <nav className="ml-auto hidden items-center gap-6 text-sm font-medium text-[#3d4f5e] md:flex">
+          <nav className="ml-auto flex items-center gap-4 text-sm font-medium text-[#3d4f5e] sm:gap-6">
             <a href="#templates" className="py-2 transition hover:text-[#0c2340]">Templates</a>
-            <a href="#how" className="py-2 transition hover:text-[#0c2340]">How it works</a>
+            <a href="#how" className="hidden py-2 transition hover:text-[#0c2340] sm:block">How it works</a>
             <a href="#contact" className="py-2 transition hover:text-[#0c2340]">Contact</a>
           </nav>
-
-          <a
-            href={`https://wa.me/${WHATSAPP}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="ml-auto inline-flex items-center gap-2 rounded-full bg-[#0e7c66] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#0a5f4f] md:ml-0"
-          >
-            <MessageCircle className="size-4" /> WhatsApp
-          </a>
         </div>
       </header>
 
@@ -216,42 +208,13 @@ export default function PortfolioIndex() {
             </div>
           </Reveal>
 
-          {/* Browser-window stack */}
-          <Reveal from="right" delay={150} className="hidden lg:block">
-            <div className="relative h-[26rem]">
-              {heroCovers.map((site, i) => (
-                <div
-                  key={site.href}
-                  className="absolute w-72 overflow-hidden rounded-xl border border-white/10 shadow-2xl"
-                  style={{
-                    top: `${i * 3.5}rem`,
-                    left: `${i * 5}rem`,
-                    transform: `rotate(${(i - 1) * 3}deg)`,
-                    zIndex: i,
-                  }}
-                >
-                  <div className="flex items-center gap-2 bg-[#132c50] px-3 py-2">
-                    <span className="flex gap-1.5">
-                      <span className="size-2 rounded-full bg-[#ff5a3c]" />
-                      <span className="size-2 rounded-full bg-[#ffd166]" />
-                      <span className="size-2 rounded-full bg-[#2fbf8f]" />
-                    </span>
-                    <span className={`${mono.className} truncate text-[0.6rem] text-[#9fb3c8]`}>
-                      {site.href}
-                    </span>
-                  </div>
-                  <div className="relative aspect-[4/3]">
-                    <Image
-                      src={site.cover}
-                      alt={site.brand}
-                      fill
-                      sizes="18rem"
-                      className="object-cover"
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
+          {/* Autoplaying browser-window slideshow, one template per category */}
+          <Reveal from="right" delay={150}>
+            <HeroCarousel
+              slides={heroSlides}
+              monoClass={mono.className}
+              displayClass={display.className}
+            />
           </Reveal>
         </div>
       </section>
@@ -273,7 +236,7 @@ export default function PortfolioIndex() {
             items={PORTFOLIO.map((group, i) => ({
               label: group.label,
               count: group.sites.length,
-              anchor: `#${groupSlug(group.label)}`,
+              anchor: `#${group.slug}`,
               cover:
                 ALL_SITES.find((s) => s.href === CATEGORY_COVER_HREFS[i])?.cover ??
                 group.sites[0].cover,
@@ -316,7 +279,7 @@ export default function PortfolioIndex() {
       {/* Catalog */}
       <main id="templates" className="mx-auto max-w-7xl scroll-mt-20 px-5 pb-8 sm:px-6">
         {PORTFOLIO.map((group) => (
-          <section key={group.label} id={groupSlug(group.label)} className="scroll-mt-20 pt-16">
+          <section key={group.label} id={group.slug} className="scroll-mt-20 pt-16">
             <Reveal>
               <div className="flex items-baseline gap-3 border-b border-[#d6dee1] pb-3">
                 <h2 className={`${display.className} text-2xl tracking-tight text-[#0c2340] md:text-3xl`}>
@@ -438,6 +401,8 @@ export default function PortfolioIndex() {
           Felipe Muner — software engineer. All template brands are fictional; the code is real.
         </p>
       </footer>
+
+      <WhatsappFab />
     </div>
   );
 }

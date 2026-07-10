@@ -11,12 +11,15 @@ export interface PortfolioSite {
 
 export interface PortfolioGroup {
   label: string;
+  /** Shareable anchor on the index page, e.g. /portfolio#villas. */
+  slug: string;
   sites: readonly PortfolioSite[];
 }
 
 export const PORTFOLIO: readonly PortfolioGroup[] = [
   {
     label: "Gym & Fitness",
+    slug: "gym",
     sites: [
       { href: "/gym/v1", name: "Forge", brand: "Forge Strength Club", detail: "Brutalist black & orange, weekly board", cover: "/img/layouts/gym-deadlift.jpg" },
       { href: "/gym/v2", name: "Foundry", brand: "Foundry Gym", detail: "Industrial spec sheet, punch-card matrix", cover: "/img/layouts/gym-bright.jpg" },
@@ -28,6 +31,7 @@ export const PORTFOLIO: readonly PortfolioGroup[] = [
   },
   {
     label: "Yoga & Wellness",
+    slug: "yoga",
     sites: [
       { href: "/yoga/v1", name: "Sanctuary", brand: "Sanctuary Yoga", detail: "Warm sand & arches, week garden", cover: "/img/layouts/yoga-meditation-studio.jpg" },
       { href: "/yoga/v2", name: "Tide", brand: "Tide Studio", detail: "Eucalyptus chapters, moon & tide chart", cover: "/img/layouts/yoga-beach-group.jpg" },
@@ -39,6 +43,7 @@ export const PORTFOLIO: readonly PortfolioGroup[] = [
   },
   {
     label: "Villas & Stays",
+    slug: "villas",
     sites: [
       { href: "/villa/v1", name: "Azure", brand: "Azure Villas", detail: "Classic luxury, teal & gold", cover: "/img/layouts/villa-pool-palms.jpg" },
       { href: "/villa/v2", name: "Palma", brand: "Palma Guesthouse", detail: "Boutique garden editorial", cover: "/img/layouts/villa-terrace-view.jpg" },
@@ -55,6 +60,7 @@ export const PORTFOLIO: readonly PortfolioGroup[] = [
   },
   {
     label: "Local Business",
+    slug: "local",
     sites: [
       { href: "/restaurant", name: "Ember", brand: "Ember", detail: "Open-fire restaurant, searchable menu", cover: "/img/layouts/food-dark-plate.jpg" },
       { href: "/cafe", name: "Crumb & Co.", brand: "Crumb & Co.", detail: "Bakery café, warm & rounded", cover: "/img/layouts/cafe-bread.jpg" },
@@ -72,6 +78,7 @@ export const PORTFOLIO: readonly PortfolioGroup[] = [
   },
   {
     label: "Adventure & Nightlife",
+    slug: "adventure",
     sites: [
       { href: "/rental", name: "Loop", brand: "Loop Island Rides", detail: "Roadside price board, film-strip fleet", cover: "/img/layouts/rental-3.jpg" },
       { href: "/boat", name: "Blue Horizon", brand: "Blue Horizon Boat Co.", detail: "Captain's chart, day plotted hour by hour", cover: "/img/layouts/boat-3.jpg" },
