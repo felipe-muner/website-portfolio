@@ -42,18 +42,24 @@ const FEATURED_HREFS = ["/dive", "/sacolaria", "/villa/v1", "/realestate"] as co
 const STEPS = [
   {
     n: "01",
+    who: "you do this",
     title: "Pick a template",
     text: "Every card below opens a real working demo — click around, try the menus, calendars and carts.",
+    image: "/img/layouts/howit-pick.jpg",
   },
   {
     n: "02",
+    who: "you do this",
     title: "Send me your content",
     text: "Business name, logo, photos, prices and language — one WhatsApp message is enough to start.",
+    image: "/img/layouts/howit-send.jpg",
   },
   {
     n: "03",
+    who: "I do this",
     title: "Launch",
     text: "I rebrand the template, deploy it on fast hosting and hand you the keys. Days, not months.",
+    image: "/img/layouts/howit-launch.jpg",
   },
 ] as const;
 
@@ -148,14 +154,6 @@ export default function PortfolioIndex() {
   return (
     <div className={`${body.className} min-h-dvh bg-[#eef2f3] text-[#16232f] antialiased`}>
       <SmoothScroll />
-      {/* Top strip */}
-      <div className="bg-[#0c2340] px-4 py-1.5 text-center">
-        <p className={`${mono.className} text-[0.65rem] text-[#9fb3c8]`}>
-          {SITE_COUNT} live templates
-          <span className="hidden sm:inline"> · answering on WhatsApp today</span>
-        </p>
-      </div>
-
       {/* Nav */}
       <header className="sticky top-0 z-50 border-b border-[#e3e8ea] bg-white/90 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl items-center gap-4 px-4 py-3 sm:px-6">
@@ -189,7 +187,7 @@ export default function PortfolioIndex() {
           { value: SITE_COUNT, label: "Live templates in the shop" },
           { value: PORTFOLIO.length, label: "Business categories" },
           { value: 100, suffix: "%", label: "Real working demos" },
-          { value: 1, label: "Engineer — no agency" },
+          { value: 100, suffix: "+", label: "Websites launched" },
         ]}
         monoClass={mono.className}
         displayClass={display.className}
@@ -197,17 +195,7 @@ export default function PortfolioIndex() {
 
       {/* Categories */}
       <section className="py-14">
-        <div className="mx-auto max-w-7xl px-5 sm:px-6">
-          <Reveal>
-            <h2 className={`${display.className} text-3xl tracking-tight text-[#0c2340]`}>
-              Choose by business
-            </h2>
-            <p className="mt-2 max-w-xl text-[#5c6b77]">
-              Five shelves, one for each kind of business. Hover to pause, click to jump to yours.
-            </p>
-          </Reveal>
-        </div>
-        <Reveal className="mt-8">
+        <Reveal>
           <CategoryMarquee
             items={PORTFOLIO.map((group, i) => ({
               label: group.label,
@@ -230,7 +218,8 @@ export default function PortfolioIndex() {
           monoClass={mono.className}
           displayClass={display.className}
         />
-        <div className="relative z-10 mx-auto w-full max-w-7xl px-5 pb-52 pt-14 sm:px-6 sm:pb-44">
+        {/* pointer-events-none lets clicks fall through to the slide link below */}
+        <div className="pointer-events-none relative z-10 mx-auto w-full max-w-7xl px-5 pb-64 pt-14 sm:px-6 sm:pb-56">
           <Reveal>
             <span
               className={`${mono.className} inline-flex items-center gap-2 rounded-full border border-white/20 bg-[#0c2340]/40 px-3.5 py-1.5 text-xs text-[#c7d5e3] backdrop-blur`}
@@ -248,22 +237,6 @@ export default function PortfolioIndex() {
               and if it fits your business, message me: I put your brand on it and you
               launch in days.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a
-                href="#templates"
-                className="inline-flex items-center gap-2 rounded-full bg-[#ff5a3c] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#e64a2e]"
-              >
-                Browse {SITE_COUNT} templates <ArrowRight className="size-4" />
-              </a>
-              <a
-                href={`https://wa.me/${WHATSAPP}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-white/25 px-6 py-3 text-sm font-bold text-white transition hover:bg-white/10"
-              >
-                <MessageCircle className="size-4" /> Talk to me first
-              </a>
-            </div>
           </Reveal>
         </div>
       </section>
@@ -320,29 +293,88 @@ export default function PortfolioIndex() {
         ))}
       </main>
 
-      {/* How it works */}
+      {/* How it works — vertical timeline ending at "live" */}
       <section id="how" className="scroll-mt-20 bg-[#0c2340] text-white">
-        <div className="mx-auto max-w-7xl px-5 py-16 sm:px-6">
+        <div className="mx-auto max-w-4xl px-5 py-16 sm:px-6 md:py-20">
           <Reveal>
-            <h2 className={`${display.className} text-3xl tracking-tight`}>How it works</h2>
-            <p className="mt-2 max-w-xl text-[#9fb3c8]">
+            <span
+              className={`${mono.className} inline-flex items-center rounded-full border border-[#ffd166]/30 bg-[#ffd166]/10 px-3.5 py-1.5 text-xs text-[#ffd166]`}
+            >
+              3 steps · days, not months
+            </span>
+            <h2 className={`${display.className} mt-4 text-3xl tracking-tight md:text-4xl`}>
+              How it works
+            </h2>
+            <p className="mt-2 max-w-xl text-[#c7d5e3]">
               You&apos;re not hiring a web project — you&apos;re buying a finished site.
+              Two of the steps are yours, and they take minutes.
             </p>
           </Reveal>
-          <div className="mt-10 grid gap-8 md:grid-cols-3">
-            {STEPS.map((step, i) => (
-              <Reveal key={step.n} delay={i * 100}>
-                <div className="flex gap-4">
-                  <span className={`${mono.className} text-2xl font-semibold text-[#ffd166]`}>
+
+          <div className="relative mt-12">
+            {/* The rail: starts at step 01, ends at the "live" dot */}
+            <span
+              aria-hidden
+              className="absolute bottom-4 left-[1.375rem] top-4 w-px bg-gradient-to-b from-[#ffd166]/70 via-white/20 to-[#ff5a3c]"
+            />
+            <ol className="space-y-8 md:space-y-10">
+              {STEPS.map((step, i) => (
+                <li key={step.n} className="relative pl-16 sm:pl-20">
+                  <span
+                    className={`${mono.className} absolute left-0 top-1 grid size-11 place-items-center rounded-full border border-[#ffd166]/40 bg-[#0c2340] text-sm font-semibold text-[#ffd166]`}
+                  >
                     {step.n}
                   </span>
-                  <div>
-                    <h3 className={`${display.className} text-xl`}>{step.title}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-[#9fb3c8]">{step.text}</p>
-                  </div>
-                </div>
-              </Reveal>
-            ))}
+                  <Reveal delay={i * 100}>
+                    <div className="overflow-hidden rounded-2xl border border-white/10 bg-[#122c50] sm:grid sm:grid-cols-[15rem_1fr]">
+                      <div className="relative aspect-[16/9] sm:aspect-auto sm:min-h-full">
+                        <Image
+                          src={step.image}
+                          alt={step.title}
+                          fill
+                          sizes="(min-width: 640px) 15rem, 90vw"
+                          className="object-cover"
+                        />
+                        {/* Navy tint keeps the photos in the section's palette */}
+                        <div className="absolute inset-0 bg-[#0c2340]/25" />
+                      </div>
+                      <div className="p-5 sm:p-6">
+                        <div className="flex flex-wrap items-center gap-3">
+                          <h3 className={`${display.className} text-xl md:text-2xl`}>{step.title}</h3>
+                          <span
+                            className={`${mono.className} rounded-full px-2.5 py-1 text-[0.62rem] uppercase tracking-wide ${
+                              step.who === "I do this"
+                                ? "bg-[#ff5a3c]/15 text-[#ff8a70]"
+                                : "bg-white/10 text-[#c7d5e3]"
+                            }`}
+                          >
+                            {step.who}
+                          </span>
+                        </div>
+                        <p className="mt-2.5 max-w-lg text-sm leading-relaxed text-[#c7d5e3] md:text-base">
+                          {step.text}
+                        </p>
+                      </div>
+                    </div>
+                  </Reveal>
+                </li>
+              ))}
+
+              {/* Terminus: where the rail ends up */}
+              <li className="relative pl-16 sm:pl-20">
+                <span className="absolute left-[0.6875rem] top-1.5 grid size-6 place-items-center rounded-full bg-[#ff5a3c] shadow-[0_0_18px_rgba(255,90,60,0.7)]">
+                  <span className="size-2 rounded-full bg-white" />
+                </span>
+                <Reveal delay={300}>
+                  <p className={`${display.className} pt-0.5 text-lg text-white md:text-xl`}>
+                    Your site is live.{" "}
+                    <a href="#templates" className="text-[#ffd166] underline-offset-4 hover:underline">
+                      Start with step 01 ↑
+                    </a>
+                  </p>
+                </Reveal>
+              </li>
+            </ol>
           </div>
         </div>
       </section>

@@ -59,6 +59,7 @@ export const PORTFOLIO: readonly PortfolioGroup[] = [
       { href: "/villa/v9", name: "Arc", brand: "Laguna Bay Villas", detail: "Arched frames & scrolling ticker", cover: "/img/layouts/villa-bedroom-canopy.jpg" },
       { href: "/villa/v10", name: "Chapters", brand: "Laguna Bay Villas", detail: "Split-screen story chapters", cover: "/img/layouts/villa-luxury-house.jpg" },
       { href: "/realestate", name: "Baan & Bay", brand: "Baan & Bay Property", detail: "Search-first portal, featured spec spread, area guide", cover: "/img/layouts/villa-resort-aerial.jpg" },
+      { href: "/biosphere", name: "Biosphere", brand: "Biosphere Land & Ecosystem Studio", detail: "Earth, water, wind & fire — land studio in bamboo", cover: "/img/layouts/biosphere-hero.jpg" },
     ],
   },
   {
