@@ -316,6 +316,19 @@
 .slide-kenburns {
   animation: slide-kenburns 8s linear both;
 }
+/* Very slow settle used by the /portfolio fullscreen hero — the zoom must
+   still be moving when the slide crossfades out, so it outlasts the slide. */
+@keyframes slide-zoom-out {
+  from {
+    transform: scale(1.22);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+.slide-zoom-out {
+  animation: slide-zoom-out 14s linear both;
+}
 
 /* Dive hero carousel — slow zoom in / out per full-screen slide */
 @keyframes dive-kb-in {
@@ -416,6 +429,7 @@
 @media (prefers-reduced-motion: reduce) {
   .hero-drift,
   .slide-kenburns,
+  .slide-zoom-out,
   .courier-drift,
   .studio-kenburns,
   .coach-breathe,

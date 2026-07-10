@@ -16,6 +16,7 @@ import { Reveal } from "@/components/layouts/Reveal";
 import { CategoryMarquee } from "@/components/layouts/portfolio/category-marquee";
 import { HeroCarousel } from "@/components/layouts/portfolio/hero-carousel";
 import { SmoothScroll } from "@/components/layouts/portfolio/smooth-scroll";
+import { StatsBar } from "@/components/layouts/portfolio/stats-bar";
 import { WhatsappFab } from "@/components/layouts/portfolio/whatsapp-fab";
 import { ALL_SITES, PORTFOLIO, type PortfolioSite } from "@/lib/layouts/registry";
 
@@ -64,16 +65,19 @@ const TRUST = [
 ] as const;
 
 function wantLink(site: PortfolioSite) {
-  const text = `Hi Felipe! I want the "${site.name}" template (${site.href}) for my business.`;
+  const text = site.external
+    ? `Hi Felipe! I want a site like "${site.name}" (${site.href}) for my business.`
+    : `Hi Felipe! I want the "${site.name}" template (${site.href}) for my business.`;
   return `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(text)}`;
 }
 
 /** A template sold as a product: cover framed in browser chrome, demo link + WhatsApp quick-buy. */
 function TemplateCard({ site, delay = 0 }: { site: PortfolioSite; delay?: number }) {
+  const newTab = site.external ? { target: "_blank", rel: "noopener noreferrer" } : {};
   return (
     <Reveal delay={delay} className="h-full">
       <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[#e3e8ea] bg-white transition hover:-translate-y-1 hover:shadow-[0_24px_48px_-28px_rgba(12,35,64,0.45)]">
-        <Link href={site.href} className="block">
+        <Link href={site.href} className="block" {...newTab}>
           <div className="flex items-center gap-2 border-b border-[#e3e8ea] bg-[#f4f6f6] px-3 py-2">
             <span className="flex gap-1.5">
               <span className="size-2.5 rounded-full bg-[#ff5a3c]" />
@@ -83,7 +87,7 @@ function TemplateCard({ site, delay = 0 }: { site: PortfolioSite; delay?: number
             <span
               className={`${mono.className} flex-1 truncate rounded-md bg-white px-2 py-0.5 text-[0.65rem] text-[#5c6b77]`}
             >
-              {site.href}
+              {site.href.replace(/^https?:\/\//, "")}
             </span>
           </div>
           <div className="relative aspect-[4/3] overflow-hidden">
@@ -97,14 +101,25 @@ function TemplateCard({ site, delay = 0 }: { site: PortfolioSite; delay?: number
           </div>
         </Link>
         <div className="flex flex-1 flex-col p-4">
-          <h3 className={`${display.className} text-lg text-[#16232f]`}>{site.name}</h3>
+          <div className="flex items-center gap-2">
+            <h3 className={`${display.className} text-lg text-[#16232f]`}>{site.name}</h3>
+            {site.external && (
+              <span
+                className={`${mono.className} rounded-full bg-[#0e7c66]/10 px-2 py-0.5 text-[0.6rem] font-semibold uppercase tracking-wide text-[#0e7c66]`}
+              >
+                In production
+              </span>
+            )}
+          </div>
           <p className="mt-1 flex-1 text-sm leading-snug text-[#5c6b77]">{site.detail}</p>
           <div className="mt-4 flex items-center justify-between gap-3">
             <Link
               href={site.href}
+              {...newTab}
               className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#0c2340] hover:text-[#ff5a3c]"
             >
-              Open live demo <ArrowUpRight className="size-4 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              {site.external ? "Open live site" : "Open live demo"}{" "}
+              <ArrowUpRight className="size-4 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </Link>
             <a
               href={wantLink(site)}
@@ -168,59 +183,20 @@ export default function PortfolioIndex() {
         </div>
       </header>
 
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-[#0c2340] text-white">
-        <div className="pointer-events-none absolute -right-28 -top-28 size-96 rounded-full bg-[#123056] blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-36 left-1/4 size-80 rounded-full bg-[#0f2a4b] blur-3xl" />
-        <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 py-16 sm:px-6 md:py-24 lg:grid-cols-[1.1fr_1fr]">
-          <Reveal>
-            <span
-              className={`${mono.className} inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3.5 py-1.5 text-xs text-[#c7d5e3]`}
-            >
-              <Code2 className="size-4 text-[#ffd166]" /> Software engineer · templates for sale
-            </span>
-            <h1 className={`${display.className} mt-5 text-4xl leading-[1.05] tracking-tight sm:text-5xl md:text-6xl`}>
-              Ready-made websites.
-              <br />
-              <span className="text-[#ff5a3c]">Pick one</span>, it&apos;s yours.
-            </h1>
-            <p className="mt-5 max-w-md text-base leading-relaxed text-[#9fb3c8]">
-              I&apos;m Felipe, a software engineer. Every template in this shop is a real
-              working site I built — booking calendars, menus, carts and all. Open a demo,
-              and if it fits your business, message me: I put your brand on it and you
-              launch in days.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a
-                href="#templates"
-                className="inline-flex items-center gap-2 rounded-full bg-[#ff5a3c] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#e64a2e]"
-              >
-                Browse {SITE_COUNT} templates <ArrowRight className="size-4" />
-              </a>
-              <a
-                href={`https://wa.me/${WHATSAPP}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-full border border-white/25 px-6 py-3 text-sm font-bold text-white transition hover:bg-white/10"
-              >
-                <MessageCircle className="size-4" /> Talk to me first
-              </a>
-            </div>
-          </Reveal>
-
-          {/* Autoplaying browser-window slideshow, one template per category */}
-          <Reveal from="right" delay={150}>
-            <HeroCarousel
-              slides={heroSlides}
-              monoClass={mono.className}
-              displayClass={display.className}
-            />
-          </Reveal>
-        </div>
-      </section>
+      {/* Shop numbers */}
+      <StatsBar
+        stats={[
+          { value: SITE_COUNT, label: "Live templates in the shop" },
+          { value: PORTFOLIO.length, label: "Business categories" },
+          { value: 100, suffix: "%", label: "Real working demos" },
+          { value: 1, label: "Engineer — no agency" },
+        ]}
+        monoClass={mono.className}
+        displayClass={display.className}
+      />
 
       {/* Categories */}
-      <section className="py-16">
+      <section className="py-14">
         <div className="mx-auto max-w-7xl px-5 sm:px-6">
           <Reveal>
             <h2 className={`${display.className} text-3xl tracking-tight text-[#0c2340]`}>
@@ -245,6 +221,51 @@ export default function PortfolioIndex() {
             monoClass={mono.className}
           />
         </Reveal>
+      </section>
+
+      {/* Hero — fullscreen slideshow (one template per category) behind the copy */}
+      <section className="relative flex min-h-dvh items-center overflow-hidden bg-[#0c2340] text-white">
+        <HeroCarousel
+          slides={heroSlides}
+          monoClass={mono.className}
+          displayClass={display.className}
+        />
+        <div className="relative z-10 mx-auto w-full max-w-7xl px-5 pb-52 pt-14 sm:px-6 sm:pb-44">
+          <Reveal>
+            <span
+              className={`${mono.className} inline-flex items-center gap-2 rounded-full border border-white/20 bg-[#0c2340]/40 px-3.5 py-1.5 text-xs text-[#c7d5e3] backdrop-blur`}
+            >
+              <Code2 className="size-4 text-[#ffd166]" /> Software engineer · templates for sale
+            </span>
+            <h1 className={`${display.className} mt-5 text-4xl leading-[1.05] tracking-tight sm:text-5xl md:text-6xl`}>
+              Ready-made websites.
+              <br />
+              <span className="text-[#ff5a3c]">Pick one</span>, it&apos;s yours.
+            </h1>
+            <p className="mt-5 max-w-md text-base leading-relaxed text-[#d3dfea]">
+              I&apos;m Felipe, a software engineer. Every template in this shop is a real
+              working site I built — booking calendars, menus, carts and all. Open a demo,
+              and if it fits your business, message me: I put your brand on it and you
+              launch in days.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a
+                href="#templates"
+                className="inline-flex items-center gap-2 rounded-full bg-[#ff5a3c] px-6 py-3 text-sm font-bold text-white transition hover:bg-[#e64a2e]"
+              >
+                Browse {SITE_COUNT} templates <ArrowRight className="size-4" />
+              </a>
+              <a
+                href={`https://wa.me/${WHATSAPP}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full border border-white/25 px-6 py-3 text-sm font-bold text-white transition hover:bg-white/10"
+              >
+                <MessageCircle className="size-4" /> Talk to me first
+              </a>
+            </div>
+          </Reveal>
+        </div>
       </section>
 
       {/* Featured full builds */}
