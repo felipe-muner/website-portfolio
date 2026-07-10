@@ -215,9 +215,9 @@ export function SlotBooking({
             <span style={{ color: theme.muted }}>Date</span>
             <span className="font-semibold">{date ? format(date, "EEE d MMM") : "—"}</span>
           </p>
-          <p className="flex justify-between">
+          <p className="flex justify-between gap-3">
             <span style={{ color: theme.muted }}>Price</span>
-            <span className="font-semibold">{currency}{option.price.toLocaleString()} {priceUnit}</span>
+            <span className="text-right font-semibold">{currency}{option.price.toLocaleString()} {priceUnit}</span>
           </p>
         </div>
         <div className="my-5 h-px w-full" style={{ backgroundColor: theme.border }} />
