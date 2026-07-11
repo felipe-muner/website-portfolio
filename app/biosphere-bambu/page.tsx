@@ -11,6 +11,7 @@ import casaImg from "@/public/img/layouts/biosphere-casa.jpg";
 import buildImg from "@/public/img/layouts/biosphere-build.jpg";
 import communityImg from "@/public/img/layouts/biosphere-community.jpg";
 import { LayoutSwitcher } from "@/components/layouts/LayoutSwitcher";
+import { BiosphereMobileMenu } from "@/components/layouts/biosphere/mobile-menu";
 import { SmoothScroll } from "@/components/layouts/portfolio/smooth-scroll";
 import { SlotBooking, type SlotOption } from "@/components/layouts/SlotBooking";
 import { CONTACT } from "@/lib/layouts/content";
@@ -400,13 +401,24 @@ export default function BiosphereBambuPage() {
               </a>
             ))}
           </nav>
-          <a
-            href="#events"
-            className="rounded-[2px] px-4 py-2 text-[11px] font-medium uppercase tracking-[0.16em] transition-opacity hover:opacity-85"
-            style={{ backgroundColor: SEAL, color: WASHI }}
-          >
-            Walk the land
-          </a>
+          <div className="flex items-center gap-1">
+            <a
+              href="#events"
+              className="rounded-[2px] px-4 py-2 text-[11px] font-medium uppercase tracking-[0.16em] transition-opacity hover:opacity-85"
+              style={{ backgroundColor: SEAL, color: WASHI }}
+            >
+              Walk the land
+            </a>
+            <BiosphereMobileMenu
+              links={NAV}
+              cta={{ label: "Walk the land", href: "#events" }}
+              triggerColor={WASHI}
+              panelStyle={{ backgroundColor: WASHI, color: SUMI, borderColor: GOLDTHREAD }}
+              linkClassName={`${mincho.className} text-2xl`}
+              ctaClassName="rounded-[2px] px-5 py-3 text-center text-[11px] font-medium uppercase tracking-[0.16em]"
+              ctaStyle={{ backgroundColor: SEAL, color: WASHI }}
+            />
+          </div>
         </div>
       </header>
 
