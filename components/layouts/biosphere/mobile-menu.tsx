@@ -28,6 +28,7 @@ export function BiosphereMobileMenu({
   linkClassName = "",
   ctaClassName = "",
   ctaStyle,
+  hiddenFrom = "md",
 }: {
   links: readonly MobileMenuLink[];
   cta?: MobileMenuLink;
@@ -37,6 +38,8 @@ export function BiosphereMobileMenu({
   linkClassName?: string;
   ctaClassName?: string;
   ctaStyle?: CSSProperties;
+  /** Breakpoint where the host page's desktop nav takes over. */
+  hiddenFrom?: "md" | "lg";
 }) {
   const [open, setOpen] = useState(false);
 
@@ -59,7 +62,9 @@ export function BiosphereMobileMenu({
         <button
           type="button"
           aria-label="Open menu"
-          className="grid size-10 place-items-center rounded-full transition-opacity hover:opacity-70 md:hidden"
+          className={`grid size-10 place-items-center rounded-full transition-opacity hover:opacity-70 ${
+            hiddenFrom === "lg" ? "lg:hidden" : "md:hidden"
+          }`}
           style={{ color: triggerColor }}
         >
           <Menu className="size-5" />
