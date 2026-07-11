@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import type { CSSProperties, ReactNode } from "react";
 import Image from "next/image";
 import { Space_Grotesk, Fragment_Mono } from "next/font/google";
+import logoImg from "@/public/img/layouts/biosphere-logo.png";
+import heroImg from "@/public/img/layouts/biosphere-hero.jpg";
+import casaImg from "@/public/img/layouts/biosphere-casa.jpg";
+import buildImg from "@/public/img/layouts/biosphere-build.jpg";
 import { LayoutSwitcher } from "@/components/layouts/LayoutSwitcher";
 import { SmoothScroll } from "@/components/layouts/portfolio/smooth-scroll";
 import { SlotBooking, type SlotOption } from "@/components/layouts/SlotBooking";
@@ -285,7 +289,7 @@ export default function BiosphereMasterplanPage() {
       >
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
           <a href="#site" className="flex items-center gap-3">
-            <Image src="/img/layouts/biosphere-logo.png" alt="" width={26} height={26} />
+            <Image src={logoImg} alt="" width={26} height={26} priority />
             <span className={`${mono.className} text-sm tracking-[0.3em]`} style={{ color: HEAD }}>
               BIOSPHERE
             </span>
@@ -326,10 +330,11 @@ export default function BiosphereMasterplanPage() {
           <div className="grain relative overflow-hidden">
             <div className="relative aspect-[4/5] sm:aspect-[16/10] lg:aspect-[2/1]">
               <Image
-                src="/img/layouts/biosphere-hero.jpg"
+                src={heroImg}
                 alt="Bamboo eco-villas with pools glowing at dusk on a jungle hillside"
                 fill
                 priority
+                placeholder="blur"
                 sizes="(min-width: 1280px) 1216px, 100vw"
                 className="object-cover"
               />
@@ -531,9 +536,10 @@ export default function BiosphereMasterplanPage() {
               <article className="border" style={{ borderColor: HAIRLINE, backgroundColor: "rgba(14, 21, 18, 0.6)" }}>
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <Image
-                    src="/img/layouts/biosphere-casa.jpg"
+                    src={casaImg}
                     alt="Finished bamboo and wood interior of La Casa"
                     fill
+                    placeholder="blur"
                     sizes="(min-width: 1024px) 384px, (min-width: 768px) 45vw, 100vw"
                     className="object-cover"
                   />
@@ -571,9 +577,10 @@ export default function BiosphereMasterplanPage() {
               <article className="border" style={{ borderColor: HAIRLINE, backgroundColor: "rgba(14, 21, 18, 0.6)" }}>
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <Image
-                    src="/img/layouts/biosphere-build.jpg"
+                    src={buildImg}
                     alt="Workers raising a bamboo frame on The Bay construction site"
                     fill
+                    placeholder="blur"
                     sizes="(min-width: 1024px) 384px, (min-width: 768px) 45vw, 100vw"
                     className="object-cover"
                   />
@@ -687,7 +694,7 @@ export default function BiosphereMasterplanPage() {
           <div className="grid gap-px md:grid-cols-3" style={{ backgroundColor: HAIRLINE }}>
             <div className="flex flex-col justify-between gap-6 p-6" style={{ backgroundColor: SHEET }}>
               <div className="flex items-center gap-3">
-                <Image src="/img/layouts/biosphere-logo.png" alt="" width={34} height={34} />
+                <Image src={logoImg} alt="" width={34} height={34} />
                 <div>
                   <p className={`${mono.className} text-sm tracking-[0.3em]`} style={{ color: HEAD }}>
                     BIOSPHERE

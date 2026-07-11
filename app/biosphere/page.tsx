@@ -1,6 +1,16 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import { Newsreader, Figtree } from "next/font/google";
+import logoImg from "@/public/img/layouts/biosphere-logo.png";
+import heroImg from "@/public/img/layouts/biosphere-hero.jpg";
+import earthImg from "@/public/img/layouts/biosphere-earth.jpg";
+import waterImg from "@/public/img/layouts/biosphere-water.jpg";
+import windImg from "@/public/img/layouts/biosphere-wind.jpg";
+import fireImg from "@/public/img/layouts/biosphere-fire.jpg";
+import casaImg from "@/public/img/layouts/biosphere-casa.jpg";
+import buildImg from "@/public/img/layouts/biosphere-build.jpg";
+import planImg from "@/public/img/layouts/biosphere-plan.jpg";
+import communityImg from "@/public/img/layouts/biosphere-community.jpg";
 import { LayoutSwitcher } from "@/components/layouts/LayoutSwitcher";
 import { BiosphereNav } from "@/components/layouts/biosphere/nav";
 import { SmoothScroll } from "@/components/layouts/portfolio/smooth-scroll";
@@ -90,7 +100,7 @@ const ELEMENTS: readonly {
   numeral: string;
   name: string;
   color: string;
-  image: string;
+  image: StaticImageData;
   line: string;
   text: string;
   chips: readonly string[];
@@ -100,7 +110,7 @@ const ELEMENTS: readonly {
     numeral: "I",
     name: "Earth",
     color: CLAY,
-    image: "/img/layouts/biosphere-earth.jpg",
+    image: earthImg,
     line: "Every masterplan starts under your feet.",
     text: "We read soil, slope and stone before drawing a single wall. Terraces, swales and access roads are shaped from the land's own contours — so what gets built feels found, not forced.",
     chips: ["Land audit & masterplan", "Soil & terracing", "Architecture & construction"],
@@ -110,7 +120,7 @@ const ELEMENTS: readonly {
     numeral: "II",
     name: "Water",
     color: TEAL,
-    image: "/img/layouts/biosphere-water.jpg",
+    image: waterImg,
     line: "Water decides where life gathers.",
     text: "Spring, rain and greywater are mapped into one living cycle: swales slow it, ponds hold it, gardens drink it. Pools sit exactly where the land already wants water to rest.",
     chips: ["Hydrology & swales", "Pools & ponds", "Ecology & reforestation"],
@@ -120,7 +130,7 @@ const ELEMENTS: readonly {
     numeral: "III",
     name: "Wind",
     color: AIR,
-    image: "/img/layouts/biosphere-wind.jpg",
+    image: windImg,
     line: "The invisible layers carry the plan.",
     text: "Breeze paths cool the buildings before electricity has to; drones read the canopy from above; titles, permits and governance move quietly underneath. Everything you don't see — handled.",
     chips: ["Nature intelligence & survey", "Passive cooling & orientation", "Legal & governance"],
@@ -130,7 +140,7 @@ const ELEMENTS: readonly {
     numeral: "IV",
     name: "Fire",
     color: EMBER,
-    image: "/img/layouts/biosphere-fire.jpg",
+    image: fireImg,
     line: "A place is finished when people gather in it.",
     text: "Kitchens, fire pits and lantern light turn a masterplan into a living address. We train the team, open the doors and stay through the first season of hospitality.",
     chips: ["Hospitality & operations", "Community & events", "Brand & business"],
@@ -150,14 +160,14 @@ const PROJECTS = [
   {
     id: "la-casa",
     name: "La Casa — The Fibonacci",
-    image: "/img/layouts/biosphere-casa.jpg",
+    image: casaImg,
     note: "A spiral of shared pavilions where the golden ratio sets every room's proportion.",
     status: "Completed · 14 months",
   },
   {
     id: "the-bay",
     name: "The Bay",
-    image: "/img/layouts/biosphere-build.jpg",
+    image: buildImg,
     note: "A tide-facing hillside raised entirely in bamboo — currently in its build season.",
     status: "In progress · phase 03",
   },
@@ -182,10 +192,11 @@ export default function BiospherePage() {
       {/* Hero */}
       <section id="top" className="relative flex min-h-[92dvh] items-end overflow-hidden">
         <Image
-          src="/img/layouts/biosphere-hero.jpg"
+          src={heroImg}
           alt="Bamboo villas at dusk, pools reflecting the last light"
           fill
           priority
+          placeholder="blur"
           sizes="100vw"
           className="slide-zoom-out object-cover"
         />
@@ -275,6 +286,7 @@ export default function BiospherePage() {
                   src={el.image}
                   alt={el.name}
                   fill
+                  placeholder="blur"
                   sizes="(min-width: 768px) 40vw, 85vw"
                   className="object-cover"
                 />
@@ -311,7 +323,7 @@ export default function BiospherePage() {
               className="grid size-12 place-items-center rounded-full border-2"
               style={{ borderColor: INK, backgroundColor: PAPER }}
             >
-              <Image src="/img/layouts/biosphere-logo.png" alt="" width={28} height={28} className="size-7" />
+              <Image src={logoImg} alt="" width={28} height={28} className="size-7" />
             </span>
           </div>
           <div className="self-center md:col-start-3 md:row-start-1">
@@ -333,9 +345,10 @@ export default function BiospherePage() {
       <section id="year" className="scroll-mt-24 text-[#f4efe4]" style={{ backgroundColor: INK }}>
         <div className="relative h-64 w-full overflow-hidden sm:h-80">
           <Image
-            src="/img/layouts/biosphere-plan.jpg"
+            src={planImg}
             alt="Design team reviewing the masterplan on a bamboo construction site"
             fill
+            placeholder="blur"
             sizes="100vw"
             className="object-cover opacity-80"
           />
@@ -386,6 +399,7 @@ export default function BiospherePage() {
                   src={project.image}
                   alt={project.name}
                   fill
+                  placeholder="blur"
                   sizes="(min-width: 768px) 45vw, 92vw"
                   className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
                 />
@@ -424,9 +438,10 @@ export default function BiospherePage() {
             </p>
             <div className="relative mt-8 aspect-[4/3] overflow-hidden rounded-lg">
               <Image
-                src="/img/layouts/biosphere-community.jpg"
+                src={communityImg}
                 alt="The studio team gathered under a bamboo pavilion"
                 fill
+                placeholder="blur"
                 sizes="(min-width: 768px) 45vw, 92vw"
                 className="object-cover"
               />
@@ -461,7 +476,7 @@ export default function BiospherePage() {
           ))}
         </div>
         <Image
-          src="/img/layouts/biosphere-logo.png"
+          src={logoImg}
           alt="Biosphere logo"
           width={48}
           height={48}
