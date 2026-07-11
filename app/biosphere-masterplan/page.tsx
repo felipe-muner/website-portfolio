@@ -7,6 +7,7 @@ import heroImg from "@/public/img/layouts/biosphere-hero.jpg";
 import casaImg from "@/public/img/layouts/biosphere-casa.jpg";
 import buildImg from "@/public/img/layouts/biosphere-build.jpg";
 import { LayoutSwitcher } from "@/components/layouts/LayoutSwitcher";
+import { BiosphereMobileMenu } from "@/components/layouts/biosphere/mobile-menu";
 import { SmoothScroll } from "@/components/layouts/portfolio/smooth-scroll";
 import { SlotBooking, type SlotOption } from "@/components/layouts/SlotBooking";
 import { CONTACT } from "@/lib/layouts/content";
@@ -314,13 +315,29 @@ export default function BiosphereMasterplanPage() {
               Contact
             </a>
           </nav>
-          <a
-            href="#site-visit"
-            className="rounded-[2px] px-4 py-2 text-[11px] font-bold uppercase tracking-[0.14em] transition-opacity hover:opacity-85"
-            style={{ backgroundColor: AMBER, color: BG }}
-          >
-            Walk the land
-          </a>
+          <div className="flex items-center gap-1">
+            <a
+              href="#site-visit"
+              className="rounded-[2px] px-4 py-2 text-[11px] font-bold uppercase tracking-[0.14em] transition-opacity hover:opacity-85"
+              style={{ backgroundColor: AMBER, color: BG }}
+            >
+              Walk the land
+            </a>
+            <BiosphereMobileMenu
+              links={[
+                { label: "About", href: "#survey" },
+                { label: "Projects", href: "#as-built" },
+                { label: "Events", href: "#programme" },
+                { label: "Contact", href: "#contact" },
+              ]}
+              cta={{ label: "Walk the land", href: "#site-visit" }}
+              triggerColor={HEAD}
+              panelStyle={{ backgroundColor: SHEET, color: HEAD, borderColor: HAIRLINE }}
+              linkClassName={`${mono.className} text-lg uppercase tracking-[0.18em]`}
+              ctaClassName="rounded-[2px] px-5 py-3 text-center text-[11px] font-bold uppercase tracking-[0.14em]"
+              ctaStyle={{ backgroundColor: AMBER, color: BG }}
+            />
+          </div>
         </div>
       </header>
 
