@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import Image, { type StaticImageData } from "next/image";
 import { Fraunces, Karla, IBM_Plex_Mono } from "next/font/google";
 import logoImg from "@/public/img/layouts/biosphere-logo.png";
@@ -114,6 +114,109 @@ function Plate({
   );
 }
 
+/**
+ * Engraved field-guide figures, one per phase of the year — pale line
+ * drawings on the dark note cards, gold where the work (or the sun) is.
+ */
+function PhaseFigure({
+  index,
+  stroke = "rgba(232, 237, 221, 0.72)",
+  fill = "rgba(232, 237, 221, 0.6)",
+}: {
+  index: number;
+  stroke?: string;
+  fill?: string;
+}) {
+  return (
+    <svg viewBox="0 0 64 48" className="h-11 w-[3.75rem]" aria-hidden>
+      <g
+        fill="none"
+        stroke={stroke}
+        strokeWidth={1.5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        {index === 0 && (
+          <>
+            {/* walking the land: contours, footsteps, a survey pennant */}
+            <path d="M4 38 C 12 28, 22 28, 30 34 C 38 40, 48 40, 60 32" />
+            <path d="M10 43 C 20 37, 34 39, 44 43" opacity={0.55} />
+            <path d="M40 33 V12" />
+            <path d="M40 12 C 45 13.5, 49 13, 53 11 C 50 16, 45 17.5, 40 18 Z" fill={fill} stroke="none" />
+            {[
+              [14, 33.5],
+              [20, 30.5],
+              [26, 31.5],
+            ].map(([cx, cy]) => (
+              <circle key={cx} cx={cx} cy={cy} r={1} fill={fill} stroke="none" />
+            ))}
+          </>
+        )}
+        {index === 1 && (
+          <>
+            {/* the one drawing: a scroll-edged plan, footprint and contours */}
+            <path d="M13 9 H51 V39 H13 Z" />
+            <path d="M13 9 C 8.5 9.5, 8.5 15, 13 15.5" />
+            <path d="M21 14 h9 v7 h-9 z" />
+            <path d="M19 31 C 25 24, 35 23, 45 29" strokeDasharray="3 3" />
+            <path d="M42 14 v6 M39 17 h6" />
+          </>
+        )}
+        {index === 2 && (
+          <>
+            {/* frame rising, joints lashed in pollen gold */}
+            <path d="M20 41 V12 M18.5 32 h3 M18.5 22 h3" />
+            <path d="M44 41 V12 M42.5 30 h3 M42.5 20 h3" />
+            <path d="M13 14 H51" />
+            <path d="M20 38 L44 16" />
+            <path d="M17.5 11.5 l5 5 M22.5 11.5 l-5 5" stroke={POLLEN} />
+            <path d="M41.5 11.5 l5 5 M46.5 11.5 l-5 5" stroke={POLLEN} />
+          </>
+        )}
+        {index === 3 && (
+          <>
+            {/* a lantern lit, a garden potted */}
+            <path d="M23 6 V12" />
+            <path d="M23 12 C 16 12, 14 18, 14 23 C 14 29, 18 32, 23 32 C 28 32, 32 29, 32 23 C 32 18, 30 12, 23 12 Z" />
+            <path d="M14.5 22 H31.5" opacity={0.55} />
+            <path d="M23 32 V36" />
+            <path d="M42 35 H54 L52.5 41 H43.5 Z" />
+            <path d="M47 35 C 47 29, 44 26, 41 23" />
+            <path d="M48.5 35 C 49 28, 52 26, 55 22" />
+            <path d="M41 23 C 37.5 21, 36 17.5, 37 14 C 40.5 16, 42 19.5, 41 23 Z" fill={fill} stroke="none" />
+            <path d="M55 22 C 58.5 20, 60 16.5, 59 13 C 55.5 15, 54 18.5, 55 22 Z" fill={fill} stroke="none" />
+          </>
+        )}
+        {index === 4 && (
+          <>
+            {/* the team, ready at the door */}
+            <path d="M11.5 41 C 13 32.5, 23 32.5, 24.5 41" />
+            <path d="M25 41 C 26.5 30, 37.5 30, 39 41" />
+            <path d="M39.5 41 C 41 32.5, 51 32.5, 52.5 41" />
+            <circle cx={18} cy={26.5} r={2.4} fill={fill} stroke="none" />
+            <circle cx={32} cy={23.5} r={2.6} fill={fill} stroke="none" />
+            <circle cx={46} cy={26.5} r={2.4} fill={fill} stroke="none" />
+          </>
+        )}
+        {index === 5 && (
+          <>
+            {/* doors open: the house under green, sun risen in pollen gold */}
+            <path d="M10 27 C 18 14, 46 14, 54 27" />
+            <path d="M17 27 V41 M47 27 V41" />
+            <path d="M10 41 H54" />
+            <path d="M28.5 41 V33.5 C 28.5 31.5, 35.5 31.5, 35.5 33.5 V41" />
+            <path d="M8 41 C 9.5 32, 12 24, 17 16" />
+            <path d="M17 16 C 20 12.5, 24.5 11, 29 12 C 25.5 15.5, 21 16.8, 17 16 Z" fill={fill} stroke="none" />
+            <path d="M14.5 22 C 11 19.5, 9.5 16, 10 12.5 C 13.5 15, 15 18.5, 14.5 22 Z" fill={fill} stroke="none" />
+            <path d="M56 41 c 1 -2.5, 1 -4, .5 -5.5 M60 41 c .8 -2, 1.4 -3.2, 2.6 -4" />
+            <circle cx={50} cy={10} r={4} fill={POLLEN} stroke="none" />
+          </>
+        )}
+      </g>
+    </svg>
+  );
+}
+
 const ELEMENTS: readonly {
   id: ElementKind;
   numeral: string;
@@ -169,6 +272,32 @@ const PHASES = [
   { n: "05", months: "Month 11", title: "Activation", text: "Operations, hospitality and management systems are prepared for a seamless launch." },
   { n: "06", months: "Month 12", title: "A Place Comes to Life", text: "The vision becomes reality — a destination where nature, people and purpose exist in harmony." },
 ] as const;
+
+type YearState = "complete" | "build" | "planned";
+
+/** Month spans for the collection calendar, drawn to scale like a phenology chart. */
+const YEAR: readonly { start: number; end: number; state: YearState }[] = [
+  { start: 1, end: 1, state: "complete" },
+  { start: 2, end: 3, state: "complete" },
+  { start: 4, end: 8, state: "build" },
+  { start: 9, end: 11, state: "planned" },
+  { start: 11, end: 11, state: "planned" },
+  { start: 12, end: 12, state: "planned" },
+];
+
+function yearBarStyle(state: YearState): CSSProperties {
+  if (state === "complete") {
+    return { backgroundColor: MOUNT, color: PALE, border: `1px solid ${MOUNT}` };
+  }
+  if (state === "build") {
+    return {
+      border: `1px solid ${MOUNT}`,
+      backgroundImage: "repeating-linear-gradient(45deg, rgba(34, 56, 43, 0.3) 0 4px, transparent 4px 9px)",
+      color: INK,
+    };
+  }
+  return { border: `1.5px dashed ${POLLEN}`, color: "#7d5613" };
+}
 
 const PROJECTS = [
   {
@@ -388,22 +517,98 @@ export default function BiosphereFieldPage() {
               development.
             </p>
           </div>
-          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {PHASES.map((phase) => (
-              <div key={phase.n} className="p-6" style={{ backgroundColor: MOUNT, color: PALE }}>
-                <div className="flex items-baseline justify-between gap-3">
-                  <p className={`${display.className} text-3xl italic`} style={{ color: POLLEN }}>
-                    {phase.n}
-                  </p>
-                  <p className={`${mono.className} text-[10px] uppercase tracking-[0.2em]`} style={{ color: "rgba(232, 237, 221, 0.6)" }}>
-                    {phase.months}
-                  </p>
+          <div className="relative mt-12">
+            <div className="overflow-x-auto pb-3">
+              <div className="min-w-[960px]">
+                {/* month scale */}
+                <div className="grid grid-cols-[15rem_1fr]">
+                  <span />
+                  <div className="grid grid-cols-12">
+                    {Array.from({ length: 12 }, (_, m) => (
+                      <span
+                        key={m}
+                        className={`${mono.className} pb-2 text-center text-[9px] uppercase tracking-[0.18em]`}
+                        style={{ color: MUTED }}
+                      >
+                        M{String(m + 1).padStart(2, "0")}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-                <h3 className={`${display.className} mt-3 text-xl`}>{phase.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed" style={{ color: "rgba(232, 237, 221, 0.78)" }}>
-                  {phase.text}
-                </p>
+                {PHASES.map((phase, i) => {
+                  const row = YEAR[i];
+                  return (
+                    <div
+                      key={phase.n}
+                      className="grid grid-cols-[15rem_1fr] border-t"
+                      style={{ borderColor: HAIRLINE }}
+                    >
+                      <div className="flex items-center justify-between gap-3 py-4 pr-5">
+                        <div>
+                          <p className={`${mono.className} text-[10px] uppercase tracking-[0.2em]`} style={{ color: POLLEN }}>
+                            P-{phase.n}
+                          </p>
+                          <h3 className={`${display.className} mt-1 text-lg leading-tight`}>{phase.title}</h3>
+                          <p className={`${mono.className} mt-1 text-[9px] uppercase tracking-[0.18em]`} style={{ color: MUTED }}>
+                            {phase.months}
+                          </p>
+                        </div>
+                        <PhaseFigure index={i} stroke="rgba(29, 43, 33, 0.7)" fill="rgba(29, 43, 33, 0.55)" />
+                      </div>
+                      <div
+                        className="relative grid grid-cols-12 items-center"
+                        style={{
+                          backgroundImage: `linear-gradient(to right, ${HAIRLINE} 1px, transparent 1px)`,
+                          backgroundSize: "calc(100% / 12) 100%",
+                        }}
+                      >
+                        <div
+                          className={`${mono.className} mx-0.5 flex h-9 items-center px-2.5 text-[9px] uppercase tracking-[0.16em]`}
+                          style={{ ...yearBarStyle(row.state), gridColumn: `${row.start} / ${row.end + 1}` }}
+                        >
+                          {row.state === "complete" ? "Complete" : row.state === "build" ? "In build" : "Planned"}
+                        </div>
+                        {i === PHASES.length - 1 && (
+                          <span
+                            className={`${mono.className} absolute -top-2 right-1 rotate-6 border-2 px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-[0.16em]`}
+                            style={{ borderColor: POLLEN, color: "#7d5613", backgroundColor: "rgba(240, 242, 233, 0.85)" }}
+                          >
+                            First guests
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+                <div className="border-t" style={{ borderColor: HAIRLINE }} />
               </div>
+            </div>
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-y-0 right-0 w-10 md:hidden"
+              style={{ background: "linear-gradient(to left, #f0f2e9, rgba(240, 242, 233, 0))" }}
+            />
+          </div>
+          <p className={`${mono.className} mt-1 text-[10px] uppercase tracking-[0.2em] md:hidden`} style={{ color: MUTED }}>
+            Slide for month 12 →
+          </p>
+
+          <div className="mt-7 flex flex-wrap items-center gap-x-7 gap-y-3">
+            {(
+              [
+                ["complete", "Complete"],
+                ["build", "In build — The Bay"],
+                ["planned", "Planned"],
+              ] as const
+            ).map(([state, label]) => (
+              <p
+                key={state}
+                className={`${mono.className} flex items-center gap-2 text-[10px] uppercase tracking-[0.18em]`}
+                style={{ color: MUTED }}
+              >
+                <span aria-hidden className="inline-block h-2.5 w-6" style={yearBarStyle(state)} />
+                {label}
+              </p>
             ))}
           </div>
           <p className={`${display.className} mt-12 max-w-md text-xl italic leading-relaxed sm:text-2xl`}>
