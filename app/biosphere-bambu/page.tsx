@@ -326,6 +326,144 @@ function internodeStyle(state: PhaseState): CSSProperties {
   return { border: "1px dashed rgba(36, 38, 33, 0.5)" };
 }
 
+/**
+ * Marginalia ink studies, one above each internode — the year sketched the
+ * way a site journal would draw it. Ink weight follows the phase state:
+ * finished months in full ink, the active build lashed in cinnabar, months
+ * ahead in faint dashed underdrawing. The finale is always fully inked —
+ * the finished picture the whole year is painting toward.
+ */
+function PhaseSketch({ index, state }: { index: number; state: PhaseState }) {
+  const finale = index === 5;
+  const ahead = state === "ahead" && !finale;
+  const ink = ahead ? 0.5 : 0.72;
+  const fillInk = ahead ? 0.4 : 0.6;
+  const seal = state === "active" ? 0.85 : ahead ? 0.5 : 0.7;
+
+  return (
+    <svg viewBox="0 0 64 48" className="h-12 w-16" aria-hidden>
+      <g
+        fill="none"
+        stroke={SUMI}
+        strokeOpacity={ink}
+        strokeWidth={1.5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeDasharray={ahead ? "2.5 3.5" : undefined}
+      >
+        {index === 0 && (
+          <>
+            {/* walking the land: contours, footsteps, a survey pennant */}
+            <path d="M4 38 C 12 28, 22 28, 30 34 C 38 40, 48 40, 60 32" />
+            <path d="M10 43 C 20 37, 34 39, 44 43" strokeOpacity={ink * 0.55} />
+            <path d="M40 33 V12" />
+            <path
+              d="M40 12 C 45 13.5, 49 13, 53 11 C 50 16, 45 17.5, 40 18 Z"
+              fill={SUMI}
+              fillOpacity={fillInk}
+              stroke="none"
+            />
+            {[
+              [14, 33.5],
+              [20, 30.5],
+              [26, 31.5],
+            ].map(([cx, cy]) => (
+              <circle key={cx} cx={cx} cy={cy} r={1} fill={SUMI} fillOpacity={fillInk} stroke="none" />
+            ))}
+          </>
+        )}
+        {index === 1 && (
+          <>
+            {/* the one drawing: a scroll-edged plan, footprint and contours */}
+            <path d="M13 9 H51 V39 H13 Z" />
+            <path d="M13 9 C 8.5 9.5, 8.5 15, 13 15.5" />
+            <path d="M21 14 h9 v7 h-9 z" />
+            <path d="M19 31 C 25 24, 35 23, 45 29" strokeDasharray="3 3" />
+            <path d="M42 14 v6 M39 17 h6" />
+          </>
+        )}
+        {index === 2 && (
+          <>
+            {/* bamboo frame rising, joints lashed in cinnabar */}
+            <path d="M20 41 V12 M18.5 32 h3 M18.5 22 h3" />
+            <path d="M44 41 V12 M42.5 30 h3 M42.5 20 h3" />
+            <path d="M13 14 H51" />
+            <path d="M20 38 L44 16" />
+            <path d="M17.5 11.5 l5 5 M22.5 11.5 l-5 5" stroke={SEAL} strokeOpacity={seal} />
+            <path d="M41.5 11.5 l5 5 M46.5 11.5 l-5 5" stroke={SEAL} strokeOpacity={seal} />
+            <path
+              d={LEAF}
+              transform="translate(51 14) scale(0.35) rotate(-28)"
+              fill={SUMI}
+              fillOpacity={fillInk}
+              stroke="none"
+            />
+          </>
+        )}
+        {index === 3 && (
+          <>
+            {/* a lantern lit, a garden potted */}
+            <path d="M23 6 V12" />
+            <path d="M23 12 C 16 12, 14 18, 14 23 C 14 29, 18 32, 23 32 C 28 32, 32 29, 32 23 C 32 18, 30 12, 23 12 Z" />
+            <path d="M14.5 22 H31.5" strokeOpacity={ink * 0.6} />
+            <path d="M23 32 V36" />
+            <path d="M42 35 H54 L52.5 41 H43.5 Z" />
+            <path d="M47 35 C 47 29, 44 26, 41 23" />
+            <path d="M48.5 35 C 49 28, 52 26, 55 22" />
+            <path
+              d="M41 23 C 37.5 21, 36 17.5, 37 14 C 40.5 16, 42 19.5, 41 23 Z"
+              fill={SUMI}
+              fillOpacity={fillInk}
+              stroke="none"
+            />
+            <path
+              d="M55 22 C 58.5 20, 60 16.5, 59 13 C 55.5 15, 54 18.5, 55 22 Z"
+              fill={SUMI}
+              fillOpacity={fillInk}
+              stroke="none"
+            />
+          </>
+        )}
+        {index === 4 && (
+          <>
+            {/* the team, robed and ready at the door */}
+            <path d="M11.5 41 C 13 32.5, 23 32.5, 24.5 41" />
+            <path d="M25 41 C 26.5 30, 37.5 30, 39 41" />
+            <path d="M39.5 41 C 41 32.5, 51 32.5, 52.5 41" />
+            <circle cx={18} cy={26.5} r={2.4} fill={SUMI} fillOpacity={fillInk} stroke="none" />
+            <circle cx={32} cy={23.5} r={2.6} fill={SUMI} fillOpacity={fillInk} stroke="none" />
+            <circle cx={46} cy={26.5} r={2.4} fill={SUMI} fillOpacity={fillInk} stroke="none" />
+          </>
+        )}
+        {finale && (
+          <>
+            {/* doors open: the house under bamboo, sun risen in seal red */}
+            <path d="M10 27 C 18 14, 46 14, 54 27" />
+            <path d="M17 27 V41 M47 27 V41" />
+            <path d="M10 41 H54" />
+            <path d="M28.5 41 V33.5 C 28.5 31.5, 35.5 31.5, 35.5 33.5 V41" />
+            <path d="M8 41 C 9.5 32, 12 24, 17 16" />
+            <path
+              d="M17 16 C 20 12.5, 24.5 11, 29 12 C 25.5 15.5, 21 16.8, 17 16 Z"
+              fill={SUMI}
+              fillOpacity={fillInk}
+              stroke="none"
+            />
+            <path
+              d="M14.5 22 C 11 19.5, 9.5 16, 10 12.5 C 13.5 15, 15 18.5, 14.5 22 Z"
+              fill={SUMI}
+              fillOpacity={fillInk}
+              stroke="none"
+            />
+            <path d="M56 41 c 1 -2.5, 1 -4, .5 -5.5 M60 41 c .8 -2, 1.4 -3.2, 2.6 -4" />
+            <circle cx={50} cy={10} r={4} fill={SEAL} fillOpacity={0.82} stroke="none" />
+          </>
+        )}
+      </g>
+    </svg>
+  );
+}
+
 const PROJECTS = [
   {
     id: "la-casa",
@@ -565,40 +703,34 @@ export default function BiosphereBambuPage() {
               </p>
 
               <div className="relative mt-12">
-                <div className="overflow-x-auto pb-2 pt-7">
+                <div className="overflow-x-auto pb-2 pt-1">
                 <div
                   className="grid min-w-[780px] pr-4"
                   style={{ gridTemplateColumns: PHASES.map((p) => `${p.span}fr`).join(" ") }}
                 >
                   {PHASES.map((phase, i) => (
                     <div key={phase.n} className="relative">
-                      {/* node ring straddling each joint */}
-                      {i > 0 && (
-                        <span
-                          aria-hidden
-                          className="absolute -top-[3px] left-0 z-10 h-7 w-[7px] -translate-x-1/2 rounded-full border"
-                          style={{ borderColor: "rgba(36, 38, 33, 0.6)", backgroundColor: WASHI }}
+                      {/* the phase, sketched above its internode */}
+                      <div className="flex h-14 items-end justify-center pb-2">
+                        <PhaseSketch index={i} state={phase.state} />
+                      </div>
+                      <div className="relative">
+                        {/* node ring straddling each joint */}
+                        {i > 0 && (
+                          <span
+                            aria-hidden
+                            className="absolute -top-[3px] left-0 z-10 h-7 w-[7px] -translate-x-1/2 rounded-full border"
+                            style={{ borderColor: "rgba(36, 38, 33, 0.6)", backgroundColor: WASHI }}
+                          />
+                        )}
+                        <div
+                          className={`h-[23px] ${i === 0 ? "rounded-l-md" : ""} ${
+                            i === PHASES.length - 1 ? "rounded-r-md" : ""
+                          }`}
+                          style={internodeStyle(phase.state)}
                         />
-                      )}
-                      <div
-                        className={`h-[23px] ${i === 0 ? "rounded-l-md" : ""} ${
-                          i === PHASES.length - 1 ? "rounded-r-md" : ""
-                        }`}
-                        style={internodeStyle(phase.state)}
-                      />
-                      {/* leaf sprig at the growing tip */}
-                      {i === PHASES.length - 1 && (
-                        <svg
-                          viewBox="0 0 60 40"
-                          className="absolute -right-2 -top-6 h-8 w-12"
-                          aria-hidden
-                        >
-                          <path d="M8 36 L22 18" stroke={SUMI} strokeOpacity={0.55} strokeWidth={1.4} fill="none" />
-                          <path d={LEAF} transform="translate(22 18) scale(0.55) rotate(-30)" fill={SUMI} fillOpacity={0.55} />
-                          <path d={LEAF} transform="translate(22 18) scale(0.5) rotate(14)" fill={SUMI} fillOpacity={0.45} />
-                        </svg>
-                      )}
-                      <div className="pt-4">
+                      </div>
+                      <div className="pr-3 pt-4">
                         <p className="flex items-baseline gap-2">
                           <span className="text-[10px] font-medium tracking-[0.2em]" style={{ color: SEAL }}>
                             {phase.n}
