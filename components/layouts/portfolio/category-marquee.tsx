@@ -58,7 +58,7 @@ export function CategoryMarquee({
         >
           {[0, 1, 2, 3].map((copy) => (
             <ul key={copy} aria-hidden={copy > 0} className="flex shrink-0 gap-5 pr-5">
-              {items.map((item, idx) => (
+              {items.map((item) => (
                 <li key={item.label} className="w-72 sm:w-80">
                   <a
                     href={item.anchor}
@@ -70,7 +70,7 @@ export function CategoryMarquee({
                       alt={item.label}
                       fill
                       sizes="20rem"
-                      priority={copy === 0 && idx < 4}
+                      priority={copy === 0}
                       className="object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0c2340]/95 via-[#0c2340]/45 to-transparent" />
