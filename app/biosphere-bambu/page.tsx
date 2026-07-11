@@ -1,7 +1,15 @@
 import type { Metadata } from "next";
 import type { CSSProperties, ReactNode } from "react";
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import { Shippori_Mincho, Zen_Kaku_Gothic_New } from "next/font/google";
+import logoImg from "@/public/img/layouts/biosphere-logo.png";
+import earthImg from "@/public/img/layouts/biosphere-earth.jpg";
+import waterImg from "@/public/img/layouts/biosphere-water.jpg";
+import windImg from "@/public/img/layouts/biosphere-wind.jpg";
+import fireImg from "@/public/img/layouts/biosphere-fire.jpg";
+import casaImg from "@/public/img/layouts/biosphere-casa.jpg";
+import buildImg from "@/public/img/layouts/biosphere-build.jpg";
+import communityImg from "@/public/img/layouts/biosphere-community.jpg";
 import { LayoutSwitcher } from "@/components/layouts/LayoutSwitcher";
 import { SmoothScroll } from "@/components/layouts/portfolio/smooth-scroll";
 import { SlotBooking, type SlotOption } from "@/components/layouts/SlotBooking";
@@ -220,7 +228,7 @@ function AlbumLeaf({
   className = "",
   children,
 }: {
-  src: string;
+  src: StaticImageData;
   alt: string;
   sizes: string;
   aspect: string;
@@ -230,7 +238,7 @@ function AlbumLeaf({
   return (
     <div className={`border p-2.5 sm:p-3 ${className}`} style={{ borderColor: HAIRLINE, backgroundColor: MAT }}>
       <div className={`relative overflow-hidden ${aspect}`}>
-        <Image src={src} alt={alt} fill sizes={sizes} className="object-cover" style={INK_WASH} />
+        <Image src={src} alt={alt} fill placeholder="blur" sizes={sizes} className="object-cover" style={INK_WASH} />
         <div
           aria-hidden
           className="absolute inset-0"
@@ -251,7 +259,7 @@ const CHAPTERS = [
     id: "earth",
     numeral: "I",
     name: "Earth",
-    image: "/img/layouts/biosphere-earth.jpg",
+    image: earthImg,
     line: "Every masterplan starts under your feet.",
     text: "We read soil, slope and stone before drawing a single wall. Terraces, swales and access roads are shaped from the land's own contours — so what gets built feels found, not forced.",
     tags: ["Land audit & masterplan", "Soil & terracing", "Architecture & construction"],
@@ -260,7 +268,7 @@ const CHAPTERS = [
     id: "water",
     numeral: "II",
     name: "Water",
-    image: "/img/layouts/biosphere-water.jpg",
+    image: waterImg,
     line: "Water decides where life gathers.",
     text: "Spring, rain and greywater are mapped into one living cycle: swales slow it, ponds hold it, gardens drink it. Pools sit exactly where the land already wants water to rest.",
     tags: ["Hydrology & swales", "Pools & ponds", "Ecology & reforestation"],
@@ -269,7 +277,7 @@ const CHAPTERS = [
     id: "wind",
     numeral: "III",
     name: "Wind",
-    image: "/img/layouts/biosphere-wind.jpg",
+    image: windImg,
     line: "The invisible layers carry the plan.",
     text: "Breeze paths cool the buildings before electricity has to; drones read the canopy from above; titles, permits and governance move quietly underneath. Everything you don't see — handled.",
     tags: ["Nature intelligence & survey", "Passive cooling & orientation", "Legal & governance"],
@@ -278,7 +286,7 @@ const CHAPTERS = [
     id: "fire",
     numeral: "IV",
     name: "Fire",
-    image: "/img/layouts/biosphere-fire.jpg",
+    image: fireImg,
     line: "A place is finished when people gather in it.",
     text: "Kitchens, fire pits and lantern light turn a masterplan into a living address. We train the team, open the doors and stay through the first season of hospitality.",
     tags: ["Hospitality & operations", "Community & events", "Brand & business"],
@@ -321,7 +329,7 @@ const PROJECTS = [
   {
     id: "la-casa",
     name: "La Casa — The Fibonacci",
-    image: "/img/layouts/biosphere-casa.jpg",
+    image: casaImg,
     note: "A spiral of shared pavilions where the golden ratio sets every room's proportion.",
     stamp: "Signed · complete",
     stampColor: SEAL,
@@ -329,7 +337,7 @@ const PROJECTS = [
   {
     id: "the-bay",
     name: "The Bay",
-    image: "/img/layouts/biosphere-build.jpg",
+    image: buildImg,
     note: "A tide-facing hillside raised entirely in bamboo — currently in its build season.",
     stamp: "In build · phase 03",
     stampColor: SUMI,
@@ -374,7 +382,7 @@ export default function BiosphereBambuPage() {
       >
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
           <a href="#top" className="flex items-center gap-3" style={{ color: WASHI }}>
-            <Image src="/img/layouts/biosphere-logo.png" alt="" width={28} height={28} />
+            <Image src={logoImg} alt="" width={28} height={28} priority />
             <span className={`${mincho.className} text-sm tracking-[0.32em]`}>BIOSPHERE</span>
           </a>
           <nav
@@ -683,7 +691,7 @@ export default function BiosphereBambuPage() {
                 </div>
                 <div className="relative pr-8">
                   <AlbumLeaf
-                    src="/img/layouts/biosphere-community.jpg"
+                    src={communityImg}
                     alt="The studio team gathered under a bamboo pavilion"
                     sizes="(min-width: 768px) 42vw, 85vw"
                     aspect="aspect-[4/3]"

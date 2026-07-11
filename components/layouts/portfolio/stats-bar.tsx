@@ -55,8 +55,20 @@ export function StatsBar({
   const vals = useCountUp(targets, inView);
 
   return (
-    <section ref={ref} className="bg-[#0c2340]" aria-label="Shop numbers">
-      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-y-8 px-5 py-10 text-center sm:px-6 md:grid-cols-4 md:py-12">
+    <section ref={ref} className="relative overflow-hidden bg-[#0c2340]" aria-label="Shop numbers">
+      {/* Soft mesh glow: layered radial washes of the shop's amber/coral/teal accents */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background: `
+            radial-gradient(85rem 30rem at 12% -40%, rgba(255, 209, 102, 0.16), transparent 55%),
+            radial-gradient(70rem 28rem at 90% 150%, rgba(255, 90, 60, 0.15), transparent 60%),
+            radial-gradient(55rem 22rem at 38% 130%, rgba(14, 124, 102, 0.18), transparent 60%),
+            radial-gradient(60rem 26rem at 60% -20%, rgba(18, 44, 80, 0.9), transparent 70%)`,
+        }}
+      />
+      <div className="relative mx-auto grid max-w-7xl grid-cols-2 gap-y-8 px-5 py-10 text-center sm:px-6 md:grid-cols-4 md:py-12">
         {stats.map((s, i) => (
           <div
             key={s.label}

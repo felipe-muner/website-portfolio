@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import { Reveal } from "@/components/layouts/Reveal";
 import { CategoryMarquee } from "@/components/layouts/portfolio/category-marquee";
-import { HeroCarousel } from "@/components/layouts/portfolio/hero-carousel";
 import { SmoothScroll } from "@/components/layouts/portfolio/smooth-scroll";
 import { StatsBar } from "@/components/layouts/portfolio/stats-bar";
 import { WhatsappFab } from "@/components/layouts/portfolio/whatsapp-fab";
@@ -78,7 +77,15 @@ function wantLink(site: PortfolioSite) {
 }
 
 /** A template sold as a product: cover framed in browser chrome, demo link + WhatsApp quick-buy. */
-function TemplateCard({ site, delay = 0 }: { site: PortfolioSite; delay?: number }) {
+function TemplateCard({
+  site,
+  delay = 0,
+  priority = false,
+}: {
+  site: PortfolioSite;
+  delay?: number;
+  priority?: boolean;
+}) {
   const newTab = site.external ? { target: "_blank", rel: "noopener noreferrer" } : {};
   return (
     <Reveal delay={delay} className="h-full">
@@ -102,6 +109,7 @@ function TemplateCard({ site, delay = 0 }: { site: PortfolioSite; delay?: number
               alt={site.brand}
               fill
               sizes="(min-width: 1024px) 22vw, (min-width: 640px) 45vw, 90vw"
+              priority={priority}
               className="object-cover transition-transform duration-700 group-hover:scale-105"
             />
           </div>
@@ -148,8 +156,6 @@ export default function PortfolioIndex() {
   const featured = FEATURED_HREFS.map((href) => ALL_SITES.find((s) => s.href === href)).filter(
     (s): s is PortfolioSite => Boolean(s),
   );
-  // One representative template per category shelf for the hero slideshow.
-  const heroSlides = PORTFOLIO.map((group) => group.sites[0]);
 
   return (
     <div className={`${body.className} min-h-dvh bg-[#eef2f3] text-[#16232f] antialiased`}>
@@ -211,36 +217,6 @@ export default function PortfolioIndex() {
         </Reveal>
       </section>
 
-      {/* Hero — fullscreen slideshow (one template per category) behind the copy */}
-      <section className="relative flex min-h-dvh items-center overflow-hidden bg-[#0c2340] text-white">
-        <HeroCarousel
-          slides={heroSlides}
-          monoClass={mono.className}
-          displayClass={display.className}
-        />
-        {/* pointer-events-none lets clicks fall through to the slide link below */}
-        <div className="pointer-events-none relative z-10 mx-auto w-full max-w-7xl px-5 pb-64 pt-14 sm:px-6 sm:pb-56">
-          <Reveal>
-            <span
-              className={`${mono.className} inline-flex items-center gap-2 rounded-full border border-white/20 bg-[#0c2340]/40 px-3.5 py-1.5 text-xs text-[#c7d5e3] backdrop-blur`}
-            >
-              <Code2 className="size-4 text-[#ffd166]" /> Software engineer · templates for sale
-            </span>
-            <h1 className={`${display.className} mt-5 text-4xl leading-[1.05] tracking-tight sm:text-5xl md:text-6xl`}>
-              Ready-made websites.
-              <br />
-              <span className="text-[#ff5a3c]">Pick one</span>, it&apos;s yours.
-            </h1>
-            <p className="mt-5 max-w-md text-base leading-relaxed text-[#d3dfea]">
-              I&apos;m Felipe, a software engineer. Every template in this shop is a real
-              working site I built — booking calendars, menus, carts and all. Open a demo,
-              and if it fits your business, message me: I put your brand on it and you
-              launch in days.
-            </p>
-          </Reveal>
-        </div>
-      </section>
-
       {/* Featured full builds */}
       <section className="bg-white">
         <div className="mx-auto max-w-7xl px-5 py-16 sm:px-6">
@@ -264,7 +240,7 @@ export default function PortfolioIndex() {
           </Reveal>
           <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {featured.map((site, i) => (
-              <TemplateCard key={site.href} site={site} delay={i * 80} />
+              <TemplateCard key={site.href} site={site} delay={i * 80} priority={i < 4} />
             ))}
           </div>
         </div>

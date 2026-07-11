@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
+import logoImg from "@/public/img/layouts/biosphere-logo.png";
 import { ChevronDown } from "lucide-react";
 import {
   Popover,
@@ -73,10 +74,11 @@ export function BiosphereNav({
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 sm:px-8">
         <a href="#top" className="flex items-center gap-3" style={{ color: INK }}>
           <Image
-            src="/img/layouts/biosphere-logo.png"
+            src={logoImg}
             alt=""
             width={36}
             height={36}
+            priority
             className="size-9"
           />
           <span className={`${serifClass} text-lg tracking-[0.28em]`}>BIOSPHERE</span>
@@ -178,7 +180,7 @@ export function BiosphereNav({
                 Close menu
               </SheetClose>
               <Image
-                src="/img/layouts/biosphere-logo.png"
+                src={logoImg}
                 alt=""
                 width={40}
                 height={40}

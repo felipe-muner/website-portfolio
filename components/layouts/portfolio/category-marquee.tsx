@@ -58,7 +58,7 @@ export function CategoryMarquee({
         >
           {[0, 1, 2, 3].map((copy) => (
             <ul key={copy} aria-hidden={copy > 0} className="flex shrink-0 gap-5 pr-5">
-              {items.map((item) => (
+              {items.map((item, idx) => (
                 <li key={item.label} className="w-72 sm:w-80">
                   <a
                     href={item.anchor}
@@ -70,21 +70,21 @@ export function CategoryMarquee({
                       alt={item.label}
                       fill
                       sizes="20rem"
+                      priority={copy === 0 && idx < 4}
                       className="object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0c2340]/95 via-[#0c2340]/45 to-transparent" />
-                    <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 p-5">
-                      <div>
-                        <p className={`${monoClass} text-xs text-[#ffd166]`}>
-                          {item.count} templates
-                        </p>
-                        <h3 className={`${displayClass} mt-1 text-2xl text-white`}>
-                          {item.label}
-                        </h3>
-                      </div>
-                      <span className="mb-1 grid size-9 shrink-0 place-items-center rounded-full bg-[#ff5a3c] text-white transition group-hover:translate-x-1">
-                        <ArrowRight className="size-4" />
-                      </span>
+                    {/* Arrow lives top-right so the bottom line gets the card's full width */}
+                    <span className="absolute right-4 top-4 grid size-9 place-items-center rounded-full bg-[#ff5a3c] text-white transition group-hover:translate-x-1">
+                      <ArrowRight className="size-4" />
+                    </span>
+                    <div className="absolute inset-x-0 bottom-0 p-5">
+                      <p className={`${monoClass} text-xs text-[#ffd166]`}>
+                        {item.count} templates
+                      </p>
+                      <h3 className={`${displayClass} mt-1 whitespace-nowrap text-xl text-white sm:text-2xl`}>
+                        {item.label}
+                      </h3>
                     </div>
                   </a>
                 </li>
