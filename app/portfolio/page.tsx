@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { Reveal } from "@/components/layouts/Reveal";
 import { CategoryMarquee } from "@/components/layouts/portfolio/category-marquee";
+import { PortfolioNav } from "@/components/layouts/portfolio/portfolio-nav";
 import { SmoothScroll } from "@/components/layouts/portfolio/smooth-scroll";
 import { StatsBar } from "@/components/layouts/portfolio/stats-bar";
 import { WhatsappFab } from "@/components/layouts/portfolio/whatsapp-fab";
@@ -179,11 +180,7 @@ export default function PortfolioIndex() {
             </span>
           </Link>
 
-          <nav className="ml-auto flex items-center gap-4 text-sm font-medium text-[#3d4f5e] sm:gap-6">
-            <a href="#templates" className="py-2 transition hover:text-[#0c2340]">Templates</a>
-            <a href="#how" className="hidden py-2 transition hover:text-[#0c2340] sm:block">How it works</a>
-            <a href="#contact" className="py-2 transition hover:text-[#0c2340]">Contact</a>
-          </nav>
+          <PortfolioNav />
         </div>
       </header>
 
