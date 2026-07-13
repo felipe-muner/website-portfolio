@@ -179,7 +179,14 @@ export default function Header() {
 
       {/* 3) Centered logo */}
       <Link href="/" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-        <Image src="/img/logo.png" alt={APP_NAME} width={300} height={60} />
+        <Image
+          src="/img/logo.png"
+          alt={APP_NAME}
+          width={300}
+          height={60}
+          priority
+          style={{ width: "auto", height: "auto" }}
+        />
       </Link>
 
       {/* Right side can be empty or add something else if needed */}
