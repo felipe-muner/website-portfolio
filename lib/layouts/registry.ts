@@ -59,7 +59,7 @@ export const PORTFOLIO: readonly PortfolioGroup[] = [
       { href: "/villa/v9", name: "Arc", brand: "Laguna Bay Villas", detail: "Arched frames & scrolling ticker", cover: "/img/layouts/villa-bedroom-canopy.jpg" },
       { href: "/villa/v10", name: "Chapters", brand: "Laguna Bay Villas", detail: "Split-screen story chapters", cover: "/img/layouts/villa-luxury-house.jpg" },
       { href: "/realestate", name: "Baan & Bay", brand: "Baan & Bay Property", detail: "Search-first portal, featured spec spread, area guide", cover: "/img/layouts/villa-resort-aerial.jpg" },
-      { href: "/estate", name: "Isla Verde", brand: "Isla Verde Estate", detail: "Off-plan developer brochure — two-tone type, ROI cards, phase specs", cover: "/img/layouts/villa-luxury-house.jpg" },
+      { href: "/biosphere-estate", name: "Isla Verde", brand: "Isla Verde Estate", detail: "Off-plan developer brochure — two-tone type, ROI cards, phase specs", cover: "/img/layouts/villa-luxury-house.jpg" },
       { href: "/biosphere", name: "Elements", brand: "Biosphere Land & Ecosystem Studio", detail: "Earth, water, wind & fire — element chapters", cover: "/img/layouts/biosphere-hero.jpg" },
       { href: "/biosphere-bambu", name: "Bambu", brand: "Biosphere Land & Ecosystem Studio", detail: "Ink-painted bamboo grove, scroll-painting rhythm", cover: "/img/layouts/biosphere-build.jpg" },
       { href: "/biosphere-masterplan", name: "Masterplan", brand: "Biosphere Land & Ecosystem Studio", detail: "Dark drafting table — contours, sheets & coordinates", cover: "/img/layouts/biosphere-plan.jpg" },
