@@ -34,6 +34,7 @@ export default function AdminLogin() {
             src="/img/login/1.jpg"
             alt="Podium Gym"
             fill
+            sizes="(max-width: 1024px) 0px, 50vw"
             className="object-cover opacity-80"
             priority
           />
