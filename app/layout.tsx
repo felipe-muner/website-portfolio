@@ -20,9 +20,9 @@ const mulish = Mulish({
   weight: ["400", "600", "700"]
 });
 
-const SITE_TITLE = "Felipe Muner — Ready-Made Website Templates";
+const SITE_TITLE = "Launch Your Dream Website in Days";
 const SITE_DESCRIPTION =
-  "Software engineer selling ready-made websites. Dozens of live templates for gyms, yoga studios, villas and local businesses — pick one and launch in days.";
+  "Live, fully working designs for gyms, yoga studios, villas and local businesses — pick one and I'll make it yours: your name, colors, photos, content and language.";
 
 export const metadata: Metadata = {
   title: SITE_TITLE,
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
     type: "website",
-    siteName: "Felipe Muner",
+    siteName: "Ready-Made Websites",
   },
   twitter: {
     card: "summary_large_image",
