@@ -3,7 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { Bricolage_Grotesque, Inter, JetBrains_Mono } from "next/font/google";
 import {
-  ArrowRight,
   ArrowUpRight,
   Code2,
   MessageCircle,
@@ -17,8 +16,9 @@ import { CategoryMarquee } from "@/components/layouts/portfolio/category-marquee
 import { PortfolioNav } from "@/components/layouts/portfolio/portfolio-nav";
 import { SmoothScroll } from "@/components/layouts/portfolio/smooth-scroll";
 import { StatsBar } from "@/components/layouts/portfolio/stats-bar";
+import { TemplateMarquee } from "@/components/layouts/portfolio/template-marquee";
 import { WhatsappFab } from "@/components/layouts/portfolio/whatsapp-fab";
-import { ALL_SITES, PORTFOLIO, type PortfolioSite } from "@/lib/layouts/registry";
+import { ALL_SITES, PORTFOLIO } from "@/lib/layouts/registry";
 
 const SITE_COUNT = ALL_SITES.length;
 
@@ -36,8 +36,6 @@ const WHATSAPP = "5521984852802";
 
 /** One representative photo per category shelf, distinct from the hero stack. */
 const CATEGORY_COVER_HREFS = ["/gym/v3", "/yoga/v3", "/villa/v7", "/cafe", "/beachclub"] as const;
-
-const FEATURED_HREFS = ["/dive", "/sacolaria", "/villa/v1", "/realestate"] as const;
 
 const STEPS = [
   {
@@ -70,94 +68,7 @@ const TRUST = [
   { icon: UserRound, title: "Direct with the engineer", text: "No agency in between. You talk to the person who wrote the code." },
 ] as const;
 
-function wantLink(site: PortfolioSite) {
-  const text = site.external
-    ? `Hi Felipe! I want a site like "${site.name}" (${site.href}) for my business.`
-    : `Hi Felipe! I want the "${site.name}" template (${site.href}) for my business.`;
-  return `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(text)}`;
-}
-
-/** A template sold as a product: cover framed in browser chrome, demo link + WhatsApp quick-buy. */
-function TemplateCard({
-  site,
-  delay = 0,
-  priority = false,
-}: {
-  site: PortfolioSite;
-  delay?: number;
-  priority?: boolean;
-}) {
-  const newTab = site.external ? { target: "_blank", rel: "noopener noreferrer" } : {};
-  return (
-    <Reveal delay={delay} className="h-full">
-      <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[#e3e8ea] bg-white transition hover:-translate-y-1 hover:shadow-[0_24px_48px_-28px_rgba(12,35,64,0.45)]">
-        <Link href={site.href} className="block" {...newTab}>
-          <div className="flex items-center gap-2 border-b border-[#e3e8ea] bg-[#f4f6f6] px-3 py-2">
-            <span className="flex gap-1.5">
-              <span className="size-2.5 rounded-full bg-[#ff5a3c]" />
-              <span className="size-2.5 rounded-full bg-[#ffd166]" />
-              <span className="size-2.5 rounded-full bg-[#2fbf8f]" />
-            </span>
-            <span
-              className={`${mono.className} flex-1 truncate rounded-md bg-white px-2 py-0.5 text-[0.65rem] text-[#5c6b77]`}
-            >
-              {site.href.replace(/^https?:\/\//, "")}
-            </span>
-          </div>
-          <div className="relative aspect-[4/3] overflow-hidden">
-            <Image
-              src={site.cover}
-              alt={site.brand}
-              fill
-              sizes="(min-width: 1024px) 22vw, (min-width: 640px) 45vw, 90vw"
-              priority={priority}
-              className="object-cover transition-transform duration-700 group-hover:scale-105"
-            />
-          </div>
-        </Link>
-        <div className="flex flex-1 flex-col p-4">
-          <div className="flex items-center gap-2">
-            <h3 className={`${display.className} text-lg text-[#16232f]`}>{site.name}</h3>
-            {site.external && (
-              <span
-                className={`${mono.className} rounded-full bg-[#0e7c66]/10 px-2 py-0.5 text-[0.6rem] font-semibold uppercase tracking-wide text-[#0e7c66]`}
-              >
-                In production
-              </span>
-            )}
-          </div>
-          <p className="mt-1 flex-1 text-sm leading-snug text-[#5c6b77]">{site.detail}</p>
-          <div className="mt-4 flex items-center justify-between gap-3">
-            <Link
-              href={site.href}
-              {...newTab}
-              className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#0c2340] hover:text-[#ff5a3c]"
-            >
-              {site.external ? "Open live site" : "Open live demo"}{" "}
-              <ArrowUpRight className="size-4 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </Link>
-            <a
-              href={wantLink(site)}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`I want the ${site.name} template — WhatsApp`}
-              title="I want this one"
-              className="inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-[#0e7c66] text-white transition hover:bg-[#0a5f4f]"
-            >
-              <MessageCircle className="size-4" />
-            </a>
-          </div>
-        </div>
-      </div>
-    </Reveal>
-  );
-}
-
 export default function PortfolioIndex() {
-  const featured = FEATURED_HREFS.map((href) => ALL_SITES.find((s) => s.href === href)).filter(
-    (s): s is PortfolioSite => Boolean(s),
-  );
-
   return (
     <div className={`${body.className} min-h-dvh bg-[#eef2f3] text-[#16232f] antialiased`}>
       <SmoothScroll />
@@ -214,53 +125,29 @@ export default function PortfolioIndex() {
         </Reveal>
       </section>
 
-      {/* Featured full builds */}
-      <section className="bg-white">
-        <div className="mx-auto max-w-7xl px-5 py-16 sm:px-6">
-          <Reveal>
-            <div className="flex items-end justify-between gap-4">
-              <div>
-                <h2 className={`${display.className} text-3xl tracking-tight text-[#0c2340]`}>
-                  Full builds
-                </h2>
-                <p className="mt-2 max-w-xl text-[#5c6b77]">
-                  The heavy machinery: real carts, checkouts, search and owner dashboards.
-                </p>
-              </div>
-              <a
-                href="#templates"
-                className="hidden shrink-0 items-center gap-1.5 text-sm font-semibold text-[#0c2340] hover:text-[#ff5a3c] sm:inline-flex"
-              >
-                See everything <ArrowRight className="size-4" />
-              </a>
-            </div>
-          </Reveal>
-          <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {featured.map((site, i) => (
-              <TemplateCard key={site.href} site={site} delay={i * 80} priority={i < 4} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Catalog */}
-      <main id="templates" className="mx-auto max-w-7xl scroll-mt-20 px-5 pb-8 sm:px-6">
-        {PORTFOLIO.map((group) => (
+      {/* Catalog — each category drifts horizontally, alternating direction shelf to shelf */}
+      <main id="templates" className="scroll-mt-20 pb-8">
+        {PORTFOLIO.map((group, gi) => (
           <section key={group.label} id={group.slug} className="scroll-mt-20 pt-16">
-            <Reveal>
-              <div className="flex items-baseline gap-3 border-b border-[#d6dee1] pb-3">
-                <h2 className={`${display.className} text-2xl tracking-tight text-[#0c2340] md:text-3xl`}>
-                  {group.label}
-                </h2>
-                <span className={`${mono.className} ml-auto text-xs text-[#8194a3]`}>
-                  {group.sites.length} templates
-                </span>
-              </div>
-            </Reveal>
-            <div className="mt-7 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {group.sites.map((site, i) => (
-                <TemplateCard key={site.href} site={site} delay={(i % 4) * 70} />
-              ))}
+            <div className="mx-auto max-w-7xl px-5 sm:px-6">
+              <Reveal>
+                <div className="flex items-baseline gap-3 border-b border-[#d6dee1] pb-3">
+                  <h2 className={`${display.className} text-2xl tracking-tight text-[#0c2340] md:text-3xl`}>
+                    {group.label}
+                  </h2>
+                  <span className={`${mono.className} ml-auto text-xs text-[#8194a3]`}>
+                    {group.sites.length} templates
+                  </span>
+                </div>
+              </Reveal>
+            </div>
+            <div className="mt-7">
+              <TemplateMarquee
+                sites={group.sites}
+                reverse={gi % 2 === 1}
+                displayClass={display.className}
+                monoClass={mono.className}
+              />
             </div>
           </section>
         ))}
