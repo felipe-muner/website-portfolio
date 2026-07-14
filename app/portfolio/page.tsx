@@ -131,13 +131,22 @@ export default function PortfolioIndex() {
           <section key={group.label} id={group.slug} className="scroll-mt-20 pt-16">
             <div className="mx-auto max-w-7xl px-5 sm:px-6">
               <Reveal>
-                <div className="flex items-baseline gap-3 border-b border-[#d6dee1] pb-3">
-                  <h2 className={`${display.className} text-2xl tracking-tight text-[#0c2340] md:text-3xl`}>
-                    {group.label}
-                  </h2>
-                  <span className={`${mono.className} ml-auto text-xs text-[#8194a3]`}>
+                <div className="flex flex-col items-center pb-8 text-center">
+                  <span
+                    className={`${mono.className} inline-flex items-center gap-2 rounded-full border border-[#ffd166]/50 bg-[#ffd166]/15 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wide text-[#a4791a]`}
+                  >
+                    <span className="size-1.5 rounded-full bg-[#ff5a3c]" />
                     {group.sites.length} templates
                   </span>
+                  <h2
+                    className={`${display.className} mt-4 text-4xl tracking-tight text-[#0c2340] md:text-5xl`}
+                  >
+                    {group.label}
+                  </h2>
+                  <span
+                    aria-hidden
+                    className="mt-4 h-1 w-16 rounded-full bg-gradient-to-r from-[#ff5a3c] to-[#ffd166]"
+                  />
                 </div>
               </Reveal>
             </div>

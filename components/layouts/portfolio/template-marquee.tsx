@@ -129,7 +129,7 @@ export function TemplateMarquee({
           className="marquee-track"
           style={
             {
-              "--marquee-duration": "90s",
+              "--marquee-duration": "160s",
               animationPlayState: paused ? "paused" : "running",
               animationDirection: reverse ? "reverse" : "normal",
             } as React.CSSProperties
