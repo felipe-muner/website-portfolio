@@ -131,21 +131,21 @@ export default function PortfolioIndex() {
           <section key={group.label} id={group.slug} className="scroll-mt-20 pt-16">
             <div className="mx-auto max-w-7xl px-5 sm:px-6">
               <Reveal>
-                <div className="flex flex-col items-center pb-8 text-center">
+                <div className="flex flex-col items-center pb-10 text-center">
                   <span
-                    className={`${mono.className} inline-flex items-center gap-2 rounded-full border border-[#ffd166]/50 bg-[#ffd166]/15 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wide text-[#a4791a]`}
+                    className={`${mono.className} inline-flex items-center gap-2 rounded-full bg-[#0c2340] px-4 py-2 text-sm font-bold uppercase tracking-[0.12em] text-[#ffd166] shadow-[0_10px_24px_-10px_rgba(12,35,64,0.7)]`}
                   >
-                    <span className="size-1.5 rounded-full bg-[#ff5a3c]" />
+                    <span className="size-2 animate-pulse rounded-full bg-[#ff5a3c]" />
                     {group.sites.length} templates
                   </span>
                   <h2
-                    className={`${display.className} mt-4 text-4xl tracking-tight text-[#0c2340] md:text-5xl`}
+                    className={`${display.className} mt-5 text-5xl font-extrabold tracking-tight text-[#0c2340] sm:text-6xl md:text-7xl`}
                   >
                     {group.label}
                   </h2>
                   <span
                     aria-hidden
-                    className="mt-4 h-1 w-16 rounded-full bg-gradient-to-r from-[#ff5a3c] to-[#ffd166]"
+                    className="mt-5 h-1.5 w-20 rounded-full bg-gradient-to-r from-[#ff5a3c] to-[#ffd166]"
                   />
                 </div>
               </Reveal>
