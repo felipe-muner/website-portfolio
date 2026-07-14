@@ -6,7 +6,6 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ChromeGate } from "@/components/layouts/ChromeGate";
 import { AuthProvider } from "@/components/providers/auth-provider";
-import { APP_NAME } from "@/constants";
 
 const oswald = Oswald({
   variable: "--font-oswald",
@@ -21,9 +20,24 @@ const mulish = Mulish({
   weight: ["400", "600", "700"]
 });
 
+const SITE_TITLE = "Felipe Muner — Ready-Made Website Templates";
+const SITE_DESCRIPTION =
+  "Software engineer selling ready-made websites. Dozens of live templates for gyms, yoga studios, villas and local businesses — pick one and launch in days.";
+
 export const metadata: Metadata = {
-  title: APP_NAME,
-  description: `Empower your fitness journey with ${APP_NAME}.`,
+  title: SITE_TITLE,
+  description: SITE_DESCRIPTION,
+  openGraph: {
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    type: "website",
+    siteName: "Felipe Muner",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+  },
 };
 
 export default function RootLayout({
