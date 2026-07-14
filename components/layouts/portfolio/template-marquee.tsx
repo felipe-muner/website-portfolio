@@ -99,11 +99,14 @@ export function TemplateMarquee({
   reverse = false,
   displayClass,
   monoClass,
+  fadeColor = "#eef2f3",
 }: {
   sites: readonly PortfolioSite[];
   reverse?: boolean;
   displayClass: string;
   monoClass: string;
+  /** Solid colour the left/right edge fades blend to — match the section background. */
+  fadeColor?: string;
 }) {
   const [paused, setPaused] = useState(false);
 
@@ -111,11 +114,13 @@ export function TemplateMarquee({
     <div className="relative">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-[#eef2f3] to-transparent sm:w-24"
+        className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 sm:w-24"
+        style={{ backgroundImage: `linear-gradient(to right, ${fadeColor}, ${fadeColor}00)` }}
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-[#eef2f3] to-transparent sm:w-24"
+        className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 sm:w-24"
+        style={{ backgroundImage: `linear-gradient(to left, ${fadeColor}, ${fadeColor}00)` }}
       />
       <div
         className="marquee-viewport overflow-hidden"
@@ -126,7 +131,7 @@ export function TemplateMarquee({
         onTouchCancel={() => setPaused(false)}
       >
         <div
-          className="marquee-track"
+          className="marquee-track py-6"
           style={
             {
               "--marquee-duration": "160s",
