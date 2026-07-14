@@ -23,8 +23,8 @@ import { ALL_SITES, PORTFOLIO } from "@/lib/layouts/registry";
 const SITE_COUNT = ALL_SITES.length;
 
 export const metadata: Metadata = {
-  title: `Felipe Muner — ${SITE_COUNT} Ready-Made Website Templates`,
-  description: `I'm a software engineer selling ready-made websites. ${SITE_COUNT} live templates for gyms, yoga studios, villas and local businesses — pick one and launch in days.`,
+  title: `${SITE_COUNT} Ready-Made Website Templates`,
+  description: `Launch your website in days. ${SITE_COUNT} live, fully working templates for gyms, yoga studios, villas and local businesses — pick one and I'll make it yours: your name, colors, photos, content and language.`,
   robots: { index: false },
 };
 
