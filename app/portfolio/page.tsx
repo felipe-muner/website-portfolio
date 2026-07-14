@@ -37,6 +37,20 @@ const WHATSAPP = "5521984852802";
 /** One representative photo per category shelf, distinct from the hero stack. */
 const CATEGORY_COVER_HREFS = ["/gym/v3", "/yoga/v3", "/villa/v7", "/cafe", "/beachclub"] as const;
 
+/**
+ * Each category shelf sits on its own soft radial wash — same airy family, but a
+ * visibly different hue per section. `edge` is the flat colour the marquee's
+ * left/right fades blend to, so the shelf edges dissolve into the wash.
+ */
+const SECTION_THEMES = [
+  { edge: "#e9f1f8", bg: "radial-gradient(120% 85% at 50% -15%, #f4f9fd 0%, rgba(244,249,253,0) 68%), radial-gradient(110% 70% at 50% 118%, #dfeaf5 0%, rgba(223,234,245,0) 62%), #e9f1f8" },
+  { edge: "#e6f2ec", bg: "radial-gradient(120% 85% at 50% -15%, #f2f9f6 0%, rgba(242,249,246,0) 68%), radial-gradient(110% 70% at 50% 118%, #dbeee6 0%, rgba(219,238,230,0) 62%), #e6f2ec" },
+  { edge: "#f1e9db", bg: "radial-gradient(120% 85% at 50% -15%, #f9f5ee 0%, rgba(249,245,238,0) 68%), radial-gradient(110% 70% at 50% 118%, #ece1cf 0%, rgba(236,225,207,0) 62%), #f1e9db" },
+  { edge: "#f2e4e4", bg: "radial-gradient(120% 85% at 50% -15%, #faf1f1 0%, rgba(250,241,241,0) 68%), radial-gradient(110% 70% at 50% 118%, #ecdada 0%, rgba(236,218,218,0) 62%), #f2e4e4" },
+  { edge: "#e9e6f4", bg: "radial-gradient(120% 85% at 50% -15%, #f5f3fb 0%, rgba(245,243,251,0) 68%), radial-gradient(110% 70% at 50% 118%, #e0dcef 0%, rgba(224,220,239,0) 62%), #e9e6f4" },
+  { edge: "#e2f1f1", bg: "radial-gradient(120% 85% at 50% -15%, #f0f9f9 0%, rgba(240,249,249,0) 68%), radial-gradient(110% 70% at 50% 118%, #d5eaea 0%, rgba(213,234,234,0) 62%), #e2f1f1" },
+] as const;
+
 const STEPS = [
   {
     n: "01",
@@ -127,8 +141,15 @@ export default function PortfolioIndex() {
 
       {/* Catalog — each category drifts horizontally, alternating direction shelf to shelf */}
       <main id="templates" className="scroll-mt-20 pb-8">
-        {PORTFOLIO.map((group, gi) => (
-          <section key={group.label} id={group.slug} className="scroll-mt-20 pt-16">
+        {PORTFOLIO.map((group, gi) => {
+          const theme = SECTION_THEMES[gi % SECTION_THEMES.length];
+          return (
+          <section
+            key={group.label}
+            id={group.slug}
+            className="scroll-mt-20 pt-16 pb-20"
+            style={{ background: theme.bg }}
+          >
             <div className="mx-auto max-w-7xl px-5 sm:px-6">
               <Reveal>
                 <div className="flex flex-col items-center pb-10 text-center">
@@ -156,10 +177,12 @@ export default function PortfolioIndex() {
                 reverse={gi % 2 === 1}
                 displayClass={display.className}
                 monoClass={mono.className}
+                fadeColor={theme.edge}
               />
             </div>
           </section>
-        ))}
+          );
+        })}
       </main>
 
       {/* How it works — vertical timeline ending at "live" */}
