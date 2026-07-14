@@ -24,7 +24,7 @@ const SITE_COUNT = ALL_SITES.length;
 
 export const metadata: Metadata = {
   title: `${SITE_COUNT} Ready-Made Website Templates`,
-  description: `Launch your website in days. ${SITE_COUNT} live, fully working templates for gyms, yoga studios, villas and local businesses — pick one and I'll make it yours: your name, colors, photos, content and language.`,
+  description: `Launch your dream website in days. ${SITE_COUNT} live, fully working designs for gyms, yoga studios, villas and local businesses — pick one and I'll make it yours: your name, colors, photos, content and language.`,
   robots: { index: false },
 };
 
