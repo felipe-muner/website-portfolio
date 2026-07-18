@@ -62,6 +62,7 @@ export const PORTFOLIO: readonly PortfolioGroup[] = [
       { href: "/biosphere-estate", name: "Isla Verde", brand: "Isla Verde Estate", detail: "Off-plan developer brochure — two-tone type, ROI cards, phase specs", cover: "/img/layouts/villa-luxury-house.jpg" },
       { href: "/biosphere", name: "Elements", brand: "Biosphere Land & Ecosystem Studio", detail: "Earth, water, wind & fire — element chapters", cover: "/img/layouts/biosphere-hero.jpg" },
       { href: "/biosphere-bambu", name: "Bambu", brand: "Biosphere Land & Ecosystem Studio", detail: "Ink-painted bamboo grove, scroll-painting rhythm", cover: "/img/layouts/biosphere-build.jpg" },
+      { href: "/biosphere-build", name: "Raising", brand: "Biosphere Land & Ecosystem Studio", detail: "Scroll-built bamboo house — footing to ridge, phase by phase", cover: "/img/layouts/biosphere-build.jpg" },
       { href: "/biosphere-masterplan", name: "Masterplan", brand: "Biosphere Land & Ecosystem Studio", detail: "Dark drafting table — contours, sheets & coordinates", cover: "/img/layouts/biosphere-plan.jpg" },
       { href: "/biosphere-field", name: "Field Guide", brand: "Biosphere Land & Ecosystem Studio", detail: "Pale field-guide paper, dark herbarium plates", cover: "/img/layouts/biosphere-earth.jpg" },
     ],

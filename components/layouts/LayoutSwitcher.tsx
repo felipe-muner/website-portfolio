@@ -36,7 +36,10 @@ export function LayoutSwitcher() {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-[60] flex items-center gap-2 rounded-full border border-white/15 bg-neutral-950/90 py-1.5 pl-4 pr-1.5 font-sans shadow-xl backdrop-blur">
+    <div
+      data-capture-hide
+      className="fixed bottom-4 right-4 z-[60] flex items-center gap-2 rounded-full border border-white/15 bg-neutral-950/90 py-1.5 pl-4 pr-1.5 font-sans shadow-xl backdrop-blur"
+    >
       <LayoutTemplate className="size-4 text-brand-orange" />
       <span className="hidden text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-neutral-300 sm:inline">
         Template

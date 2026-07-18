@@ -1,0 +1,189 @@
+{
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "scale": 1.5,
+  "shots": [
+    {
+      "slug": "gym-v1",
+      "height": 5200
+    },
+    {
+      "slug": "yoga-v1",
+      "height": 5200
+    },
+    {
+      "slug": "villa-v7",
+      "height": 5200
+    },
+    {
+      "slug": "biosphere-estate",
+      "height": 5200
+    },
+    {
+      "slug": "biosphere",
+      "height": 5200
+    },
+    {
+      "slug": "biosphere-bambu",
+      "height": 5200
+    },
+    {
+      "slug": "biosphere-masterplan",
+      "height": 4523
+    },
+    {
+      "slug": "biosphere-field",
+      "height": 5200
+    },
+    {
+      "slug": "restaurant",
+      "height": 3382
+    },
+    {
+      "slug": "barber",
+      "height": 3361
+    },
+    {
+      "slug": "dive",
+      "height": 5200
+    },
+    {
+      "slug": "studio",
+      "height": 5200
+    },
+    {
+      "slug": "coaching",
+      "height": 5200
+    },
+    {
+      "slug": "beachclub",
+      "height": 4224
+    },
+    {
+      "slug": "gym-v2",
+      "height": 4025
+    },
+    {
+      "slug": "gym-v3",
+      "height": 5200
+    },
+    {
+      "slug": "gym-v4",
+      "height": 5200
+    },
+    {
+      "slug": "gym-v5",
+      "height": 5200
+    },
+    {
+      "slug": "muaythai",
+      "height": 4625
+    },
+    {
+      "slug": "yoga-v2",
+      "height": 5200
+    },
+    {
+      "slug": "yoga-v3",
+      "height": 5200
+    },
+    {
+      "slug": "yoga-v4",
+      "height": 5192
+    },
+    {
+      "slug": "yoga-v5",
+      "height": 5200
+    },
+    {
+      "slug": "retreat",
+      "height": 5200
+    },
+    {
+      "slug": "lipemoves",
+      "height": 5200
+    },
+    {
+      "slug": "villa-v1",
+      "height": 5200
+    },
+    {
+      "slug": "villa-v2",
+      "height": 5200
+    },
+    {
+      "slug": "villa-v3",
+      "height": 5200
+    },
+    {
+      "slug": "villa-v4",
+      "height": 4681
+    },
+    {
+      "slug": "villa-v5",
+      "height": 3511
+    },
+    {
+      "slug": "villa-v6",
+      "height": 5200
+    },
+    {
+      "slug": "villa-v8",
+      "height": 5200
+    },
+    {
+      "slug": "villa-v9",
+      "height": 5200
+    },
+    {
+      "slug": "villa-v10",
+      "height": 5200
+    },
+    {
+      "slug": "realestate",
+      "height": 3950
+    },
+    {
+      "slug": "cafe",
+      "height": 2852
+    },
+    {
+      "slug": "spa",
+      "height": 3423
+    },
+    {
+      "slug": "courier",
+      "height": 4314
+    },
+    {
+      "slug": "sacolaria",
+      "height": 4391
+    },
+    {
+      "slug": "tattoo",
+      "height": 4407
+    },
+    {
+      "slug": "cooking",
+      "height": 4310
+    },
+    {
+      "slug": "coworking",
+      "height": 4687
+    },
+    {
+      "slug": "rental",
+      "height": 3395
+    },
+    {
+      "slug": "boat",
+      "height": 5200
+    },
+    {
+      "slug": "fullmoon",
+      "height": 3896
+    }
+  ]
+}

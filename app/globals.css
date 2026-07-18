@@ -426,6 +426,19 @@
 .coach-breathe {
   animation: coach-breathe 7s ease-in-out infinite;
 }
+/* /portfolio rail: auto-scroll a full-page screenshot to mimic a visitor scrolling */
+@keyframes railPan {
+  0% {
+    object-position: 50% 0%;
+  }
+  100% {
+    object-position: 50% 100%;
+  }
+}
+.rail-pan {
+  animation: railPan 16s ease-in-out infinite alternate;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero-drift,
   .slide-kenburns,
@@ -433,6 +446,7 @@
   .courier-drift,
   .studio-kenburns,
   .coach-breathe,
+  .rail-pan,
   .animate-landing-fade-down,
   .animate-dive-chill-pulse,
   .marquee-track {
