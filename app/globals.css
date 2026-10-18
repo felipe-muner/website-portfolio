@@ -439,6 +439,26 @@
   animation: railPan 16s ease-in-out infinite alternate;
 }
 
+/* /portfolio hero: the dwell bar under the particle swarm, and the template
+   chips floating around it */
+@keyframes hero-dwell {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes hero-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero-drift,
   .slide-kenburns,
