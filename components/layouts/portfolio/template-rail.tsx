@@ -6,18 +6,11 @@ import Link from "next/link";
 import { ArrowUpRight, ArrowLeft, ArrowRight, Plus } from "lucide-react";
 import { hasRailVideo, type ShowcaseEntry } from "@/lib/layouts/showcase";
 
-/* Light section, darker card boxes — the cards read as distinct panels. */
-const SECTION_BG = "#efe7d6";
-const CARD = {
-  bg: "#211d18",
-  text: "#f4f1ea",
-  sub: "rgba(244,241,234,0.55)",
-  accent: "#fb923c",
-  dots: "rgba(255,255,255,0.28)",
-};
-
 /** How many cards are visible at first, and how many each "See more" adds. */
 const PAGE = 6;
+
+/* Card width per breakpoint — shared by previews and the trailing tile. */
+const CARD_W = "w-[84vw] sm:w-[58vw] lg:w-[min(44vw,40rem)]";
 
 /**
  * A horizontal, swipeable rail of templates. It does NOT hijack vertical
@@ -27,13 +20,7 @@ const PAGE = 6;
  * "See more" tile that appends another {@link PAGE}, so nobody is forced
  * through the entire shelf at once.
  */
-export function TemplateRail({
-  entries,
-  displayClass,
-}: {
-  entries: ShowcaseEntry[];
-  displayClass: string;
-}) {
+export function TemplateRail({ entries }: { entries: ShowcaseEntry[] }) {
   const scroller = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(PAGE);
   const [atStart, setAtStart] = useState(true);
@@ -72,22 +59,19 @@ export function TemplateRail({
   };
 
   return (
-    <section
-      id="templates"
-      style={{ backgroundColor: SECTION_BG }}
-      className="relative scroll-mt-20 py-20 text-[#17130f] sm:py-24"
-    >
-      <div className="flex items-start justify-between px-6 pb-8 sm:px-10">
+    <section id="templates" className="relative scroll-mt-24 pb-12 pt-20 sm:pb-16 sm:pt-28">
+      <div className="mx-auto flex max-w-[1440px] items-end justify-between gap-10 px-5 pb-10 sm:px-8 sm:pb-12 lg:px-12">
         <div>
-          <span className="text-xs uppercase tracking-[0.3em] text-[#c2410c]">
+          <span className="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-[#8ea8ff]">
+            <span className="size-1.5 rounded-full bg-[#4f7cff] shadow-[0_0_10px_2px_rgba(79,124,255,0.7)]" />
             Showing {shown.length} of {entries.length} · swipe →
           </span>
-          <h2 className={`${displayClass} mt-2 text-3xl leading-none sm:text-5xl`}>
-            Every design, <span className="italic">in motion.</span>
+          <h2 className="mt-5 text-balance text-[2.6rem] font-light leading-[1.02] tracking-[-0.04em] sm:text-6xl">
+            Every design, <span className="font-serif italic text-white/55">in motion.</span>
           </h2>
         </div>
-        <div className="hidden items-center gap-3 lg:flex">
-          <p className="max-w-xs text-sm text-[#17130f]/55">
+        <div className="hidden items-center gap-6 lg:flex">
+          <p className="max-w-xs text-sm leading-relaxed text-white/50">
             Each preview scrolls itself, just like a visitor would. Click any card to open the
             real, working demo.
           </p>
@@ -97,7 +81,7 @@ export function TemplateRail({
               onClick={() => nudge(-1)}
               disabled={atStart}
               aria-label="Previous templates"
-              className="grid size-11 place-items-center rounded-full border border-black/15 transition-opacity hover:bg-black/5 disabled:opacity-30"
+              className="grid size-12 place-items-center rounded-full border border-white/15 bg-white/[0.03] transition hover:border-white/30 hover:bg-white/[0.07] disabled:opacity-30"
             >
               <ArrowLeft className="size-5" />
             </button>
@@ -106,7 +90,7 @@ export function TemplateRail({
               onClick={() => nudge(1)}
               disabled={atEnd}
               aria-label="More templates"
-              className="grid size-11 place-items-center rounded-full border border-black/15 transition-opacity hover:bg-black/5 disabled:opacity-30"
+              className="grid size-12 place-items-center rounded-full border border-white/15 bg-white/[0.03] transition hover:border-white/30 hover:bg-white/[0.07] disabled:opacity-30"
             >
               <ArrowRight className="size-5" />
             </button>
@@ -116,35 +100,41 @@ export function TemplateRail({
 
       <div
         ref={scroller}
-        className="flex snap-x snap-mandatory items-stretch gap-6 overflow-x-auto scroll-smooth px-6 pb-4 [scrollbar-width:none] sm:gap-8 sm:px-10 [&::-webkit-scrollbar]:hidden"
+        className="flex snap-x snap-mandatory items-stretch gap-5 overflow-x-auto scroll-smooth px-5 pb-6 [scrollbar-width:none] sm:gap-6 sm:px-8 lg:px-[max(3rem,calc((100vw_-_1440px)/2_+_3rem))] [&::-webkit-scrollbar]:hidden"
       >
         {shown.map((entry, i) => (
-          <PreviewCard key={entry.slug} entry={entry} index={i} displayClass={displayClass} />
+          <PreviewCard key={entry.slug} entry={entry} index={i} />
         ))}
 
         {hasMore ? (
           <button
             type="button"
             onClick={loadMore}
-            className="group flex w-[80vw] shrink-0 snap-center flex-col items-center justify-center gap-4 rounded-3xl border border-dashed border-black/25 bg-transparent p-10 text-center text-[#17130f] transition-colors hover:border-[#e8590c] hover:bg-[#e8590c]/5 sm:w-[54vw] lg:w-[42vw]"
+            className={`group flex ${CARD_W} shrink-0 snap-center flex-col items-center justify-center gap-4 rounded-[28px] border border-dashed border-white/15 p-10 text-center transition-colors hover:border-[#4f7cff]/60 hover:bg-[#4f7cff]/[0.06]`}
           >
-            <span className="grid size-14 place-items-center rounded-full bg-[#e8590c] text-[#f4f1ea] transition-transform group-hover:scale-110">
+            <span className="grid size-14 place-items-center rounded-full bg-[#2f5bff] text-white shadow-[0_0_40px_-6px_rgba(79,124,255,0.8)] transition-transform group-hover:scale-110">
               <Plus className="size-6" />
             </span>
-            <span className={`${displayClass} text-3xl leading-tight sm:text-4xl`}>See more</span>
-            <span className="text-sm font-semibold uppercase tracking-[0.2em] text-[#17130f]/55">
+            <span className="text-3xl font-light tracking-[-0.03em] sm:text-4xl">See more</span>
+            <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-white/45">
               {entries.length - visible} more · load {Math.min(PAGE, entries.length - visible)}
             </span>
           </button>
         ) : (
           <Link
             href="#contact"
-            className="group flex w-[80vw] shrink-0 snap-center flex-col items-center justify-center gap-3 rounded-3xl bg-[#e8590c] p-10 text-center text-[#0b0a09] sm:w-[54vw] lg:w-[42vw]"
+            className={`group relative flex ${CARD_W} shrink-0 snap-center flex-col items-center justify-center gap-4 overflow-hidden rounded-[28px] bg-[#2f5bff] p-10 text-center text-white`}
           >
-            <span className={`${displayClass} max-w-[16ch] text-4xl leading-tight sm:text-5xl`}>
-              Found one you love?
+            <span
+              aria-hidden
+              className="pointer-events-none absolute inset-0 bg-[radial-gradient(80%_60%_at_50%_0%,rgba(255,255,255,0.28),transparent)]"
+            />
+            <span className="relative max-w-[16ch] text-4xl font-light leading-tight tracking-[-0.03em] sm:text-5xl">
+              Found one you <span className="font-serif italic">love?</span>
             </span>
-            <span className="text-sm font-semibold uppercase tracking-[0.2em]">Let&apos;s make it yours →</span>
+            <span className="relative font-mono text-[11px] uppercase tracking-[0.22em] text-white/80">
+              Let&apos;s make it yours →
+            </span>
           </Link>
         )}
       </div>
@@ -152,15 +142,7 @@ export function TemplateRail({
   );
 }
 
-function PreviewCard({
-  entry,
-  index,
-  displayClass,
-}: {
-  entry: ShowcaseEntry;
-  index: number;
-  displayClass: string;
-}) {
+function PreviewCard({ entry, index }: { entry: ShowcaseEntry; index: number }) {
   const wrap = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [inView, setInView] = useState(false);
@@ -193,10 +175,9 @@ function PreviewCard({
       target={entry.external ? "_blank" : undefined}
       rel={entry.external ? "noopener noreferrer" : undefined}
       draggable={false}
-      style={{ backgroundColor: CARD.bg, boxShadow: "0 24px 60px -30px rgba(0,0,0,0.55)" }}
-      className="group flex w-[80vw] shrink-0 snap-center flex-col overflow-hidden rounded-3xl p-4 ring-1 ring-black/10 transition-transform duration-500 hover:-translate-y-1.5 sm:w-[58vw] sm:p-5 lg:w-[46vw]"
+      className={`group flex ${CARD_W} shrink-0 snap-center flex-col rounded-[28px] border border-white/10 bg-[#090b16] p-3 transition duration-500 hover:-translate-y-1.5 hover:border-[#4f7cff]/40 hover:shadow-[0_40px_90px_-45px_rgba(79,124,255,0.7)] sm:p-3.5`}
     >
-      <div ref={wrap} className="relative aspect-[1200/790] overflow-hidden rounded-xl bg-[#0e0d0b] ring-1 ring-white/10">
+      <div ref={wrap} className="relative aspect-[1200/790] overflow-hidden rounded-[20px] bg-[#05060d] ring-1 ring-white/10">
         {video ? (
           <video
             ref={videoRef}
@@ -212,37 +193,33 @@ function PreviewCard({
             src={`/img/rail/${entry.slug}.webp`}
             alt={`${entry.name} — ${entry.detail}`}
             fill
-            sizes="(min-width: 1024px) 46vw, (min-width: 640px) 58vw, 80vw"
+            sizes="(min-width: 1024px) 44vw, (min-width: 640px) 58vw, 84vw"
             className={`object-cover object-top ${inView ? "rail-pan" : ""}`}
           />
         )}
-        <div className="pointer-events-none absolute inset-x-0 top-0 flex h-7 items-center gap-1.5 bg-gradient-to-b from-black/35 to-transparent px-3">
-          <span className="size-2 rounded-full" style={{ backgroundColor: CARD.dots }} />
-          <span className="size-2 rounded-full" style={{ backgroundColor: CARD.dots }} />
-          <span className="size-2 rounded-full" style={{ backgroundColor: CARD.dots }} />
+        <div className="pointer-events-none absolute inset-x-0 top-0 flex h-7 items-center gap-1.5 bg-gradient-to-b from-black/45 to-transparent px-3">
+          <span className="size-2 rounded-full bg-white/30" />
+          <span className="size-2 rounded-full bg-white/30" />
+          <span className="size-2 rounded-full bg-white/30" />
         </div>
         {entry.external && (
-          <span className="absolute right-3 top-3 rounded-full px-2.5 py-1 text-[0.6rem] font-semibold uppercase tracking-wide" style={{ backgroundColor: CARD.accent, color: CARD.bg }}>
+          <span className="absolute right-3 top-3 rounded-full bg-[#2f5bff] px-2.5 py-1 font-mono text-[9.5px] uppercase tracking-[0.14em] text-white">
             Live site
           </span>
         )}
       </div>
 
-      <div className="flex items-end justify-between gap-4 px-1 pt-4">
+      <div className="flex items-end justify-between gap-4 px-2 pb-1.5 pt-5">
         <div>
-          <span className="text-[0.7rem] uppercase tracking-[0.22em]" style={{ color: CARD.accent }}>
+          <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-[#8ea8ff]">
             {String(index + 1).padStart(2, "0")} · {entry.category}
           </span>
-          <h3 className={`${displayClass} mt-1 text-2xl sm:text-3xl`} style={{ color: CARD.text }}>
-            {entry.name}
-          </h3>
-          <p className="mt-0.5 text-sm" style={{ color: CARD.sub }}>
-            {entry.detail}
-          </p>
+          <h3 className="mt-2 text-2xl tracking-[-0.02em] text-white sm:text-[1.75rem]">{entry.name}</h3>
+          <p className="mt-1 text-sm text-white/50">{entry.detail}</p>
         </div>
-        <span className="mb-1 inline-flex items-center gap-1.5 whitespace-nowrap text-sm transition-transform group-hover:translate-x-0.5" style={{ color: CARD.sub }}>
+        <span className="mb-1 inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border border-white/10 px-3.5 py-1.5 text-xs text-white/70 transition-colors group-hover:border-white/25 group-hover:text-white">
           {entry.external ? "Live site" : "View live"}
-          <ArrowUpRight className="size-4" />
+          <ArrowUpRight className="size-3.5" />
         </span>
       </div>
     </Link>
