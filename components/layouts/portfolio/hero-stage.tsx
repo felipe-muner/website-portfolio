@@ -1,15 +1,17 @@
 "use client";
 
-import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { useInView } from "react-intersection-observer";
-import { shapeIndex } from "./particle-shapes";
+import { useSwarmCycle } from "@/components/layouts/particles/use-swarm-cycle";
+import { buildShapes, shapeIndex } from "./particle-shapes";
 
 /* WebGL is client-only and heavy — keep it off the SSR path. */
-const ParticleCanvas = dynamic(() => import("./particle-canvas"), { ssr: false, loading: () => null });
+const ParticleCanvas = dynamic(() => import("@/components/layouts/particles/particle-canvas"), {
+  ssr: false,
+  loading: () => null,
+});
 
 /** How long the swarm holds each shape (morph included) before moving on. */
 const DWELL_MS = 6500;
@@ -31,24 +33,6 @@ const CHIP_SPOTS = [
   { left: "86%", top: "74%" },
 ] as const;
 
-function useMedia(query: string): boolean {
-  const subscribe = useCallback(
-    (onChange: () => void) => {
-      const mql = window.matchMedia(query);
-      mql.addEventListener("change", onChange);
-      return () => mql.removeEventListener("change", onChange);
-    },
-    [query],
-  );
-  return useSyncExternalStore(
-    subscribe,
-    () => window.matchMedia(query).matches,
-    () => false,
-  );
-}
-
-const subscribeNever = () => () => {};
-
 /**
  * The hero's right-hand stage: the morphing particle swarm, a floating chip
  * per category (hover one to preview its shape, click to open its best
@@ -56,28 +40,12 @@ const subscribeNever = () => () => {};
  * copy on wide screens; its own block above the copy on small ones.
  */
 export function HeroStage({ categories }: { categories: HeroCategory[] }) {
-  const reduced = useMedia("(prefers-reduced-motion: reduce)");
-  const webgl = useSyncExternalStore(subscribeNever, () => "WebGL2RenderingContext" in window, () => false);
-  const { ref, inView } = useInView({ threshold: 0 });
-  const [index, setIndex] = useState(0);
-  const [preview, setPreview] = useState<number | null>(null);
-
-  const steps = categories.length + 1; // every category, then "yours"
-  const current = preview ?? index;
+  // Every category, then "yours".
+  const { ref, inView, reduced, webgl, current, index, cycling, preview, release } = useSwarmCycle(
+    categories.length + 1,
+    DWELL_MS,
+  );
   const category = current < categories.length ? categories[current] : null;
-  const cycling = !reduced && inView && preview === null;
-
-  useEffect(() => {
-    if (!cycling) return;
-    const id = window.setTimeout(() => setIndex((i) => (i + 1) % steps), DWELL_MS);
-    return () => window.clearTimeout(id);
-  }, [cycling, index, steps]);
-
-  // After a preview, carry on cycling from the shape that was shown.
-  const release = (i: number) => {
-    setIndex(i);
-    setPreview(null);
-  };
 
   return (
     <div ref={ref} className="relative mt-16 h-[400px] sm:h-[480px] lg:absolute lg:inset-0 lg:mt-0 lg:h-auto">
@@ -87,7 +55,12 @@ export function HeroStage({ categories }: { categories: HeroCategory[] }) {
       />
       {webgl && (
         <div className="absolute inset-0">
-          <ParticleCanvas shape={shapeIndex(category ? category.slug : "yours")} active={inView} reduced={reduced} />
+          <ParticleCanvas
+            shape={shapeIndex(category ? category.slug : "yours")}
+            active={inView}
+            reduced={reduced}
+            build={buildShapes}
+          />
         </div>
       )}
 
@@ -107,7 +80,7 @@ export function HeroStage({ categories }: { categories: HeroCategory[] }) {
               category={c}
               active={i === current}
               floatDelay={i * -1.4}
-              onPreview={() => setPreview(i)}
+              onPreview={() => preview(i)}
               onRelease={() => release(i)}
             />
           </li>

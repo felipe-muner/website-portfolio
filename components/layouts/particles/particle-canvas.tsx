@@ -3,7 +3,28 @@
 import { useEffect, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import { buildShapes, seeded } from "./particle-shapes";
+import { seeded, type ShapeSet } from "./geometry";
+
+type RGB = [number, number, number];
+
+/** Swarm colours, as linear 0–1 RGB. */
+export interface SwarmPalette {
+  /** Most particles fall between these two. */
+  deep: RGB;
+  mid: RGB;
+  /** The odd sparkle, and the highlight while particles are in flight. */
+  ice: RGB;
+  /** Floor rings and the pool of light under the swarm. */
+  floor: RGB;
+}
+
+/** Electric blue — the /portfolio swarm. */
+export const BLUE: SwarmPalette = {
+  deep: [0.09, 0.22, 1.0],
+  mid: [0.34, 0.56, 1.0],
+  ice: [0.84, 0.91, 1.0],
+  floor: [0.25, 0.45, 1.0],
+};
 
 /* Denser swarm where there is room (and usually a GPU) for it. */
 const COUNT =
@@ -24,6 +45,9 @@ type SwarmUniforms = {
   uPixelRatio: THREE.IUniform<number>;
   uPointer: THREE.IUniform<THREE.Vector3>;
   uPointerStrength: THREE.IUniform<number>;
+  uDeep: THREE.IUniform<THREE.Color>;
+  uMid: THREE.IUniform<THREE.Color>;
+  uIce: THREE.IUniform<THREE.Color>;
 };
 
 type FloorUniforms = {
@@ -47,6 +71,9 @@ const SWARM_VERTEX = /* glsl */ `
   uniform float uPixelRatio;
   uniform vec3 uPointer;
   uniform float uPointerStrength;
+  uniform vec3 uDeep;
+  uniform vec3 uMid;
+  uniform vec3 uIce;
 
   attribute vec3 aTo;
   attribute float aRand;
@@ -87,12 +114,9 @@ const SWARM_VERTEX = /* glsl */ `
     float sparkle = step(0.985, aRand);
     gl_PointSize = uSize * (0.55 + aRand * 0.9 + sparkle * 1.4) * uPixelRatio / -view.z;
 
-    // Electric blue, a lighter blue, and the odd ice-white sparkle.
-    vec3 deep = vec3(0.09, 0.22, 1.0);
-    vec3 mid = vec3(0.34, 0.56, 1.0);
-    vec3 ice = vec3(0.84, 0.91, 1.0);
-    vColor = mix(deep, mid, smoothstep(0.15, 0.95, aRand));
-    vColor = mix(vColor, ice, clamp(step(0.965, aRand) * 0.85 + uTurb * 0.15, 0.0, 1.0));
+    // Deep to mid by chance, plus the odd near-white sparkle.
+    vColor = mix(uDeep, uMid, smoothstep(0.15, 0.95, aRand));
+    vColor = mix(vColor, uIce, clamp(step(0.965, aRand) * 0.85 + uTurb * 0.15, 0.0, 1.0));
 
     float twinkle = 0.72 + 0.28 * sin(uTime * (1.2 + aRand * 2.5) + aRand * 40.0);
     float fog = clamp(1.4 - (-view.z - 5.2) * 0.5, 0.3, 1.0);
@@ -147,10 +171,17 @@ const FLOOR_FRAGMENT = /* glsl */ `
 /* Scene                                                               */
 /* ------------------------------------------------------------------ */
 
-function Swarm({ shape, reduced }: { shape: number; reduced: boolean }) {
+interface SwarmProps {
+  shape: number;
+  reduced: boolean;
+  build: (count: number) => ShapeSet;
+  palette: SwarmPalette;
+}
+
+function Swarm({ shape, reduced, build, palette }: SwarmProps) {
   // Built once: every target shape, the intro scatter, and per-particle noise.
   const [initial] = useState(() => {
-    const { intro, targets } = buildShapes(COUNT);
+    const { intro, targets } = build(COUNT);
     const r = seeded(7);
     const rand = new Float32Array(COUNT);
     const stagger = new Float32Array(COUNT);
@@ -175,12 +206,15 @@ function Swarm({ shape, reduced }: { shape: number; reduced: boolean }) {
     uPixelRatio: { value: 1 },
     uPointer: { value: new THREE.Vector3(99, 99, 0) },
     uPointerStrength: { value: 0 },
+    uDeep: { value: new THREE.Color(...palette.deep) },
+    uMid: { value: new THREE.Color(...palette.mid) },
+    uIce: { value: new THREE.Color(...palette.ice) },
   }));
   const [floorUniforms] = useState<FloorUniforms>(() => ({
     uTime: { value: 0 },
     uPulse: { value: 0 },
     uPulseAmp: { value: 0 },
-    uColor: { value: new THREE.Color(0.25, 0.45, 1.0) },
+    uColor: { value: new THREE.Color(...palette.floor) },
   }));
 
   const points = useRef<THREE.Points>(null);
@@ -188,6 +222,8 @@ function Swarm({ shape, reduced }: { shape: number; reduced: boolean }) {
   const floor = useRef<THREE.ShaderMaterial>(null);
   const sway = useRef<THREE.Group>(null);
   const anim = useRef({
+    /** Own clock: R3F resets its clock to 0 whenever the frameloop toggles. */
+    time: 0,
     shape,
     m: 0,
     duration: reduced ? 0.001 : INTRO_SECONDS,
@@ -261,7 +297,8 @@ function Swarm({ shape, reduced }: { shape: number; reduced: boolean }) {
     const p = pointer.current;
     // Resuming after the hero was off screen can hand us a huge delta.
     const dt = Math.min(delta, 1 / 20);
-    const time = state.clock.elapsedTime;
+    a.time += dt;
+    const time = a.time;
     if (a.pulseAt < 0) a.pulseAt = time;
 
     // Churn only while particles are in flight, then settle fast so each
@@ -341,7 +378,7 @@ function Swarm({ shape, reduced }: { shape: number; reduced: boolean }) {
  * Places the swarm: right of the copy on wide screens (centred at 69% of the
  * width from 1280px, 72% between 1024 and 1280px), centred otherwise.
  */
-function Stage({ shape, reduced }: { shape: number; reduced: boolean }) {
+function Stage(props: SwarmProps) {
   const viewport = useThree((s) => s.viewport);
   const width = useThree((s) => s.size.width);
   const wide = width >= 1024;
@@ -351,25 +388,31 @@ function Stage({ shape, reduced }: { shape: number; reduced: boolean }) {
   const offset = wide ? viewport.width * (roomy ? 0.19 : 0.22) : 0;
   return (
     <group position={[offset, 0, 0]} scale={fit}>
-      <Swarm shape={shape} reduced={reduced} />
+      <Swarm {...props} />
     </group>
   );
 }
 
 /**
- * The /portfolio hero swarm: a WebGL particle cloud that morphs between one
- * silhouette per template category. Client-only — load it with next/dynamic.
+ * A WebGL particle swarm that morphs between the shapes `build` returns, over
+ * a rippling floor (the /portfolio hero). Client-only —
+ * load it with next/dynamic.
  */
 export default function ParticleCanvas({
   shape,
   active,
   reduced,
+  build,
+  palette = BLUE,
 }: {
-  /** Index into SHAPE_KEYS. */
+  /** Index into the targets `build` returns. */
   shape: number;
   /** Render only while the hero is on screen. */
   active: boolean;
   reduced: boolean;
+  /** Called once with the particle count; must return a stable shape order. */
+  build: (count: number) => ShapeSet;
+  palette?: SwarmPalette;
 }) {
   return (
     <Canvas
@@ -380,7 +423,7 @@ export default function ParticleCanvas({
       onCreated={({ camera }) => camera.lookAt(0, 0, 0)}
       style={{ pointerEvents: "none" }}
     >
-      <Stage shape={shape} reduced={reduced} />
+      <Stage shape={shape} reduced={reduced} build={build} palette={palette} />
     </Canvas>
   );
 }
