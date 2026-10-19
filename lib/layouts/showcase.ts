@@ -42,7 +42,7 @@ const ALL: ShowcaseEntry[] = PORTFOLIO.flatMap((group) =>
 const BY_SLUG = new Map(ALL.map((e) => [e.slug, e]));
 
 /** The newest showpieces lead the /portfolio rail; the rest follow in registry order. */
-const RAIL_LEAD = ["gym-v6"];
+const RAIL_LEAD = ["gym-v6", "beanbowl"];
 
 /** Every template — used by the /portfolio scroll rail. */
 export const TEMPLATES: ShowcaseEntry[] = [

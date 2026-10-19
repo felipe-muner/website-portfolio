@@ -188,6 +188,10 @@
     {
       "slug": "gym-v6",
       "height": 5200
+    },
+    {
+      "slug": "beanbowl",
+      "height": 5200
     }
   ]
 }
