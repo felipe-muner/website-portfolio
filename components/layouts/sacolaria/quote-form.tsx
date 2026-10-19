@@ -250,7 +250,7 @@ function Step({
   title,
   text,
 }: {
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   title: string;
   text: string;
 }) {

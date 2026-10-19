@@ -559,7 +559,7 @@ function MethodCard({
   active,
   onClick,
 }: {
-  icon: React.ElementType;
+  icon: React.ComponentType<{ className?: string }>;
   title: string;
   hint: string;
   active: boolean;
