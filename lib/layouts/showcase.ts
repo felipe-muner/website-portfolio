@@ -41,8 +41,14 @@ const ALL: ShowcaseEntry[] = PORTFOLIO.flatMap((group) =>
 
 const BY_SLUG = new Map(ALL.map((e) => [e.slug, e]));
 
-/** Every template, in registry order — used by the /portfolio scroll rail. */
-export const TEMPLATES: ShowcaseEntry[] = ALL;
+/** The newest showpieces lead the /portfolio rail; the rest follow in registry order. */
+const RAIL_LEAD = ["gym-v6"];
+
+/** Every template — used by the /portfolio scroll rail. */
+export const TEMPLATES: ShowcaseEntry[] = [
+  ...RAIL_LEAD.map((slug) => BY_SLUG.get(slug)).filter((e): e is ShowcaseEntry => e !== undefined),
+  ...ALL.filter((e) => !RAIL_LEAD.includes(e.slug)),
+];
 
 /**
  * Slugs that have a rendered scroll-through clip in public/video/rail/.
@@ -56,6 +62,7 @@ export const VIDEO_SLUGS = new Set<string>([
   "coaching",
   "dive",
   "gym-v1",
+  "gym-v6",
   "restaurant",
   "studio",
   "villa-v7",

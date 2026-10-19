@@ -23,6 +23,7 @@ export const PORTFOLIO: readonly PortfolioGroup[] = [
     label: "Gym & Fitness",
     slug: "gym",
     sites: [
+      { href: "/gym/v6", name: "Chalk", brand: "Chalk Strength Club", detail: "Iron & chalk — 3D kettlebell slam, live gym clock, plate pricing", cover: "/img/layouts/chalk-cover.jpg" },
       { href: "/gym/v1", name: "Forge", brand: "Forge Strength Club", detail: "Brutalist black & orange, weekly board", cover: "/img/layouts/gym-deadlift.jpg" },
       { href: "/gym/v2", name: "Foundry", brand: "Foundry Gym", detail: "Industrial spec sheet, punch-card matrix", cover: "/img/layouts/gym-bright.jpg" },
       { href: "/gym/v3", name: "Velocity", brand: "Velocity Performance", detail: "Carbon & red, race-lane schedule", cover: "/img/layouts/gym-sled-push.jpg" },
