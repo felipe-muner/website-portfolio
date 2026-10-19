@@ -10,7 +10,7 @@ import * as THREE from "three";
 /* ------------------------------------------------------------------ */
 
 const BEANS = 48;
-const FIRST_DROP = 0.35;
+const FIRST_DROP = 0.15;
 const DROP_EVERY = 0.085;
 const GRAVITY = 7.5;
 /** How long a bean's share of coffee takes to blend in once it lands. */
@@ -74,16 +74,19 @@ function innerRadius(y: number): number {
   return INNER[INNER.length - 1].r;
 }
 
+/* Saucer profile: underside out to the rim, then the top back to the centre.
+   Lathe faces point to the right of the direction of travel, so this order
+   makes the top face up and the underside face down. */
 const SAUCER: [number, number][] = [
-  [0, 0.02],
-  [0.3, 0.02],
-  [0.34, 0.032],
-  [0.72, 0.066],
-  [0.8, 0.098],
-  [0.82, 0.094],
-  [0.79, 0.06],
-  [0.36, 0.004],
   [0, 0],
+  [0.36, 0.004],
+  [0.79, 0.06],
+  [0.82, 0.094],
+  [0.8, 0.098],
+  [0.72, 0.066],
+  [0.34, 0.032],
+  [0.3, 0.02],
+  [0, 0.02],
 ];
 
 interface Bean {
@@ -112,7 +115,8 @@ function plan(): Bean[] {
     const reach = innerRadius(landAt) * 0.62;
     const a = r() * Math.PI * 2;
     const d = Math.sqrt(r()) * reach;
-    const y0 = 2.1 + r() * 0.9;
+    // Above the top of the frame on every layout, so beans shower in already moving.
+    const y0 = 4.0 + r() * 0.6;
     const fall = Math.sqrt((2 * (y0 - landAt - 0.03)) / GRAVITY);
     const drift = 0.08;
     beans.push({
@@ -475,8 +479,11 @@ function Coffee({ reduced, pour }: { reduced: boolean; pour: number }) {
       const fall = b.impact - b.t0;
       let size = b.scale;
       let stretch = 1;
-      if (t < b.impact) {
-        const dt = Math.max(0, t - b.t0);
+      if (t < b.t0) {
+        // Not dropped yet: nothing waits in view — every bean arrives already falling.
+        size = 0;
+      } else if (t < b.impact) {
+        const dt = t - b.t0;
         p.set(b.x + b.vx * dt, b.y0 - 0.5 * GRAVITY * dt * dt, b.z + b.vz * dt);
         q.setFromAxisAngle(b.axis, dt * b.spin);
         stretch = 1 + 0.9 * Math.max(0, 1 - (b.impact - t) / 0.16);
