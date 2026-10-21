@@ -46,3 +46,7 @@ next-env.d.ts
 # The small display copies (public/img/rail/*.webp) and manifest.json ARE tracked.
 public/img/rail/*.png
 .env*.local
+
+# Lead lists and outreach copy from scripts/leads — business contact details,
+# and this repo is public. Only lib/previews/leads.json (no emails) is tracked.
+/leads
