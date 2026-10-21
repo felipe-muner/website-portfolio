@@ -3,15 +3,16 @@
 import { useSyncExternalStore } from "react";
 import type { ScheduleSession } from "@/lib/layouts/schedule";
 
-// Gym 6 · Chalk — the gym's own clock. The timetable is in gym time
-// (Thailand), so "today", "now" and countdowns ignore the visitor's zone.
+// The studio's own clock, shared by the timetable templates (Chalk,
+// Stillwater). Timetables are in studio time (Thailand), so "today", "now"
+// and countdowns ignore the visitor's zone.
 
-const GYM_ZONE = "Asia/Bangkok";
+const STUDIO_ZONE = "Asia/Bangkok";
 const WEEK = 7 * 86_400;
 const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 const parts = new Intl.DateTimeFormat("en-GB", {
-  timeZone: GYM_ZONE,
+  timeZone: STUDIO_ZONE,
   weekday: "short",
   hour: "2-digit",
   minute: "2-digit",
@@ -19,14 +20,14 @@ const parts = new Intl.DateTimeFormat("en-GB", {
   hourCycle: "h23",
 });
 
-export interface GymTime {
-  /** 0 = Monday … 6 = Sunday, in gym time. */
+export interface StudioTime {
+  /** 0 = Monday … 6 = Sunday, in studio time. */
   weekday: number;
-  /** Seconds since gym-time midnight. */
+  /** Seconds since studio-time midnight. */
   seconds: number;
 }
 
-function gymTime(epochSeconds: number): GymTime {
+function studioTime(epochSeconds: number): StudioTime {
   const p = Object.fromEntries(parts.formatToParts(new Date(epochSeconds * 1000)).map((x) => [x.type, x.value]));
   return {
     weekday: DAYS.indexOf(p.weekday ?? "Mon"),
@@ -51,11 +52,11 @@ function store(every: number) {
   return s;
 }
 
-/** Gym time, ticking every `every` seconds. Null while prerendering. */
-export function useGymTime(every: number): GymTime | null {
+/** Studio time, ticking every `every` seconds. Null while prerendering. */
+export function useStudioTime(every: number): StudioTime | null {
   const s = store(every);
   const epoch = useSyncExternalStore(s.subscribe, s.read, () => null);
-  return epoch === null ? null : gymTime(epoch);
+  return epoch === null ? null : studioTime(epoch);
 }
 
 const toSeconds = (hhmm: string) => {
@@ -63,13 +64,13 @@ const toSeconds = (hhmm: string) => {
   return h * 3600 + m * 60;
 };
 
-/** Seconds into the gym week. */
+/** Seconds into the studio week. */
 const weekSeconds = (weekday: number, seconds: number) => weekday * 86_400 + seconds;
 
-/** The session on the floor right now, or the next one up, with seconds to go. */
+/** The session running right now, or the next one up, with seconds to go. */
 export function upNext(
   week: readonly ScheduleSession[],
-  now: GymTime,
+  now: StudioTime,
 ): { session: ScheduleSession; live: boolean; seconds: number } | null {
   const t = weekSeconds(now.weekday, now.seconds);
   let best: { session: ScheduleSession; live: boolean; seconds: number } | null = null;

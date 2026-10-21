@@ -36,6 +36,7 @@ export const PORTFOLIO: readonly PortfolioGroup[] = [
     label: "Yoga & Wellness",
     slug: "yoga",
     sites: [
+      { href: "/yoga/v6", name: "Stillwater", brand: "Stillwater Yoga", detail: "Dusk lake — 3D stone cairn, a singing bowl to ring, live clock", cover: "/img/layouts/stillwater-cover.jpg" },
       { href: "/yoga/v1", name: "Sanctuary", brand: "Sanctuary Yoga", detail: "Warm sand & arches, week garden", cover: "/img/layouts/yoga-meditation-studio.jpg" },
       { href: "/yoga/v2", name: "Tide", brand: "Tide Studio", detail: "Eucalyptus chapters, moon & tide chart", cover: "/img/layouts/yoga-beach-group.jpg" },
       { href: "/yoga/v3", name: "Dawn", brand: "Dawn House", detail: "Sunrise gradient, sun-arc schedule", cover: "/img/layouts/yoga-sunset-pose.jpg" },
