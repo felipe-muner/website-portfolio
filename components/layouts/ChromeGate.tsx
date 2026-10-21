@@ -9,5 +9,11 @@ const LANDING_PREVIEW = /^\/(gym|yoga|villa)(\/v\d+)?$|^\/(gym|yoga|villa)\/v\d+
 export function ChromeGate({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   if (LANDING_PREVIEW.test(pathname)) return null;
-  return <>{children}</>;
+  // `contents` adds no box; the marker lets the 404 page hide this chrome
+  // (see `[data-site-chrome]` in globals.css).
+  return (
+    <div data-site-chrome className="contents">
+      {children}
+    </div>
+  );
 }

@@ -426,6 +426,10 @@
 .coach-breathe {
   animation: coach-breathe 7s ease-in-out infinite;
 }
+/* The 404 page brings its own header — hide the legacy gym chrome around it. */
+body:has([data-not-found]) [data-site-chrome] {
+  display: none;
+}
 /* MGM air con (/aircon): dashed lines of moving air, and sonar pings on map pins */
 @keyframes aircon-airflow {
   to {
