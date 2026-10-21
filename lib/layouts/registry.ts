@@ -73,6 +73,7 @@ export const PORTFOLIO: readonly PortfolioGroup[] = [
     label: "Local Business",
     slug: "local",
     sites: [
+      { href: "/aircon", name: "MGM Air", brand: "MGM Air Conditioning", detail: "Sunshine Coast air con — 3D split system you drive with a remote, room sizer, coverage map", cover: "/img/layouts/aircon-cover.jpg" },
       { href: "/beanbowl", name: "Bean & Bowl", brand: "Bean & Bowl", detail: "All-day café — 3D coffee pour, live bowl builder, filterable menu", cover: "/img/layouts/beanbowl-cover.jpg" },
       { href: "/restaurant", name: "Ember", brand: "Ember", detail: "Open-fire restaurant, searchable menu", cover: "/img/layouts/food-dark-plate.jpg" },
       { href: "/cafe", name: "Crumb & Co.", brand: "Crumb & Co.", detail: "Bakery café, warm & rounded", cover: "/img/layouts/cafe-bread.jpg" },
