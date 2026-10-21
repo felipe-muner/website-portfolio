@@ -1,7 +1,7 @@
 "use client";
 
 import { GYM_WEEK } from "@/lib/layouts/schedule";
-import { hms, upNext, useGymTime } from "./clock";
+import { hms, upNext, useStudioTime } from "@/components/layouts/studio-clock";
 import { chooseSession } from "./events";
 
 /**
@@ -10,7 +10,7 @@ import { chooseSession } from "./events";
  * books that class.
  */
 export function NextClass() {
-  const now = useGymTime(1);
+  const now = useStudioTime(1);
   const next = now ? upNext(GYM_WEEK, now) : null;
   const s = next?.session;
 

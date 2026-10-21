@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { Search, X } from "lucide-react";
 import { GYM_WEEK, WEEKDAYS, WEEKDAYS_SHORT, sessionsOn, type ScheduleSession } from "@/lib/layouts/schedule";
 import { useScheduleSearch } from "@/components/layouts/schedule/use-schedule-search";
-import { useGymTime } from "./clock";
+import { useStudioTime } from "@/components/layouts/studio-clock";
 import { chooseSession, useScheduleFilter } from "./events";
 
 /* The board spans 06:30–20:30; every hour is HOUR_PX tall. */
@@ -68,7 +68,7 @@ export function WeekBoard() {
   const { query, setQuery, toggle, isActive, matches, hasQuery, matchCount, teachers, classNames } =
     useScheduleSearch(GYM_WEEK);
   useScheduleFilter(setQuery);
-  const now = useGymTime(60);
+  const now = useStudioTime(60);
   const [picked, setPicked] = useState<number | null>(null);
 
   const today = now?.weekday ?? null;

@@ -1,7 +1,7 @@
 "use client";
 
 import { WEEKDAYS } from "@/lib/layouts/schedule";
-import { useGymTime } from "./clock";
+import { useStudioTime } from "@/components/layouts/studio-clock";
 
 /* A FICTIONAL week of workouts for the board — Monday first. */
 const WODS = [
@@ -19,7 +19,7 @@ const WODS = [
  * written up in marker the way every box does it.
  */
 export function Whiteboard() {
-  const now = useGymTime(60);
+  const now = useStudioTime(60);
   const day = now?.weekday ?? 0;
   const wod = WODS[day];
 
