@@ -200,6 +200,22 @@
     {
       "slug": "aircon",
       "height": 5200
+    },
+    {
+      "slug": "artist",
+      "height": 5200
+    },
+    {
+      "slug": "brasa",
+      "height": 5200
+    },
+    {
+      "slug": "goldenhour",
+      "height": 5200
+    },
+    {
+      "slug": "blacklotus",
+      "height": 5200
     }
   ]
 }
