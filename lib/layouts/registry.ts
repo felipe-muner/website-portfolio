@@ -73,6 +73,9 @@ export const PORTFOLIO: readonly PortfolioGroup[] = [
     label: "Local Business",
     slug: "local",
     sites: [
+      { href: "/artist", name: "Maria Meads", brand: "Maria Meads Art", detail: "Visionary painter — a canvas you paint yourself, soul-portrait commissions, prints & hand-painted denim", cover: "/img/layouts/meads-cover.jpg" },
+      { href: "/brasa", name: "Brasa", brand: "Brasa Fire Kitchen", detail: "Island open-fire restaurant — 3D charcoal pit you stoke, live kitchen clock, chilli-rated menu, table booking", cover: "/img/layouts/brasa-cover.jpg" },
+      { href: "/blacklotus", name: "Black Lotus", brand: "Black Lotus Tattoo", detail: "Island tattoo studio — 3D forearm you place flash on and turn, flash sheet with try-on, three artists, aftercare", cover: "/img/layouts/blacklotus-cover.jpg" },
       { href: "/aircon", name: "MGM Air", brand: "MGM Air Conditioning", detail: "Sunshine Coast air con — 3D split system you drive with a remote, room sizer, coverage map", cover: "/img/layouts/aircon-cover.jpg" },
       { href: "/beanbowl", name: "Bean & Bowl", brand: "Bean & Bowl", detail: "All-day café — 3D coffee pour, live bowl builder, filterable menu", cover: "/img/layouts/beanbowl-cover.jpg" },
       { href: "/restaurant", name: "Ember", brand: "Ember", detail: "Open-fire restaurant, searchable menu", cover: "/img/layouts/food-dark-plate.jpg" },
@@ -93,6 +96,7 @@ export const PORTFOLIO: readonly PortfolioGroup[] = [
     label: "Adventure & Nightlife",
     slug: "adventure",
     sites: [
+      { href: "/goldenhour", name: "Golden Hour", brand: "Golden Hour Beach Club", detail: "West-coast beach club — 3D sunset you drag through the day, live club timeline, tappable deck map", cover: "/img/layouts/goldenhour-cover.jpg" },
       { href: "/rental", name: "Loop", brand: "Loop Island Rides", detail: "Roadside price board, film-strip fleet", cover: "/img/layouts/rental-3.jpg" },
       { href: "/boat", name: "Blue Horizon", brand: "Blue Horizon Boat Co.", detail: "Captain's chart, day plotted hour by hour", cover: "/img/layouts/boat-3.jpg" },
       { href: "/beachclub", name: "Sundown", brand: "Sundown Beach Club", detail: "Festival poster, noon-to-night colour ramp", cover: "/img/layouts/beachclub-1.jpg" },
