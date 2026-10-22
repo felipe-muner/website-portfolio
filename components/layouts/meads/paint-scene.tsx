@@ -9,8 +9,10 @@ import * as THREE from "three";
 /*                                                                     */
 /* A linen canvas with a faint graphite underdrawing of the painting.  */
 /* Wherever the pointer goes (or the studio's own brush, when you let  */
-/* it), paint goes on: a coverage mask drawn on a 2D canvas, read by a */
-/* shader that lights the strokes as thick, wet impasto.               */
+/* it), paint goes on. The coverage mask lives entirely on the GPU: a  */
+/* render target that brush dabs are drawn into, read by a shader that */
+/* lights the strokes as thick, wet impasto. Nothing is uploaded from  */
+/* a 2D canvas each frame, so there is nothing to tear or flicker.      */
 /* ------------------------------------------------------------------ */
 
 export interface PaintSceneProps {
@@ -38,9 +40,11 @@ const WET = 24;
 const WET_SECONDS = 1.4;
 /** Seconds without pointer painting before the studio brush takes over. */
 const IDLE = 1.3;
+/** Most dabs drawn in one frame; the rest wait for the next. */
+const MAX_DABS = 768;
 
 /* ------------------------------------------------------------------ */
-/* Shader                                                              */
+/* Shaders                                                             */
 /* ------------------------------------------------------------------ */
 
 const VERT = /* glsl */ `
@@ -152,6 +156,82 @@ const SHADOW_FRAG = /* glsl */ `
   }
 `;
 
+/* One dab of paint, drawn into the mask: a soft elongated body plus a few
+   ragged bristle hairs along the stroke. Instanced; one quad per dab. */
+const DAB_VERT = /* glsl */ `
+  attribute vec2 aCenter;
+  attribute vec2 aSize;
+  attribute float aAngle;
+  attribute float aLoad;
+  attribute float aSeed;
+  uniform vec2 uSize;
+  varying vec2 vLocal;
+  varying float vLoad;
+  varying float vSeed;
+  varying float vRadius;
+  void main() {
+    vLocal = position.xy * 2.0;
+    vLoad = aLoad;
+    vSeed = aSeed;
+    vRadius = aSize.x;
+    vec2 local = vLocal * aSize;
+    float c = cos(aAngle);
+    float s = sin(aAngle);
+    vec2 rotated = vec2(local.x * c - local.y * s, local.x * s + local.y * c);
+    vec2 clip = (aCenter + rotated) / uSize * 2.0 - 1.0;
+    gl_Position = vec4(clip, 0.0, 1.0);
+  }
+`;
+
+const DAB_FRAG = /* glsl */ `
+  varying vec2 vLocal;
+  varying float vLoad;
+  varying float vSeed;
+  varying float vRadius;
+  float hash(float n) { return fract(sin(n) * 43758.5453); }
+  void main() {
+    float d = length(vec2(vLocal.x, vLocal.y / 0.62));
+    float body = pow(clamp(1.0 - d, 0.0, 1.0), 1.4) * 0.5;
+    float a = body * vLoad;
+    for (int i = 0; i < 7; i++) {
+      float fi = float(i);
+      float oy = (hash(vSeed + fi * 1.7) - 0.5) * 1.1;
+      float len = 0.5 + hash(vSeed + fi * 3.1) * 0.8;
+      float th = (0.8 + hash(vSeed + fi * 5.3) * 2.2) / vRadius;
+      float slope = (hash(vSeed + fi * 7.9) - 0.5) * 0.08;
+      float along = vLocal.x / len;
+      float fade = 1.0 - smoothstep(0.7, 1.0, abs(along));
+      float dy = abs(vLocal.y - oy - slope * vLocal.x);
+      float line = 1.0 - smoothstep(th * 0.5, th * 0.5 + 1.5 / vRadius, dy);
+      a += (0.16 + hash(vSeed + fi * 11.3) * 0.28) * vLoad * fade * line;
+    }
+    gl_FragColor = vec4(1.0, 1.0, 1.0, clamp(a, 0.0, 1.0));
+  }
+`;
+
+/* Box-filters the mask down to a GRID×GRID probe, read back for coverage. */
+const PROBE_VERT = /* glsl */ `
+  void main() {
+    gl_Position = vec4(position.xy, 0.0, 1.0);
+  }
+`;
+
+const PROBE_FRAG = /* glsl */ `
+  uniform sampler2D uMask;
+  uniform float uGrid;
+  void main() {
+    vec2 cell = floor(gl_FragCoord.xy) / uGrid;
+    float sum = 0.0;
+    for (int y = 0; y < 6; y++) {
+      for (int x = 0; x < 6; x++) {
+        vec2 uv = cell + (vec2(float(x), float(y)) + 0.5) / (6.0 * uGrid);
+        sum += texture2D(uMask, uv).r;
+      }
+    }
+    gl_FragColor = vec4(vec3(sum / 36.0), 1.0);
+  }
+`;
+
 /* ------------------------------------------------------------------ */
 /* Textures — one shared cache, so switching paintings is instant      */
 /* ------------------------------------------------------------------ */
@@ -164,8 +244,7 @@ function loadTexture(src: string): THREE.Texture {
   if (!t) {
     t = loader.load(src);
     t.colorSpace = THREE.SRGBColorSpace;
-    // The painting is shown near 1:1, so skip mipmaps: a third less GPU
-    // memory per painting and no mip generation when one loads.
+    // Shown near 1:1 — no mipmaps keeps GPU memory down.
     t.generateMipmaps = false;
     t.minFilter = THREE.LinearFilter;
     t.magFilter = THREE.LinearFilter;
@@ -175,80 +254,120 @@ function loadTexture(src: string): THREE.Texture {
 }
 
 /* ------------------------------------------------------------------ */
-/* Brush                                                               */
+/* Brush — dabs queued in JS, drawn into the mask on the GPU           */
 /* ------------------------------------------------------------------ */
 
 interface Brush {
-  canvas: HTMLCanvasElement;
-  ctx: CanvasRenderingContext2D;
   w: number;
   h: number;
-  dirty: boolean;
+  mask: THREE.WebGLRenderTarget;
+  probe: THREE.WebGLRenderTarget;
+  scene: THREE.Scene;
+  camera: THREE.Camera;
+  geometry: THREE.InstancedBufferGeometry;
+  material: THREE.ShaderMaterial;
+  probeScene: THREE.Scene;
+  probeMaterial: THREE.ShaderMaterial;
+  centers: THREE.InstancedBufferAttribute;
+  sizes: THREE.InstancedBufferAttribute;
+  angles: THREE.InstancedBufferAttribute;
+  loads: THREE.InstancedBufferAttribute;
+  seeds: THREE.InstancedBufferAttribute;
+  /** Dabs waiting to be drawn: x, y, rx, ry, angle, load, seed. */
+  pending: number[];
+  /** Fill the mask with this before drawing anything else. */
+  clearTo: "black" | "white" | null;
+  readback: Uint8Array;
 }
 
 function makeBrush(aspect: number): Brush {
-  const canvas = document.createElement("canvas");
   const w = aspect >= 1 ? MASK : Math.round(MASK * aspect);
   const h = aspect >= 1 ? Math.round(MASK / aspect) : MASK;
-  canvas.width = w;
-  canvas.height = h;
-  // CPU-backed on purpose: this canvas is uploaded to the GPU as a texture on
-  // every painted frame and sampled for coverage, and a GPU-backed 2D canvas
-  // flips between backings under that load, which shows up as black tiles
-  // flashing over the painting in Chrome.
-  const ctx = canvas.getContext("2d", { willReadFrequently: true });
-  if (!ctx) throw new Error("2D canvas unavailable");
-  ctx.fillStyle = "#000";
-  ctx.fillRect(0, 0, w, h);
-  return { canvas, ctx, w, h, dirty: true };
+  const targetOptions = {
+    depthBuffer: false,
+    stencilBuffer: false,
+    generateMipmaps: false,
+    minFilter: THREE.LinearFilter,
+    magFilter: THREE.LinearFilter,
+  };
+  const mask = new THREE.WebGLRenderTarget(w, h, targetOptions);
+  const probe = new THREE.WebGLRenderTarget(GRID, GRID, { ...targetOptions, minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter });
+
+  const plane = new THREE.PlaneGeometry(1, 1);
+  const geometry = new THREE.InstancedBufferGeometry();
+  geometry.index = plane.index;
+  geometry.setAttribute("position", plane.getAttribute("position"));
+  const centers = new THREE.InstancedBufferAttribute(new Float32Array(MAX_DABS * 2), 2);
+  const sizes = new THREE.InstancedBufferAttribute(new Float32Array(MAX_DABS * 2), 2);
+  const angles = new THREE.InstancedBufferAttribute(new Float32Array(MAX_DABS), 1);
+  const loads = new THREE.InstancedBufferAttribute(new Float32Array(MAX_DABS), 1);
+  const seeds = new THREE.InstancedBufferAttribute(new Float32Array(MAX_DABS), 1);
+  for (const a of [centers, sizes, angles, loads, seeds]) a.setUsage(THREE.DynamicDrawUsage);
+  geometry.setAttribute("aCenter", centers);
+  geometry.setAttribute("aSize", sizes);
+  geometry.setAttribute("aAngle", angles);
+  geometry.setAttribute("aLoad", loads);
+  geometry.setAttribute("aSeed", seeds);
+  geometry.instanceCount = 0;
+
+  const material = new THREE.ShaderMaterial({
+    vertexShader: DAB_VERT,
+    fragmentShader: DAB_FRAG,
+    uniforms: { uSize: { value: new THREE.Vector2(w, h) } },
+    transparent: true,
+    depthTest: false,
+    depthWrite: false,
+  });
+  const dabs = new THREE.Mesh(geometry, material);
+  dabs.frustumCulled = false;
+  const scene = new THREE.Scene();
+  scene.add(dabs);
+
+  const probeMaterial = new THREE.ShaderMaterial({
+    vertexShader: PROBE_VERT,
+    fragmentShader: PROBE_FRAG,
+    uniforms: { uMask: { value: mask.texture }, uGrid: { value: GRID } },
+    depthTest: false,
+    depthWrite: false,
+  });
+  const probeQuad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), probeMaterial);
+  probeQuad.frustumCulled = false;
+  const probeScene = new THREE.Scene();
+  probeScene.add(probeQuad);
+
+  return {
+    w,
+    h,
+    mask,
+    probe,
+    scene,
+    camera: new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1),
+    geometry,
+    material,
+    probeScene,
+    probeMaterial,
+    centers,
+    sizes,
+    angles,
+    loads,
+    seeds,
+    pending: [],
+    clearTo: "black",
+    readback: new Uint8Array(GRID * GRID * 4),
+  };
 }
 
-function wipe(brush: Brush, to: "black" | "white") {
-  brush.ctx.globalAlpha = 1;
-  brush.ctx.fillStyle = to === "black" ? "#000" : "#fff";
-  brush.ctx.fillRect(0, 0, brush.w, brush.h);
-  brush.dirty = true;
+function disposeBrush(brush: Brush) {
+  brush.mask.dispose();
+  brush.probe.dispose();
+  brush.geometry.dispose();
+  brush.material.dispose();
+  brush.probeMaterial.dispose();
 }
 
-/** One dab of paint: a soft elongated body plus bristle streaks along the stroke. */
+/** Queue one dab at (x, y) mask pixels, radius r px, pointing along `angle`. */
 function dab(brush: Brush, x: number, y: number, angle: number, r: number, load: number) {
-  const { ctx } = brush;
-  ctx.save();
-  ctx.translate(x, y);
-  ctx.rotate(angle);
-  // Soft body: a circle squashed across the stroke, so the gradient fades to
-  // nothing at its rim in both directions — no hard-edged shards.
-  ctx.save();
-  ctx.scale(1, 0.62);
-  const body = ctx.createRadialGradient(0, 0, 0, 0, 0, r);
-  body.addColorStop(0, `rgba(255,255,255,${0.5 * load})`);
-  body.addColorStop(0.55, `rgba(255,255,255,${0.28 * load})`);
-  body.addColorStop(1, "rgba(255,255,255,0)");
-  ctx.fillStyle = body;
-  ctx.beginPath();
-  ctx.arc(0, 0, r, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.restore();
-  // Bristles: a few ragged hairs along the stroke, fading at their ends.
-  ctx.lineCap = "round";
-  for (let i = 0; i < 7; i++) {
-    const oy = (Math.random() - 0.5) * r * 1.1;
-    const len = r * (0.5 + Math.random() * 0.8);
-    const hair = ctx.createLinearGradient(-len, 0, len, 0);
-    const a = (0.16 + Math.random() * 0.28) * load;
-    hair.addColorStop(0, "rgba(255,255,255,0)");
-    hair.addColorStop(0.3, `rgba(255,255,255,${a})`);
-    hair.addColorStop(0.7, `rgba(255,255,255,${a})`);
-    hair.addColorStop(1, "rgba(255,255,255,0)");
-    ctx.strokeStyle = hair;
-    ctx.lineWidth = 0.8 + Math.random() * 2.2;
-    ctx.beginPath();
-    ctx.moveTo(-len, oy);
-    ctx.lineTo(len, oy + (Math.random() - 0.5) * 5);
-    ctx.stroke();
-  }
-  ctx.restore();
-  brush.dirty = true;
+  brush.pending.push(x, y, r, r, angle, load, Math.random() * 1000);
 }
 
 /** A stroke segment from (x0,y0) to (x1,y1), dabbed every r/3 px. */
@@ -262,6 +381,48 @@ function stroke(brush: Brush, x0: number, y0: number, x1: number, y1: number, r:
     const p = i / steps;
     dab(brush, x0 + dx * p, y0 + dy * p, angle, r * (0.85 + Math.random() * 0.3), load);
   }
+}
+
+const CLEAR = new THREE.Color();
+
+/** Draw everything queued into the mask. Runs inside the frame loop. */
+function flush(brush: Brush, gl: THREE.WebGLRenderer) {
+  if (!brush.clearTo && brush.pending.length === 0) return;
+  const prevTarget = gl.getRenderTarget();
+  const prevAutoClear = gl.autoClear;
+  const prevAlpha = gl.getClearAlpha();
+  gl.getClearColor(CLEAR);
+
+  gl.setRenderTarget(brush.mask);
+  if (brush.clearTo) {
+    gl.setClearColor(brush.clearTo === "white" ? 0xffffff : 0x000000, 1);
+    gl.clear(true, false, false);
+    brush.clearTo = null;
+  }
+  const n = Math.min(MAX_DABS, brush.pending.length / 7);
+  if (n > 0) {
+    const q = brush.pending;
+    for (let i = 0; i < n; i++) {
+      const o = i * 7;
+      brush.centers.setXY(i, q[o], q[o + 1]);
+      brush.sizes.setXY(i, q[o + 2], q[o + 3]);
+      brush.angles.setX(i, q[o + 4]);
+      brush.loads.setX(i, q[o + 5]);
+      brush.seeds.setX(i, q[o + 6]);
+    }
+    for (const a of [brush.centers, brush.sizes, brush.angles, brush.loads, brush.seeds]) {
+      a.addUpdateRange(0, n * a.itemSize);
+      a.needsUpdate = true;
+    }
+    brush.geometry.instanceCount = n;
+    brush.pending.splice(0, n * 7);
+    gl.autoClear = false;
+    gl.render(brush.scene, brush.camera);
+  }
+
+  gl.setRenderTarget(prevTarget);
+  gl.autoClear = prevAutoClear;
+  gl.setClearColor(CLEAR, prevAlpha);
 }
 
 /* ------------------------------------------------------------------ */
@@ -309,7 +470,7 @@ function newStroke(brush: Brush, cells: Float32Array): AutoStroke {
 
 type Uniforms = {
   uArt: THREE.IUniform<THREE.Texture>;
-  uMask: THREE.IUniform<THREE.CanvasTexture>;
+  uMask: THREE.IUniform<THREE.Texture>;
   uTexel: THREE.IUniform<THREE.Vector2>;
   uTime: THREE.IUniform<number>;
   uAspect: THREE.IUniform<number>;
@@ -320,20 +481,15 @@ interface PaintMaterial extends THREE.ShaderMaterial {
   uniforms: Uniforms;
 }
 
-/** The 2D brush canvas behind each mask texture. */
+/** The brush behind each mask texture. */
 const BRUSHES = new WeakMap<THREE.Texture, Brush>();
 
 function createUniforms(src: string, aspect: number): Uniforms {
   const brush = makeBrush(aspect);
-  const mask = new THREE.CanvasTexture(brush.canvas);
-  mask.colorSpace = THREE.NoColorSpace;
-  mask.minFilter = THREE.LinearFilter;
-  mask.magFilter = THREE.LinearFilter;
-  mask.generateMipmaps = false;
-  BRUSHES.set(mask, brush);
+  BRUSHES.set(brush.mask.texture, brush);
   return {
     uArt: { value: loadTexture(src) },
-    uMask: { value: mask },
+    uMask: { value: brush.mask.texture },
     uTexel: { value: new THREE.Vector2(1 / brush.w, 1 / brush.h) },
     uTime: { value: 0 },
     uAspect: { value: aspect },
@@ -343,7 +499,6 @@ function createUniforms(src: string, aspect: number): Uniforms {
 
 /** Everything the frame loop and the pointer mutate, kept out of React. */
 interface Rig {
-  sampler: CanvasRenderingContext2D | null;
   cells: Float32Array;
   last: { x: number; y: number; t: number } | null;
   lastPointerAt: number;
@@ -357,11 +512,7 @@ interface Rig {
 }
 
 function createRig(): Rig {
-  const sampler = document.createElement("canvas");
-  sampler.width = GRID;
-  sampler.height = GRID;
   return {
-    sampler: sampler.getContext("2d", { willReadFrequently: true }),
     cells: new Float32Array(GRID * GRID),
     last: null,
     lastPointerAt: -10,
@@ -376,13 +527,15 @@ function createRig(): Rig {
 }
 
 /** How much of the canvas is painted, overall and per grid cell. */
-function measure(rig: Rig, brush: Brush, onProgress: (coverage: number) => void) {
-  if (!rig.sampler) return;
-  rig.sampler.drawImage(brush.canvas, 0, 0, GRID, GRID);
-  const data = rig.sampler.getImageData(0, 0, GRID, GRID).data;
+function measure(rig: Rig, brush: Brush, gl: THREE.WebGLRenderer, onProgress: (coverage: number) => void) {
+  const prevTarget = gl.getRenderTarget();
+  gl.setRenderTarget(brush.probe);
+  gl.render(brush.probeScene, brush.camera);
+  gl.readRenderTargetPixels(brush.probe, 0, 0, GRID, GRID, brush.readback);
+  gl.setRenderTarget(prevTarget);
   let sum = 0;
   for (let i = 0; i < GRID * GRID; i++) {
-    const v = data[i * 4] / 255;
+    const v = brush.readback[i * 4] / 255;
     rig.cells[i] = v;
     sum += v;
   }
@@ -421,7 +574,8 @@ function Painting({ src, aspect, active, reduced, clearToken, revealToken, onPro
   useEffect(() => {
     const m = material.current;
     return () => {
-      m?.uniforms.uMask.value.dispose();
+      const brush = m ? BRUSHES.get(m.uniforms.uMask.value) : undefined;
+      if (brush) disposeBrush(brush);
     };
   }, []);
 
@@ -429,12 +583,14 @@ function Painting({ src, aspect, active, reduced, clearToken, revealToken, onPro
   useEffect(() => {
     const l = live();
     if (!l) return;
-    wipe(l.brush, reduced ? "white" : "black");
+    l.brush.pending.length = 0;
+    l.brush.clearTo = reduced ? "white" : "black";
     l.rig.auto = null;
     l.rig.wipeStart = -1;
     l.rig.reported = -1;
-    measure(l.rig, l.brush, onProgress);
-    l.m.uniforms.uMask.value.needsUpdate = true;
+    l.rig.cells.fill(reduced ? 1 : 0);
+    l.rig.coverage = reduced ? 1 : 0;
+    onProgress(reduced ? 1 : 0);
   }, [reduced, clearToken, onProgress]);
 
   useEffect(() => {
@@ -449,7 +605,7 @@ function Painting({ src, aspect, active, reduced, clearToken, revealToken, onPro
     if (!l || reduced || !e.uv) return;
     const { brush, rig, m } = l;
     const x = e.uv.x * brush.w;
-    const y = (1 - e.uv.y) * brush.h;
+    const y = e.uv.y * brush.h;
     const now = rig.time;
     const size = brush.w * 0.046;
     if (tap || !rig.last || now - rig.last.t > 0.25) {
@@ -464,7 +620,7 @@ function Painting({ src, aspect, active, reduced, clearToken, revealToken, onPro
     rig.auto = null;
   };
 
-  useFrame((_, delta) => {
+  useFrame(({ gl }, delta) => {
     const l = live();
     if (!l || !active) return;
     const { brush, rig, m } = l;
@@ -476,16 +632,12 @@ function Painting({ src, aspect, active, reduced, clearToken, revealToken, onPro
       /* Reveal: a widening pool from the centre. */
       const p = (rig.time - rig.wipeStart) / 0.8;
       if (p >= 1) {
-        wipe(brush, "white");
+        brush.pending.length = 0;
+        brush.clearTo = "white";
         rig.wipeStart = -1;
       } else {
-        const radius = Math.max(1, p * Math.hypot(brush.w, brush.h) * 0.62);
-        const g = brush.ctx.createRadialGradient(brush.w / 2, brush.h / 2, radius * 0.7, brush.w / 2, brush.h / 2, radius);
-        g.addColorStop(0, "rgba(255,255,255,0.5)");
-        g.addColorStop(1, "rgba(255,255,255,0)");
-        brush.ctx.fillStyle = g;
-        brush.ctx.fillRect(0, 0, brush.w, brush.h);
-        brush.dirty = true;
+        const radius = Math.max(8, p * Math.hypot(brush.w, brush.h) * 0.62);
+        brush.pending.push(brush.w / 2, brush.h / 2, radius, radius / 0.62, 0, 1.1, 0);
       }
     } else if (!reduced && rig.time - rig.lastPointerAt > IDLE && rig.coverage < 0.965) {
       /* The studio brush keeps painting while you watch. */
@@ -494,7 +646,7 @@ function Painting({ src, aspect, active, reduced, clearToken, revealToken, onPro
       const nx = a.x + Math.cos(a.angle) * a.speed * dt;
       const ny = a.y + Math.sin(a.angle) * a.speed * dt;
       stroke(brush, a.x, a.y, nx, ny, a.r, 0.9);
-      markWet(rig, m.uniforms, nx / brush.w, 1 - ny / brush.h, 0.05);
+      markWet(rig, m.uniforms, nx / brush.w, ny / brush.h, 0.05);
       a.x = nx;
       a.y = ny;
       a.angle += a.turn * dt + Math.sin(rig.time * 7 + a.r) * 1.6 * dt;
@@ -502,11 +654,8 @@ function Painting({ src, aspect, active, reduced, clearToken, revealToken, onPro
       if (nx < 0 || ny < 0 || nx > brush.w || ny > brush.h) a.left = 0;
     }
 
-    if (brush.dirty) {
-      m.uniforms.uMask.value.needsUpdate = true;
-      brush.dirty = false;
-    }
-    if (++rig.frame % 12 === 0) measure(rig, brush, onProgress);
+    flush(brush, gl);
+    if (++rig.frame % 12 === 0) measure(rig, brush, gl, onProgress);
 
     /* The canvas leans toward the pointer, and breathes a little. */
     const g = group.current;
@@ -538,8 +687,10 @@ function Painting({ src, aspect, active, reduced, clearToken, revealToken, onPro
         <planeGeometry args={[size.w * 1.06, size.h * 1.06]} />
         <shaderMaterial transparent depthWrite={false} vertexShader={VERT} fragmentShader={SHADOW_FRAG} />
       </mesh>
-      {/* Stretcher bars: a thin dark slab behind the linen */}
-      <mesh position={[0, 0, -0.03]}>
+      {/* Stretcher bars: a thin dark slab behind the linen. Its front face sits
+          clearly behind the canvas plane — coplanar, the two z-fight into a
+          black-and-cream checkerboard as soon as the canvas tilts. */}
+      <mesh position={[0, 0, -0.05]}>
         <boxGeometry args={[size.w * 1.012, size.h * 1.012, 0.06]} />
         <meshBasicMaterial color="#2a2320" />
       </mesh>
