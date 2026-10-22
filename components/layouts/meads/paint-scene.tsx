@@ -560,6 +560,9 @@ function Painting({ src, aspect, active, reduced, clearToken, revealToken, onPro
   const group = useRef<THREE.Group>(null);
   const material = useRef<PaintMaterial>(null);
   const rigRef = useRef<Rig | null>(null);
+  /* The reveal token this painting has already acted on — a new painting
+     mounting after an earlier Reveal must start blank, not revealed. */
+  const revealed = useRef(revealToken);
   const uniforms = useMemo(() => createUniforms(src, aspect), [src, aspect]);
 
   /* The live material and its brush — read only from effects, handlers and the frame loop. */
@@ -595,7 +598,8 @@ function Painting({ src, aspect, active, reduced, clearToken, revealToken, onPro
 
   useEffect(() => {
     const l = live();
-    if (!l || revealToken === 0) return;
+    if (!l || revealToken === revealed.current) return;
+    revealed.current = revealToken;
     l.rig.wipeStart = l.rig.time;
     l.rig.auto = null;
   }, [revealToken]);
