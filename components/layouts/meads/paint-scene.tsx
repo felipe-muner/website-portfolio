@@ -164,7 +164,11 @@ function loadTexture(src: string): THREE.Texture {
   if (!t) {
     t = loader.load(src);
     t.colorSpace = THREE.SRGBColorSpace;
-    t.anisotropy = 4;
+    // The painting is shown near 1:1, so skip mipmaps: a third less GPU
+    // memory per painting and no mip generation when one loads.
+    t.generateMipmaps = false;
+    t.minFilter = THREE.LinearFilter;
+    t.magFilter = THREE.LinearFilter;
     TEXTURES.set(src, t);
   }
   return t;
@@ -188,7 +192,11 @@ function makeBrush(aspect: number): Brush {
   const h = aspect >= 1 ? Math.round(MASK / aspect) : MASK;
   canvas.width = w;
   canvas.height = h;
-  const ctx = canvas.getContext("2d");
+  // CPU-backed on purpose: this canvas is uploaded to the GPU as a texture on
+  // every painted frame and sampled for coverage, and a GPU-backed 2D canvas
+  // flips between backings under that load, which shows up as black tiles
+  // flashing over the painting in Chrome.
+  const ctx = canvas.getContext("2d", { willReadFrequently: true });
   if (!ctx) throw new Error("2D canvas unavailable");
   ctx.fillStyle = "#000";
   ctx.fillRect(0, 0, w, h);
@@ -563,7 +571,7 @@ export default function PaintScene(props: PaintSceneProps) {
   return (
     <Canvas
       camera={{ fov: 28, position: [0, 0, 3.2], near: 0.1, far: 20 }}
-      dpr={[1, 1.75]}
+      dpr={[1, 1.5]}
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       frameloop={props.active ? "always" : "never"}
       style={{ touchAction: "pan-y" }}
