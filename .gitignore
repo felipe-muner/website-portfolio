@@ -50,3 +50,6 @@ public/img/rail/*.png
 # Lead lists and outreach copy from scripts/leads — business contact details,
 # and this repo is public. Only lib/previews/leads.json (no emails) is tracked.
 /leads
+
+# Design references (other people's screenshots and videos) — local only.
+/references

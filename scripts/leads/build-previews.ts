@@ -1,4 +1,4 @@
-// Turns lead lists from find-places.ts into preview sites and outreach copy.
+// Turns lead lists (CSV, one business per row) into preview sites and outreach copy.
 //
 //   npm run leads:build -- leads/plumber-ac-repair-house-cleaning-service-in-tampa-fl-houston-tx.csv
 //
@@ -39,6 +39,41 @@ const FREEMAIL =
   /@(gmail|yahoo|ymail|hotmail|outlook|live|msn|icloud|me|aol|comcast|att|sbcglobal|bellsouth|verizon|proton|protonmail)\.[a-z.]+$/i;
 
 type Phone = { display: string; tel: string };
+type Location = { latitude: number; longitude: number };
+
+const STATES: Record<string, string> = {
+  AL: "Alabama", AK: "Alaska", AZ: "Arizona", AR: "Arkansas", CA: "California", CO: "Colorado",
+  CT: "Connecticut", DE: "Delaware", FL: "Florida", GA: "Georgia", HI: "Hawaii", ID: "Idaho",
+  IL: "Illinois", IN: "Indiana", IA: "Iowa", KS: "Kansas", KY: "Kentucky", LA: "Louisiana",
+  ME: "Maine", MD: "Maryland", MA: "Massachusetts", MI: "Michigan", MN: "Minnesota",
+  MS: "Mississippi", MO: "Missouri", MT: "Montana", NE: "Nebraska", NV: "Nevada",
+  NH: "New Hampshire", NJ: "New Jersey", NM: "New Mexico", NY: "New York", NC: "North Carolina",
+  ND: "North Dakota", OH: "Ohio", OK: "Oklahoma", OR: "Oregon", PA: "Pennsylvania",
+  RI: "Rhode Island", SC: "South Carolina", SD: "South Dakota", TN: "Tennessee", TX: "Texas",
+  UT: "Utah", VT: "Vermont", VA: "Virginia", WA: "Washington", WV: "West Virginia",
+  WI: "Wisconsin", WY: "Wyoming", DC: "District of Columbia",
+};
+
+// Coordinates for each city (the AC preview's live "outside" temperature), from
+// Open-Meteo's free geocoder. One lookup per city per run.
+const located = new Map<string, Promise<Location | null>>();
+function locate(city: string, state: string) {
+  const key = `${city}|${state}`;
+  if (!located.has(key)) {
+    const url = `https://geocoding-api.open-meteo.com/v1/search?count=10&countryCode=US&name=${encodeURIComponent(city)}`;
+    located.set(
+      key,
+      fetch(url, { signal: AbortSignal.timeout(10000) })
+        .then((res) => res.json() as Promise<{ results?: { latitude: number; longitude: number; admin1?: string }[] }>)
+        .then(({ results = [] }) => {
+          const match = results.find((r) => r.admin1 === STATES[state]) ?? results[0];
+          return match ? { latitude: match.latitude, longitude: match.longitude } : null;
+        })
+        .catch(() => null),
+    );
+  }
+  return located.get(key)!;
+}
 
 type Lead = {
   slug: string;
@@ -47,6 +82,7 @@ type Lead = {
   trade: Trade;
   city: string;
   place: string;
+  location: Location | null;
   phone: Phone | null;
   rating: number;
   reviews: number;
@@ -161,29 +197,28 @@ function reasonText(issue: string) {
 }
 
 function emailFor(l: Lead) {
-  const noticed = l.issue
-    ? `noticed ${reasonText(l.issue)}`
-    : "took a look at your website. It's a solid start, but I think a more modern site could be bringing you a lot more calls";
+  const hook =
+    l.issue === "no website" || l.issue.startsWith("only a ")
+      ? `You don't have one yet, and people in ${l.city} are searching for ${TRADES[l.trade].people} on their phones right now.`
+      : l.issue
+        ? `Right now ${reasonText(l.issue)}. This one fixes that.`
+        : `Your current one works. This one gets people to call.`;
   return {
-    subject: `New website for ${l.short}`,
-    body: `Hi ${l.short} team,
+    subject: `I built ${l.short} a new website`,
+    body: `Hi ${l.short},
 
-I'm ${SENDER}, I build websites for ${TRADES[l.trade].people}. I came across ${l.short} on Google Maps and ${noticed}.
-
-So I went ahead and made you a new one. Take a look, it works great on phones too:
+I built you a new website. It's live, take a look:
 ${l.url}
 
-You can see more of my work here: ${PORTFOLIO}
+${hook}
 
-If you like it, it's yours for ${PRICE}, one-time. That includes putting it live on your own domain, linking it to your Google listing, and free hosting for the first year. Happy to change anything you want.
+${PRICE} one-time: your own domain, linked to your Google listing, hosting free for a year. Any changes you want are included.
 
-Interested? Just reply to this email.
+Want it? Just reply "yes".
 
-Thanks,
 ${SENDER}
-
-[YOUR MAILING ADDRESS]
-Not interested? Reply "no" and I won't email you again.`,
+${PORTFOLIO}
+Not interested? Reply "no" and that's the last you'll hear from me.`,
   };
 }
 
@@ -304,6 +339,7 @@ async function main() {
         trade,
         city,
         place: state ? `${city}, ${state}` : city,
+        location: await locate(city, state),
         phone,
         rating: Number(r.rating) || 0,
         reviews: Number(r.reviews) || 0,
@@ -324,19 +360,26 @@ async function main() {
   }
 
   // Only what the preview page shows goes into the repo (it's public): no emails.
-  const previews = leads.map(({ slug, name, short, trade, city, place, phone, rating, reviews, maps }) => ({
+  const previews = leads.map(({ slug, name, short, trade, city, place, location, phone, rating, reviews, maps }) => ({
     slug,
     name,
     short,
     trade,
     city,
     place,
+    location,
     phone,
     rating,
     reviews,
     maps,
   }));
-  await writeFile("lib/previews/leads.json", JSON.stringify(previews, null, 2) + "\n");
+  // Keep previews from earlier runs: their links are already in sent emails.
+  const existing: typeof previews = await readFile("lib/previews/leads.json", "utf8")
+    .then((t) => JSON.parse(t))
+    .catch(() => []);
+  const bySlug = new Map(existing.map((p) => [p.slug, p]));
+  for (const p of previews) bySlug.set(p.slug, p);
+  await writeFile("lib/previews/leads.json", JSON.stringify([...bySlug.values()], null, 2) + "\n");
 
   await mkdir("leads", { recursive: true });
   await writeFile("leads/outreach.html", outreachPage(leads));
@@ -353,7 +396,7 @@ async function main() {
     Object.entries(Object.groupBy(leads, (l) => l[key]))
       .map(([value, group]) => `${value} ${group?.length ?? 0}`)
       .join(", ");
-  console.log(`${leads.length} previews → lib/previews/leads.json (${count("trade")})`);
+  console.log(`${leads.length} new previews, ${bySlug.size} total → lib/previews/leads.json (${count("trade")})`);
   console.log(`leads/outreach.html: ${count("channel")}`);
 }
 

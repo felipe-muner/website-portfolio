@@ -24,6 +24,13 @@ export const INITIAL_CLIMATE: Climate = {
   swing: false,
 };
 
+/** The set point is kept in °C; US sites show it in °F. */
+export const toFahrenheit = (celsius: number) => Math.round((celsius * 9) / 5 + 32);
+
+/** A temperature as the visitor reads it: the number and its unit. */
+export const reading = (celsius: number, fahrenheit?: boolean) =>
+  fahrenheit ? { value: toFahrenheit(celsius), unit: "°F" } : { value: celsius, unit: "°C" };
+
 export const MODE_LABEL: Record<Mode, string> = {
   cool: "Cool",
   dry: "Dry",

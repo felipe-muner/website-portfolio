@@ -2,7 +2,7 @@
 
 import { Droplets, Fan, Minus, MoveVertical, Plus, Power, Snowflake, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { MAX_TEMP, MIN_TEMP, MODE_LABEL, type Climate, type FanSpeed, type Mode } from "./climate";
+import { MAX_TEMP, MIN_TEMP, MODE_LABEL, reading, type Climate, type FanSpeed, type Mode } from "./climate";
 
 const MODES: { mode: Mode; icon: LucideIcon }[] = [
   { mode: "cool", icon: Snowflake },
@@ -23,15 +23,19 @@ export function Remote({
   climate,
   onChange,
   outside,
+  fahrenheit,
   className,
 }: {
   climate: Climate;
   onChange: (patch: Partial<Climate>) => void;
-  /** Live outside temperature, when known. */
+  /** Live outside temperature in °C, when known. */
   outside: number | null;
+  /** Show temperatures in °F (the climate itself stays in °C). */
+  fahrenheit?: boolean;
   className?: string;
 }) {
   const { power, temp, mode, fan, swing } = climate;
+  const setPoint = reading(temp, fahrenheit);
 
   return (
     <div
@@ -52,7 +56,7 @@ export function Remote({
         </span>
         {outside !== null ? (
           <span>
-            Outside <span className="text-[#faab3f]">{outside}°</span>
+            Outside <span className="text-[#faab3f]">{reading(outside, fahrenheit).value}°</span>
           </span>
         ) : null}
       </div>
@@ -70,8 +74,8 @@ export function Remote({
 
         <div className="text-center" aria-live="polite">
           <p className="font-mono text-[3.4rem] leading-none font-light tracking-tight tabular-nums">
-            {power ? temp : "--"}
-            <span className="ml-0.5 align-top text-xl text-white/55">°C</span>
+            {power ? setPoint.value : "--"}
+            <span className="ml-0.5 align-top text-xl text-white/55">{setPoint.unit}</span>
           </p>
           <p className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.22em] text-[#99f2e0]/80">
             {power ? `${MODE_LABEL[mode]} · fan ${fan}${swing ? " · swing" : ""}` : "Standby"}

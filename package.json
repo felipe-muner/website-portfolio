@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "rail:capture": "bun scripts/capture-templates.ts",
     "rail:render": "bun scripts/render-rail.ts",
-    "leads:find": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/leads/find-places.ts",
+    "leads:scrape": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/leads/scrape-maps.ts",
     "leads:build": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/leads/build-previews.ts",
     "video": "remotion studio remotion/index.ts",
     "video:render": "remotion render remotion/index.ts Showreel out/showreel.mp4",

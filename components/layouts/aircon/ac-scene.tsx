@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, type RefObject } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Environment, Lightformer, RoundedBox } from "@react-three/drei";
 import * as THREE from "three";
-import { coolness, MAX_TEMP, MIN_TEMP, type Climate, type Mode } from "./climate";
+import { coolness, MAX_TEMP, MIN_TEMP, reading, type Climate, type Mode } from "./climate";
 
 /* ------------------------------------------------------------------ */
 /* The unit — a wall-mounted split system, built from rounded boxes    */
@@ -103,7 +103,7 @@ function drawModeGlyph(ctx: CanvasRenderingContext2D, mode: Mode, x: number, y: 
 }
 
 /** The front display: dark glass, lit with the set point while the unit runs. */
-function drawDisplay(ctx: CanvasRenderingContext2D, climate: Climate, on: boolean) {
+function drawDisplay(ctx: CanvasRenderingContext2D, climate: Climate, on: boolean, fahrenheit?: boolean) {
   const { width: w, height: h } = ctx.canvas;
   ctx.clearRect(0, 0, w, h);
   roundRect(ctx, 4, 4, w - 8, h - 8, h * 0.22);
@@ -116,13 +116,14 @@ function drawDisplay(ctx: CanvasRenderingContext2D, climate: Climate, on: boolea
   ctx.fillStyle = "#a6ffea";
   ctx.strokeStyle = "#a6ffea";
 
+  const { value, unit } = reading(climate.temp, fahrenheit);
   ctx.textBaseline = "alphabetic";
   ctx.textAlign = "right";
   ctx.font = "600 132px ui-monospace, 'SF Mono', Menlo, monospace";
-  ctx.fillText(String(climate.temp), w * 0.66, h * 0.8);
+  ctx.fillText(String(value), w * 0.66, h * 0.8);
   ctx.textAlign = "left";
   ctx.font = "500 44px ui-monospace, 'SF Mono', Menlo, monospace";
-  ctx.fillText("°C", w * 0.675, h * 0.42);
+  ctx.fillText(unit, w * 0.675, h * 0.42);
 
   drawModeGlyph(ctx, climate.mode, h * 0.5, h * 0.5, h * 0.24);
 
@@ -137,12 +138,15 @@ function drawDisplay(ctx: CanvasRenderingContext2D, climate: Climate, on: boolea
 }
 
 /** Small debossed-looking maker's mark on the left of the panel. */
-function drawBadge() {
+function drawBadge(brand: string) {
   const { c, ctx } = canvas(256, 64);
   ctx.fillStyle = "#97a39f";
   ctx.font = "700 40px 'Helvetica Neue', Arial, sans-serif";
+  // Longer names shrink to fit in front of "INVERTER".
+  const size = Math.min(40, Math.floor((40 * 108) / ctx.measureText(brand).width));
+  ctx.font = `700 ${size}px 'Helvetica Neue', Arial, sans-serif`;
   ctx.textBaseline = "middle";
-  ctx.fillText("MGM", 6, 34);
+  ctx.fillText(brand, 6, 34);
   ctx.font = "500 15px 'Helvetica Neue', Arial, sans-serif";
   ctx.fillStyle = "#b3bdb9";
   ctx.fillText("INVERTER", 122, 36);
@@ -469,7 +473,20 @@ function Airflow({ climate, sharedRef, reduced }: { climate: Climate; sharedRef:
   );
 }
 
-function Unit({ climate, sharedRef, reduced }: { climate: Climate; sharedRef: RefObject<Shared>; reduced: boolean }) {
+type Look = {
+  /** Maker's mark on the panel. */
+  brand?: string;
+  /** Show the set point in °F. */
+  fahrenheit?: boolean;
+};
+
+function Unit({
+  climate,
+  sharedRef,
+  reduced,
+  brand = "MGM",
+  fahrenheit,
+}: { climate: Climate; sharedRef: RefObject<Shared>; reduced: boolean } & Look) {
   const unit = useRef<THREE.Group>(null);
   const louvre = useRef<THREE.Group>(null);
   const glow = useRef<THREE.PointLight>(null);
@@ -482,7 +499,7 @@ function Unit({ climate, sharedRef, reduced }: { climate: Climate; sharedRef: Re
     const { c, ctx } = canvas(512, 192);
     return { ctx, map: texture(c) };
   }, []);
-  const badge = useMemo(() => drawBadge(), []);
+  const badge = useMemo(() => drawBadge(brand), [brand]);
 
   useEffect(() => {
     bootAt.current = performance.now() + (reduced ? 0 : BOOT_MS);
@@ -512,7 +529,7 @@ function Unit({ climate, sharedRef, reduced }: { climate: Climate; sharedRef: Re
     const on = climate.power && bootAt.current > 0 && performance.now() >= bootAt.current;
 
     if (lit.current !== on) {
-      drawDisplay(display.ctx, climate, on);
+      drawDisplay(display.ctx, climate, on, fahrenheit);
       const map = screen.current?.map;
       if (map) map.needsUpdate = true;
       lit.current = on;
@@ -691,7 +708,7 @@ function Lights({ sharedRef }: { sharedRef: RefObject<Shared> }) {
 }
 
 /** Places the unit up and right of the copy on wide screens, centred otherwise. */
-function Stage({ climate, reduced }: { climate: Climate; reduced: boolean }) {
+function Stage({ climate, reduced, ...look }: { climate: Climate; reduced: boolean } & Look) {
   const viewport = useThree((s) => s.viewport);
   const width = useThree((s) => s.size.width);
   const wide = width >= 1024;
@@ -714,7 +731,7 @@ function Stage({ climate, reduced }: { climate: Climate; reduced: boolean }) {
       <Lights sharedRef={sharedRef} />
       <HeatMotes sharedRef={sharedRef} reduced={reduced} />
       <group position={[wide ? viewport.width * 0.21 : 0, viewport.height * (wide ? 0.2 : 0.24), 0]} scale={fit}>
-        <Unit climate={climate} sharedRef={sharedRef} reduced={reduced} />
+        <Unit climate={climate} sharedRef={sharedRef} reduced={reduced} {...look} />
       </group>
     </>
   );
@@ -725,7 +742,12 @@ function Stage({ climate, reduced }: { climate: Climate; reduced: boolean }) {
  * air across a warm Sunshine Coast haze, which cools to mint. Driven by the
  * remote. Client-only — load it with next/dynamic.
  */
-export default function AcScene({ climate, active, reduced }: { climate: Climate; active: boolean; reduced: boolean }) {
+export default function AcScene({
+  climate,
+  active,
+  reduced,
+  ...look
+}: { climate: Climate; active: boolean; reduced: boolean } & Look) {
   return (
     <Canvas
       dpr={[1, 1.75]}
@@ -734,7 +756,7 @@ export default function AcScene({ climate, active, reduced }: { climate: Climate
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       style={{ pointerEvents: "none" }}
     >
-      <Stage climate={climate} reduced={reduced} />
+      <Stage climate={climate} reduced={reduced} {...look} />
     </Canvas>
   );
 }
