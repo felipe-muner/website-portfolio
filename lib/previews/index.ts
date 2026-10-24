@@ -15,6 +15,8 @@ export type PreviewLead = {
   city: string;
   /** "Tampa, FL" */
   place: string;
+  /** City centre, for live local weather; null if the city couldn't be found. */
+  location: { latitude: number; longitude: number } | null;
   phone: { display: string; tel: string } | null;
   rating: number;
   reviews: number;

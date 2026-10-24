@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { useWebglStage } from "@/components/layouts/use-webgl-stage";
 import { Remote } from "./remote";
-import { useOutsideTemp } from "./use-outside-temp";
+import { useOutsideTemp, type Location } from "./use-outside-temp";
 import { coolness, INITIAL_CLIMATE, type Climate } from "./climate";
 
 /* WebGL is client-only and heavy — keep it off the SSR path. */
@@ -17,11 +17,25 @@ const BOOT_MS = 900;
  * MGM · the hero stage. The remote drives both the 3D unit and the backdrop,
  * which crossfades from Sunshine Coast heat to cool air as the room "cools".
  * Renders as flex items of the hero section: copy (children), stage, remote.
+ * `brand`, `fahrenheit` and `location` restyle it for another business (the
+ * outreach previews); the defaults are MGM's.
  */
-export function HeroStage({ children }: { children: React.ReactNode }) {
+export function HeroStage({
+  children,
+  brand,
+  fahrenheit,
+  location,
+}: {
+  children: React.ReactNode;
+  /** Maker's mark printed on the unit. */
+  brand?: string;
+  fahrenheit?: boolean;
+  /** Where the remote's "Outside" reading comes from; null leaves it out. */
+  location?: Location | null;
+}) {
   const [climate, setClimate] = useState<Climate>(INITIAL_CLIMATE);
   const [booted, setBooted] = useState(false);
-  const outside = useOutsideTemp();
+  const outside = useOutsideTemp(location);
   const { ref, inView, reduced, webgl } = useWebglStage();
 
   useEffect(() => {
@@ -56,13 +70,18 @@ export function HeroStage({ children }: { children: React.ReactNode }) {
       >
         {webgl && (
           <div className="absolute inset-0 [mask-image:linear-gradient(to_bottom,black_80%,transparent)]">
-            <AcScene climate={climate} active={inView} reduced={reduced} />
+            <AcScene climate={climate} active={inView} reduced={reduced} brand={brand} fahrenheit={fahrenheit} />
           </div>
         )}
       </div>
 
       <div className="relative z-20 order-3 flex justify-center px-5 pb-14 lg:absolute lg:right-[5%] lg:bottom-20 lg:p-0 xl:right-[7%]">
-        <Remote climate={climate} outside={outside} onChange={(patch) => setClimate((c) => ({ ...c, ...patch }))} />
+        <Remote
+          climate={climate}
+          outside={outside}
+          fahrenheit={fahrenheit}
+          onChange={(patch) => setClimate((c) => ({ ...c, ...patch }))}
+        />
       </div>
     </>
   );
