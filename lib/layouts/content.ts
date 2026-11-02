@@ -60,7 +60,7 @@ export const GYM_CLASSES: readonly LandingClass[] = [
     detail: "Outdoor-style team training — carries, runs and bodyweight grit in the island heat.",
     href: "#",
     image: "/img/layouts/gym-battle-ropes.jpg",
-    coach: "Diana",
+    coach: "Mara",
   },
   {
     name: "Jiu-Jitsu",
@@ -166,7 +166,7 @@ export const GYM_COACHES: readonly LandingCoach[] = [
   { name: "Theo", specialty: "HIIT & Tabata", languages: "English", href: "#", image: "/img/layouts/person-m5.jpg" },
   { name: "Lena", specialty: "Race Prep & Engine", languages: "German / English", href: "#", image: "/img/layouts/person-coach-f2.jpg" },
   { name: "Nadia", specialty: "Weightlifting", languages: "Thai / English", href: "#", image: "/img/layouts/person-coach-f1.jpg" },
-  { name: "Diana", specialty: "Boot Camp", languages: "English", href: "#", image: "/img/layouts/person-f3.jpg" },
+  { name: "Mara", specialty: "Boot Camp", languages: "English", href: "#", image: "/img/layouts/person-f3.jpg" },
   { name: "Eli", specialty: "Jiu-Jitsu", languages: "English / Portuguese", href: "#", image: "/img/layouts/person-m7.jpg" },
 ] as const;
 

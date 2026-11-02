@@ -55,24 +55,24 @@ export const GYM_WEEK: readonly ScheduleSession[] = [
   session("g12", "Race Prep", "Lena", 5, "09:00", "10:00", ["engine", "race"]),
   session("g13", "Weightlifting", "Nadia", 1, "10:30", "11:30", ["barbell", "strength", "technique"]),
   session("g14", "Weightlifting", "Nadia", 3, "10:30", "11:30", ["barbell", "strength", "technique"]),
-  session("g15", "Open Gym Coaching", "Diana", 5, "10:30", "12:00", ["open gym", "strength"]),
+  session("g15", "Open Gym Coaching", "Mara", 5, "10:30", "12:00", ["open gym", "strength"]),
   // afternoon
-  session("g16", "Boot Camp", "Diana", 0, "16:00", "17:00", ["outdoor", "conditioning", "team"]),
+  session("g16", "Boot Camp", "Mara", 0, "16:00", "17:00", ["outdoor", "conditioning", "team"]),
   session("g17", "Tabata", "Theo", 1, "16:00", "16:40", ["cardio", "intervals"]),
-  session("g18", "Boot Camp", "Diana", 2, "16:00", "17:00", ["outdoor", "conditioning", "team"]),
+  session("g18", "Boot Camp", "Mara", 2, "16:00", "17:00", ["outdoor", "conditioning", "team"]),
   session("g19", "Tabata", "Theo", 3, "16:00", "16:40", ["cardio", "intervals"]),
-  session("g20", "Boot Camp", "Diana", 4, "16:00", "17:00", ["outdoor", "conditioning", "team"]),
+  session("g20", "Boot Camp", "Mara", 4, "16:00", "17:00", ["outdoor", "conditioning", "team"]),
   // evening
   session("g21", "Cross-Training WOD", "Nadia", 0, "17:30", "18:30", ["strength", "conditioning"]),
   session("g22", "Cross-Training WOD", "Marco", 1, "17:30", "18:30", ["strength", "conditioning"]),
   session("g23", "Cross-Training WOD", "Nadia", 2, "17:30", "18:30", ["strength", "conditioning"]),
   session("g24", "Cross-Training WOD", "Marco", 3, "17:30", "18:30", ["strength", "conditioning"]),
-  session("g25", "Cross-Training WOD", "Diana", 4, "17:30", "18:30", ["strength", "conditioning"]),
+  session("g25", "Cross-Training WOD", "Mara", 4, "17:30", "18:30", ["strength", "conditioning"]),
   session("g26", "Jiu-Jitsu", "Eli", 1, "18:30", "20:00", ["martial arts", "grappling"]),
   session("g27", "Jiu-Jitsu", "Eli", 3, "18:30", "20:00", ["martial arts", "grappling"]),
   // sunday
   session("g28", "Mobility & Recovery", "Lena", 6, "09:00", "10:00", ["mobility", "recovery"]),
-  session("g29", "Open Gym Coaching", "Diana", 6, "10:30", "12:00", ["open gym", "strength"]),
+  session("g29", "Open Gym Coaching", "Mara", 6, "10:30", "12:00", ["open gym", "strength"]),
 ] as const;
 
 export const YOGA_WEEK: readonly ScheduleSession[] = [

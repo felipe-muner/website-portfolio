@@ -257,7 +257,7 @@ async function seedMembersWithNewPricing() {
         planType: 'group_classes_1month', duration: 1, isThaiNational: true // 50% discount
       },
       {
-        name: 'Kate Davis', email: 'member17@test.com', phone: '+66812345017',
+        name: 'Nina Davis', email: 'member17@test.com', phone: '+66812345017',
         planType: 'group_classes_3month', duration: 3, isThaiNational: false
       },
 

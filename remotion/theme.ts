@@ -21,7 +21,7 @@ export const FEATURED = [
   { src: "ember", label: "Local Business", name: "Ember" },
   { src: "moonlight", label: "Yoga & Wellness", name: "Moonlight" },
   { src: "cinema", label: "Villas & Stays", name: "Cinema" },
-  { src: "dive", label: "Local Business", name: "Aqua Sport" },
+  { src: "dive", label: "Local Business", name: "Blue Reef" },
   { src: "barber", label: "Local Business", name: "Fade District" },
 ] as const;
 

@@ -31,7 +31,7 @@ export function GymmoAppDownload() {
         />
         {/* Clickable overlay - Left half for Google Play */}
         <Link
-          href="https://play.google.com/store/apps/details?id=app"
+          href="https://play.google.com/store/apps/details"
           target="_blank"
           rel="noopener noreferrer"
           className="absolute top-0 left-0 w-1/2 h-full hover:opacity-0 hover:bg-white/10 transition-all"

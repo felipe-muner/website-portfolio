@@ -10,7 +10,7 @@ export default function Hiit() {
     <>
       <Breadcrumb route={'HIIT'} isClass />
       <div className="flex flex-col gap-4 items-start justify-center p-4 my-20 text-brand-gray-medium container mx-auto max-w-[700px] font-mulish">
-        <h1 className="text-3xl font-semibold text-white text-left">High-Intensity Interval Training with <Link href="/coaches-trainers/steve" className="text-brand-orange hover:underline">Steve</Link></h1>
+        <h1 className="text-3xl font-semibold text-white text-left">High-Intensity Interval Training with <Link href="/coaches-trainers/owen" className="text-brand-orange hover:underline">Owen</Link></h1>
         <p>This class designed to boost your fitness level, burn calories, and increase strength in a short amount of time.</p>
 
         <p>This fast-paced workout combines bursts of intense exercises with short recovery periods, ensuring a full-body workout that will leave you feeling energized.</p>

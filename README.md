@@ -1,371 +1,90 @@
 # Website Portfolio
 
-A comprehensive gym and CrossFit management system built with Next.js 15, Drizzle ORM, and NextAuth.js featuring advanced revenue sharing, flexible membership plans, and intelligent check-in validation.
+**Live:** https://website-portfolio-felipe-muner.vercel.app · **Code:** https://github.com/felipe-muner/website-portfolio
 
-## 🚀 Features
+A growing showcase of complete, production-style websites for every kind of small business,
+all in one Next.js codebase. Each template is a real, working page (not a mock-up): gym,
+yoga studio, villa rental, café, barber, dive shop, air conditioning service, tattoo studio,
+restaurant, coworking space, retreat, real estate, courier, boat charter, artist portfolio,
+online store, and more. There is also a full gym management back office (members, check-in,
+plans, payments, reports) behind Google login.
 
-### 👥 Member Management
-- Complete CRUD operations for gym/CrossFit members with nationality tracking
-- Advanced member profiles with passport ID, birthday tracking, and contact information
-- Member birthday dashboard with age calculations and celebration reminders
-- Comprehensive member search and filtering capabilities
+## Why this exists
 
-### 📋 Membership Plans & Pricing
-- **Unlimited Plans**: 1, 3, 6, 12-month memberships for gym, CrossFit, and combo access
-- **Visit-Based Plans**: 5-pass and 10-pass systems with intelligent visit tracking
-- **Day Passes**: Single-visit access for walk-in customers
-- **Thai National Discounts**: Special pricing for Thai nationals on all plans
-- **Combo Plans**: Mixed gym/CrossFit access with automated revenue splitting
+Every new website starts from zero: the same hero, the same pricing table, the same
+contact form, rebuilt again and again. With AI coding assistants that waste is now also
+measured in tokens. This repository is the opposite of starting from zero: pick the
+template closest to your field, copy it, and you are already at "make it mine" instead
+of "make it exist". I keep the templates current with the latest features of the stack
+(Next.js, React, the AI SDK, Remotion), so starting from here also means starting from
+today's best practices, not last year's.
 
-### ✅ Smart Check-in System
-- Email or passport ID validation for member access
-- **Visit Tracking Rules**:
-  - Same-day re-entry doesn&apos;t deduct additional visits for pass plans
-  - Automatic visit countdown for 5-pass/10-pass memberships
-  - Real-time membership status validation (active/expired/paused)
-- Day pass integration with facility-specific access control
-- Recent check-ins dashboard with detailed member information
+**Who it's for:** freelancers, agencies and founders who need a professional site fast;
+developers who want a reference implementation of a given page type; and me, since this
+is the toolbox I use for my own client pitches and demos.
 
-### 💰 Advanced Payment & Revenue Sharing
-- **Automated Revenue Splitting**:
-  - Gym-only plans: 100% to gym
-  - Combo plans: Configurable percentage splits (default 80% CrossFit, 20% Gym)
-  - CrossFit plans: 100% to CrossFit
-- Payment history tracking with share amount calculations
-- Multiple payment methods (cash/card) support
-- Thai national discount application
+All template brands, people, reviews, phone numbers and addresses are fictional sample
+data. The code is real.
 
-### 📊 Reports & Analytics
-- Comprehensive income reports with date range filtering
-- Revenue breakdown by facility (gym vs CrossFit)
-- Transaction analysis with growth comparisons
-- Daily revenue tracking with facility-specific insights
-- Detailed transaction logs with member information
+## What's inside
 
-### 🔐 Role-Based Access Control
-- **Admin Role**: Full system access including user management, reports, and all features
-- **Staff Role**: Reception-focused access (members, check-ins, birthdays, limited features)
-- Secure authentication via Google OAuth with email whitelist validation
+| Area | Where |
+|---|---|
+| Templates, one route per business type (`/gym`, `/yoga`, `/villa`, `/cafe`, `/barber`, `/dive`, `/aircon`, `/artist`, `/tattoo`, `/restaurant`, `/coworking`, `/retreat`, `/realestate`, `/courier`, `/boat`, `/rental`, `/spa`, `/muaythai`, `/brazilian-jiu-jitsu`, `/reformer-pilates`, `/sacolaria`, `/beachclub`, `/fullmoon`, `/goldenhour`, `/coaching`, `/biosphere*`, plus versioned variants like `/gym/v1..v6`, `/villa/v1..v10`, `/yoga/v1..v6`) | `app/`, `lib/layouts/`, `components/layouts/` |
+| Portfolio and showcase index pages | `app/portfolio`, `app/showcase`, `app/work` |
+| Trade preview generator (plumbing, HVAC, cleaning) | `app/preview/[slug]`, `lib/previews/`, `components/previews/` |
+| Gym management back office (members, check-in, plans, payments, reports, users) | `app/admin/`, `components/admin/`, `app/api/admin/` |
+| Database schema and migrations (Drizzle + Postgres) | `drizzle/`, `lib/db/`, `types/` |
+| Auth (NextAuth v5, Google OAuth, role-based access) | `lib/auth*`, `app/api/auth/` |
+| Showreel and presentation video | `remotion/` |
+| Unit and end-to-end tests | `tests/unit/`, `tests/e2e/` |
 
-### ⏸️ Membership Management
-- **Membership Pausing**:
-  - Maximum 90 days per pause period
-  - Maximum 2 pause periods per membership
-  - Accurate day calculation for remaining membership time
-  - Visit-based plans (5-pass/10-pass) cannot be paused
-- Membership activation/deactivation controls
-- End date management with pause period extensions
+## Tech stack
 
-## 🛠️ Tech Stack
+Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS v4 · shadcn/ui · Framer Motion ·
+react-three-fiber (WebGL heroes) · Drizzle ORM + Neon PostgreSQL · NextAuth.js v5 ·
+Remotion · Jest + Playwright · deployed on Vercel.
 
-- **Frontend**: Next.js 15 (App Router)
-- **Database**: Neon PostgreSQL with Drizzle ORM
-- **Authentication**: NextAuth.js with Google OAuth
-- **UI**: Tailwind CSS + shadcn/ui components
-- **Deployment**: Vercel
-
-## 📋 Prerequisites
-
-- Node.js 22+
-- PostgreSQL database (Neon recommended)
-- Google OAuth credentials
-
-## 🔧 Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd website-portfolio
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Set up environment variables**
-   ```bash
-   cp .env.example .env.local
-   ```
-   
-   Fill in the required values:
-   ```env
-   DATABASE_URL="postgresql://username:password@host:5432/database"
-   NEXTAUTH_SECRET="your-secret-here"
-   NEXTAUTH_URL="http://localhost:3000"
-   GOOGLE_CLIENT_ID="your-google-client-id"
-   GOOGLE_CLIENT_SECRET="your-google-client-secret"
-   ```
-
-4. **Generate and push database schema**
-   ```bash
-   npm run db:generate
-   npm run db:push
-   ```
-
-5. **Create initial admin user**
-   ```bash
-   INITIAL_ADMIN_EMAIL="your-email@gmail.com" npm run db:seed
-   ```
-
-6. **Start development server**
-   ```bash
-   npm run dev
-   ```
-
-## 📁 Project Structure
-
-```
-├── app/                           # Next.js App Router
-│   ├── admin/                    # Admin dashboard
-│   │   ├── (dashboard)/         # Protected dashboard routes
-│   │   │   ├── members/         # Member management (CRUD, profiles)
-│   │   │   ├── checkin/         # Check-in validation system
-│   │   │   ├── birthdays/       # Birthday tracking dashboard
-│   │   │   ├── reports/         # Revenue reports & analytics
-│   │   │   ├── plans/           # Membership plan management
-│   │   │   ├── users/           # Admin user management
-│   │   │   └── dashboard/       # Main dashboard
-│   │   ├── login/               # Authentication pages
-│   │   └── layout.tsx           # Admin layout with auth
-│   └── api/                     # API routes
-│       ├── admin/               # Admin-specific endpoints
-│       │   ├── members/         # Member CRUD & payments
-│       │   ├── reports/         # Financial reporting
-│       │   ├── users/           # User management
-│       │   └── recent-checkins/ # Check-in history
-│       ├── checkin/             # Public check-in validation
-│       └── auth/                # NextAuth routes
-├── components/                   # Reusable components
-│   ├── admin/                   # Admin dashboard components
-│   │   ├── members/             # Member tables, forms, profiles
-│   │   ├── plans/               # Plan management components
-│   │   ├── users/               # User management components
-│   │   └── sidebar.tsx          # Navigation sidebar
-│   ├── providers/               # Context providers
-│   └── ui/                      # shadcn/ui components
-├── lib/                         # Utilities & configuration
-│   ├── auth.ts                  # NextAuth configuration
-│   ├── db/                      # Database setup
-│   │   ├── index.ts             # Database connection
-│   │   └── schema.ts            # Drizzle schema definitions
-│   └── types/                   # TypeScript definitions
-│       └── database.ts          # Database type exports
-├── scripts/                     # Database & utility scripts
-│   ├── seed-*.ts               # Data seeding scripts
-│   ├── add-single-user.ts      # User creation utility
-│   └── create-admin.ts         # Admin user creation
-└── tests/                      # Test suites
-    ├── e2e/                    # End-to-end tests
-    └── unit/                   # Unit tests
-```
-
-## 🗃️ Database Schema
-
-### Core Business Tables
-- **`members`**: Customer profiles with passport ID, nationality, plan details, and membership status
-- **`plans`**: Configurable membership plans with pricing, duration, visit limits, and revenue share percentages
-- **`payments`**: Payment records with automatic gym/CrossFit share amount calculations
-- **`check_ins`**: Facility usage tracking with timestamp and facility type
-- **`membership_pauses`**: Pause history with duration limits and admin attribution
-- **`day_passes`**: Walk-in customer single-visit passes
-- **`nationalities`**: Country reference data with flags for member profiles
-
-### Admin & Access Control
-- **`admin_users`**: System users with role-based permissions (admin/staff)
-- **`users`**, **`accounts`**, **`sessions`**: NextAuth.js authentication tables
-
-### Commerce (Future)
-- **`shop_items`** & **`shop_sales`**: Inventory and point-of-sale system
-
-### Key Schema Features
-- **Soft deletes**: `deletedAt` timestamp on all tables
-- **Audit trails**: `createdAt` and `updatedAt` timestamps
-- **Flexible plan types**: Extensible enum system for membership plans
-- **Revenue sharing**: Built-in percentage calculations for combo plans
-- **Visit tracking**: `usedVisits` counter for pass-based memberships
-
-## 🔐 Authentication Flow
-
-1. Admin visits `/admin/login`
-2. Google OAuth authentication
-3. Email validation against `admin_users` table
-4. Role-based dashboard access
-
-## 👥 User Roles & Permissions
-
-| Role | Dashboard | Members | Check-ins | Birthdays | Reports | Plans | Admin Users | Shop |
-|------|-----------|---------|-----------|-----------|---------|--------|-------------|------|
-| **Admin** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| **Staff** | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
-
-### Role Descriptions
-- **Admin**: Full system access including user management, financial reports, plan configuration, and shop management
-- **Staff**: Reception-focused access for day-to-day operations (member management, check-ins, birthday tracking)
-
-## 💳 Membership Plans & Pricing Structure
-
-### 🏋️ Gym-Only Memberships
-| Duration | Regular Price | Thai Discount | Plan Type |
-|----------|---------------|---------------|-----------|
-| 1 Month | 1,900฿ | 1,600฿ | `gym_only_1month` |
-| 3 Months | 5,200฿ | 4,400฿ | `gym_only_3month` |
-| 6 Months | 9,600฿ | 8,200฿ | `gym_only_6month` |
-| 12 Months | 16,000฿ | 14,000฿ | `gym_only_12month` |
-| 5-Pass | 1,250฿ | 1,100฿ | `gym_5pass` |
-| Drop-in | 300฿ | 250฿ | `gym_only_dropin` |
-
-### 🥊 CrossFit Memberships
-| Duration | Regular Price | Thai Discount | Plan Type |
-|----------|---------------|---------------|-----------|
-| 1 Month | 4,200฿ | 3,600฿ | `crossfit_1month` |
-| 3 Months | 11,400฿ | 9,600฿ | `crossfit_3month` |
-| 10-Pass | 3,500฿ | 3,000฿ | `crossfit_10pass` |
-| Drop-in | 600฿ | 500฿ | `crossfit_dropin` |
-
-### 🤸 Fitness Classes
-| Duration | Regular Price | Thai Discount | Plan Type |
-|----------|---------------|---------------|-----------|
-| 1 Month | 2,800฿ | 2,400฿ | `fitness_1month` |
-| 5-Pass | 1,250฿ | 1,100฿ | `fitness_5pass` |
-| Drop-in | 300฿ | 250฿ | `fitness_dropin` |
-
-### 🏋️‍♀️ Open Gym
-| Duration | Regular Price | Thai Discount | Plan Type |
-|----------|---------------|---------------|-----------|
-| 1 Month | 3,000฿ | 2,600฿ | `open_gym_1month` |
-| 5-Pass | 1,350฿ | 1,200฿ | `open_gym_5pass` |
-| Drop-in | 450฿ | 400฿ | `open_gym_dropin` |
-
-### 🔥 Combo Plans (Gym + CrossFit/Fitness)
-| Plan | Duration | Regular Price | Thai Discount | Revenue Split | Plan Type |
-|------|----------|---------------|---------------|---------------|-----------|
-| Fitness + Gym | 1 Month | 4,000฿ | 3,400฿ | 60% Gym, 40% Fitness | `fitness_gym_1month` |
-| Group Classes | 1 Month | 4,200฿ | 3,600฿ | 20% Gym, 80% CrossFit | `group_classes_1month` |
-| Group Classes | 3 Months | 11,400฿ | 9,600฿ | 20% Gym, 80% CrossFit | `group_classes_3month` |
-| Open Gym Combo | 1 Month | 5,000฿ | 4,400฿ | 60% Gym, 40% Open Gym | `open_gym_combo_1month` |
-
-## 🎯 Check-in System Rules
-
-### Visit Tracking Logic
-- **Time-based Plans**: Unlimited check-ins during membership period
-- **Visit-based Plans**:
-  - 5-pass plans: 5 visits maximum
-  - 10-pass plans: 10 visits maximum
-  - **Same-day re-entry rule**: Multiple check-ins on the same day only count as 1 visit
-- **Day Passes**: Single-use, facility-specific access
-
-### Membership Status Validation
-| Status | Check-in Allowed | Message |
-|--------|------------------|---------|
-| **Active** | ✅ | Welcome message with remaining time/visits |
-| **Expired** | ❌ | Membership expired, payment required |
-| **Paused** | ❌ | Contact reception to resume membership |
-| **Inactive** | ❌ | Contact reception to reactivate |
-
-### Facility Access Rules
-| Pass Type | Gym | CrossFit | Fitness Class |
-|-----------|-----|----------|---------------|
-| `gym_only_dropin` | ✅ | ❌ | ❌ |
-| `crossfit_dropin` | ❌ | ✅ | ❌ |
-| `fitness_dropin` | ❌ | ❌ | ✅ |
-| `open_gym` | ✅ | ❌ | ❌ |
-
-## 🔧 Available Scripts
+## Getting started
 
 ```bash
-# Development
-npm run dev          # Start development server
-npm run build        # Build for production
-npm run start        # Start production server
-npm run lint         # Run ESLint
-
-# Database
-npm run db:generate  # Generate migrations
-npm run db:push      # Push schema to database
-npm run db:migrate   # Run migrations
-npm run db:studio    # Open Drizzle Studio
-npm run db:seed      # Create initial admin user
+git clone https://github.com/felipe-muner/website-portfolio
+cd website-portfolio
+npm install
+cp .env.production.example .env.local   # fill in DATABASE_URL, AUTH_SECRET, Google OAuth
+docker compose up -d                     # local Postgres (optional, or use Neon)
+npx drizzle-kit push                     # create the schema
+npm run dev                              # http://localhost:3000
 ```
 
-## 🚀 Deployment
+The templates work without a database. Only the back office under `/admin` and the
+check-in flow need `DATABASE_URL`, `AUTH_SECRET` and the Google OAuth variables. See
+`VERCEL-DEPLOYMENT.md` for the production setup.
 
-### Vercel (Recommended)
-1. Connect repository to Vercel
-2. Add environment variables
-3. Deploy automatically on push
+## Scripts
 
-### Database Setup
-1. Create Neon PostgreSQL database
-2. Run migrations: `npm run db:push`
-3. Create admin user: `npm run db:seed`
-
-## 🔄 GitHub Actions
-
-### Branch Status Checks
-- Runs on all PRs to `main`
-- Linting and build verification
-- Automatic PR comments
-
-### Claude Code Integration
-- AI-assisted code reviews
-- Responds to `@claude` mentions in issues/PRs
-
-## 📊 Revenue Sharing System
-
-The system automatically calculates and tracks revenue sharing based on plan configuration:
-
-### Revenue Split Logic
-```
-Payment Amount × Plan Share Percentage = Facility Share Amount
+```bash
+npm run dev            # dev server
+npm run build          # production build
+npm run lint           # eslint
+npm test               # jest unit tests
+npm run test:e2e       # playwright end-to-end tests
+npm run video          # remotion studio for the showreel
+npm run rail:capture   # full-page screenshots of every template
 ```
 
-### Default Revenue Splits
-| Plan Category | Gym Share | CrossFit Share |
-|---------------|-----------|----------------|
-| **Gym Plans** | 100% | 0% |
-| **CrossFit Plans** | 0% | 100% |
-| **Fitness Plans** | 0% | 100% |
-| **Combo Plans** | 20% | 80% |
-| **Shop Sales** | 100% | 0% |
+## Using a template
 
-### Share Calculation Examples
-- **Gym 1-Month (1,900฿)**: Gym = 1,900฿, CrossFit = 0฿
-- **Group Classes 1-Month (4,200฿)**: Gym = 840฿ (20%), CrossFit = 3,360฿ (80%)
-- **Fitness + Gym Combo (4,000฿)**: Gym = 2,400฿ (60%), Fitness = 1,600฿ (40%)
+1. Open the route you want (for example `/barber`) and the matching data file in
+   `lib/layouts/` or the page in `app/<name>/page.tsx`.
+2. Copy the page and its `components/layouts/<name>/` folder into your own project.
+3. Replace the sample content in the data file. Images live under `public/img/layouts/`.
 
-## ⏸️ Membership Pausing Rules
+## Roadmap
 
-### Pause Limitations
-- **Maximum pause duration**: 90 days per pause
-- **Maximum pauses per membership**: 2 total pauses
-- **Non-pausable plans**: Visit-based plans (5-pass, 10-pass)
-- **Time-based plans only**: Monthly/yearly memberships can be paused
+Planned work is in [ROADMAP.md](./ROADMAP.md) and the GitHub issues.
 
-### Pause Calculations
-- Original end date remains unchanged for reference
-- Current end date extends by pause duration
-- Accurate day calculation preserves exact remaining time
-- Pause history tracked with admin user attribution
+## License
 
-## 🛡️ Security Features
-
-- Environment variable validation
-- Role-based route protection
-- Secure session management
-- SQL injection prevention with Drizzle ORM
-
-## 📱 Mobile Responsive
-
-Optimized for tablet use at reception desks with responsive design for all screen sizes.
-
-## 🆘 Support
-
-For issues or questions:
-1. Check existing GitHub issues
-2. Create new issue with detailed description
-3. Use `@claude` for AI assistance in issues/PRs
-
-## 📄 License
-
-Private project - All rights reserved
+Code is released under the [MIT License](./LICENSE). Sample images under `public/` are
+either my own or stock images used for demonstration.

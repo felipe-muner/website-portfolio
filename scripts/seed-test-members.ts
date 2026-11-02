@@ -153,7 +153,7 @@ async function seedTestMembers() {
 
       // 11. Expired gym_5pass with 0 visits (PAID)
       {
-        name: 'Kate Davis', email: 'member11@test.com', phone: '+1234567011',
+        name: 'Nina Davis', email: 'member11@test.com', phone: '+1234567011',
         birthday: subYears(now, 33),
         planType: 'gym_5pass' as const, planDuration: null, startDate: subDays(now, 35),
         originalEndDate: subDays(now, 5), currentEndDate: subDays(now, 5),

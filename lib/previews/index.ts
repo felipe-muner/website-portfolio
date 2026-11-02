@@ -2,8 +2,7 @@ import leads from "./leads.json";
 import type { Trade } from "./trades";
 
 /**
- * A business we built a preview site for. Generated from a Google Maps lead
- * list by scripts/leads/build-previews.ts — don't edit leads.json by hand.
+ * A business we built a preview site for. Sample businesses (fictional) in leads.json.
  */
 export type PreviewLead = {
   slug: string;

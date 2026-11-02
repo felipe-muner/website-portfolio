@@ -2,42 +2,42 @@ import Link from "next/link";
 
 export default function CoachesTrainersPage() {
   const personalTrainers = [
-    { name: "Alex", specialty: "Gym", languages: "🇬🇧 English", href: "/coaches-trainers/alex" },
-    { name: "Charlene", specialty: "Hyrox & Gym", languages: "🇬🇧 English", href: "/coaches-trainers/charlene" },
-    { name: "Code", specialty: "Gym", languages: "🇹🇭 Thai", href: "/coaches-trainers/code" },
-    { name: "Daniel", specialty: "CrossFit", languages: "🇮🇱 Hebrew / 🇬🇧 English", href: "/coaches-trainers/daniel" },
-    { name: "Diana", specialty: "Gym & CrossFit", languages: "🇩🇪 German / 🇬🇧 English", href: "/coaches-trainers/diana" },
-    { name: "Emil", specialty: "Gym", languages: "🇵🇱 Polish", href: "/coaches-trainers/emil" },
-    { name: "Eugene", specialty: "Gym", languages: "🇷🇺 Russian", href: "/coaches-trainers/eugene" },
-    { name: "Jamie", specialty: "BJJ", languages: "🇬🇧 English", href: "/coaches-trainers/jamie" },
-    { name: "Kate", specialty: "CrossFit & Gym", languages: "🇹🇭 Thai / 🇬🇧 English", href: "/coaches-trainers/kate" },
-    { name: "Micha", specialty: "Právílo", languages: "🇷🇺 Russian", href: "/coaches-trainers/micha" },
-    { name: "Michal", specialty: "Reformer Pilates", languages: "🇬🇧 English", href: "/coaches-trainers/michal" },
-    { name: "Namwan", specialty: "Gym", languages: "🇹🇭 Thai / 🇬🇧 English", href: "/coaches-trainers/namwan" },
-    { name: "Vanessa", specialty: "Reformer Pilates", languages: "🇬🇧 English / Afrikaans", href: "/coaches-trainers/vanessa" },
+    { name: "Noah", specialty: "Gym", languages: "🇬🇧 English", href: "/coaches-trainers/noah" },
+    { name: "Clara", specialty: "Hyrox & Gym", languages: "🇬🇧 English", href: "/coaches-trainers/clara" },
+    { name: "Kai", specialty: "Gym", languages: "🇹🇭 Thai", href: "/coaches-trainers/kai" },
+    { name: "Leo", specialty: "CrossFit", languages: "🇮🇱 Hebrew / 🇬🇧 English", href: "/coaches-trainers/leo" },
+    { name: "Mara", specialty: "Gym & CrossFit", languages: "🇩🇪 German / 🇬🇧 English", href: "/coaches-trainers/mara" },
+    { name: "Oskar", specialty: "Gym", languages: "🇵🇱 Polish", href: "/coaches-trainers/oskar" },
+    { name: "Ivan", specialty: "Gym", languages: "🇷🇺 Russian", href: "/coaches-trainers/ivan" },
+    { name: "Rhys", specialty: "BJJ", languages: "🇬🇧 English", href: "/coaches-trainers/rhys" },
+    { name: "Nina", specialty: "CrossFit & Gym", languages: "🇹🇭 Thai / 🇬🇧 English", href: "/coaches-trainers/nina" },
+    { name: "Yuri", specialty: "Právílo", languages: "🇷🇺 Russian", href: "/coaches-trainers/yuri" },
+    { name: "Elena", specialty: "Reformer Pilates", languages: "🇬🇧 English", href: "/coaches-trainers/elena" },
+    { name: "Fah", specialty: "Gym", languages: "🇹🇭 Thai / 🇬🇧 English", href: "/coaches-trainers/fah" },
+    { name: "Sofia", specialty: "Reformer Pilates", languages: "🇬🇧 English / Afrikaans", href: "/coaches-trainers/sofia" },
   ];
 
   const groupClasses = {
     "Reformer Pilates": [
-      { name: "Michal", href: "/coaches-trainers/michal" },
-      { name: "Mook", href: "/coaches-trainers/mook" },
-      { name: "Vanessa", href: "/coaches-trainers/vanessa" },
+      { name: "Elena", href: "/coaches-trainers/elena" },
+      { name: "Ploy", href: "/coaches-trainers/ploy" },
+      { name: "Sofia", href: "/coaches-trainers/sofia" },
     ],
     "CrossFit & Hyrox": [
-      { name: "Charlene", href: "/coaches-trainers/charlene" },
-      { name: "Daniel", href: "/coaches-trainers/daniel" },
-      { name: "Diana", href: "/coaches-trainers/diana" },
-      { name: "Kate", href: "/coaches-trainers/kate" },
+      { name: "Clara", href: "/coaches-trainers/clara" },
+      { name: "Leo", href: "/coaches-trainers/leo" },
+      { name: "Mara", href: "/coaches-trainers/mara" },
+      { name: "Nina", href: "/coaches-trainers/nina" },
     ],
     "Fitness Classes": [
-      { name: "Charlene — Maximum Mobility", href: "/coaches-trainers/charlene" },
-      { name: "Diana — Boot Camp", href: "/coaches-trainers/diana" },
-      { name: "Jace — Primal Moves", href: "/coaches-trainers/jace" },
-      { name: "Steve — HIIT & Tabata", href: "/coaches-trainers/steve" },
-      { name: "Vanessa — Pilates Mobility", href: "/coaches-trainers/vanessa" },
+      { name: "Clara — Maximum Mobility", href: "/coaches-trainers/clara" },
+      { name: "Mara — Boot Camp", href: "/coaches-trainers/mara" },
+      { name: "Theo — Primal Moves", href: "/coaches-trainers/theo" },
+      { name: "Owen — HIIT & Tabata", href: "/coaches-trainers/owen" },
+      { name: "Sofia — Pilates Mobility", href: "/coaches-trainers/sofia" },
     ],
     "BJJ": [
-      { name: "Jamie", href: "/coaches-trainers/jamie" },
+      { name: "Rhys", href: "/coaches-trainers/rhys" },
     ],
   };
 

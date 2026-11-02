@@ -2,6 +2,7 @@
   "name": "website-portfolio",
   "version": "0.1.0",
   "private": true,
+  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build --webpack",
@@ -9,8 +10,6 @@
     "lint": "eslint .",
     "rail:capture": "bun scripts/capture-templates.ts",
     "rail:render": "bun scripts/render-rail.ts",
-    "leads:scrape": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/leads/scrape-maps.ts",
-    "leads:build": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/leads/build-previews.ts",
     "video": "remotion studio remotion/index.ts",
     "video:render": "remotion render remotion/index.ts Showreel out/showreel.mp4",
     "video:still": "remotion still remotion/index.ts Showreel out/frame.png",

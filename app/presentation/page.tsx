@@ -461,8 +461,8 @@ export default function PresentationPage() {
                         <TableRow>
                           <TableCell>
                             <div>
-                              <p className="font-medium">Alex Chen</p>
-                              <p className="text-sm text-muted-foreground">alex@email.com</p>
+                              <p className="font-medium">Noah Chen</p>
+                              <p className="text-sm text-muted-foreground">noah@email.com</p>
                             </div>
                           </TableCell>
                           <TableCell>
@@ -587,7 +587,7 @@ export default function PresentationPage() {
                         <div className="flex items-center gap-3">
                           <Badge className="bg-blue-600">FITNESS</Badge>
                           <div>
-                            <p className="font-medium">Alex Chen</p>
+                            <p className="font-medium">Noah Chen</p>
                             <p className="text-sm text-muted-foreground">14:20 - 5-pass (3 remaining)</p>
                           </div>
                         </div>

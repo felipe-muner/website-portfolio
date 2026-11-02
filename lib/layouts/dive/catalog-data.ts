@@ -1,4 +1,4 @@
-// AUTO-GENERATED from aquamaster.net (WooCommerce Store API) — real catalogue
+// AUTO-GENERATED from aquamaster.net (WooCommerce Store API) — sample catalogue
 // for Blue Reef Dive Supply. Prices in whole Thai Baht; images hotlinked from
 // aquamaster.net (allowlisted in next.config). Regenerate via scratchpad/curate.mjs.
 import type { Product } from "./catalog";

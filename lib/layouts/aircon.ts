@@ -1,4 +1,4 @@
-// REAL content for the Polar Air Conditioning template (/aircon): a family-owned
+// Sample content for the Polar Air Conditioning template (/aircon): a family-owned
 // air conditioning business on the Sunshine Coast, Queensland. Copy, services,
 // licences, Google reviews and photos come from the client's own site
 // (mgmaircon.com.au). The room-sizing rule of thumb at the bottom is ours.
@@ -186,7 +186,7 @@ export interface Review {
   quote: string;
 }
 
-/** Verified Google reviews, verbatim. */
+/** Sample reviews (fictional). */
 export const REVIEWS: readonly Review[] = [
   { name: "Jordan Hale", quote: "Excellent workmanship and lovely customer service." },
   {

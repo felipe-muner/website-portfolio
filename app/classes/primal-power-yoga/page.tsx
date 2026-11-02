@@ -10,7 +10,7 @@ export default function PrimalPowerYoga() {
     <>
       <Breadcrumb route={'Primal Moves'} isClass />
       <div className="flex flex-col gap-4 items-start justify-center p-4 my-20 text-brand-gray-medium container mx-auto max-w-[700px] font-mulish">
-        <h1 className="text-3xl font-semibold text-white text-left">Primal Moves with <Link href="/coaches-trainers/jace" className="text-brand-orange hover:underline">Jace</Link></h1>
+        <h1 className="text-3xl font-semibold text-white text-left">Primal Moves with <Link href="/coaches-trainers/theo" className="text-brand-orange hover:underline">Theo</Link></h1>
         <p>Primal Moves is a return to the body&apos;s original design, the way humans are built to move. Drawing from animal locomotion, natural movement, and bodyweight training. Primal builds strength, mobility, and control through intentional and grounded motion.</p>
         <p>Each movement engages the whole body as one system, developing functional strength, joint resilience, and coordination for real-world performance. Through fluid transitions, crawling, squatting, rolling, leaping, and balancing, you rediscover agility, stability and control.</p>
 

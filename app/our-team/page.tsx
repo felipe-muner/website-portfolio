@@ -7,57 +7,46 @@ export const metadata = getMetadata({ routeName: "Our Team" });
 export default function OurTeam() {
   const team = [
     {
-      name: "Vanessa",
+      name: "Sofia",
       role: "Pilates Mobility Instructor",
       image: "/img/team/team-1.jpg",
-      bio: "Sample bio.",
-      certifications: [
-        "Foundation & Basic Mat Pilates by Conscious Movement Education - a training school",
-        "Pilates Equipment / Reformer by Conscious Movement Education - a training school"
-      ]
+      bio: "Sofia leads our Pilates Mobility sessions with a focus on technique, consistency and training safely at every level.",
+      certifications: ["Certified Pilates Mobility Instructor"]
     },
     {
-      name: "Steve",
+      name: "Owen",
       role: "HIIT & Tabata Instructor",
       image: "/img/team/team-2.jpg",
-      bio: "Sample bio.",
-      certifications: []
+      bio: "Owen leads our HIIT & Tabata sessions with a focus on technique, consistency and training safely at every level.",
+      certifications: ["Certified HIIT & Tabata Instructor"]
     },
     {
-      name: "Diana",
+      name: "Mara",
       role: "CrossFit Coach",
       image: "/img/team/team-3.jpg",
-      bio: "Sample bio.",
-      certifications: [
-        "Diploma of Sports Science",
-        "Crossfit Trainer Certificate Level 1 and Level 2",
-        "Crossfit Trainer Certificate Weightlifting",
-        "Crossfit Trainer Certificate Gymnastics"
-      ]
+      bio: "Mara leads our CrossFit sessions with a focus on technique, consistency and training safely at every level.",
+      certifications: ["Certified CrossFit Coach"]
     },
     {
-      name: "Daniel",
+      name: "Leo",
       role: "CrossFit Coach",
       image: "/img/team/team-5.jpg",
-      bio: "Sample bio.",
-      certifications: [
-        "Graduate of a sports institute",
-        "Crossfit Trainer Certificate Level 2"
-      ]
+      bio: "Leo leads our CrossFit sessions with a focus on technique, consistency and training safely at every level.",
+      certifications: ["Certified CrossFit Coach"]
     },
     {
-      name: "Carlene",
+      name: "Clara",
       role: "Max Power Mobility Instructor",
       image: "/img/team/team-6.jpg",
-      bio: "",
-      certifications: []
+      bio: "Clara leads our Max Power Mobility sessions with a focus on technique, consistency and training safely at every level.",
+      certifications: ["Certified Max Power Mobility Instructor"]
     },
     {
-      name: "Jace",
+      name: "Theo",
       role: "Primal Power Yoga Instructor",
       image: "/img/team/team-4.jpg",
-      bio: "",
-      certifications: []
+      bio: "Theo leads our Primal Power Yoga sessions with a focus on technique, consistency and training safely at every level.",
+      certifications: ["Certified Primal Power Yoga Instructor"]
     },
   ];
 

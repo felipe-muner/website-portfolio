@@ -73,7 +73,7 @@ export const PORTFOLIO: readonly PortfolioGroup[] = [
     label: "Local Business",
     slug: "local",
     sites: [
-      { href: "/artist", name: "Vera Lind", brand: "Vera Lind Art", detail: "Visionary painter — a canvas you paint yourself, soul-portrait commissions, prints & hand-painted denim", cover: "/img/layouts/meads-cover.jpg" },
+      { href: "/artist", name: "Vera Lind", brand: "Vera Lind Art", detail: "Visionary painter — a canvas you paint yourself, soul-portrait commissions, prints & hand-painted denim", cover: "/img/layouts/artist-cover.jpg" },
       { href: "/brasa", name: "Brasa", brand: "Brasa Fire Kitchen", detail: "Island open-fire restaurant — 3D charcoal pit you stoke, live kitchen clock, chilli-rated menu, table booking", cover: "/img/layouts/brasa-cover.jpg" },
       { href: "/blacklotus", name: "Black Lotus", brand: "Black Lotus Tattoo", detail: "Island tattoo studio — 3D forearm you place flash on and turn, flash sheet with try-on, three artists, aftercare", cover: "/img/layouts/blacklotus-cover.jpg" },
       { href: "/aircon", name: "Polar Air", brand: "Polar Air Conditioning", detail: "Sunshine Coast air con — 3D split system you drive with a remote, room sizer, coverage map", cover: "/img/layouts/aircon-cover.jpg" },

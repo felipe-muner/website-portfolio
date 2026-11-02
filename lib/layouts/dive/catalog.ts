@@ -1,4 +1,4 @@
-// Catalogue for Blue Reef Dive Supply — the dive shop. Product data is REAL,
+// Catalogue for Blue Reef Dive Supply — the dive shop. Product data is sample data,
 // pulled from the partner store aquamaster.net (WooCommerce Store API) and
 // curated in lib/layouts/dive/catalog-data.ts. Images are hotlinked from
 // aquamaster.net (host allowlisted in next.config). Prices are whole Thai Baht.

@@ -10,7 +10,7 @@ export default function MaxPowerMobility() {
     <>
       <Breadcrumb route={'Max Power Mobility'} isClass />
       <div className="flex flex-col gap-4 items-start justify-center p-4 my-20 text-brand-gray-medium container mx-auto max-w-[700px] font-mulish">
-        <h1 className="text-3xl font-semibold text-white text-left">Max Power Mobility with <Link href="/coaches-trainers/charlene" className="text-brand-orange hover:underline">Charlene</Link></h1>
+        <h1 className="text-3xl font-semibold text-white text-left">Max Power Mobility with <Link href="/coaches-trainers/clara" className="text-brand-orange hover:underline">Clara</Link></h1>
         <p>Class description to follow soon.</p>
 
         <h2 className="text-3xl font-semibold mt-4 text-white">Key Benefits</h2>

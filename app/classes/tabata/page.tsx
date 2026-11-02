@@ -10,7 +10,7 @@ export default function Tabata() {
     <>
       <Breadcrumb route={'Tabata'} isClass />
       <div className="flex flex-col gap-4 items-start justify-center p-4 my-20 text-brand-gray-medium container mx-auto max-w-[700px] font-mulish">
-        <h1 className="text-3xl font-semibold text-white text-left">Tabata Training with <Link href="/coaches-trainers/steve" className="text-brand-orange hover:underline">Steve</Link></h1>
+        <h1 className="text-3xl font-semibold text-white text-left">Tabata Training with <Link href="/coaches-trainers/owen" className="text-brand-orange hover:underline">Owen</Link></h1>
         <p>This high-intensity workout is built on short, explosive rounds: 25 seconds of all-out effort, followed by 10 seconds of rest.</p>
 
         <p>We cycle through multiple exercises targeting strength, cardio, and endurance, moving quickly, resting briefly, and pushing your limits with every round.</p>

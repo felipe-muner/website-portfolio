@@ -144,7 +144,7 @@ function generateBirthdayToday(): Date {
   return new Date(baseYear, now.getMonth(), now.getDate())
 }
 
-const firstNames = ['Emma', 'Liam', 'Olivia', 'Noah', 'Ava', 'Ethan', 'Sophia', 'Mason', 'Isabella', 'William', 'Mia', 'James', 'Charlotte', 'Benjamin', 'Amelia', 'Lucas', 'Harper', 'Henry', 'Evelyn', 'Alexander', 'Abigail', 'Michael', 'Emily', 'Daniel', 'Elizabeth', 'Jacob', 'Sofia', 'Logan', 'Avery', 'Jackson', 'Ella', 'Sebastian', 'Scarlett', 'Jack', 'Grace', 'Owen', 'Chloe', 'Samuel', 'Victoria', 'Matthew', 'Riley', 'Joseph', 'Aria', 'Luke', 'Lily', 'David', 'Aubrey', 'Carter', 'Zoey', 'Wyatt']
+const firstNames = ['Emma', 'Liam', 'Olivia', 'Noah', 'Ava', 'Ethan', 'Sophia', 'Mason', 'Isabella', 'William', 'Mia', 'James', 'Charlotte', 'Benjamin', 'Amelia', 'Lucas', 'Harper', 'Henry', 'Evelyn', 'Alexander', 'Abigail', 'Michael', 'Emily', 'Leo', 'Elizabeth', 'Jacob', 'Sofia', 'Logan', 'Avery', 'Jackson', 'Ella', 'Sebastian', 'Scarlett', 'Jack', 'Grace', 'Owen', 'Chloe', 'Samuel', 'Victoria', 'Matthew', 'Riley', 'Joseph', 'Aria', 'Luke', 'Lily', 'David', 'Aubrey', 'Carter', 'Zoey', 'Wyatt']
 const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas', 'Taylor', 'Moore', 'Jackson', 'Martin', 'Lee', 'Perez', 'Thompson', 'White', 'Harris', 'Sanchez', 'Clark', 'Ramirez', 'Lewis', 'Robinson', 'Walker', 'Young', 'Allen', 'King', 'Wright', 'Scott', 'Torres', 'Nguyen', 'Hill', 'Flores', 'Green', 'Adams', 'Nelson', 'Baker', 'Hall', 'Rivera', 'Campbell', 'Mitchell', 'Carter', 'Roberts']
 const thaiFirstNames = ['Somchai', 'Apinya', 'Niran', 'Siriporn', 'Chaiyaporn', 'Kamon', 'Ratana', 'Pong', 'Wanpen', 'Sukjai', 'Somboon', 'Wongso', 'Pothong', 'Khumtong', 'Jaidee']
 const thaiLastNames = ['Sukjai', 'Wanpen', 'Jaidee', 'Khumtong', 'Pothong', 'Somboon', 'Wongso']
@@ -535,7 +535,7 @@ async function seed1000MembersForPresentation() {
         scenario: 'Active - Group Classes (Thai Discount)'
       },
       {
-        name: 'Kate Davis', email: 'fitness05@test.com', phone: '+66812343005',
+        name: 'Nina Davis', email: 'fitness05@test.com', phone: '+66812343005',
         planType: 'group_classes_3month', duration: 3, isThaiNational: false,
         scenario: 'Active - Group Classes 3 Months'
       },
@@ -768,7 +768,7 @@ async function seed1000MembersForPresentation() {
         scenario: 'Unpaid - Gym 6 Months'
       },
       {
-        name: 'Diana Foster', email: 'unpaid10@test.com', phone: '+66812347010',
+        name: 'Mara Foster', email: 'unpaid10@test.com', phone: '+66812347010',
         planType: 'crossfit_10pass', duration: null, isThaiNational: false, usedVisits: 1,
         scenario: 'Unpaid - CrossFit 10 Pass'
       },
@@ -845,7 +845,7 @@ async function seed1000MembersForPresentation() {
         scenario: 'Special - Group Classes Thai with Pause History'
       },
       {
-        name: 'Steve Special', email: 'special10@test.com', phone: '+66812348010',
+        name: 'Owen Special', email: 'special10@test.com', phone: '+66812348010',
         planType: 'open_gym_combo_1month', duration: 1, isThaiNational: false,
         scenario: 'Special - Open Gym Combo Plan'
       },

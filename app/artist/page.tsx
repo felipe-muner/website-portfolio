@@ -6,21 +6,21 @@ import { ArrowDownRight, ArrowRight, ArrowUpRight, Mail, MapPin, Palette, Shoppi
 import { InstagramIcon } from "@/components/ui/brand-icons";
 import { LayoutSwitcher } from "@/components/layouts/LayoutSwitcher";
 import { Reveal } from "@/components/layouts/Reveal";
-import { CommissionForm } from "@/components/layouts/meads/commission-form";
-import { CommissionLink, Tiers } from "@/components/layouts/meads/commission-link";
-import { HeroStage } from "@/components/layouts/meads/hero-stage";
-import { OpenStudio } from "@/components/layouts/meads/open-studio";
-import { WorksGrid } from "@/components/layouts/meads/works-grid";
-import { ARTIST, COLLECTORS, FAQ, OBJECTS, PRINTS, PROCESS, STUDIO_GALLERY, WORKS } from "@/lib/layouts/meads";
+import { CommissionForm } from "@/components/layouts/artist/commission-form";
+import { CommissionLink, Tiers } from "@/components/layouts/artist/commission-link";
+import { HeroStage } from "@/components/layouts/artist/hero-stage";
+import { OpenStudio } from "@/components/layouts/artist/open-studio";
+import { WorksGrid } from "@/components/layouts/artist/works-grid";
+import { ARTIST, COLLECTORS, FAQ, OBJECTS, PRINTS, PROCESS, STUDIO_GALLERY, WORKS } from "@/lib/layouts/artist";
 
 export const metadata: Metadata = {
   title: "Artist Layout — Vera Lind",
   robots: { index: false },
 };
 
-const display = Gloock({ subsets: ["latin"], weight: "400", variable: "--font-meads-display" });
-const sans = Outfit({ subsets: ["latin"], variable: "--font-meads-sans" });
-const mono = DM_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-meads-mono" });
+const display = Gloock({ subsets: ["latin"], weight: "400", variable: "--font-artist-display" });
+const sans = Outfit({ subsets: ["latin"], variable: "--font-artist-sans" });
+const mono = DM_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-artist-mono" });
 
 const ORIGINALS = WORKS.filter((w) => w.series !== "Wearable art").length;
 const WEARABLES = WORKS.filter((w) => w.series === "Wearable art").length;
@@ -82,7 +82,7 @@ export default function ArtistLayout() {
   return (
     <div
       id="top"
-      className={`${display.variable} ${sans.variable} ${mono.variable} relative min-h-dvh overflow-x-clip bg-[#120d14] font-[family-name:var(--font-meads-sans)] text-[#f3ead9] antialiased selection:bg-[#e9b44c] selection:text-[#120d14] [&_.font-display]:font-[family-name:var(--font-meads-display)] [&_.font-mono]:font-[family-name:var(--font-meads-mono)]`}
+      className={`${display.variable} ${sans.variable} ${mono.variable} relative min-h-dvh overflow-x-clip bg-[#120d14] font-[family-name:var(--font-artist-sans)] text-[#f3ead9] antialiased selection:bg-[#e9b44c] selection:text-[#120d14] [&_.font-display]:font-[family-name:var(--font-artist-display)] [&_.font-mono]:font-[family-name:var(--font-artist-mono)]`}
     >
       <div aria-hidden className="pointer-events-none fixed inset-0 z-[45] opacity-[0.07] mix-blend-overlay" style={{ backgroundImage: GRAIN }} />
       <Nav />
@@ -273,7 +273,7 @@ function SoulPortraits() {
           <Reveal delay={120} from="right" className="relative">
             <div className="relative aspect-[3/4] overflow-hidden rounded-2xl">
               <Image
-                src="/img/layouts/meads-gentle-earthling.jpg"
+                src="/img/layouts/artist-gentle-earthling.jpg"
                 alt="Gentle Earthling — a soul portrait in leaves and butterflies"
                 fill
                 sizes="(min-width: 1024px) 45vw, 92vw"
@@ -282,7 +282,7 @@ function SoulPortraits() {
             </div>
             <div className="absolute -bottom-6 -left-4 hidden w-[42%] overflow-hidden rounded-xl border-4 border-[#160f1a] shadow-2xl sm:block lg:-left-10">
               <div className="relative aspect-[3/4]">
-                <Image src="/img/layouts/meads-detail-face.jpg" alt="Detail of the face in Gentle Earthling" fill sizes="20vw" className="object-cover" />
+                <Image src="/img/layouts/artist-detail-face.jpg" alt="Detail of the face in Gentle Earthling" fill sizes="20vw" className="object-cover" />
               </div>
             </div>
             <p className="mt-10 font-mono text-[10.5px] uppercase tracking-[0.2em] text-white/40 sm:pl-[46%]">Gentle Earthling · 50 × 70 cm · 2025</p>
@@ -427,7 +427,7 @@ function About() {
           <Reveal from="left">
             <div className="relative aspect-[3/4] overflow-hidden rounded-2xl">
               <Image
-                src="/img/layouts/meads-portrait-2.jpg"
+                src="/img/layouts/artist-portrait-2.jpg"
                 alt="Vera Lind holding the painting Balance in her studio"
                 fill
                 sizes="(min-width: 1024px) 40vw, 92vw"
@@ -664,7 +664,7 @@ function Footer() {
         aria-hidden
         className="font-display -mb-[0.2em] select-none bg-gradient-to-b from-[#e9b44c] via-[#e9b44c]/35 to-transparent bg-clip-text text-center text-[20vw] leading-[0.9] text-transparent"
       >
-        Meads
+        Lind
       </p>
     </footer>
   );

@@ -265,6 +265,6 @@ export const REVIEWS = [
   { quote: "Cabana 3 with six of us and the waiter never let a glass sit empty.", who: "Lukas · Zürich" },
   { quote: "Tamarind margarita. That's the review.", who: "Mei · Singapore" },
   { quote: "Kids in the pool till six, then it turned into the best night of the trip.", who: "Sophie · Bristol" },
-  { quote: "The minimum spend is easy when the som tam is this good.", who: "Daniel · Tel Aviv" },
+  { quote: "The minimum spend is easy when the som tam is this good.", who: "Leo · Tel Aviv" },
   { quote: "Lanterns over the water after dark — nobody warned us, nobody needed to.", who: "Aroon · Chiang Mai" },
 ] as const;
