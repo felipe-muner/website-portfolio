@@ -1,0 +1,41 @@
+[
+  {
+    "slug": "sunline-plumbing-tampa",
+    "name": "Sunline Plumbing & Drain LLC",
+    "short": "Sunline Plumbing",
+    "trade": "plumbing",
+    "city": "Tampa",
+    "place": "Tampa, FL",
+    "location": { "latitude": 27.9506, "longitude": -82.4572 },
+    "phone": { "display": "(555) 010-2201", "tel": "+15550102201" },
+    "rating": 4.8,
+    "reviews": 214,
+    "maps": "#"
+  },
+  {
+    "slug": "coolwave-hvac-phoenix",
+    "name": "CoolWave Heating & Air",
+    "short": "CoolWave Heating & Air",
+    "trade": "hvac",
+    "city": "Phoenix",
+    "place": "Phoenix, AZ",
+    "location": { "latitude": 33.4484, "longitude": -112.074 },
+    "phone": { "display": "(555) 010-3302", "tel": "+15550103302" },
+    "rating": 4.9,
+    "reviews": 388,
+    "maps": "#"
+  },
+  {
+    "slug": "brightnest-cleaning-austin",
+    "name": "BrightNest Home Cleaning",
+    "short": "BrightNest Cleaning",
+    "trade": "cleaning",
+    "city": "Austin",
+    "place": "Austin, TX",
+    "location": { "latitude": 30.2672, "longitude": -97.7431 },
+    "phone": { "display": "(555) 010-4403", "tel": "+15550104403" },
+    "rating": 4.7,
+    "reviews": 126,
+    "maps": "#"
+  }
+]
