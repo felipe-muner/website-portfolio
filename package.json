@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "next dev",
-    "build": "next build --webpack",
+    "build": "next build --webpack || (echo 'Retrying: Google Fonts fetch failed' && next build --webpack) || (echo 'Retrying again' && next build --webpack)",
     "start": "next start",
     "lint": "eslint .",
     "rail:capture": "bun scripts/capture-templates.ts",
