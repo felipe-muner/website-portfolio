@@ -1,0 +1,94 @@
+/* Hinge Physio (/physio): framed "cell" layout. Everything is scoped under .hinge. */
+.hinge {
+  --ink: #0b3b36;
+  --pale: #f2f8ef;
+  --sea: #c4ecdf;
+  --sun: #f3ec92;
+  --lagoon: #0e6b5d;
+  --coral: #ff6f4f;
+  background: radial-gradient(120% 80% at 0% 0%, #d6f2e6, transparent 60%), radial-gradient(90% 70% at 100% 10%, #f4f6c8, transparent 60%), #e7f4ea;
+  color: var(--ink);
+}
+.hinge ::selection { background: var(--coral); color: #fff; }
+
+/* In the components layer so Tailwind utilities (bg-…, p-…) can override them. */
+@layer components {
+/* A bordered, rounded block. The page is a grid of these. */
+.hinge-cell {
+  border: 2px solid var(--ink);
+  border-radius: 22px;
+  background: var(--pale);
+}
+.hinge-cell--sun { background: var(--sun); }
+.hinge-cell--sea { background: var(--sea); }
+.hinge-cell--lagoon { background: var(--lagoon); color: #f4fbe6; }
+
+/* Pill button with a dark arrow cap */
+.hinge-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  height: 3rem;
+  padding-left: 1.4rem;
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  background: var(--coral);
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: background-color 0.3s;
+}
+.hinge-btn:hover { background: #ff8a6e; }
+.hinge-btn-arrow {
+  display: grid;
+  place-items: center;
+  align-self: stretch;
+  width: 3rem;
+  margin-left: 0.2rem;
+  background: var(--ink);
+  color: var(--pale);
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hinge-btn:hover .hinge-btn-arrow { width: 3.6rem; }
+.hinge-btn-arrow svg { transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+.hinge-btn:hover .hinge-btn-arrow svg { transform: rotate(45deg); }
+.hinge-btn--ghost {
+  background: transparent;
+  padding-right: 1.4rem;
+}
+.hinge-btn--ghost:hover { background: var(--ink); color: var(--pale); }
+}
+
+/* Hero photos drifting in their circles */
+@keyframes hinge-float { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-14px) rotate(1.5deg); } }
+.hinge-float { animation: hinge-float 7s ease-in-out infinite; }
+.hinge-float--slow { animation-duration: 9s; animation-delay: -3s; }
+
+/* "We come to you": rings pulsing out from the photo */
+@keyframes hinge-ring { 0% { transform: scale(0.72); opacity: 0.9; } 100% { transform: scale(1.35); opacity: 0; } }
+.hinge-ring { position: absolute; inset: 0; border: 1.5px solid var(--sun); border-radius: 50%; animation: hinge-ring 4.5s cubic-bezier(0.2, 0.6, 0.3, 1) infinite; }
+.hinge-ring:nth-child(2) { animation-delay: -1.5s; }
+.hinge-ring:nth-child(3) { animation-delay: -3s; }
+
+/* Team portraits cut into a keyhole: an arch on top of a wide base */
+.hinge-keyhole {
+  /* box is 4:5, so a 40% x 32% ellipse is a circle */
+  -webkit-mask: radial-gradient(ellipse 40% 32% at 50% 36%, #000 99%, transparent 100%), radial-gradient(ellipse 64% 50% at 50% 100%, #000 99%, transparent 100%);
+  mask: radial-gradient(ellipse 40% 32% at 50% 36%, #000 99%, transparent 100%), radial-gradient(ellipse 64% 50% at 50% 100%, #000 99%, transparent 100%);
+}
+
+/* FAQ accordion */
+.hinge-faq summary { list-style: none; cursor: pointer; }
+.hinge-faq summary::-webkit-details-marker { display: none; }
+.hinge-faq .plus { transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
+.hinge-faq details[open] .plus { transform: rotate(45deg); }
+
+/* Marquee of the places we visit */
+@keyframes hinge-marquee { to { transform: translateX(-50%); } }
+.hinge-marquee { animation: hinge-marquee 30s linear infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hinge-float, .hinge-ring, .hinge-marquee { animation: none; }
+}
