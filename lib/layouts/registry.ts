@@ -42,7 +42,7 @@ export const PORTFOLIO: readonly PortfolioGroup[] = [
       { href: "/yoga/v2", name: "Tide", brand: "Tide Studio", detail: "Eucalyptus chapters, moon & tide chart", cover: "/img/layouts/yoga-beach-group.jpg" },
       { href: "/yoga/v3", name: "Dawn", brand: "Dawn House", detail: "Sunrise gradient, sun-arc schedule", cover: "/img/layouts/yoga-sunset-pose.jpg" },
       { href: "/yoga/v4", name: "Journal", brand: "The Practice Journal", detail: "Editorial agenda, month in type", cover: "/img/layouts/yoga-fold-bw.jpg" },
-      { href: "/yoga/v5", name: "Moonlight", brand: "Nocturne Yoga", detail: "Indigo & gold, lunar-month schedule", cover: "/img/layouts/yoga-palm-silhouette.jpg" },
+      { href: "/yoga/v5", name: "Moonday", brand: "Moonday Yoga", detail: "Vermilion & cream, a month planned by the moon", cover: "/img/layouts/yoga-sunset-pose.jpg" },
       { href: "/retreat", name: "Sati", brand: "Sati Retreat", detail: "One quiet column, the day as a vertical rhythm", cover: "/img/layouts/retreat-4.jpg" },
       { href: "https://lipemoves.com", name: "Lipe Moves", brand: "Lipe Moves", detail: "Felipe's own movement platform — live in production", cover: "/img/layouts/lipemoves.jpg", external: true },
     ],

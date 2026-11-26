@@ -1,7 +1,7 @@
 // Lunar phase math for the moon-calendar schedules.
 // Reference new moon: 2000-01-06 18:14 UTC. Synodic month ≈ 29.530588853 days.
 
-const SYNODIC_MONTH = 29.530588853;
+export const SYNODIC_MONTH = 29.530588853;
 const REF_NEW_MOON_MS = Date.UTC(2000, 0, 6, 18, 14);
 const DAY_MS = 86_400_000;
 

@@ -1,321 +1,161 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
-import { Cinzel, EB_Garamond } from "next/font/google";
-import { MapPin, Moon, Sparkles, Star } from "lucide-react";
-import { FacebookIcon, InstagramIcon } from "@/components/ui/brand-icons";
+import { Golos_Text } from "next/font/google";
+import { ArrowUp } from "lucide-react";
 import { LayoutSwitcher } from "@/components/layouts/LayoutSwitcher";
 import { Reveal } from "@/components/layouts/Reveal";
-import { MoonlightConstellation } from "@/components/layouts/schedule/MoonlightConstellation";
-import {
-  CLASS_PLANS,
-  CONTACT,
-  YOGA_CLASSES,
-  YOGA_COACHES,
-} from "@/lib/layouts/content";
+import { LenisScroll } from "@/components/layouts/showcase/lenis-scroll";
+import { ClassCards } from "@/components/layouts/moonday/class-cards";
+import { FirstClassForm } from "@/components/layouts/moonday/first-class-form";
+import { MoondayHero } from "@/components/layouts/moonday/hero";
+import { LunarCycle } from "@/components/layouts/moonday/lunar-cycle";
+import { Manifesto } from "@/components/layouts/moonday/manifesto";
+import { MonthSky } from "@/components/layouts/moonday/month-sky";
+import { MoonGlyph } from "@/components/layouts/moonday/moon";
+import { Wordmark } from "@/components/layouts/moonday/wordmark";
+import { CONTACT } from "@/lib/layouts/content";
+import { AUDIENCES, MOONDAY, MOONDAY_PLANS, MOONDAY_TEACHERS, SALA_FACTS } from "@/lib/layouts/moonday";
 
 export const metadata: Metadata = {
-  title: "Yoga Layout 5 — Moonlight",
+  title: "Yoga Layout 5 — Moonday",
+  description: "A yoga studio that plans its month around the moon. Fictional demo.",
   robots: { index: false },
 };
 
-const display = Cinzel({ subsets: ["latin"], weight: ["400", "500", "700"] });
-const body = EB_Garamond({ subsets: ["latin"], weight: ["400", "500", "600"], style: ["normal", "italic"] });
+const golos = Golos_Text({ subsets: ["latin"], weight: "variable" });
 
-const NIGHT = "#141627";
-const DEEP = "#1d2038";
-const GOLD = "#d8b56c";
-const MIST = "#aab0d0";
+const NAV = [
+  { href: "#classes", label: "Classes" },
+  { href: "#cycle", label: "Moon cycle" },
+  { href: "#sky", label: "Calendar" },
+  { href: "#teachers", label: "Teachers" },
+  { href: "#prices", label: "Prices" },
+] as const;
 
-// Unique imagery for this layout (public/img/layouts).
-const PRACTICE_IMAGES = [
-  "/img/layouts/breathwork-group.jpg",
-  "/img/layouts/yoga-meditation-studio.jpg",
-  "/img/layouts/yoga-fold-bw.jpg",
-  "/img/layouts/mobility-ball.jpg",
-  "/img/layouts/yoga-backbend.jpg",
-  "/img/layouts/yoga-palm-silhouette.jpg",
-];
+const H2 = "text-[clamp(2.5rem,5.2vw,4.6rem)] font-[760] leading-[0.95] tracking-[-0.05em]";
+const WRAP = "mx-auto w-full max-w-[1400px] px-6 md:px-10";
 
-const STARS: React.CSSProperties = {
-  backgroundImage:
-    "radial-gradient(rgba(216,181,108,0.4) 0.8px, transparent 1.2px), radial-gradient(rgba(170,176,208,0.25) 0.8px, transparent 1.2px)",
-  backgroundSize: "90px 90px, 55px 55px",
-  backgroundPosition: "0 0, 30px 40px",
-};
-
-export default function MoonlightLayout() {
+export default function MoondayLayout() {
   return (
-    <div className={`${body.className} text-lg`} style={{ backgroundColor: NIGHT, color: "#ece8dd" }}>
-      <Nav />
-      <Hero />
-      <Ritual />
-      <Practices />
-      <Schedule />
-      <Pricing />
-      <Teachers />
-      <Footer />
+    <div id="top" className={`${golos.className} min-h-dvh antialiased`} style={{ backgroundColor: MOONDAY.frame, color: MOONDAY.ink }}>
+      <LenisScroll />
+
+      {/* The vermilion frame, drawn over everything with rounded inner corners */}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-2 z-[60] rounded-[14px] md:inset-[18px] md:rounded-[18px]"
+        style={{ boxShadow: `0 0 0 40px ${MOONDAY.frame}` }}
+      />
+
+      <div className="p-2 md:p-[18px]">
+        <div className="relative rounded-[14px] md:rounded-[18px]" style={{ backgroundColor: MOONDAY.cream }}>
+          <Header />
+          <main>
+            <MoondayHero />
+            <Classes />
+            <Rules />
+            <LunarCycle />
+            <Sky />
+            <Teachers />
+            <Audiences />
+            <Sala />
+            <Prices />
+            <Contact />
+          </main>
+          <Footer />
+        </div>
+      </div>
+
       <LayoutSwitcher />
     </div>
   );
 }
 
-function GoldRule() {
+function Header() {
   return (
-    <div className="flex items-center justify-center gap-3">
-      <span className="h-px w-14" style={{ backgroundColor: `${GOLD}80` }} />
-      <Star className="size-3 fill-current" style={{ color: GOLD }} />
-      <span className="h-px w-14" style={{ backgroundColor: `${GOLD}80` }} />
-    </div>
-  );
-}
-
-function Nav() {
-  return (
-    <header className="absolute inset-x-0 top-0 z-50">
-      <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-5 md:px-10">
-        <Link href="/" className={`${display.className} flex items-center gap-2 text-lg tracking-[0.15em]`} style={{ color: GOLD }}>
-          <Moon className="size-4" />
-          NOCTURNE
-        </Link>
-        <nav className="hidden gap-8 text-xs uppercase tracking-[0.3em] text-[#ece8dd]/60 md:flex">
-          <a href="#ritual" className="hover:text-[#d8b56c]">The ritual</a>
-          <a href="#practices" className="hover:text-[#d8b56c]">Practices</a>
-          <a href="#evenings" className="hover:text-[#d8b56c]">Evenings</a>
-          <a href="#passes" className="hover:text-[#d8b56c]">Passes</a>
+    <header
+      className="sticky top-2 z-50 rounded-t-[14px] border-b md:top-[18px] md:rounded-t-[18px]"
+      style={{ backgroundColor: MOONDAY.cream, borderColor: `${MOONDAY.line}aa` }}
+    >
+      <div className={`${WRAP} flex h-16 items-center justify-between gap-6`}>
+        <a href="#top" className="text-[1.6rem] font-[780] tracking-[-0.05em]" style={{ color: MOONDAY.frame }}>
+          <Wordmark light={MOONDAY.frame} dark={MOONDAY.blush} />
+        </a>
+        <nav className="hidden items-center gap-7 text-[0.95rem] font-medium lg:flex" style={{ color: MOONDAY.red }}>
+          {NAV.map((item) => (
+            <a key={item.href} href={item.href} className="transition-opacity hover:opacity-60">
+              {item.label}
+            </a>
+          ))}
         </nav>
         <a
-          href="#passes"
-          className="border px-6 py-2.5 text-xs uppercase tracking-[0.25em] transition-colors hover:bg-[#d8b56c] hover:text-[#141627]"
-          style={{ borderColor: GOLD, color: GOLD }}
+          href="#contact"
+          className="rounded-full px-5 py-2.5 text-[0.9rem] font-semibold transition-transform hover:-translate-y-0.5"
+          style={{ backgroundColor: MOONDAY.red, color: MOONDAY.cream }}
         >
-          Reserve
+          Book a class
         </a>
       </div>
     </header>
   );
 }
 
-function Hero() {
+function SectionHead({ title, children }: { title: React.ReactNode; children: React.ReactNode }) {
   return (
-    <section className="relative flex min-h-dvh items-center justify-center overflow-hidden text-center" style={STARS}>
-      <div
-        aria-hidden
-        className="pointer-events-none absolute left-1/2 top-24 size-40 -translate-x-1/2 rounded-full md:size-52"
-        style={{
-          background: `radial-gradient(circle, ${GOLD} 0%, ${GOLD}26 60%, transparent 75%)`,
-          filter: "blur(2px)",
-          opacity: 0.5,
-        }}
-      />
-      <div className="relative mx-auto max-w-3xl px-5 pt-24">
-        <Reveal>
-          <p className="text-xs uppercase tracking-[0.45em]" style={{ color: MIST }}>
-            Evening practice · On the island
-          </p>
-        </Reveal>
-        <Reveal delay={140}>
-          <h1 className={`${display.className} mt-8 text-5xl leading-[1.1] md:text-7xl`}>
-            When the heat
-            <br />
-            of the day <span style={{ color: GOLD }}>settles</span>,
-            <br />
-            the practice begins.
-          </h1>
-        </Reveal>
-        <Reveal delay={280}>
-          <p className="mx-auto mt-8 max-w-xl italic leading-relaxed text-[#ece8dd]/70">
-            Candle-lit flows, slow breath, and the bright cold of the ice bath
-            under an island sky — the Nocturne studio after sundown.
-          </p>
-        </Reveal>
-        <Reveal delay={400}>
-          <div className="mt-10">
-            <GoldRule />
-            <div className="mt-8 flex flex-wrap justify-center gap-5">
-              <a
-                href="#practices"
-                className="px-8 py-4 text-xs font-semibold uppercase tracking-[0.3em] text-[#141627] transition-opacity hover:opacity-90"
-                style={{ backgroundColor: GOLD }}
-              >
-                The night practices
-              </a>
-              <a
-                href="#ritual"
-                className="border border-[#ece8dd]/30 px-8 py-4 text-xs uppercase tracking-[0.3em] text-[#ece8dd]/80 transition-colors hover:border-[#d8b56c] hover:text-[#d8b56c]"
-              >
-                The ritual
-              </a>
-            </div>
+    <Reveal>
+      <div className="grid gap-5 md:grid-cols-2 md:items-end md:gap-16">
+        <h2 className={H2} style={{ color: MOONDAY.frame }}>
+          {title}
+        </h2>
+        <p className="max-w-xl text-[1.02rem] leading-relaxed md:justify-self-end">{children}</p>
+      </div>
+    </Reveal>
+  );
+}
+
+function Classes() {
+  return (
+    <section id="classes" className={`${WRAP} scroll-mt-20 py-24 md:py-32`}>
+      <SectionHead title={<>Four ways onto the&nbsp;mat</>}>
+        Most people start with Vinyasa and add the others as the month asks for
+        them. Every class is booked by the mat, and every mat comes with a
+        teacher who knows your name.
+      </SectionHead>
+      <ClassCards />
+    </section>
+  );
+}
+
+function Rules() {
+  return (
+    <section className="border-t py-24 md:py-32" style={{ borderColor: MOONDAY.line }}>
+      <div className={`${WRAP} grid gap-8 md:grid-cols-[minmax(0,0.42fr)_1fr] md:gap-16`}>
+        <div className="md:sticky md:top-28 md:self-start">
+          <h2 className="text-[clamp(1.8rem,2.6vw,2.4rem)] font-[760] leading-[1] tracking-[-0.045em]" style={{ color: MOONDAY.frame }}>
+            Six things the moon taught us
+          </h2>
+          <div className="mt-6 flex gap-1.5">
+            {[0, 0.125, 0.25, 0.375, 0.5, 0.625].map((p) => (
+              <MoonGlyph key={p} phase={p} size={22} light={MOONDAY.frame} dark={MOONDAY.blush} />
+            ))}
           </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-function Ritual() {
-  const steps = [
-    { time: "18:00", title: "Arrive & soften", text: "Leave the day at the door. The studio is lit low, the mats are out." },
-    { time: "18:15", title: "Breathe", text: "Guided breathwork to down-shift the nervous system, round by round." },
-    { time: "19:00", title: "The plunge", text: "Three minutes in the ice. The mind goes quiet; everything else gets loud." },
-    { time: "19:30", title: "Steam & tea", text: "Warm up slowly in the steam room and close the evening together." },
-  ];
-  return (
-    <section id="ritual" className="py-24 md:py-32" style={{ backgroundColor: DEEP }}>
-      <div className="mx-auto max-w-6xl px-5 md:px-10">
-        <Reveal>
-          <h2 className={`${display.className} text-center text-4xl md:text-5xl`}>
-            The Saturday <span style={{ color: GOLD }}>ritual</span>
-          </h2>
-          <p className="mt-4 text-center text-xs uppercase tracking-[0.35em]" style={{ color: MIST }}>
-            Breathwork &amp; ice bath
-          </p>
-        </Reveal>
-        <div className="mt-16 grid gap-10 md:grid-cols-4">
-          {steps.map((step, index) => (
-            <Reveal key={step.title} delay={index * 100}>
-              <div className="relative text-center md:text-left">
-                <p className={`${display.className} text-3xl`} style={{ color: GOLD }}>
-                  {step.time}
-                </p>
-                <span className="mx-auto mt-4 block h-px w-10 md:mx-0" style={{ backgroundColor: `${GOLD}66` }} />
-                <h3 className="mt-4 text-xl font-semibold">{step.title}</h3>
-                <p className="mt-2 text-base italic leading-relaxed text-[#ece8dd]/60">
-                  {step.text}
-                </p>
-              </div>
-            </Reveal>
-          ))}
         </div>
-        <Reveal delay={300}>
-          <p className="mt-14 text-center">
-            <a
-              href="#ritual"
-              className="text-xs uppercase tracking-[0.3em] underline underline-offset-8"
-              style={{ color: GOLD }}
-            >
-              About breathwork &amp; ice bath →
-            </a>
-          </p>
-        </Reveal>
+        <Manifesto />
       </div>
     </section>
   );
 }
 
-function Practices() {
+function Sky() {
   return (
-    <section id="practices" className="mx-auto max-w-6xl px-5 py-24 md:px-10 md:py-32">
-      <Reveal>
-        <h2 className={`${display.className} text-center text-4xl md:text-5xl`}>
-          Practices by <span style={{ color: GOLD }}>candlelight</span>
-        </h2>
-        <div className="mt-6">
-          <GoldRule />
-        </div>
-      </Reveal>
-      <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-        {YOGA_CLASSES.map((item, index) => (
-          <Reveal key={item.name} delay={index * 80} className="h-full">
-            <Link
-              href={item.href}
-              className="group flex h-full flex-col border border-[#ece8dd]/15 p-3 transition-colors hover:border-[#d8b56c]"
-            >
-              <div className="relative aspect-[5/4] overflow-hidden">
-                <Image
-                  src={PRACTICE_IMAGES[index % PRACTICE_IMAGES.length]}
-                  alt={item.name}
-                  fill
-                  sizes="(min-width: 1024px) 30vw, (min-width: 768px) 45vw, 90vw"
-                  className="object-cover brightness-[0.65] saturate-[0.8] transition-all duration-700 group-hover:scale-105 group-hover:brightness-90"
-                />
-                <Sparkles className="absolute right-3 top-3 size-4" style={{ color: GOLD }} />
-              </div>
-              <div className="flex flex-1 flex-col p-5 text-center">
-                <h3 className={`${display.className} text-xl transition-colors group-hover:[color:#d8b56c]`}>
-                  {item.name}
-                </h3>
-                {item.coach && (
-                  <p className="mt-1 text-[0.65rem] uppercase tracking-[0.3em]" style={{ color: MIST }}>
-                    {item.coach}
-                  </p>
-                )}
-                <p className="mt-3 flex-1 text-base italic leading-relaxed text-[#ece8dd]/60">
-                  {item.detail}
-                </p>
-              </div>
-            </Link>
-          </Reveal>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function Schedule() {
-  return (
-    <section id="evenings" className="py-24 md:py-32" style={{ backgroundColor: DEEP, ...STARS }}>
-      <div className="mx-auto max-w-6xl px-5 md:px-10">
-        <Reveal>
-          <h2 className={`${display.className} text-center text-4xl md:text-5xl`}>
-            The week&rsquo;s <span style={{ color: GOLD }}>constellation</span>
-          </h2>
-        </Reveal>
-        <div className="mt-14">
-          <Reveal delay={100}>
-            <MoonlightConstellation displayClass={display.className} />
-          </Reveal>
-        </div>
-        <p className="mt-10 text-center text-sm italic text-[#ece8dd]/50">
-          A representative sky — each night recurs weekly
-        </p>
-      </div>
-    </section>
-  );
-}
-
-function Pricing() {
-  return (
-    <section id="passes" className="mx-auto max-w-6xl px-5 py-24 md:px-10 md:py-32">
-      <Reveal>
-        <h2 className={`${display.className} text-center text-4xl md:text-5xl`}>
-          Passes for <span style={{ color: GOLD }}>night owls</span>
-        </h2>
-        <p className="mt-4 text-center text-xs uppercase tracking-[0.35em]" style={{ color: MIST }}>
-          and early birds — Thai Baht
-        </p>
-      </Reveal>
-      <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {CLASS_PLANS.map((plan, index) => (
-          <Reveal key={plan.name} delay={index * 80} className="h-full">
-            <div
-              className={`relative flex h-full flex-col items-center border p-8 text-center ${
-                plan.featured ? "" : "border-[#ece8dd]/15"
-              }`}
-              style={plan.featured ? { borderColor: GOLD, backgroundColor: `${GOLD}14` } : undefined}
-            >
-              {plan.featured && (
-                <span
-                  className="absolute -top-3 px-3 text-[0.6rem] uppercase tracking-[0.3em]"
-                  style={{ backgroundColor: NIGHT, color: GOLD }}
-                >
-                  Most loved
-                </span>
-              )}
-              <h3 className="text-xs uppercase tracking-[0.3em]" style={{ color: MIST }}>
-                {plan.name}
-              </h3>
-              <p className={`${display.className} mt-6 text-4xl`} style={{ color: GOLD }}>
-                ฿{plan.price.toLocaleString()}
-              </p>
-              <p className="mt-1 text-sm italic text-[#ece8dd]/50">per {plan.unit}</p>
-              <p className="mt-auto pt-8 text-sm italic text-[#ece8dd]/70">
-                {plan.note ?? "Every studio class included"}
-              </p>
-            </div>
-          </Reveal>
-        ))}
+    <section id="sky" className="scroll-mt-20 border-t py-24 md:py-32" style={{ borderColor: MOONDAY.line }}>
+      <div className={WRAP}>
+        <SectionHead title={<>This month&rsquo;s&nbsp;sky</>}>
+          Every night of the month with the moon you will see that evening.
+          Choose a night to read its classes, or a teacher to light up their days.
+          The flow on the beach moves with the full moon, never the calendar.
+        </SectionHead>
+        <MonthSky />
       </div>
     </section>
   );
@@ -323,38 +163,112 @@ function Pricing() {
 
 function Teachers() {
   return (
-    <section className="py-24 md:py-32" style={{ backgroundColor: DEEP }}>
-      <div className="mx-auto max-w-5xl px-5 md:px-10">
-        <Reveal>
-          <h2 className={`${display.className} text-center text-4xl md:text-5xl`}>
-            Keepers of the <span style={{ color: GOLD }}>flame</span>
-          </h2>
-        </Reveal>
-        <div className="mt-16 grid grid-cols-2 gap-8 lg:grid-cols-4">
-          {YOGA_COACHES.map((coach, index) => (
-            <Reveal key={coach.name} delay={index * 90}>
-              <Link href={coach.href} className="group block text-center">
-                <div className="relative mx-auto w-fit p-2">
-                  <span
-                    aria-hidden
-                    className="absolute inset-0 rounded-full border transition-colors group-hover:border-[#d8b56c]"
-                    style={{ borderColor: `${GOLD}4d` }}
-                  />
-                  <div className="relative size-32 overflow-hidden rounded-full md:size-40">
-                    <Image
-                      src={coach.image}
-                      alt={`${coach.name} — ${coach.specialty}`}
-                      fill
-                      sizes="160px"
-                      className="object-cover brightness-90 transition-all duration-700 group-hover:brightness-105"
-                    />
-                  </div>
+    <section id="teachers" className={`${WRAP} scroll-mt-20 py-24 md:py-32`}>
+      <SectionHead title="Teachers who notice">
+        Four teachers, each with 500 hours of training and a phase of the moon
+        they love to teach. Small rooms on purpose: watching you is the job.
+      </SectionHead>
+      <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {MOONDAY_TEACHERS.map((t, i) => (
+          <Reveal key={t.name} delay={i * 90} className="h-full">
+            <article className="group flex h-full flex-col rounded-[16px] border p-3 transition-colors duration-500 hover:bg-[#f6dccf]" style={{ borderColor: MOONDAY.line }}>
+              <div className="flex items-start justify-between px-1.5 pb-4 pt-1.5">
+                <h3 className="text-xl font-[740] tracking-[-0.03em]" style={{ color: MOONDAY.frame }}>
+                  {t.name}
+                </h3>
+                <MoonGlyph phase={t.phase} size={24} light={MOONDAY.frame} dark={MOONDAY.blush} />
+              </div>
+              <div className="relative aspect-[4/5] overflow-hidden rounded-[12px]">
+                <Image
+                  src={t.image}
+                  alt={t.name}
+                  fill
+                  sizes="(min-width: 1024px) 24vw, (min-width: 640px) 45vw, 92vw"
+                  className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                />
+              </div>
+              <p className="mt-4 px-1.5 text-sm font-semibold" style={{ color: MOONDAY.red }}>
+                {t.role}
+              </p>
+              <p className="mt-2 px-1.5 pb-2 leading-relaxed">{t.bio}</p>
+            </article>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Audiences() {
+  const offsets = ["md:mt-0", "md:mt-0", "md:mt-6", "md:mt-24"];
+  return (
+    <section className={`${WRAP} pb-24 md:pb-32`}>
+      <SectionHead title={<>Who walks in on a Moonday</>}>
+        There is no yoga body. There are surfers, laptop backs, first timers and
+        people passing through, and the same moon over all of them.
+      </SectionHead>
+      <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
+        {AUDIENCES.map((a, i) => (
+          <Reveal key={a.title} delay={i * 100} className={offsets[i]}>
+            <h3 className="text-[1.65rem] font-[740] tracking-[-0.035em]" style={{ color: MOONDAY.frame }}>
+              {a.title}
+            </h3>
+            <div className="group relative mt-3 aspect-[2/3] overflow-hidden rounded-[14px]">
+              <Image
+                src={a.image}
+                alt=""
+                fill
+                sizes="(min-width: 1024px) 24vw, (min-width: 640px) 45vw, 92vw"
+                className="object-cover transition-transform duration-1000 group-hover:scale-[1.05]"
+              />
+            </div>
+            <p className="mt-4 leading-relaxed">{a.text}</p>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Sala() {
+  return (
+    <section className="border-t py-24 md:py-32" style={{ borderColor: MOONDAY.line }}>
+      <div className={WRAP}>
+        <div className="grid gap-8 md:grid-cols-2 md:gap-16">
+          <Reveal>
+            <h2 className={H2} style={{ color: MOONDAY.frame }}>
+              One sala above Sunset&nbsp;Beach
+            </h2>
+          </Reveal>
+          <Reveal delay={120}>
+            <p className="max-w-xl text-[1.02rem] leading-relaxed">
+              A teak floor open to the sea breeze, forty mats, two cold tubs on
+              the deck and a sandy path down to where the Full Moon Flow happens.
+            </p>
+            <dl className="mt-6 grid grid-cols-2 gap-x-6">
+              {SALA_FACTS.map((f) => (
+                <div key={f.title} className="border-t py-3.5" style={{ borderColor: MOONDAY.line }}>
+                  <dt className="text-sm font-semibold" style={{ color: MOONDAY.red }}>
+                    {f.title}
+                  </dt>
+                  <dd className="mt-0.5">{f.text}</dd>
                 </div>
-                <h3 className={`${display.className} mt-5 text-xl`}>{coach.name}</h3>
-                <p className="mt-1 text-[0.6rem] uppercase tracking-[0.3em]" style={{ color: GOLD }}>
-                  {coach.specialty}
-                </p>
-              </Link>
+              ))}
+            </dl>
+          </Reveal>
+        </div>
+
+        <div className="mt-12 grid grid-cols-6 gap-3">
+          {[
+            { src: "/img/layouts/retreat-1.jpg", span: "col-span-6 md:col-span-4", alt: "Morning sit on the deck" },
+            { src: "/img/layouts/retreat-4.jpg", span: "col-span-3 md:col-span-2", alt: "The garden path" },
+            { src: "/img/layouts/retreat-5.jpg", span: "col-span-3 md:col-span-2", alt: "Stone steps through the jungle" },
+            { src: "/img/layouts/fullmoon-2.jpg", span: "col-span-6 md:col-span-4", alt: "The beach below the studio at night" },
+          ].map((img, i) => (
+            <Reveal key={img.src} delay={i * 80} className={img.span}>
+              <div className="group relative aspect-[16/10] overflow-hidden rounded-[14px] md:h-[360px] md:aspect-auto">
+                <Image src={img.src} alt={img.alt} fill sizes="(min-width: 768px) 60vw, 92vw" className="object-cover transition-transform duration-1000 group-hover:scale-[1.04]" />
+              </div>
             </Reveal>
           ))}
         </div>
@@ -363,35 +277,149 @@ function Teachers() {
   );
 }
 
+function Prices() {
+  return (
+    <section id="prices" className="scroll-mt-20 border-t py-24 md:py-32" style={{ borderColor: MOONDAY.line }}>
+      <div className={WRAP}>
+        <SectionHead title="Three ways to pay">
+          No joining fee and no contract. Mats and props are free, and the towels
+          for the ice are on us.
+        </SectionHead>
+        <div className="mt-12 grid gap-4 md:grid-cols-3">
+          {MOONDAY_PLANS.map((plan, i) => {
+            const featured = "featured" in plan && plan.featured;
+            return (
+              <Reveal key={plan.name} delay={i * 100} className="h-full">
+                <div
+                  className="flex h-full flex-col rounded-[16px] border p-7 md:p-8"
+                  style={
+                    featured
+                      ? { backgroundColor: MOONDAY.red, borderColor: MOONDAY.red, color: MOONDAY.cream }
+                      : { borderColor: MOONDAY.line }
+                  }
+                >
+                  <div className="flex items-center justify-between">
+                    <p className="font-semibold" style={{ color: featured ? MOONDAY.cream : MOONDAY.red }}>
+                      {plan.name}
+                    </p>
+                    <MoonGlyph
+                      phase={[0.06, 0.5, 0.25][i]}
+                      size={26}
+                      light={featured ? MOONDAY.cream : MOONDAY.frame}
+                      dark={featured ? MOONDAY.deep : MOONDAY.blush}
+                    />
+                  </div>
+                  <p className="mt-6 text-[3.6rem] font-[760] leading-none tracking-[-0.05em]" style={{ color: featured ? MOONDAY.cream : MOONDAY.frame }}>
+                    {plan.price}
+                  </p>
+                  <p className="mt-2 text-sm font-semibold" style={{ color: featured ? MOONDAY.cream : MOONDAY.red }}>
+                    {plan.unit}
+                  </p>
+                  <p className="mt-5 leading-relaxed">{plan.text}</p>
+                  <a
+                    href="#contact"
+                    className="mt-auto w-fit rounded-full px-5 py-3 text-[0.92rem] font-semibold transition-transform hover:-translate-y-0.5"
+                    style={featured ? { backgroundColor: MOONDAY.cream, color: MOONDAY.red, marginTop: "2.5rem" } : { backgroundColor: MOONDAY.red, color: MOONDAY.cream, marginTop: "2.5rem" }}
+                  >
+                    {plan.cta}
+                  </a>
+                </div>
+              </Reveal>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Contact() {
+  return (
+    <section id="contact" className="scroll-mt-20 border-t py-24 md:py-32" style={{ borderColor: MOONDAY.line }}>
+      <div className={`${WRAP} grid gap-14 md:grid-cols-2 md:gap-16`}>
+        <Reveal>
+          <h2 className={H2} style={{ color: MOONDAY.frame }}>
+            Come in for a first&nbsp;class
+          </h2>
+          <p className="mt-6 max-w-lg text-[clamp(1.15rem,1.6vw,1.5rem)] font-[480] leading-snug tracking-[-0.012em]">
+            Tell us a little about your body and where you are in your week, and
+            we will suggest a class and a teacher. Or just call: the front desk
+            picks up between classes.
+          </p>
+          <dl className="mt-8 grid grid-cols-2 gap-x-6 gap-y-5 text-[0.95rem]">
+            <div>
+              <dt className="text-sm font-semibold" style={{ color: MOONDAY.red }}>Studio</dt>
+              <dd className="mt-1">{CONTACT.address}</dd>
+            </div>
+            <div>
+              <dt className="text-sm font-semibold" style={{ color: MOONDAY.red }}>Hours</dt>
+              <dd className="mt-1">Daily 07:00–20:00<br />Full moon until late</dd>
+            </div>
+            <div>
+              <dt className="text-sm font-semibold" style={{ color: MOONDAY.red }}>Phone</dt>
+              <dd className="mt-1">
+                <a href={CONTACT.phoneHref} className="hover:underline">{CONTACT.phone}</a>
+              </dd>
+            </div>
+            <div>
+              <dt className="text-sm font-semibold" style={{ color: MOONDAY.red }}>Email</dt>
+              <dd className="mt-1">
+                <a href={CONTACT.emailHref} className="hover:underline">{CONTACT.email}</a>
+              </dd>
+            </div>
+          </dl>
+        </Reveal>
+        <Reveal delay={120}>
+          <FirstClassForm />
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
 function Footer() {
   return (
-    <footer className="py-16 text-center" style={STARS}>
-      <div className="mx-auto max-w-4xl px-5">
-        <Reveal>
-          <Moon className="mx-auto size-7" style={{ color: GOLD }} />
-          <p className={`${display.className} mt-6 text-3xl md:text-4xl`}>
-            The studio is lit. <span style={{ color: GOLD }}>Come in.</span>
-          </p>
-        </Reveal>
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-base italic text-[#ece8dd]/60">
-          <span className="flex items-center gap-2">
-            <MapPin className="size-4" style={{ color: GOLD }} />
-            {CONTACT.address}
-          </span>
-          <a href={CONTACT.phoneHref} className="hover:text-[#d8b56c]">{CONTACT.phone}</a>
-          <a href={CONTACT.emailHref} className="hover:text-[#d8b56c]">{CONTACT.email}</a>
+    <footer className="rounded-b-[14px] md:rounded-b-[18px]" style={{ backgroundColor: MOONDAY.red, color: MOONDAY.cream }}>
+      <div className={`${WRAP} pb-8 pt-16 md:pt-20`}>
+        <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+          <div>
+            <p className="text-[clamp(3.2rem,8vw,6.5rem)] font-[800] leading-[0.85] tracking-[-0.06em]">
+              <Wordmark light={MOONDAY.cream} dark={MOONDAY.deep} />
+            </p>
+            <p className="mt-5 max-w-xs leading-relaxed opacity-90">
+              Yoga by the lunar month on Sunset Beach. Small rooms, cold water and
+              one long flow under every full moon.
+            </p>
+          </div>
+          <div>
+            <p className="text-sm font-semibold opacity-80">Visit</p>
+            <p className="mt-3 leading-relaxed">{CONTACT.address}</p>
+          </div>
+          <div>
+            <p className="text-sm font-semibold opacity-80">Talk to us</p>
+            <ul className="mt-3 space-y-1.5">
+              <li><a href={CONTACT.phoneHref} className="hover:underline">{CONTACT.phone}</a></li>
+              <li><a href={CONTACT.emailHref} className="hover:underline">{CONTACT.email}</a></li>
+              <li><a href={CONTACT.instagram} className="hover:underline">Instagram</a></li>
+            </ul>
+          </div>
+          <div>
+            <p className="text-sm font-semibold opacity-80">On this page</p>
+            <ul className="mt-3 space-y-1.5">
+              {NAV.map((item) => (
+                <li key={item.href}>
+                  <a href={item.href} className="hover:underline">{item.label}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-        <div className="mt-6 flex items-center justify-center gap-5">
-          <a href={CONTACT.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-            <InstagramIcon className="size-5 hover:text-[#d8b56c]" />
-          </a>
-          <a href={CONTACT.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-            <FacebookIcon className="size-5 hover:text-[#d8b56c]" />
+        <div className="mt-16 flex flex-wrap items-center justify-between gap-4 border-t pt-6 text-sm" style={{ borderColor: "rgba(246,242,231,0.25)" }}>
+          <p className="opacity-80">© {new Date().getFullYear()} Moonday Yoga — fictional demo · Layout 5</p>
+          <a href="#top" className="flex items-center gap-1.5 font-semibold hover:underline">
+            Back to the top <ArrowUp className="size-4" />
           </a>
         </div>
-        <p className="mt-10 text-[0.65rem] uppercase tracking-[0.35em] text-[#ece8dd]/30">
-          © {new Date().getFullYear()} Nocturne Yoga — fictional demo · Layout 5
-        </p>
       </div>
     </footer>
   );
