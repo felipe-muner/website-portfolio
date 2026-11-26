@@ -68,6 +68,7 @@ export const VIDEO_SLUGS = new Set<string>([
   "studio",
   "villa-v7",
   "yoga-v1",
+  "yoga-v5",
   "yoga-v6",
 ]);
 
@@ -105,7 +106,7 @@ export const RAIL_THEMES: RailTheme[] = [
  */
 export const RAIL_SLUGS = [
   "gym-v1",
-  "yoga-v1",
+  "yoga-v5",
   "villa-v7",
   "restaurant",
   "dive",
