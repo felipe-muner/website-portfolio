@@ -1,5 +1,5 @@
-// Data for the /showcase page: which templates play as horizontal-rail videos
-// and which fill the static grid below. Everything is derived from the single
+// Data for the /showcase page: one grid of every template, curated lead first,
+// with looping clips for the slugs in VIDEO_SLUGS. Everything is derived from the single
 // PORTFOLIO registry so names, hrefs and categories never drift out of sync.
 
 import { PORTFOLIO, type PortfolioSite } from "./registry";
@@ -77,34 +77,11 @@ export function hasRailVideo(slug: string): boolean {
 }
 
 /**
- * Contrasting card treatments cycled across the horizontal rails so each
- * template reads as visibly distinct from its neighbours (instead of dark
- * frames disappearing into a dark page).
+ * Curated lead of the /showcase grid: the templates with the strongest clips,
+ * alternating light/dark and category. Each slug must have a clip in
+ * public/video/rail/.
  */
-export interface RailTheme {
-  bg: string;
-  text: string;
-  sub: string;
-  accent: string;
-  ring: string;
-  dots: string;
-}
-
-export const RAIL_THEMES: RailTheme[] = [
-  { bg: "#f4efe1", text: "#17130f", sub: "rgba(23,19,15,0.55)", accent: "#c2410c", ring: "rgba(0,0,0,0.12)", dots: "rgba(0,0,0,0.22)" },
-  { bg: "#211d1a", text: "#f4f1ea", sub: "rgba(244,241,234,0.55)", accent: "#f97316", ring: "rgba(255,255,255,0.14)", dots: "rgba(255,255,255,0.28)" },
-  { bg: "#2c1810", text: "#ffe7d2", sub: "rgba(255,231,210,0.6)", accent: "#fb923c", ring: "rgba(255,255,255,0.14)", dots: "rgba(255,255,255,0.28)" },
-  { bg: "#e6e1d2", text: "#1c1a14", sub: "rgba(28,26,20,0.55)", accent: "#b45309", ring: "rgba(0,0,0,0.12)", dots: "rgba(0,0,0,0.22)" },
-  { bg: "#132019", text: "#e6efe6", sub: "rgba(230,239,230,0.6)", accent: "#a3e635", ring: "rgba(255,255,255,0.14)", dots: "rgba(255,255,255,0.26)" },
-  { bg: "#1a1622", text: "#efe9f4", sub: "rgba(239,233,244,0.6)", accent: "#c084fc", ring: "rgba(255,255,255,0.14)", dots: "rgba(255,255,255,0.26)" },
-];
-
-/**
- * Curated set that plays as looping scroll videos in the horizontal rail.
- * Order is deliberate — alternating light/dark and category for visual rhythm.
- * Each slug must have a rendered clip in public/video/rail/.
- */
-export const RAIL_SLUGS = [
+export const SHOWCASE_LEAD = [
   "gym-v1",
   "yoga-v5",
   "villa-v7",
@@ -117,15 +94,16 @@ export const RAIL_SLUGS = [
   "coaching",
 ] as const;
 
-export const RAIL: ShowcaseEntry[] = RAIL_SLUGS.map((slug) => {
-  const entry = BY_SLUG.get(slug);
-  if (!entry) throw new Error(`showcase: unknown rail slug "${slug}"`);
-  return entry;
-});
+const LEAD_SET = new Set<string>(SHOWCASE_LEAD);
 
-/** Everything not in the rail, shown as static cover cards in the grid. */
-export const GRID: ShowcaseEntry[] = ALL.filter(
-  (e) => !RAIL_SLUGS.includes(e.slug as (typeof RAIL_SLUGS)[number]),
-);
+/** Every template for the /showcase grid: the curated lead first, then the rest. */
+export const SHOWCASE: ShowcaseEntry[] = [
+  ...SHOWCASE_LEAD.map((slug) => {
+    const entry = BY_SLUG.get(slug);
+    if (!entry) throw new Error(`showcase: unknown lead slug "${slug}"`);
+    return entry;
+  }),
+  ...ALL.filter((e) => !LEAD_SET.has(e.slug)),
+];
 
 export const TOTAL = ALL.length;

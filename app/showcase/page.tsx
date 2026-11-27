@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { Fraunces, Archivo } from "next/font/google";
-import { ArrowUpRight, ArrowDown } from "lucide-react";
+import { ArrowDown } from "lucide-react";
 import { LenisScroll } from "@/components/layouts/showcase/lenis-scroll";
-import { VideoRail } from "@/components/layouts/showcase/video-rail";
-import { RAIL, GRID, TOTAL } from "@/lib/layouts/showcase";
+import { TemplateGrid } from "@/components/layouts/showcase/template-grid";
+import { SHOWCASE, TOTAL, VIDEO_SLUGS } from "@/lib/layouts/showcase";
 
 const display = Fraunces({ subsets: ["latin"], weight: ["400", "500", "600"], style: ["normal", "italic"] });
 const body = Archivo({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
@@ -56,7 +55,7 @@ export default function ShowcasePage() {
           </h1>
           <p className="mt-7 max-w-xl text-lg leading-relaxed text-[#f4f1ea]/70">
             A shelf of real, working websites for gyms, studios, villas and local
-            businesses. Scroll through a few of them — every one is live code you can
+            businesses. All of them are below — every one is live code you can
             click, not a mockup.
           </p>
         </div>
@@ -67,54 +66,20 @@ export default function ShowcasePage() {
         </div>
       </section>
 
-      {/* ── Horizontal video rail ────────────────────────────── */}
-      <VideoRail entries={RAIL} displayClass={display.className} monoClass={body.className} />
-
-      {/* ── The rest, as a grid ──────────────────────────────── */}
-      <section id="grid" className="scroll-mt-10 px-6 py-24 sm:px-10">
+      {/* ── Every template ─────────────────────────────────── */}
+      <section id="grid" className="scroll-mt-10 px-6 pb-24 pt-10 sm:px-10">
         <div className="mx-auto max-w-7xl">
           <div className="flex flex-col gap-4 border-b border-white/10 pb-8 sm:flex-row sm:items-end sm:justify-between">
             <h2 className={`${display.className} text-4xl leading-none sm:text-6xl`}>
               Every template
             </h2>
             <p className="max-w-md text-[#f4f1ea]/60">
-              {GRID.length} more designs beyond the reel above. Tap any to open the
-              live demo in a new context.
+              {TOTAL} designs. Pick a category, hover to look around, tap any card
+              to open the live site.
             </p>
           </div>
 
-          <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {GRID.map((entry) => (
-              <Link
-                key={entry.slug}
-                href={entry.href}
-                target={entry.external ? "_blank" : undefined}
-                rel={entry.external ? "noopener noreferrer" : undefined}
-                className="group relative block overflow-hidden rounded-2xl bg-[#161311] ring-1 ring-white/10 transition-colors hover:ring-white/25"
-              >
-                <div className="relative aspect-[4/3] overflow-hidden">
-                  <Image
-                    src={`/img/rail/${entry.slug}.webp`}
-                    alt={`${entry.brand} — ${entry.detail}`}
-                    fill
-                    sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw"
-                    className="object-cover object-top transition-transform duration-700 group-hover:scale-[1.05]"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0e0d0b] via-[#0e0d0b]/10 to-transparent" />
-                </div>
-                <div className="flex items-end justify-between gap-3 p-5">
-                  <div>
-                    <span className="text-[0.68rem] uppercase tracking-[0.2em] text-[#e8590c]">
-                      {entry.category}
-                    </span>
-                    <h3 className={`${display.className} mt-1 text-xl text-[#f4f1ea]`}>{entry.name}</h3>
-                    <p className="mt-1 text-sm text-[#f4f1ea]/50">{entry.detail}</p>
-                  </div>
-                  <ArrowUpRight className="mb-1 size-5 shrink-0 text-[#f4f1ea]/40 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#e8590c]" />
-                </div>
-              </Link>
-            ))}
-          </div>
+          <TemplateGrid entries={SHOWCASE} videoSlugs={[...VIDEO_SLUGS]} displayClass={display.className} />
         </div>
       </section>
 
