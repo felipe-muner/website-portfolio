@@ -67,9 +67,9 @@ export default function ShowcasePage() {
       </section>
 
       {/* ── Every template ─────────────────────────────────── */}
-      <section id="grid" className="scroll-mt-10 px-6 pb-24 pt-10 sm:px-10">
-        <div className="mx-auto max-w-7xl">
-          <div className="flex flex-col gap-4 border-b border-white/10 pb-8 sm:flex-row sm:items-end sm:justify-between">
+      <section id="grid" className="scroll-mt-10 px-3 pb-24 pt-10 sm:px-4 lg:px-5">
+        <div className="w-full">
+          <div className="flex flex-col gap-4 border-b border-white/10 px-3 pb-8 sm:px-6 sm:flex-row sm:items-end sm:justify-between">
             <h2 className={`${display.className} text-4xl leading-none sm:text-6xl`}>
               Every template
             </h2>

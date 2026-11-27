@@ -36,7 +36,7 @@ export function TemplateGrid({
 
   return (
     <>
-      <div className="sticky top-0 z-20 -mx-6 mt-8 bg-[#0e0d0b]/85 px-6 py-4 backdrop-blur-md sm:-mx-10 sm:px-10">
+      <div className="sticky top-0 z-20 -mx-3 mt-6 bg-[#0e0d0b]/85 px-6 py-4 backdrop-blur-md sm:-mx-4 sm:px-10 lg:-mx-5">
         <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-0.5 [scrollbar-width:none]">
           {categories.map(([label, count]) => {
             const on = label === category;
@@ -60,7 +60,7 @@ export function TemplateGrid({
         </div>
       </div>
 
-      <motion.div layout className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <motion.div layout className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
         <AnimatePresence mode="popLayout" initial={false}>
           {shown.map((entry) => (
             <motion.div
@@ -86,7 +86,7 @@ function Card({ entry, video, displayClass }: { entry: ShowcaseEntry; video: boo
       href={entry.href}
       target={entry.external ? "_blank" : undefined}
       rel={entry.external ? "noopener noreferrer" : undefined}
-      className="group relative block overflow-hidden rounded-2xl bg-[#161311] ring-1 ring-white/10 transition-colors hover:ring-white/25"
+      className="group relative block overflow-hidden rounded-[20px] bg-[#161311] ring-1 ring-white/10 transition-colors hover:ring-white/25"
     >
       <div className="relative aspect-[1200/790] overflow-hidden">
         {video ? <LoopClip entry={entry} /> : <PanShot entry={entry} />}
@@ -98,13 +98,13 @@ function Card({ entry, video, displayClass }: { entry: ShowcaseEntry; video: boo
           </span>
         )}
       </div>
-      <div className="flex items-end justify-between gap-3 p-5 pt-3">
+      <div className="flex items-end justify-between gap-4 px-5 pb-5 pt-3 sm:px-6 sm:pb-6">
         <div className="min-w-0">
           <span className="text-[0.68rem] uppercase tracking-[0.2em] text-[#e8590c]">{entry.category}</span>
-          <h3 className={`${displayClass} mt-1 text-xl text-[#f4f1ea]`}>{entry.name}</h3>
-          <p className="mt-1 truncate text-sm text-[#f4f1ea]/50">{entry.detail}</p>
+          <h3 className={`${displayClass} mt-1 text-2xl text-[#f4f1ea] xl:text-[1.7rem]`}>{entry.name}</h3>
+          <p className="mt-1 truncate text-sm text-[#f4f1ea]/50 xl:text-base">{entry.detail}</p>
         </div>
-        <ArrowUpRight className="mb-1 size-5 shrink-0 text-[#f4f1ea]/40 transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[#e8590c]" />
+        <ArrowUpRight className="mb-1 size-6 shrink-0 text-[#f4f1ea]/40 transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[#e8590c]" />
       </div>
     </Link>
   );
@@ -151,7 +151,7 @@ function PanShot({ entry }: { entry: ShowcaseEntry }) {
       src={`/img/rail/${entry.slug}.webp`}
       alt={`${entry.brand} — ${entry.detail}`}
       fill
-      sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw"
+      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
       className="object-cover object-top transition-[object-position] duration-[6s] ease-in-out group-hover:object-bottom"
     />
   );
