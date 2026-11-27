@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Fraunces, Archivo } from "next/font/google";
 import { ArrowDown } from "lucide-react";
 import { LenisScroll } from "@/components/layouts/showcase/lenis-scroll";
+import { HeroStrip, HeroWall } from "@/components/layouts/showcase/hero-wall";
 import { TemplateGrid } from "@/components/layouts/showcase/template-grid";
 import { SHOWCASE, TOTAL, VIDEO_SLUGS } from "@/lib/layouts/showcase";
 
@@ -23,7 +24,7 @@ export default function ShowcasePage() {
       <LenisScroll />
 
       {/* ── Hero ─────────────────────────────────────────────── */}
-      <section className="relative flex min-h-dvh flex-col justify-between overflow-hidden px-6 pb-10 pt-8 sm:px-10">
+      <section className="relative flex flex-col gap-12 overflow-hidden px-6 pb-12 pt-8 sm:px-10 lg:min-h-[86svh] lg:justify-between lg:pb-14">
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 opacity-70"
@@ -33,9 +34,9 @@ export default function ShowcasePage() {
           }}
         />
 
-        <header className="relative flex items-center justify-between">
+        <header className="relative z-10 flex items-center justify-between">
           <span className={`${display.className} text-lg italic text-[#f4f1ea]`}>Felipe Muner</span>
-          <nav className="flex items-center gap-6 text-sm text-[#f4f1ea]/60">
+          <nav className="flex items-center gap-6 rounded-full bg-[#0e0d0b]/70 px-5 py-2.5 text-sm text-[#f4f1ea]/75 ring-1 ring-white/10 backdrop-blur-md">
             <Link href="/portfolio" className="transition-colors hover:text-[#f4f1ea]">
               All templates
             </Link>
@@ -45,29 +46,44 @@ export default function ShowcasePage() {
           </nav>
         </header>
 
-        <div className="relative max-w-5xl">
+        <HeroWall entries={SHOWCASE.slice(0, 18)} />
+
+        <div className="pointer-events-none relative z-10 lg:max-w-[46%]">
           <span className="text-xs uppercase tracking-[0.35em] text-[#e8590c]">
             {TOTAL} live designs · one week each
           </span>
-          <h1 className={`${display.className} mt-6 text-[3.25rem] font-medium leading-[0.95] tracking-tight sm:text-8xl`}>
+          <h1 className={`${display.className} mt-6 text-[3.25rem] font-medium leading-[0.95] tracking-tight sm:text-8xl lg:text-[clamp(4.5rem,6.6vw,7.5rem)]`}>
             Your dream website,{" "}
             <span className="italic text-[#e8590c]">already&nbsp;built.</span>
           </h1>
           <p className="mt-7 max-w-xl text-lg leading-relaxed text-[#f4f1ea]/70">
             A shelf of real, working websites for gyms, studios, villas and local
-            businesses. All of them are below — every one is live code you can
-            click, not a mockup.
+            businesses. Every one is live code you can click, not a mockup.
           </p>
+          <div className="pointer-events-auto mt-9 flex flex-wrap items-center gap-3">
+            <a
+              href="#grid"
+              className="inline-flex items-center gap-2 rounded-full bg-[#e8590c] px-7 py-3.5 text-sm font-semibold uppercase tracking-wide text-[#0e0d0b] transition-transform hover:-translate-y-0.5"
+            >
+              See all {TOTAL}
+              <ArrowDown className="size-4" />
+            </a>
+            <a
+              href={`https://wa.me/${WHATSAPP}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full border border-white/15 px-7 py-3.5 text-sm font-semibold uppercase tracking-wide text-[#f4f1ea] transition-colors hover:border-white/40"
+            >
+              Ask about one
+            </a>
+          </div>
         </div>
 
-        <div className="relative flex items-center gap-3 text-sm text-[#f4f1ea]/50">
-          <ArrowDown className="size-4 animate-bounce" />
-          Scroll to explore
-        </div>
+        <HeroStrip entries={SHOWCASE.slice(0, 12)} />
       </section>
 
       {/* ── Every template ─────────────────────────────────── */}
-      <section id="grid" className="scroll-mt-10 px-3 pb-24 pt-10 sm:px-4 lg:px-5">
+      <section id="grid" className="scroll-mt-10 px-3 pb-24 pt-4 sm:px-4 lg:px-5">
         <div className="w-full">
           <div className="flex flex-col gap-4 border-b border-white/10 px-3 pb-8 sm:px-6 sm:flex-row sm:items-end sm:justify-between">
             <h2 className={`${display.className} text-4xl leading-none sm:text-6xl`}>
